@@ -1,0 +1,37 @@
+.main-header{
+  background-image: url(/home/header-bg.png);
+  .container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 56px;
+  }
+  .logo{
+        margin-left: 0;
+    margin-right: auto;
+  }
+  .item{
+    margin-left: 26px;
+  }
+  .text{
+    color: #fff;
+  }
+  .phone,.mail{
+    display: flex;
+    .image{
+      margin-right: 8px;
+    }
+  }
+  .deal-shock{
+    position: relative;
+    margin-right: 26px;
+    .head{
+      position: absolute;
+      top: -10px;
+      right: -32px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+  }
+}
