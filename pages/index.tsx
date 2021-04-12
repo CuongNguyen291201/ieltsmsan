@@ -1,11 +1,13 @@
 import Layout from '../components/Layout';
-import Demo from '../components/demo';
+import MainHeader from '../components/MainHeader';
+import MainMenu from '../components/MainMenu';
 
 const Index = () => {
   return (
     <Layout>
-      <div>Welcome</div>
-      <Demo />
+      <MainHeader />
+      <MainMenu />
+      {/* <HomeBanner /> */}
     </Layout>
   )
 }

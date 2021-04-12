@@ -13,7 +13,7 @@ function MainHeader() {
           </div>
           <div className="text">
             Hotline: 0947 0909 81
-        </div>
+          </div>
         </div>
         <div className="mail item">
           <div className="image">
@@ -21,7 +21,7 @@ function MainHeader() {
           </div>
           <div className="text">
             Email: infor@onthisinhvien.com
-        </div>
+          </div>
         </div>
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
@@ -34,10 +34,10 @@ function MainHeader() {
         </div>
         <div className="login text item">
           Đăng nhập
-      </div>
+        </div>
         <div className="signup text item">
           Đăng ký
-      </div>
+        </div>
       </div>
     </div>
   )
