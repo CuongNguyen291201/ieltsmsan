@@ -1,0 +1,32 @@
+.main-category-section {
+  .section-title {
+    font-weight: 900;
+    font-style: normal;
+    font-size: 36px;
+    line-height: 42px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    color: #A7A7A7;
+    margin-bottom: 48px;
+  }
+
+  .section-main {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    overflow: hidden;
+    .section-bgr {
+      overflow: hidden;
+      z-index: -100;
+      height: 400px;
+      width: 100%;
+      position: absolute;
+      transform: rotate(162deg);
+      background-color: gray;
+    }
+  }
+}

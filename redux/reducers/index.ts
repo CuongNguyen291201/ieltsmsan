@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
-import { demoReducer, DemoState } from './demo.reducer';
+import { categoryReducer, CategoryState } from './category.reducer';
+// import { demoReducer, DemoState } from './demo.reducer';
 
 export interface AppState {
-  demoReducer: DemoState
+  // demoReducer: DemoState
+  categoryReducer: CategoryState
 }
 
 export const rootReducer = combineReducers<AppState>({
-  demoReducer
+  // demoReducer
+  categoryReducer
 });
