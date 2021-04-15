@@ -18,3 +18,18 @@ body {
   max-width: $container-max-width;
   margin: auto;
 }
+.home-section-title{
+font-weight: 900;
+font-size: 36px;
+color: #000000;
+margin-bottom: 16px;
+text-align: center;
+}
+.home-section-description{
+font-weight: 500;
+font-size: 14px;
+color: #A7A7A7;
+margin-bottom: 80px;
+text-align: center;
+line-height: 1.5;
+}
