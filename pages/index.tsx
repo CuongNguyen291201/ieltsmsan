@@ -14,6 +14,7 @@ import StudentFeeling from '../components/StudentFeeling';
 import { HomeCategory } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { apiGetCategories } from '../utils/apis/categoryApi';
+import Footer from '../components/Footer';
 
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
@@ -34,6 +35,8 @@ const Index = (props: { homeCategories: HomeCategory[] }) => {
       <HomeWhy></HomeWhy>
       <HomeUtility></HomeUtility>
       <HomeNews></HomeNews>
+
+      <Footer />
     </Layout>
   )
 }

@@ -1,0 +1,32 @@
+.contact-info-panel {
+  position: relative;
+  padding: 0 10% 0 10%;
+  float: left;
+  .contact-bgr {
+    position: absolute;
+    max-width: 100%;
+    height: auto;
+  }
+    .contact-info {
+      & > * {
+        margin: 10%;
+        position: relative;
+        color: white;
+      }
+      
+      .contact-item {
+        display: flex;
+        margin: 2% 17%;
+        .title-mark {
+          width: 38.32px;
+          height: 38.32px;
+          margin-right: 24px;
+        }
+
+        span {
+          display: inline-flex;
+          align-items: center;
+        }
+      }
+    }
+}
