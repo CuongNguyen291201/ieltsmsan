@@ -1,0 +1,51 @@
+.cat-avatar {
+  position: relative;
+  & img {
+    min-height: 220px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0 0 20px 0;
+  }
+  .avatar-overlay {
+    border-radius: 0 0 20px 0;
+    position: absolute;
+    .overlay-title {
+      position: absolute;
+      color: #ffffff;
+      bottom: 0;
+      right: 0;
+      margin: 0 20px 20px 0;
+      & span {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 28px;
+        font-style: normal;
+      }
+    }
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    &:hover {
+      cursor: pointer;
+      opacity: 1;
+    }
+    transition: 0.3s ease;
+    background-color: rgba(236, 31, 36, 0.88);
+  }
+}
+
+.cat-info {
+  .cat-title {
+    font: {
+      size: 18px;
+      weight: 700;
+      style: normal;
+    }
+    line-height: 21px;
+    text-transform: uppercase;
+    color: #ec1f24;
+    margin-bottom: 21px;
+  }
+  margin: 20px;
+}
