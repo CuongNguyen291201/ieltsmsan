@@ -23,8 +23,8 @@ const Index = (props: { homeCategories: HomeCategory[] }) => {
 export default Index;
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async () => {
-  const { data, status } = await apiGetCategories({ withTotalCourses: true });
-  const homeCategories = status === 200 ? data : [];
+  const { data, status } = await apiGetCategories();
+  const homeCategories = status === 0 ? data : [];
   return {
     props: { homeCategories }
   }
