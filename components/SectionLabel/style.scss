@@ -1,0 +1,20 @@
+.section-label{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 64px;
+  margin-bottom: 30px;
+  .sign{
+    width: 150px;
+    height: 2px;
+    background: #EC1F24;
+border-radius: 3px;
+margin-bottom: 16px;
+  }
+  .text{
+    font-weight: bold;
+    font-size: 14px;
+    color: #EC1F24;
+    letter-spacing: 2px;
+  }
+}

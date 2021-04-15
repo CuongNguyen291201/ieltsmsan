@@ -1,0 +1,55 @@
+.home-why{
+  .container{
+    display: grid;
+    grid-template-columns: 83fr 45fr;
+  }
+  .left{
+    display: grid;
+    grid-template-areas: "img1 img1 img2" "img3 img4 img4";
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0px 24px;
+    padding: 20px 0;
+    .image1{
+      grid-area: img1;
+      width: 100%;
+    }
+    .image2{
+      grid-area: img2;
+      width: 100%;
+    }
+    .image3{
+      grid-area: img3;
+      width: 100%;
+    }
+    .image4{
+      grid-area: img4;
+      width: 100%;
+    }
+  }
+  .right{
+    padding:33px;
+    background-image: url(/home/home-why-right-bg.png);
+    display: flex;
+    flex-direction: column;
+        background-repeat: no-repeat;
+    .title{
+      font-weight: bold;
+      font-size: 24px;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+    }
+    .description{
+      font-weight: 500;
+      font-size: 18px;
+      color: #FC9597;
+      text-align: left;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .box:last-child{
+      .description{
+        margin-bottom: 0;
+      }
+    }
+  }
+}

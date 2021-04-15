@@ -1,0 +1,64 @@
+.student-feeling{
+  padding: 24px;
+  background: url(/home/student-feeling-bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  .text-1{
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    .text{
+      font-weight: bold;
+      font-size: 14px;
+      margin-right: 16px;
+      color: #FFFFFF;
+      letter-spacing: 2px;
+    }
+    .sign{
+      width: 100px;
+      height: 2px;
+      background: #FFFFFF;
+      border-radius: 3px;
+      margin-bottom: 3px;
+    }
+  }
+  .text-2{
+    font-weight: 900;
+    font-size: 24px;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+  }
+  .text-3{
+    font-weight: 500;
+    font-size: 14px;
+    color: #FFFFFF;
+
+  }
+  .slide-wrap{
+    width: 100%;
+    overflow: hidden;
+  }
+  .slide{
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    transition: all 0.6s;
+    .student-feeling-slide-item{
+      display: flex;
+      padding: 65px 0;
+      padding-right: 70px;
+      .image{
+        img{
+          width: 176px;
+          height: 120px;  
+        }
+      }
+      .description{
+        background: rgba(0, 0, 0, 0.15);
+        padding:16px;
+        line-height: 1.5;
+        color: #fff;
+        text-align: left;
+      }
+    }
+  }  
+}
