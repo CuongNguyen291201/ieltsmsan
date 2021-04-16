@@ -56,9 +56,10 @@ function HomeNews() {
   }
 
   useEffect(() => {
-    setInterval(() => {
-      switchSlide()
-    }, 3000)
+    let hihi = setInterval(switchSlide, 3000)
+    return () => {
+      clearInterval(hihi)
+    }
   }, [])
 
   return (

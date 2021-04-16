@@ -21,6 +21,9 @@
         line-height: 28px;
         font-style: normal;
       }
+      &:hover{
+        text-decoration: underline;
+      }
     }
     top: 0;
     height: 100%;
@@ -31,7 +34,7 @@
       opacity: 1;
     }
     transition: 0.3s ease;
-    background-color: rgba(236, 31, 36, 0.88);
+    background-color: rgba(236, 31, 36, 0.6);
   }
 }
 
@@ -45,7 +48,11 @@
     line-height: 21px;
     text-transform: uppercase;
     color: #ec1f24;
-    margin-bottom: 21px;
+    margin-bottom: 18px;
+    white-space: nowrap; 
+    min-width: 175px; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
   }
-  margin: 20px;
+  margin: 16px;
 }

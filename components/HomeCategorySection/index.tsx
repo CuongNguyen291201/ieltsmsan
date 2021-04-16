@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo } from 'react';
 import { HomeCategory } from '../../custom-types';
 import CategoryItem from '../CategoryItem';
 import GridTemplate1 from '../grid/GridTemplate1';
+import SectionLabel from '../SectionLabel';
 import './style.scss';
 
 const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
@@ -26,12 +27,15 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
       sectionBgr.style.transform = `translate(-50%, -50%) rotate(-${rad}rad)`;
     }
   }, [categories])
+
+  console.log(categories)
   return (
     <div className="main-category-section">
-      <div className="section-title">
+      <SectionLabel></SectionLabel>
+      <div className="home-section-title">
         ĐA DẠNG CÁC TRƯỜNG
       </div>
-      <div className="section-subtitle">
+      <div className="home-section-description">
         Đa dạng các trường cho bạn lựa chọn. Giúp việc học trở lên dễ dàng hơn
       </div>
 
@@ -41,7 +45,7 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
           <GridTemplate1>
             {categories.map((e) => (
               <Fragment key={e._id}>
-                <CategoryItem title={e.titleSEO || e.name} totalCourses={e.totalCourses ?? 0} avatarSrc={e.avatar} />
+                <CategoryItem theCategory={e} />
               </Fragment>
             ))}
           </GridTemplate1>
