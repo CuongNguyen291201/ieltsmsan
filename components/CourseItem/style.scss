@@ -1,0 +1,74 @@
+@import '../CategoryItem/style.scss';
+
+.crs-avatar {
+  position: relative;
+  cursor: pointer;
+  & img {
+    @include item-avatar-style;
+    min-height: 146px;
+  }
+}
+
+.crs-info {
+  margin: 12px 18px;
+  * {
+    display: flex;
+    align-items: center;
+  }
+  .crs-title {
+    font-weight: 900;
+    color: #ec1f24;
+    font-size: 12px;
+  }
+
+  .crs-desc {
+    font-weight: 500;
+    color: #9e9e9e;
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+
+  .crs-rating {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    * {
+      font-size: 10px;
+      margin-right: 12px;
+    }
+    .crs-point {
+      font-weight: 500;
+    }
+  }
+
+  .crs-price {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    * {
+      font-size: 10px;
+      margin-right: 12px;
+    }
+    .crs-discount-price {
+      font-weight: bold;
+      color: #ec1f24;
+    }
+    .crs-origin-price {
+      color: #ec1f24;
+      text-decoration-line: line-through;
+    }
+  }
+
+  .btn-video {
+    cursor: pointer;
+    background: #e7e7e7;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 69px;
+    font-weight: bold;
+    color: #ec1f24;
+  }
+}

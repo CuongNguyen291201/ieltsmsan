@@ -1,0 +1,14 @@
+@import '../../../styles/variables.scss';
+
+.grid-template-2 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 18px;
+  row-gap: 26px;
+}
+
+@media (max-width: $mobile-max-width) {
+  .grid-template-2 {
+    grid-template-columns: 1fr;
+  }
+}

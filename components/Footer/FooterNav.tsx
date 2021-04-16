@@ -1,6 +1,7 @@
+import { Fragment } from 'react'
 import GridTemplateCol55 from '../grid/GridTemplateCol55'
 import SectionLabel from '../SectionLabel'
-import { FooterNavItemProps } from './FooterNavItem'
+import FooterNavItem, { FooterNavItemProps } from './FooterNavItem'
 
 const FooterNav = () => {
   const utils: FooterNavItemProps[] = [
@@ -11,7 +12,7 @@ const FooterNav = () => {
     { title: 'Liên hệ', slug: '/lien-he' }
   ]
 
-  const policies: FooterNavItemProps[] =[
+  const policies: FooterNavItemProps[] = [
     { title: 'Chính sách chung', slug: '/chinh-sach-chung' },
     { title: 'Chính sách bảo mật thông tin', slug: '/chinh-sach-bao-mat-thong-tin' },
     { title: 'Hướng dẫn mua hàng', slug: '/huong-dan-mua-hang' },
@@ -21,15 +22,30 @@ const FooterNav = () => {
 
   return (
     <div className="footer-nav">
+      <div className="footer-label">
+        <SectionLabel />
+      </div>
       <GridTemplateCol55>
-        <div className="utils">
-          <SectionLabel />
-          <div>
+        <div id="utils">
+          <div className="nav-title">
             TIỆN ÍCH
           </div>
-          <div>
-            Trang chủ
+          {utils.map((e, i) => (
+            <Fragment key={i}>
+              <FooterNavItem title={e.title} slug={e.slug} />
+            </Fragment>
+          ))}
+        </div>
+
+        <div id="policies">
+          <div className="nav-title">
+            CÁC CHÍNH SÁCH
           </div>
+          {policies.map((e, i) => (
+            <Fragment key={i}>
+              <FooterNavItem title={e.title} slug={e.slug} />
+            </Fragment>
+          ))}
         </div>
       </GridTemplateCol55>
     </div>
