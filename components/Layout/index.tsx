@@ -13,7 +13,7 @@ const Layout: FC<{ addMathJax?: boolean }> = (props) => {
 				<meta name="description" content="" />
 				<meta name="title" content="" />
 				<link rel="icon" href="" />
-
+				<link rel="shortcut icon" href="/favicon.ico" />
 				{addMathJax && (<script type="text/javascript" async
 					src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 				</script>)}

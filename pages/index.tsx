@@ -28,7 +28,6 @@ const Index = (props: { homeCategories: HomeCategory[] }) => {
     <Layout>
       <MainHeader />
       <MainMenu />
-
       <HomeBanner />
       <HomeCategorySection categories={props.homeCategories} />
       <StudentFeeling></StudentFeeling>
