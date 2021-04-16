@@ -24,7 +24,7 @@ const RootCategoryDetail = () => {
         </div>
 
         <GridTemplate2>
-          <CourseItem />
+          <CourseItem point={4.6} cost={300000} discountPrice={50000}/>
           <CourseItem />
           <CourseItem />
           <CourseItem />

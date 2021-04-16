@@ -1,6 +1,8 @@
 import itemAvatar from '../../public/default/item-avatar.png';
 import Container1 from '../containers/Container1';
+import Ratings from '../Ratings';
 import './style.scss';
+
 
 const CourseItem = (props: {
   name?: string;
@@ -20,6 +22,7 @@ const CourseItem = (props: {
     cost = 0,
     discountPrice = 0
   } = props;
+
   return (
     <Container1>
       <div className="crs-avatar">
@@ -36,8 +39,10 @@ const CourseItem = (props: {
         </div>
 
         <div className="crs-rating">
-          <div className="crs-point">{point}</div>
-          <div className="vote-star">Star</div>
+          <div className="crs-point">{String(point).replace('.', ',')}</div>
+          <div className="vote-star">
+            <Ratings point={point} />
+          </div>
           <div className="crs-mem">({totalMembers})</div>
         </div>
 
