@@ -1,83 +1,87 @@
-.home-news{
+.home-news {
   overflow: hidden;
-  .slide-view-wrap{
+  .news-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .slide-view-wrap {
     position: relative;
   }
-  .slide-view{
+  .slide-view {
     width: 100%;
     position: relative;
     overflow: hidden;
-    .slide{
+    .slide {
       display: grid;
-      grid-template-columns: repeat(20,600px);
+      grid-template-columns: repeat(20, 600px);
       transition: all 0.6s;
-      .slide-item{
+      .slide-item {
         padding: 32px;
         position: relative;
-        &:nth-child(odd){
-          background-color: #ED1E24;
-          .title{
-          font-weight: 900;
-          font-size: 18px;
-          line-height: 21px;
-          color: #FFFFFF;
-          margin-bottom: 16px;
-          width: 65%;
+        &:nth-child(odd) {
+          background-color: #ed1e24;
+          .title {
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 21px;
+            color: #ffffff;
+            margin-bottom: 16px;
+            width: 65%;
+          }
+          .date {
+            font-size: 14px;
+            line-height: 16px;
+            color: #ffffff;
+          }
+          .description {
+            font-size: 14px;
+            line-height: 16px;
+            color: #ffffff;
+          }
         }
-        .date{
-          font-size: 14px;
-          line-height: 16px;
-          color: #FFFFFF;
-        }
-        .description{
-          font-size: 14px;
-          line-height: 16px;
-          color: #FFFFFF;
-        }
-        }
-        &:nth-child(even){
+        &:nth-child(even) {
           background-color: #fff;
-          .title{
-          font-weight: 900;
-          font-size: 18px;
-          line-height: 21px;
-          color: #000000;
-          margin-bottom: 16px;
-          width: 65%;
-        }
-        .date{
-          font-size: 14px;
-          line-height: 16px;
-          color: #A7A7A7;
-        }
-        .description{
-          font-size: 14px;
-          line-height: 16px;
-          color: #A7A7A7;
-        }
+          .title {
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 21px;
+            color: #000000;
+            margin-bottom: 16px;
+            width: 65%;
+          }
+          .date {
+            font-size: 14px;
+            line-height: 16px;
+            color: #a7a7a7;
+          }
+          .description {
+            font-size: 14px;
+            line-height: 16px;
+            color: #a7a7a7;
+          }
         }
         height: 300px;
-        
-        .quote{
+
+        .quote {
           position: absolute;
           right: 32px;
           top: 32px;
         }
       }
     }
-    }
-    .arrow{
-      position: absolute;
-      top: 50%;
-      transform: translate(0,-50%);
-      cursor: pointer;
-      height: 100%;
+  }
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    height: 100%;
     display: flex;
     align-items: center;
     transition: all 0.3s;
-    &:hover{
+    &:hover {
       background: rgba(184, 166, 166, 0.12);
     }
   }
-  
 }

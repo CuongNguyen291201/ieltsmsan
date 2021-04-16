@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo } from 'react';
 import { HomeCategory } from '../../custom-types';
 import CategoryItem from '../CategoryItem';
 import GridTemplate1 from '../grid/GridTemplate1';
+import SectionLabel from '../SectionLabel';
 import './style.scss';
 
 const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
@@ -47,6 +48,8 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
           </GridTemplate1>
         </div>
       </div>
+
+      <SectionLabel />
     </div>
   )
 }

@@ -1,18 +1,14 @@
 @import '../../../styles/variables.scss';
 
-.grid-template-1 {
-  z-index: 1;
+.grid-col-4-6 {
   display: grid;
   grid-template: {
-    columns: 24% 24% 24% 24%;
-  }
-  grid-auto-flow: row;
-  row-gap: 26px;
-  column-gap: 1.33%;
+    columns: 40% 60%;
+  };
 }
 
 @media (max-width: $mobile-max-width) {
-  .grid-template-1 {
+  .grid-col-4-6 {
     grid-template-columns: 1fr;
   }
 }
