@@ -34,7 +34,6 @@ const Index = (props: { homeCategories: HomeCategory[] }) => {
       <HomeWhy></HomeWhy>
       <HomeUtility></HomeUtility>
       <HomeNews></HomeNews>
-
       <Footer />
     </Layout>
   )

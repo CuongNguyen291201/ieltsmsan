@@ -3,7 +3,7 @@ import GridTemplate2 from '../grid/GridTemplate2';
 import CourseItem from '../CourseItem';
 import './style.scss';
 
-const RootCategoryDetail = () => {
+const RootCategoryDetail = ({ childCategories }) => {
   return (
     <>
       <div className="container">
@@ -24,19 +24,17 @@ const RootCategoryDetail = () => {
         </div>
 
         <GridTemplate2>
-          <CourseItem point={4.6} cost={300000} discountPrice={50000}/>
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
-          <CourseItem />
+          {
+            childCategories.map((el) => {
+              return (
+                <CourseItem courseItem={el} key={el._id} />
+              )
+            })
+          }
+          {/* <CourseItem point={4.6} cost={300000} discountPrice={50000} /> */}
         </GridTemplate2>
 
-        <div className="pagination">
+        {/* <div className="pagination">
           {[1, 2, 3].map((e, i) => {
             const activeId = 0;
             return (
@@ -45,7 +43,7 @@ const RootCategoryDetail = () => {
               </div>
             )
           })}
-        </div>
+        </div> */}
       </div>
 
     </>

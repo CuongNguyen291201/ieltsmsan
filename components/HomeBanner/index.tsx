@@ -19,8 +19,6 @@ function HomeBanner() {
           </div>
         </Carousel>
       </div>
-
-      <SectionLabel />
     </>
   )
 }
