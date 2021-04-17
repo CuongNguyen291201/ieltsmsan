@@ -1,22 +1,20 @@
-import Container1 from '../containers/Container1'
-import itemAvatar from '../../public/default/item-avatar.png';
-import { memo } from 'react';
-import './style.scss';
-import { ICategory } from '../../sub_modules/share/model/category_ts';
-import { CATEGORY_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { useRouter } from 'next/router';
-interface OtsvCategory extends ICategory {
-  totalCourses?: number
-}
+import { memo } from 'react';
+import { OtsvCategory } from '../../custom-types';
+import itemAvatar from '../../public/default/item-avatar.png';
+import { CATEGORY_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import Container1 from '../containers/Container1';
+import './style.scss';
+
 const CategoryItem = (props: {
-  theCategory: OtsvCategory
+  category: OtsvCategory
 }) => {
-  const { theCategory } = props;
+  const { category } = props;
   const router = useRouter()
   return (
     <Container1>
-      <div className="cat-avatar" onClick={() => { router.push(`/${theCategory.slug}-${CATEGORY_DETAIL_PAGE_TYPE}-${theCategory._id}`) }} >
-        <img src={theCategory.avatar || itemAvatar} alt={theCategory.name} />
+      <div className="cat-avatar" onClick={() => { router.push(`/${category.slug}-${CATEGORY_DETAIL_PAGE_TYPE}-${category._id}`) }} >
+        <img src={category.avatar || itemAvatar} alt={category.name} />
         <div className="avatar-overlay">
           <div className="overlay-title">
             <span>
@@ -29,11 +27,11 @@ const CategoryItem = (props: {
 
       <div className="cat-info">
         <div className="cat-title">
-          {theCategory.name}
+          {category.name}
         </div>
 
         <div className="cat-course-info">
-          Khoá học: {theCategory.totalCourses} khoá
+          Khoá học: {category.totalCourses} khoá
         </div>
       </div>
     </Container1>

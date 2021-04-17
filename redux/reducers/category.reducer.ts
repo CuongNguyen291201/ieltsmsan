@@ -1,9 +1,9 @@
-import { HomeCategory } from '../../custom-types';
+import { OtsvCategory } from '../../custom-types';
 import { CategoryAction } from '../actions/category.actions';
 import { ActionTypes, Scopes } from '../types';
 
 export interface CategoryState {
-  homeCategories: Array<HomeCategory>
+  homeCategories: Array<OtsvCategory>
 }
 
 const initialState: CategoryState = {
@@ -16,7 +16,7 @@ export function categoryReducer(state = initialState, action: CategoryAction): C
       case ActionTypes.LOAD_LIST:
         return {
           ...state,
-          [action.target ?? 'homeCategory']: action.payload
+          [action.target ?? 'homeCategories']: action.payload
         }
 
       default:
