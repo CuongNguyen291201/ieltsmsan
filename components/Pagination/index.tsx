@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, memo, useCallback } from 'react';
+import { ForwardedRef, forwardRef, memo } from 'react';
 
 const Pagination = forwardRef((props: {
   total: number;

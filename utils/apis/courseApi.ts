@@ -8,3 +8,11 @@ export const apiGetPagedCoursesByCategory = (args: {
   limit?: number;
   lastRecord?: Course
 }) => POST_REQ('get-paged-courses-by-category', args);
+
+export const apiGetSkippedCoursesByCategory = (args: {
+  categoryId: string;
+  field?: keyof ICourse;
+  asc?: boolean;
+  limit?: number;
+  skip?: number
+}) => POST_REQ('get-skipped-courses-by-category', args);
