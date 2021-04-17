@@ -1,6 +1,11 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import LoginModal from '../../sub_modules/common/components/loginModal'
+import RegisterModal from '../../sub_modules/common/components/registerModal'
+import { showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import './style.scss'
 function MainHeader() {
+  let dispatch = useDispatch()
   return (
     <div className="main-header ">
       <div className="container">
@@ -32,12 +37,14 @@ function MainHeader() {
             <img src="/home/header-cart.png" alt="" />
           </div>
         </div>
-        <div className="login text item">
+        <div className="login text item" onClick={() => dispatch(showLoginModalAction(true))}>
           Đăng nhập
         </div>
-        <div className="signup text item">
+        <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
           Đăng ký
         </div>
+        <LoginModal></LoginModal>
+        <RegisterModal></RegisterModal>
       </div>
     </div>
   )

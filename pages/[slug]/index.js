@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { getCategoriesByParentIdApi } from '../../api/categoryApi';
-import CategoryDetail from '../../components/CategoryDetail';
+// import CategoryDetail from '../../components/CategoryDetail';
+import RootCategoryDetail from '../../components/RootCategoryDetail';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -11,7 +12,7 @@ function Slug({ slug, type, id, childCategories }) {
   switch (Number(type)) {
 
     case CATEGORY_DETAIL_PAGE_TYPE:
-      return <CategoryDetail childCategories={childCategories} />;
+      return <RootCategoryDetail childCategories={childCategories} />;
 
     default:
       return <div>404</div>; // TODO: send 404 Page

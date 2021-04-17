@@ -52,7 +52,6 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
         </div>
       </div>
 
-      <SectionLabel />
     </div>
   )
 }

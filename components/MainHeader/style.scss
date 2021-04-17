@@ -35,3 +35,35 @@
     }
   }
 }
+@media(max-width:600px){
+  .main-header{
+    .container{
+      display: grid;
+      grid-template-areas: "phone phone mail mail" "dealshock cart login signup";
+    }
+    .logo{
+      grid-area: logo;
+    }
+    .phone{
+      grid-area: phone;
+    }
+    .mail{
+      grid-area: mail;;
+    }
+    .deal-shock{
+      grid-area: dealshock;
+    }
+    .cart{
+      grid-area: cart;
+    }
+    .login{
+      grid-area: login;
+    }
+    .signup{
+      grid-area: signup;
+    }
+    .item{
+      margin: 0;
+    }
+  }
+}
