@@ -11,15 +11,17 @@ import Layout from '../components/Layout';
 import MainHeader from '../components/MainHeader';
 import MainMenu from '../components/MainMenu';
 import StudentFeeling from '../components/StudentFeeling';
-import { HomeCategory } from '../custom-types';
+import { OtsvCategory } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { apiGetCategories } from '../utils/apis/categoryApi';
 import Footer from '../components/Footer';
+import { loadList } from '../redux/actions';
+import { Scopes } from '../redux/types';
 
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
 
-const Index = (props: { homeCategories: HomeCategory[] }) => {
+const Index = (props: { homeCategories: OtsvCategory[] }) => {
   useEffect(() => {
     new WOW().init();
   }, [])
@@ -41,7 +43,7 @@ const Index = (props: { homeCategories: HomeCategory[] }) => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async () => {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store }) => {
   const { data, status } = await apiGetCategories();
   const homeCategories = status === 0 ? data : [];
   return {

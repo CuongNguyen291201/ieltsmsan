@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useMemo } from 'react';
-import { HomeCategory } from '../../custom-types';
+import { OtsvCategory } from '../../custom-types';
 import CategoryItem from '../CategoryItem';
 import GridTemplate1 from '../grid/GridTemplate1';
 import SectionLabel from '../SectionLabel';
 import './style.scss';
 
-const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
+const HomeCategorySection = (props: { categories?: OtsvCategory[] }) => {
   const { categories = [] } = props;
   const sectionRows = useMemo(() => {
     const r = Math.ceil(categories.length / 4);
@@ -28,7 +28,6 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
     }
   }, [categories])
 
-  console.log(categories)
   return (
     <div className="main-category-section">
       <SectionLabel></SectionLabel>
@@ -45,7 +44,7 @@ const HomeCategorySection = (props: { categories?: HomeCategory[] }) => {
           <GridTemplate1>
             {categories.map((e) => (
               <Fragment key={e._id}>
-                <CategoryItem theCategory={e} />
+                <CategoryItem category={e} />
               </Fragment>
             ))}
           </GridTemplate1>
