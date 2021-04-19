@@ -1,0 +1,1 @@
+export const getBrowserSlug = (slug: string, type: number, id: string) => `${slug}-${type}-${id}`;

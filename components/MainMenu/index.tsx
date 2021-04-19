@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import './style.scss'
 
 function MainMenu() {
+  const router = useRouter();
   return (
     <div className="main-menu">
       <div className="container">
@@ -12,7 +14,7 @@ function MainMenu() {
           <input type="text" placeholder="tìm kiếm" />
         </div>
         <div className="menu">
-          <div className="menu-item">
+          <div className="menu-item" onClick={() => router.push('/')}>
             Trang chủ
           </div>
           <div className="menu-item document">

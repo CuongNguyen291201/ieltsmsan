@@ -7,11 +7,10 @@ export interface BaseAction {
   target?: string;
 }
 
-export const loadList = (scope: Scopes, payload?: any, target?: string): BaseAction => ({
-  type: ActionTypes.SUCCESS, scope, payload, target
+export const loadListAction = (scope: Scopes, payload?: any, target?: string): BaseAction => ({
+  type: ActionTypes.LOAD_LIST, scope, payload, target
 });
 
-export const failure = (scope: Scopes, payload?: any, target?: string): BaseAction => ({
+export const failureAction = (scope: Scopes, payload?: any, target?: string): BaseAction => ({
   type: ActionTypes.FAILURE, scope, payload, target
 });
-
