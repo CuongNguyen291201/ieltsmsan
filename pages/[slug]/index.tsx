@@ -15,7 +15,7 @@ type SlugTypes = {
   type: number;
   id: string;
   category?: OtsvCategory;
-  childCategories?: OtsvCategory[]
+  childCategories?: OtsvCategory[];
 }
 
 const DEFAULT_PAGE_TYPE = -1;
