@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import LoginModal from '../../sub_modules/common/components/loginModal'
@@ -5,11 +6,12 @@ import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import './style.scss'
 function MainHeader() {
-  let dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const router = useRouter();
   return (
-    <div className="main-header ">
+    <div className="main-header">
       <div className="container">
-        <div className="logo">
+        <div className="logo" onClick={() => router.push('/')}>
           <img src="/home/logo.png" alt="" />
         </div>
         <div className="phone item">

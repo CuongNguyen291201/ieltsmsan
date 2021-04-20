@@ -15,8 +15,6 @@ import { OtsvCategory } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { apiGetCategories } from '../utils/apis/categoryApi';
 import Footer from '../components/Footer';
-import { loadList } from '../redux/actions';
-import { Scopes } from '../redux/types';
 
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
