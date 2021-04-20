@@ -1,9 +1,10 @@
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-import React from 'react'
 import './style.scss'
 
 function MainMenu() {
   const router = useRouter();
+  const [isActiveOnMobile, setisActiveOnMobile] = useState(false)
   return (
     <div className="main-menu">
       <div className="container">
@@ -13,7 +14,10 @@ function MainMenu() {
           </div>
           <input type="text" placeholder="tìm kiếm" />
         </div>
-        <div className="menu">
+        <div className={`${isActiveOnMobile ? 'active-on-mobile' : ''} menu`}>
+          <div className="close-menu-icon" onClick={() => { setisActiveOnMobile(false) }}>
+            <i className="fas fa-arrow-right"></i>
+          </div>
           <div className="menu-item" onClick={() => router.push('/')}>
             Trang chủ
           </div>
@@ -26,11 +30,19 @@ function MainMenu() {
           <div className="menu-item">
             Liên hệ
           </div>
+          <div className="active-course">
+            Kích hoạt khóa học
+          </div>
+
         </div>
-        <div className="active-course">
-          Kích hoạt khóa học
+        <div className="menu-icon" onClick={() => setisActiveOnMobile(true)}>
+          <i className="fas fa-bars"></i>
+        </div>
+        <div className={`${isActiveOnMobile ? 'active-on-mobile' : ''} overlay-on-mobile`}>
+
         </div>
       </div>
+
     </div>
   )
 }

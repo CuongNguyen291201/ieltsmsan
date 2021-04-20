@@ -7,7 +7,7 @@
     display: grid;
     grid-template-areas: "img1 img1 img2" "img3 img4 img4";
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 0px 24px;
+    gap: 24px;
     padding: 20px 0;
     .image1{
       grid-area: img1;
@@ -34,13 +34,13 @@
         background-repeat: no-repeat;
     .title{
       font-weight: bold;
-      font-size: 24px;
+      font-size: 22px;
       color: #FFFFFF;
       margin-bottom: 16px;
     }
     .description{
       font-weight: 500;
-      font-size: 18px;
+      font-size: 16px;
       color: #FC9597;
       text-align: left;
       line-height: 1.5;
@@ -49,6 +49,32 @@
     .box:last-child{
       .description{
         margin-bottom: 0;
+      }
+    }
+  }
+}
+@media(max-width:900px){
+  .home-why{
+    padding-bottom: 16px;
+    
+
+    .container{
+      grid-template-columns: 1fr;
+    }
+    .left{
+      display: none;
+    }
+    .right{
+      background-image: none;
+      background-size: cover;
+      padding: 0 16px;
+      .title{
+        color: #000;
+        font-size: 21px;
+      }
+      .description{
+        color: #A7A7A7;
+        font-size: 16px;
       }
     }
   }

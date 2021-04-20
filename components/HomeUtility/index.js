@@ -9,7 +9,7 @@ function HomeUtility() {
         CÁC TIỆN ÍCH HỌC ONLINE
       </div>
       <div className="home-section-description">
-        Chỉ là cách học đơn giản và vui vẻ nhất mà bạn từng biết đến thôi mà <br />
+        Chỉ là cách học đơn giản và vui vẻ nhất mà bạn từng biết đến thôi mà
         cùng điểm qua có gì hot nhé!
       </div>
       <div className="list container">

@@ -60,3 +60,20 @@
   }
   margin: 16px;
 }
+@media(max-width: 600px){
+  .container-1{
+    .cat-info{
+      margin: 0;
+    padding: 12px;
+    }
+    .cat-title{
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .cat-avatar{
+      img{
+        min-height: 145px;
+      }
+    }
+  }
+}

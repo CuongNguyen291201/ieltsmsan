@@ -1,24 +1,12 @@
 @import '../../styles/variables.scss';
 
 .main-category-section {
-  .section-title {
-    font-weight: 900;
-    font-style: normal;
-    font-size: 36px;
-    line-height: 42px;
-    margin: 20px 0;
-    text-align: center;
-  }
-
-  .section-subtitle {
-    text-align: center;
-    color: #a7a7a7;
-    margin-bottom: 48px;
-  }
-
   .section-main {
     position: relative;
     overflow: hidden;
+    .grid-template-1{
+      margin-bottom: 16px;
+    }
     .section-bgr {
       z-index: -1;
       top: 50%;
@@ -37,6 +25,18 @@
     @media(max-width: $container-max-width) {
       .section-bgr {
         display: none;
+      }
+    }
+  }
+}
+@media(max-width: 600px){
+  .main-category-section{
+    .grid-template-1{
+      padding: 0 16px;
+    }
+    .container-1{
+      &:last-child{
+        margin-bottom: 16px;
       }
     }
   }
