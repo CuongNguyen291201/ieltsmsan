@@ -19,7 +19,7 @@ function MainHeader() {
             <img src="/home/header-phone.png" alt="" />
           </div>
           <div className="text">
-            Hotline: 0947 0909 81
+            <span>Hotline:</span> 0947 0909 81
           </div>
         </div>
         <div className="mail item">
@@ -27,12 +27,12 @@ function MainHeader() {
             <img src="/home/header-mail.png" alt="" />
           </div>
           <div className="text">
-            Email: infor@onthisinhvien.com
+            <span>Email:</span> infor@onthisinhvien.com
           </div>
         </div>
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
-          <div className="head">NEW</div>
+          {/* <div className="head">NEW</div> */}
         </div>
         <div className="cart item">
           <div className="image">

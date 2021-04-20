@@ -6,12 +6,24 @@ import './style.scss'
 function StudentFeeling() {
   const init = () => {
     let browserWidth = document.body.clientWidth
-    let expectedSlideItemWidth = browserWidth * (50 / 100)
-    let slideItemEls = document.getElementsByClassName('student-feeling-slide-item')
-    Array.prototype.forEach.call(slideItemEls, function (el) {
-      // Do stuff here
-      el.style.width = `${expectedSlideItemWidth}px`
-    });
+    if (browserWidth > 900) {
+      let expectedSlideItemWidth = 1270 * (50 / 100)
+      let slideItemEls = document.getElementsByClassName('student-feeling-slide-item')
+      Array.prototype.forEach.call(slideItemEls, function (el) {
+        // Do stuff here
+        el.style.width = `${expectedSlideItemWidth}px`
+      });
+    }
+    else {
+      let expectedSlideItemWidth = browserWidth * (93 / 100)
+      console.log(browserWidth);
+      let slideItemEls = document.getElementsByClassName('student-feeling-slide-item')
+      Array.prototype.forEach.call(slideItemEls, function (el) {
+        // Do stuff here
+        el.style.width = `${expectedSlideItemWidth}px`
+      });
+    }
+
 
     // expectedSlideItemWidth
   }
@@ -32,71 +44,82 @@ function StudentFeeling() {
       currentSlideIndex = currentSlideIndex + 1
     }
     let slideEl = document.querySelector('.student-feeling .slide')
-    let gap = currentSlideIndex * (52)
+    let gap
+    let browserWidth = document.body.clientWidth
+    if (browserWidth > 900) {
+      gap = currentSlideIndex * (50)
+    }
+    else {
+      gap = currentSlideIndex * (104)
+    }
+
     slideEl.style.transform = `translateX(-${gap}%)`
   }
   useEffect(() => {
-    const hihi = setInterval(switchSlide, 2000)
+    const hihi = setInterval(switchSlide, 3000)
     return () => {
       clearInterval(hihi)
     }
+
   }, [])
 
   return (
     <>
       <SectionLabel></SectionLabel>
       <div className="student-feeling">
-        <div className="text-1">
-          <div className="text">
-            ONTHISINHVIEN.COM
+        <div className="container">
+          <div className="text-1">
+            <div className="text">
+              ONTHISINHVIEN.COM
         </div>
-          <div className="sign"></div>
-        </div>
-        <div className="text-2">
-          CẢM NHẬN CỦA HỌC VIÊN
+            <div className="sign"></div>
+          </div>
+          <div className="text-2">
+            CẢM NHẬN CỦA HỌC VIÊN
       </div>
-        <div className="text-3">
-          Năm 2020, chúng tôi có hàng ngàn sinh viên từ các trường đại học
+          <div className="text-3">
+            Năm 2020, chúng tôi có hàng ngàn sinh viên từ các trường đại học
       </div>
-        <div className="slide-wrap">
-          <div className="slide">
-            <div className="student-feeling-slide-item">
-              <div className="image">
-                <img src="/home/student-feeling-1.png" alt="" />
+          <div className="slide-wrap">
+            <div className="slide">
+              <div className="student-feeling-slide-item">
+                <div className="image">
+                  <img src="/home/student-feeling-1.png" alt="" />
+                </div>
+                <div className="description">
+                  Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
+                  tài liệu có hệ thống và dễ theo dõi
+                  Tuy lớp hơi đông,
+                  chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
+                  Gửi lời cảm ơn và ngàn tim đến chị
+            </div>
               </div>
-              <div className="description">
-                Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
-                tài liệu có hệ thống và dễ theo dõi
-                Tuy lớp hơi đông,
-                chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
-                Gửi lời cảm ơn và ngàn tim đến chị
-            </div>
-            </div>
 
-            <div className="student-feeling-slide-item">
-              <div className="image">
-                <img src="/home/student-feeling-2.png" alt="" />
+              <div className="student-feeling-slide-item">
+                <div className="image">
+                  <img src="/home/student-feeling-2.png" alt="" />
+                </div>
+                <div className="description">
+                  Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
+                  tài liệu có hệ thống và dễ theo dõi
+                  Tuy lớp hơi đông,
+                  chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
+                  Gửi lời cảm ơn và ngàn tim đến chị
+            </div>
               </div>
-              <div className="description">
-                Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
-                tài liệu có hệ thống và dễ theo dõi
-                Tuy lớp hơi đông,
-                chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
-                Gửi lời cảm ơn và ngàn tim đến chị
-            </div>
-            </div>
 
-            <div className="student-feeling-slide-item">
-              <div className="image">
-                <img src="/home/student-feeling-1.png" alt="" />
-              </div>
-              <div className="description">
-                Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
-                tài liệu có hệ thống và dễ theo dõi
-                Tuy lớp hơi đông,
-                chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
-                Gửi lời cảm ơn và ngàn tim đến chị
+              <div className="student-feeling-slide-item">
+                <div className="image">
+                  <img src="/home/student-feeling-1.png" alt="" />
+                </div>
+                <div className="description">
+                  Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
+                  tài liệu có hệ thống và dễ theo dõi
+                  Tuy lớp hơi đông,
+                  chật nhưng bù lại đang mùa đông nên cũng khá ấm ^^
+                  Gửi lời cảm ơn và ngàn tim đến chị
             </div>
+              </div>
             </div>
           </div>
         </div>

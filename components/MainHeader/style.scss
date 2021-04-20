@@ -37,21 +37,41 @@
 }
 @media(max-width:600px){
   .main-header{
+    padding: 16px;
     .container{
       display: grid;
       grid-template-areas: "phone phone mail mail" "dealshock cart login signup";
+      justify-content: space-between;
+      height: auto;
     }
     .logo{
-      grid-area: logo;
+      display: none;
+    }
+    .item{
+      margin: 0;
+      // padding: 10px 16px;
     }
     .phone{
       grid-area: phone;
+      margin-bottom: 12px;
+      .text{
+        span{
+          display: none;
+        }
+      }
     }
     .mail{
-      grid-area: mail;;
+      grid-area: mail;
+      margin-bottom: 12px;
+      .text{
+        span{
+          display: none;
+        }
+      }
     }
     .deal-shock{
       grid-area: dealshock;
+      
     }
     .cart{
       grid-area: cart;
@@ -62,8 +82,6 @@
     .signup{
       grid-area: signup;
     }
-    .item{
-      margin: 0;
-    }
+    
   }
 }

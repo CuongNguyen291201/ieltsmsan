@@ -7,7 +7,6 @@ import IconEmail from '../../public/home/icon-email.png';
 const ContactInfoPanel = () => {
   return (
     <div className="contact-info-panel">
-      <img className="contact-bgr" src={HomeFooterBgr} alt="contact-info-bgr" />
       <div className="contact-info">
         <img className="logo" src={FooterLogo} alt="logo" />
 
@@ -27,20 +26,25 @@ const ContactInfoPanel = () => {
         </div>
 
 
-        <section>
-          <p style={{ marginTop: '50px', marginBottom: '20px', fontSize: '12px' }}>
-            <strong>Công ty Cổ phần Đầu tư và Phát triển Koolsoft</strong>
+        <div className="text">
+          <p className="text-1">
+            Công ty Cổ phần Đầu tư và Phát triển Koolsoft
           </p>
-          <p style={{ fontSize: '12px' }}>
-            <b>MST</b>: 0106353044 do sở kế hoạch và đầu tư thành phố Hà Nội cấp lần đầu ngày 04/11/2013
-            <br />
-            <b>Email</b>: info@onthisinhvien.com
-            <br />
-            <b>Địa chỉ</b>: Số 5B N2 TT5, Khu đô thị Bắc Linh Đàm Phường Đại Kim, Quận Hoàng Mai, TP Hà Nội
-            <br />
-            <b>Hotline</b>: 0947 0909 81
+          <p className="text-2">
+            <div>
+              <b>MST</b>: 0106353044 do sở kế hoạch và đầu tư thành phố Hà Nội cấp lần đầu ngày 04/11/2013
+            </div>
+            <div>
+              <b>Email</b>: info@onthisinhvien.com
+            </div>
+            <div>
+              <b>Địa chỉ</b>: Số 5B N2 TT5, Khu đô thị Bắc Linh Đàm Phường Đại Kim, Quận Hoàng Mai, TP Hà Nội
+            </div>
+            <div>
+              <b>Hotline</b>: 0947 0909 81
+            </div>
           </p>
-        </section>
+        </div>
       </div>
     </div>
   )

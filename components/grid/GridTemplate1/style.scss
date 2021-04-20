@@ -11,6 +11,8 @@
 
 @media (max-width: $mobile-max-width) {
   .grid-template-1 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 16px;
   }
 }

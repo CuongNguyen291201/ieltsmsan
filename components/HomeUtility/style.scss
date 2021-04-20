@@ -19,3 +19,23 @@
     }
   }
 }
+@media(max-width: 900px ){
+  .home-utility{
+    .list{
+      flex-wrap: wrap;
+      justify-content: space-around;
+      .list-item{
+        width: 50%;
+        padding: 0 16px;
+        margin-bottom: 8px;
+        img{
+          width: 80px;
+          margin-bottom: 12px;
+        }
+        .description{
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

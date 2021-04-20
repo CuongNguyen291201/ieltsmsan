@@ -85,3 +85,22 @@
     }
   }
 }
+@media(max-width:900px){
+  .home-news{
+    
+    .news-header{
+      padding: 0 16px;
+        .section-label{
+          display: block;
+        }
+      }
+      .slide-view{
+        .slide{
+          .slide-item{
+            height: 200px;
+          }
+        } 
+      }
+    }
+  
+}
