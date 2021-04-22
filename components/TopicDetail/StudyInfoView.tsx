@@ -29,9 +29,9 @@ const StudyInfoView = (props: { topic: any }) => {
     if (currentUser) {
       getDataDetailExerciseFC();
     } else {
-      setTimeout(() => dispatch(updateTopicExerciseAction(parentId, null, null, null)), 1000);
+      dispatch(updateTopicExerciseAction(parentId, null, null, null));
     }
-  }, []);
+  }, [currentUser]);
 
   return (
     <>
