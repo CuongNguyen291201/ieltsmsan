@@ -17,7 +17,7 @@ const CourseDetail = (props: { course: Course }) => {
 
   return (
     <>
-      <div className="container">
+      <div className="container course-detail">
         <div className="course-title">
           {course.name}
         </div>

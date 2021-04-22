@@ -15,6 +15,9 @@ import { OtsvCategory } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { apiGetCategories } from '../utils/apis/categoryApi';
 import Footer from '../components/Footer';
+import { getUserFromToken } from '../sub_modules/common/api/userApis';
+import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
+import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
 
 const isServer = typeof window === 'undefined'
 const WOW = !isServer ? require('wow.js') : null
@@ -41,7 +44,13 @@ const Index = (props: { homeCategories: OtsvCategory[] }) => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store }) => {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
+  const userInfo = await getUserFromToken(req);
+  if (userInfo) {
+    store.dispatch(loginSuccessAction(userInfo));
+  } else {
+    removeCookie(TOKEN);
+  }
   const { data, status } = await apiGetCategories();
   const homeCategories = status === 0 ? data : [];
   return {

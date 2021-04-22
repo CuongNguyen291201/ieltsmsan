@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses_ts';
-import { getBrowserSlug } from '../../utils';
+import { getBrowserSlug, numberFormat } from '../../utils';
 import Container1 from '../containers/Container1';
 import Ratings from '../Ratings';
 import './style.scss';
@@ -22,16 +22,13 @@ const CourseItem = (props: { course: Course }) => {
       <div className="crs-avatar" onClick={onClickItem}>
         <img src={course.avatar || itemAvatar} alt={course.name} />
       </div>
-
       <div className="crs-info">
         <div className="crs-title" onClick={onClickItem}>
           {course.name}
         </div>
-
         <div className="crs-desc">
           {course.shortDesc}
         </div>
-
         <div className="crs-rating">
           <div className="crs-point">{String(4.6).replace('.', ',')}</div>
           <div className="vote-star">
@@ -41,10 +38,9 @@ const CourseItem = (props: { course: Course }) => {
         </div>
 
         <div className="crs-price">
-          <div className="crs-discount-price">{course.cost - course.discountPrice} VNĐ</div>
-          {course.discountPrice !== 0 && <div className="crs-origin-price">{course.cost} VNĐ</div>}
+          <div className="crs-discount-price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
+          {course.discountPrice !== 0 && <div className="crs-origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
         </div>
-
         <div className="btn-video">
           Video
         </div>

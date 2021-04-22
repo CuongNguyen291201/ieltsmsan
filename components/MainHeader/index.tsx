@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppState } from '../../redux/reducers'
 import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import './style.scss'
 function MainHeader() {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const router = useRouter();
   return (
     <div className="main-header">
@@ -39,12 +41,24 @@ function MainHeader() {
             <img src="/home/header-cart.png" alt="" />
           </div>
         </div>
-        <div className="login text item" onClick={() => dispatch(showLoginModalAction(true))}>
-          Đăng nhập
-        </div>
-        <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
-          Đăng ký
-        </div>
+        {
+          currentUser ? (
+            <div className="current-user-wrap">
+              <div className="current-user-text">Hi, {currentUser.name}</div>
+            </div>
+
+          ) : (
+              <>
+                <div className="login text item" onClick={() => dispatch(showLoginModalAction(true))}>
+                  Đăng nhập
+            </div>
+                <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
+                  Đăng ký
+            </div>
+              </>
+            )
+        }
+
         <LoginModal></LoginModal>
         <RegisterModal></RegisterModal>
       </div>
