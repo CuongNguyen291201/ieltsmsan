@@ -101,15 +101,6 @@ function GamePage() {
   const router = useRouter()
 
   useEffect(() => {
-    const { id } = router.query;
-    if (!currentTopic && id) {
-      getTopicByIdApi(id)
-        .then((topic) => dispatch(setCurrrentTopicAction(topic)))
-        .catch(() => dispatch(setCurrrentTopicAction(null)))
-    }
-  })
-
-  useEffect(() => {
     const parentId = router.query.id
     if (!currentTopic || !parentId) {
       router.back()
