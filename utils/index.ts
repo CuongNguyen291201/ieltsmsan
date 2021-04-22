@@ -37,3 +37,5 @@ export const genUnitScore = (barem: number) => {
       return " %"
   }
 }
+
+export const numberFormat = new Intl.NumberFormat();

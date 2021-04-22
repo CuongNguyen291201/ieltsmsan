@@ -94,8 +94,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       }
     }
     return;
-  } catch (_) {
-    console.log('Internal Server Error');
+  } catch (e) {
+    console.log('Internal Server Error', e);
     return {
       props: { type: ERROR_PAGE }
     };

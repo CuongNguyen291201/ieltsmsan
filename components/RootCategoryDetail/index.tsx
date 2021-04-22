@@ -62,14 +62,17 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
 
   return (
     <>
-      <div className="container">
+      <div className="container root-category-detail">
         <div className="nav-cat">
-          <div className="title-cat">
-            {category.titleSEO || category.name}
+          <div className="head">
+            <div className="title-cat">
+              {category.titleSEO || category.name}
+            </div>
+            <div className="search-area">
+              <SearchBox />
+            </div>
           </div>
-          <div className="search-area">
-            <SearchBox />
-          </div>
+
         </div>
         {childCategories?.map((e) => (
           <Fragment key={e._id}>

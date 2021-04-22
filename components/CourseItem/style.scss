@@ -10,60 +10,67 @@
 }
 
 .crs-info {
-  margin: 12px 18px;
-  * {
-    display: flex;
-    align-items: center;
-  }
+  padding: 12px;
   .crs-title {
-    font-weight: 900;
-    color: #ec1f24;
-    font-size: 12px;
-    height: 28px;
-    max-height: 28px;
-    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    color: #EC1F24;
+    margin-bottom: 4px;
+    height: 32px;
   }
 
   .crs-desc {
     font-weight: 500;
     color: #9e9e9e;
-    font-size: 10px;
-    margin-bottom: 12px;
+    font-size: 15px;
+    margin-bottom: 8px;
+    height: 32px;
   }
 
   .crs-rating {
     display: flex;
     align-items: center;
-    margin: 12px 0;
-    * {
-      font-size: 10px;
-    }
+    margin-bottom: 8px;
     
     .crs-point {
-      margin-right: 12px;
-      font-weight: 500;
+      margin-right: 8px;
+      font-weight: 700;
+      font-size: 15px;
     }
 
     .vote-star {
-      margin-right: 12px;
+      margin-right: 8px;
+      .rating{
+        display: flex;
+        .star-full,.star-half{
+          img{
+            width: 14px;
+            height: 14px;
+            margin-right: 2px;
+          }
+        }
+      }
+    }
+    .crs-mem{
+      font-size: 15px;
     }
   }
 
   .crs-price {
     display: flex;
     align-items: center;
-    margin: 10px 0;
-    * {
-      font-size: 10px;
-      margin-right: 12px;
-    }
+    margin-bottom: 8px;
     .crs-discount-price {
-      font-weight: bold;
-      color: #ec1f24;
+      color: #EC1F24;
+      font-weight: 700;
+      margin-right: 16px;
+      letter-spacing: 1px;
     }
     .crs-origin-price {
-      color: #ec1f24;
-      text-decoration-line: line-through;
+      color: #EC1F24;
+      font-weight: 700;
+      text-decoration: line-through;
+      letter-spacing: 1px;
     }
   }
 
@@ -78,5 +85,21 @@
     width: 69px;
     font-weight: bold;
     color: #ec1f24;
+  }
+}
+@media(max-width: 900px){
+  .crs-info{
+    .crs-title{
+      font-size: 14px;
+      overflow: hidden;
+    }
+    .crs-desc{
+      font-size: 14px;
+    }
+    .crs-price{
+      .crs-origin-price{
+        display: none;
+      }
+    }
   }
 }
