@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses_ts';
@@ -9,12 +10,12 @@ import Ratings from '../Ratings';
 import './style.scss';
 
 
-const CourseItem = (props: { course: Course }) => {
-  const { course } = props;
+const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
+  const { category, course } = props;
   const router = useRouter();
   const courseBrowserSlug = useMemo(() => getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id), [course]);
   const onClickItem = useCallback(() => {
-    router.push(courseBrowserSlug);
+    router.push({ pathname: courseBrowserSlug, query: { root: category?._id ?? '' } });
   }, [course]);
 
   return (

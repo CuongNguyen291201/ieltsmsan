@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import React from 'react';
+import React, { useMemo } from 'react';
+import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
 import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
@@ -16,6 +17,7 @@ import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userA
 import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses_ts';
+import { getBrowserSlug } from '../../utils';
 import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
 
@@ -41,10 +43,31 @@ const Slug = (props: SlugTypes) => {
     [DEFAULT_PAGE_TYPE]: <div>404</div>,
     [ERROR_PAGE]: <div>500</div>
   }
+
+  const breadcrumbItems = useMemo(() => {
+    const items: { name: string; slug?: string }[] = [];
+    if (type === CATEGORY_DETAIL_PAGE_TYPE) {
+      const { category } = props;
+      items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+    } else if (type === COURSE_DETAIL_PAGE_TYPE) {
+      const { category, course } = props;
+      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+      items.push({ name: course.name, slug: getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id) });
+    } else if (type === TOPIC_DETAIL_PAGE_TYPE) {
+      const { category, course, topic } = props;
+      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+      items.push(
+        { name: course.name, slug: getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id) },
+        { name: topic.name, slug: getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id) }
+      );
+    }
+    return items;
+  }, [type]);
   return (
     <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
       <MainHeader />
       <MainMenu />
+      <Breadcrumb items={breadcrumbItems} />
       {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
     </Layout>
   )
@@ -70,27 +93,42 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       }
       return {
         props: {
-          id, type, slug, category: categoryRes.data, childCategories: childCategoriesRes.data
+          id, type, slug, category, childCategories
         }
       }
     } else if (type === COURSE_DETAIL_PAGE_TYPE) {
+      const { root } = query;
       store.dispatch(setCurrentCourseAction(null, true));
       let course: Course = null;
+      let category: OtsvCategory = null;
       const { data, status } = await apiGetCourseById(id);
       if (status === response_status_codes.success) course = data;
+      if (root) {
+        const { data, status } = await apiGetCategoryById(root as string);
+        if (status === response_status.success) category = data;
+      }
       store.dispatch(setCurrentCourseAction(course));
       return {
         props: {
-          id, type, slug, course
+          id, type, slug, category, course
         }
       }
     } else if (type === TOPIC_DETAIL_PAGE_TYPE) {
+      const { root } = query;
+      let category: OtsvCategory = null;
+      let course: Course = null;
       store.dispatch(setCurrrentTopicAction(null, true));
       const topic = await getTopicByIdApi(id);
       if (!topic) return { props: { type: ERROR_PAGE } };
+      const courseRes = await apiGetCourseById(topic.courseId);
+      if (courseRes.status === response_status_codes.success) course = courseRes.data;
+      if (root) {
+        const { data, status } = await apiGetCategoryById(root as string);
+        if (status === response_status.success) category = data;
+      }
       store.dispatch(setCurrrentTopicAction(topic));
       return {
-        props: { id, slug, type, topic }
+        props: { id, slug, type, category, course, topic }
       }
     }
     return;

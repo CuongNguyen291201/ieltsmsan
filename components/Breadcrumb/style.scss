@@ -1,0 +1,20 @@
+.breadcrumb {
+  border-bottom: 1px solid #ccc;
+  .main-content {
+    padding: 7px 0;
+    .breadcrumb-item, .breadcrumb-caret {
+      margin-right: 7px;
+    }
+    .breadcrumb-item {
+      cursor: pointer;
+      transition: all 0.2s;
+      &:hover {
+        text-decoration: underline;
+        color: #ec1f24;
+      }
+      &.active {
+        color: #ec1f24;
+      }
+    }
+  }
+}
