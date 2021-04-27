@@ -45,17 +45,17 @@ const Slug = (props: SlugTypes) => {
   }
 
   const breadcrumbItems = useMemo(() => {
-    const items: { name: string; slug?: string }[] = [];
+    const items: { name: string; slug?: string; addRoot?: boolean }[] = [];
     if (type === CATEGORY_DETAIL_PAGE_TYPE) {
       const { category } = props;
-      items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+      items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id), addRoot: false });
     } else if (type === COURSE_DETAIL_PAGE_TYPE) {
       const { category, course } = props;
-      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id), addRoot: false });
       items.push({ name: course.name, slug: getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id) });
     } else if (type === TOPIC_DETAIL_PAGE_TYPE) {
       const { category, course, topic } = props;
-      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id) });
+      if (category) items.push({ name: category.name, slug: getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id), addRoot: false });
       items.push(
         { name: course.name, slug: getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id) },
         { name: topic.name, slug: getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id) }
