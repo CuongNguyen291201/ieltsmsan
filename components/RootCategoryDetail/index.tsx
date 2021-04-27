@@ -1,12 +1,12 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { Course } from '../../sub_modules/share/model/courses_ts';
 import { apiGetPagedCoursesByCategory, apiGetSkippedCoursesByCategory } from '../../utils/apis/courseApi';
 import CourseItem from '../CourseItem';
 import GridTemplate2 from '../grid/GridTemplate2';
-import SearchBox from '../SearchBox';
 import Pagination from '../Pagination';
+import SearchBox from '../SearchBox';
 import './style.scss';
 
 type PaginationCourses = { totalPages: number; data: { [page: number]: Course[] }; currentPage: number };
@@ -87,7 +87,7 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
                   {
                     pages[e._id]?.data[pages[e._id].currentPage]?.map((e) => (
                       <Fragment key={e._id}>
-                        <CourseItem course={e} />
+                        <CourseItem category={category} course={e} />
                       </Fragment>
                     ))
                   }
