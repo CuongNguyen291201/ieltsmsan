@@ -170,7 +170,7 @@ function GamePage() {
       statusGame = GAME_STATUS_PREPARE_REVIEW
     }
     getCardByIdsFC()
-    dispatch(prepareStartGame(statusGame, studyScore, myCardData, currentTopic.type == TOPIC_TYPE_EXERCISE))
+    dispatch(prepareStartGame(statusGame, studyScore, myCardData, false))
   }, [currentTopic, currentUser])
   useEffect(() => {
     const message = 'Do you want to leave?';

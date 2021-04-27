@@ -49,7 +49,7 @@ const TopicTreeNode = (props: { topic: any; }) => {
         return;
       }
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
-      router.push(topicDetailSlug);
+      router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }
   }
 
