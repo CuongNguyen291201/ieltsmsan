@@ -1,9 +1,9 @@
-import router from 'next/router';
-import { useDispatch } from 'react-redux';
 import { usePaginationState } from '../../hooks/pagination';
+import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
 import PanelContainer from '../containers/PanelContainer';
+import Pagination from '../Pagination';
 import './lesson-info.scss';
 
 const LessonInfoView = (props: { topic: any }) => {
@@ -11,9 +11,12 @@ const LessonInfoView = (props: { topic: any }) => {
   const fetchDocuments = async (args: { parentId: string; lastRecord?: any; skip?: number }) => {
     return fetchPaginationAPI<any>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
   }
-  const dispatch = useDispatch();
-
-  const { pages, onChangePage } = usePaginationState<any>({ keys: [topic._id], keyName: 'parentId', fetchFunction: fetchDocuments });
+  const { pages, onChangePage } = usePaginationState<any>({
+    keys: [topic._id],
+    keyName: 'parentId',
+    fetchFunction: fetchDocuments,
+    filters: { field: 'createDate', asc: false }
+  });
 
   return (
     <div className="lesson-detail">
@@ -25,12 +28,22 @@ const LessonInfoView = (props: { topic: any }) => {
         {pages[topic._id]?.data[pages[topic._id].currentPage]?.map((e, i) => (
           <div key={i} className="doc-container">
             <div className="file-title">
-              <i className="fas fa-file-pdf" />
-              <div className="doc-title" onClick={() => router.push(e.itemsDetail[0].url)}>{e.title}</div>
+              <i className="far fa-file-pdf file-type-icon" />
+              <div className="doc-title" onClick={() => downloadFromURL(e.itemsDetail[0].url, e.itemsDetail[0].type, e.title)}> {e.title} </div>
             </div>
 
+            <i className="far fa-download download-icon" onClick={() => downloadFromURL(e.itemsDetail[0].url, e.itemsDetail[0].type, e.title)} />
           </div>
         ))}
+
+        {pages[topic._id]?.totalPages > 1 && <div className="item-pagination">
+          <Pagination
+            total={pages[topic._id]?.totalPages}
+            active={pages[topic._id]?.currentPage}
+            start={1}
+            onClick={(page) => onChangePage({ page, key: topic._id })}
+          />
+        </div>}
       </PanelContainer>
 
       <PanelContainer title="Hoạt động gần đây">

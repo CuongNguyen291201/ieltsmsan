@@ -1,3 +1,5 @@
+import { saveAs } from 'file-saver';
+import { extension } from 'mime-types';
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
 
 export const formatTimeClock = (time: any) => {
@@ -39,3 +41,8 @@ export const genUnitScore = (barem: number) => {
 }
 
 export const numberFormat = new Intl.NumberFormat();
+
+export const downloadFromURL = (url: string, contentType: string = '', filename: string = 'download') => {
+  const fileExtension = extension(contentType);
+  return saveAs(url, `${encodeURIComponent(filename)}${fileExtension ? `.${fileExtension}` : ''}`);
+}

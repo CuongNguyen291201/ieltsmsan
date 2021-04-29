@@ -9,11 +9,12 @@ type PaginationData<R> = {
 export function usePaginationState<R>(args: {
   keys: string[];
   keyName: string;
-  fetchFunction: (args: { lastRecord?: R; skip?: number } & any) => Promise<{ total: number; data: Array<R> }>
+  fetchFunction: (args: { lastRecord?: R; skip?: number, [x: string]: any }) => Promise<{ total: number; data: Array<R> }>
   itemsPerPage?: number;
   filters?: any;
 }) {
-  const { keys, keyName, filters = {}, itemsPerPage = 10, fetchFunction } = args;
+  const { keys, keyName, itemsPerPage = 10, fetchFunction } = args;
+  const filters = { ...args.filters, limit: itemsPerPage };
   const [isInit, setInit] = useState(false);
   const [pages, setPages] = useState<{
     [key: string]: PaginationData<R>

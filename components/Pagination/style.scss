@@ -1,0 +1,15 @@
+.page-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #a5222a;
+  width: 26px;
+  height: 26px;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &.active {
+    color: white;
+    background: #a5222a;
+  }
+}
