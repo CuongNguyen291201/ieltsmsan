@@ -1,13 +1,16 @@
+import { useRef } from 'react';
 import { usePaginationState } from '../../hooks/pagination';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
+import CommentPanel from '../CommentPanel';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
 import './lesson-info.scss';
 
 const LessonInfoView = (props: { topic: any }) => {
   const { topic } = props;
+
   const fetchDocuments = async (args: { parentId: string; lastRecord?: any; skip?: number }) => {
     return fetchPaginationAPI<any>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
   }
@@ -51,7 +54,7 @@ const LessonInfoView = (props: { topic: any }) => {
       </PanelContainer>
 
       <PanelContainer title="Bình luận">
-
+          <CommentPanel />
       </PanelContainer>
 
     </div>
