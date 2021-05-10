@@ -1,15 +1,17 @@
+import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import Topic from '../../sub_modules/share/model/topic';
 import { TopicAction } from '../actions/topic.action';
 import { ActionTypes, Scopes } from '../types';
 
 export interface TopicState {
-  mainTopics: Array<any>;
+  mainTopics: Array<Topic>;
   mainTopicsLoading: boolean;
   error: boolean;
-  currentTopic: any;
+  currentTopic: Topic | null;
   currentTopicLoading: boolean;
   studyScore: StudyScore | null;
-  myCardData: any;
+  myCardData: MyCardData;
   isLoadedDetailTopic: boolean;
 }
 

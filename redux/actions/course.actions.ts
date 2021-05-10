@@ -1,5 +1,5 @@
 import { BaseAction } from '.';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
 import { ActionTypes, Scopes } from '../types';
 
 export interface CourseAction extends BaseAction {

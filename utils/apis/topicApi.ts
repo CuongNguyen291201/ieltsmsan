@@ -1,6 +1,6 @@
 import { POST_API, POST_REQ } from '../../sub_modules/common/api'
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { MyCardDataModel } from '../../sub_modules/share/model/myCardData';
+import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import { TopicExercise } from '../../sub_modules/share/model/topicExercise';
 
@@ -21,10 +21,18 @@ export const apiGetDataDetailExercise = async (args: {
   if (response.status === response_status_codes.success) {
     const { topicExercise, studyScore, myCardData } = response.data;
     return {
-      topicExercise: topicExercise ? TopicExercise(topicExercise) : null,
+      topicExercise: topicExercise ? new TopicExercise(topicExercise) : null,
       studyScore: studyScore ? new StudyScore(studyScore) : null,
-      myCardData: myCardData ? MyCardDataModel(myCardData) : null
+      myCardData: myCardData ? new MyCardData(myCardData) : null
     };
+  }
+  return null;
+}
+
+export const apiGetTopicById = async (topicId: string) => {
+  const response = await POST_API('get-topic-by-id', { topicId });
+  if (response.status === response_status_codes.success) {
+    return response.data;
   }
   return null;
 }

@@ -1,0 +1,40 @@
+{
+  "_id": "6087d0c7f0a753147c9fa3f4",
+  "status": 1,
+  "type": 0,
+  "autoPlay": 0,
+  "startTime": 1604559769022.0,
+  "endTime": 0,
+  "lastUpdate": 0,
+  "courseId": "60795e55b2fb7911d8a96520",
+  "videoId": "",
+  "url": "https://www.youtube.com/watch?v=KAHKP313P2I",
+  "questionDatas": [
+    {
+      "index": 0,
+      "status": 1,
+      "type": 0,
+      "startTime": 30,
+      "timePractice": 300,
+      "_id": "5fa3a43173bddd0edd7cc673",
+      "title": "1",
+      "cardIds": [
+        "60829440c2127922156708cd",
+        "608295b6c2127922156708ce"
+      ]
+    },
+    {
+      "index": 1,
+      "status": 1,
+      "type": 0,
+      "startTime": 60,
+      "timePractice": 300,
+      "_id": "5fa3a73f73bddd0edd7cc687",
+      "title": "2",
+      "cardIds": [
+        "60829651c2127922156708cf"
+      ]
+    }
+  ],
+  "title": "Anh văn 12"
+}

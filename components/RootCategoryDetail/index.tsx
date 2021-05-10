@@ -1,7 +1,7 @@
 import { Fragment, useMemo } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import { usePaginationState } from '../../hooks/pagination';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
 import CourseItem from '../CourseItem';

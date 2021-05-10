@@ -3,10 +3,7 @@ import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
 import './style.scss';
 
 const CommentPanel = (props: any) => {
-  const commentRef = useRef<HTMLTextAreaElement>();
-  const onInputText = () => {
-    
-  }
+  const commentRef = useRef<HTMLSpanElement>();
 
   return (
     <div className="cmt-container">
@@ -15,7 +12,7 @@ const CommentPanel = (props: any) => {
           <img src={defaultAvatar} alt="" />
         </div>
 
-        <textarea className="main-comment-box" autoComplete="off" placeholder="Bình luận" onInput={() => onInputText()} ref={commentRef} />
+        <span className="main-comment-box" contentEditable role="textbox" onInput={(e) => { e.preventDefault(); }} ref={commentRef} />
         <div className="cmt-options">
           <button type="button" className="btn btn-send">
             <i className="far fa-paper-plane" />

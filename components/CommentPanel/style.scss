@@ -7,7 +7,7 @@
       margin-left: 10px;
       padding: 8px;
       min-height: 35px;
-      height: 35px;
+      // height: 35px;
       overflow: hidden;
       resize: none;
       width: 100%;
@@ -15,6 +15,10 @@
       border-radius: 3px;
       box-shadow: none;
       outline: none;
+      &[contenteditable]:empty::before {
+        content: "Bình luận";
+        color: gray;
+      }
     }
 
     .cmt-options {

@@ -7,3 +7,6 @@
 [submodule "sub_modules/share"]
 	path = sub_modules/share
 	url = git@bitbucket.org:ksdevs/elearning-model.git
+[submodule "sub_modules/scenario"]
+	path = sub_modules/scenario
+	url = git@bitbucket.org:ksdevs/video-scenario.git
