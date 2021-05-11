@@ -1,5 +1,8 @@
 .doc-container {
   transition: all 0.4s;
+  &:last-child {
+    border-bottom: 1px solid #ddd;
+  }
   &:hover {
     background-color: #fafafa;
   }
@@ -32,8 +35,20 @@
 }
 
 .item-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin: 15px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 15px 10px;
+}
+
+.image-avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  img {
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+  }
 }

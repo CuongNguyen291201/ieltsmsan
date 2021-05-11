@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMainTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
 import './style.scss';
 import TopicTree from './TopicTree';
 

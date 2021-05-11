@@ -1,4 +1,4 @@
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
 import { CourseAction } from '../actions/course.actions';
 import { ActionTypes, Scopes } from '../types';
 

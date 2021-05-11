@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
 import { getBrowserSlug, numberFormat } from '../../utils';
 import Container1 from '../containers/Container1';
 import Ratings from '../Ratings';

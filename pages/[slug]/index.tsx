@@ -11,15 +11,16 @@ import { OtsvCategory } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
-import { getTopicByIdApi } from '../../sub_modules/common/api/topicApi';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
+import Topic from '../../sub_modules/share/model/topic';
 import { getBrowserSlug } from '../../utils';
 import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
+import { apiGetTopicById } from '../../utils/apis/topicApi';
 
 type SlugTypes = {
   slug: string;
@@ -28,7 +29,7 @@ type SlugTypes = {
   category?: OtsvCategory;
   childCategories?: OtsvCategory[];
   course?: Course;
-  topic?: any
+  topic?: Topic
 }
 
 const DEFAULT_PAGE_TYPE = -1;
@@ -118,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       let category: OtsvCategory = null;
       let course: Course = null;
       store.dispatch(setCurrrentTopicAction(null, true));
-      const topic = await getTopicByIdApi(id);
+      const topic = await apiGetTopicById(id);
       if (!topic) return { props: { type: ERROR_PAGE } };
       const courseRes = await apiGetCourseById(topic.courseId);
       if (courseRes.status === response_status_codes.success) course = courseRes.data;

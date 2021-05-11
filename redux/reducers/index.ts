@@ -4,7 +4,8 @@ import userReducer, { IUserState } from '../../sub_modules/common/redux/reducers
 import { topicReducer, TopicState } from './topic.reducer';
 import { courseReducer, CourseState } from './course.reducer';
 import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
-import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer'
+import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
+import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
 
 export interface AppState {
   categoryReducer: CategoryState;
@@ -12,7 +13,8 @@ export interface AppState {
   topicReducer: TopicState;
   courseReducer: CourseState;
   prepareGameReducer: PrepareGameState;
-  gameReducer: IGameState
+  gameReducer: IGameState;
+  scenarioReducer: ScenarioState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -21,5 +23,6 @@ export const rootReducer = combineReducers<AppState>({
   topicReducer,
   courseReducer,
   prepareGameReducer,
-  gameReducer
+  gameReducer,
+  scenarioReducer
 });

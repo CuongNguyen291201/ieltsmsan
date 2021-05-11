@@ -1,5 +1,5 @@
 import { POST_API, POST_REQ } from '../../sub_modules/common/api'
-import { Course, ICourse } from '../../sub_modules/share/model/courses_ts'
+import { Course, ICourse } from '../../sub_modules/share/model/courses'
 
 export const apiSeekCoursesByCategory = (args: {
   categoryId: string;
