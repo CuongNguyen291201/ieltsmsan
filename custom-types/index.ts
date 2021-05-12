@@ -1,3 +1,3 @@
-import { Category } from '../sub_modules/share/model/category_ts';
+import { Category } from '../sub_modules/share/model/category';
 
 export type OtsvCategory = Category & { totalCourses?: number };
