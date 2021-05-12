@@ -1,4 +1,4 @@
-import { GAME_STATUS_NONE } from '../../sub_modules/game/src/gameConfig';
+import { GAME_STATUS_NONE, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { CARD_BOX_NONE } from '../../sub_modules/share/constraint';
 import { PrepareGameAction } from '../actions/prepareGame.actions';
 import { ActionTypes, Scopes } from '../types';
@@ -20,7 +20,7 @@ export function prepareGameReducer(state = initialState, action: PrepareGameActi
     switch(action.type) {
       case ActionTypes.PRE_GAME_REVIEW_BOX:
         return {
-          ...state, boxGame: action.payload
+          ...state, boxGame: action.payload, statusGame: GAME_STATUS_PREPARE_REVIEW
         }
 
       case ActionTypes.PRE_REVIEW_GAME:
