@@ -20,6 +20,7 @@
     }
   }
   .avatar{
+    align-self: baseline;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -32,11 +33,11 @@
   }
   .right{
     padding: 1px 0;
-    height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     .row1{
+      display: flex;
       .name{
         display: inline-block;
         font-size: 15px;

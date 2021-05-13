@@ -1,5 +1,10 @@
 .comment-section {
   padding: 15px;
+  .btn-show-reply {
+    // align-self: flex-end;
+    margin-right: 128px;
+    cursor: pointer;
+  }
   .reply-comment{
     .new-comment{
       margin-left: 50px;

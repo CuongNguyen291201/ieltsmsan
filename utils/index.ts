@@ -46,3 +46,13 @@ export const downloadFromURL = (url: string, contentType: string = '', filename:
   const fileExtension = extension(contentType);
   return saveAs(url, `${encodeURIComponent(filename)}${fileExtension ? `.${fileExtension}` : ''}`);
 }
+
+export const formatTimeHM = (time: number) => {
+  const dateTime = new Date(time);
+  const hour = dateTime.getHours();
+  const min = dateTime.getMinutes();
+
+  return `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}`
+}
+
+export const isEqualStringified = (foo: any, bar: any) => String(foo) === String(bar);

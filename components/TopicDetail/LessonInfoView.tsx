@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { CommentScopes } from '../../custom-types';
 import { usePaginationState } from '../../hooks/pagination';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
@@ -54,7 +55,7 @@ const LessonInfoView = (props: { topic: any }) => {
       </PanelContainer>
 
       <PanelContainer title="Bình luận">
-          <CommentPanel />
+        <CommentPanel commentScope={CommentScopes.TOPIC} />
       </PanelContainer>
 
     </div>
