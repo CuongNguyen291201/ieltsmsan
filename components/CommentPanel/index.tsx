@@ -1,39 +1,51 @@
-import { useEffect, useRef, useState } from 'react';
-import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
+import { useState } from 'react';
+import CommentItem from '../CommentItem';
+import CreateNewComment from '../CreateNewComment';
 import './style.scss';
 
-const CommentPanel = (props: any) => {
-  const commentRef = useRef<HTMLSpanElement>();
+const CommentPanel = () => {
 
   return (
-    <div className="cmt-container">
-      <div className="user-cmt-section">
-        <div className="image-avatar">
-          <img src={defaultAvatar} alt="" />
-        </div>
-
-        <span className="main-comment-box" contentEditable role="textbox" onInput={(e) => { e.preventDefault(); }} ref={commentRef} />
-        <div className="cmt-options">
-          <button type="button" className="btn btn-send">
-            <i className="far fa-paper-plane" />
-          </button>
-
-          <button type="button" className="btn btn-open-editor">
-            <i className="far fa-pencil-alt" />
-          </button>
-
-          <button type="button" className="btn btn-attach">
-            <i className="far fa-paperclip" />
-          </button>
-
-          <button type="button" className="btn btn-open-editor">
-            <i className="far fa-smile" />
-          </button>
-        </div>
-      </div>
-
+    <div className="comment-section">
+      <CreateNewComment></CreateNewComment>
+      <CommentSectionItem parentCommentId={123}></CommentSectionItem>
     </div>
   )
 };
+
+const CommentSectionItem = ({ parentCommentId }: { parentCommentId: number }) => {
+  const [isShowCreateNewReply, setisShowCreateNewReply] = useState(false)
+  const [isShowMoreReply, setisShowMoreReply] = useState(false)
+  return (
+    <div className="comment-section-item">
+      <div className="main-comment">
+        <CommentItem onShowReply={() => {
+          setisShowCreateNewReply(!isShowCreateNewReply)
+          setisShowMoreReply(true)
+        }}></CommentItem>
+      </div>
+      <div className="reply-comment">
+        {
+          isShowMoreReply ? (
+            <>
+              <CommentItem type="reply"></CommentItem>
+              <CommentItem type="reply"></CommentItem>
+              <CommentItem type="reply"></CommentItem>
+            </>
+          ) : (
+              <div className="show-more-reply" onClick={() => setisShowMoreReply(true)}>Xem thêm trả lời</div>
+            )
+        }
+        {
+          isShowCreateNewReply && (
+            <CreateNewComment parentCommentId={parentCommentId}></CreateNewComment>
+          )
+        }
+      </div>
+    </div>
+  )
+}
+
+
 
 export default CommentPanel;
