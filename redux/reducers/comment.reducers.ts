@@ -6,12 +6,18 @@ export interface CommentState {
   commentsList: Array<Discussion>;
   mapReplies: {
     [x: string]: Array<Discussion>;
+  };
+  isShowLoadMoreComments: boolean;
+  mapShowLoadMoreReplies: {
+    [x: string]: boolean;
   }
 }
 
 const initialState: CommentState = {
   commentsList: [],
-  mapReplies: {}
+  mapReplies: {},
+  isShowLoadMoreComments: false,
+  mapShowLoadMoreReplies: {}
 }
 
 export function commentReducer(state = initialState, action: CommentAction): CommentState {
@@ -26,7 +32,8 @@ export function commentReducer(state = initialState, action: CommentAction): Com
         return {
           ...state,
           commentsList: [...state.commentsList, ...list],
-          mapReplies
+          mapReplies,
+          isShowLoadMoreComments: !!list.length
         }
 
       case ActionTypes.CREATE_ONE:
@@ -57,6 +64,10 @@ export function commentReducer(state = initialState, action: CommentAction): Com
           mapReplies: {
             ...state.mapReplies,
             [parentId]: [...currentReplies, ...replies]
+          },
+          mapShowLoadMoreReplies: {
+            ...state.mapShowLoadMoreReplies,
+            [parentId]: !!replies.length
           }
         }
 

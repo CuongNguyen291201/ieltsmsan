@@ -9,12 +9,14 @@ import CommentItem from '../CommentItem';
 import CreateNewComment from '../CreateNewComment';
 import './style.scss';
 
+const LOAD_LIMIT = 10;
+
 const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { commentScope } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
-  const { commentsList } = useSelector((state: AppState) => state.commentReducer);
+  const { commentsList, isShowLoadMoreComments } = useSelector((state: AppState) => state.commentReducer);
 
   const commentRef = useRef<HTMLSpanElement>();
 
@@ -50,14 +52,29 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     }));
     commentRef.current.innerHTML = '';
   }, [currentUser]);
+
+  const loadMoreComments = () => {
+    if (!commentsList.length) return;
+    const limit = LOAD_LIMIT - (commentsList.length % LOAD_LIMIT);
+    const lastRecord = commentsList[commentsList.length - 1];
+    const args = { limit, lastRecord };
+    (commentScope === CommentScopes.COURSE
+      ? dispatch(fetchCourseCommentsAction({ ...args, courseId }))
+      : dispatch(fetchTopicCommentsAction({ ...args, topicId }))
+    );
+  };
+
   return (
     <div className="comment-section">
       <CreateNewComment onPushComment={pushComment} ref={commentRef} />
-      {commentsList.map((e) => (
+      {commentsList?.map((e) => (
         <Fragment key={e._id}>
           <CommentSectionItem discussion={e} />
         </Fragment>
       ))}
+      {isShowLoadMoreComments && <div className="load-more">
+        <span className="btn-title" onClick={() => loadMoreComments()}>Xem thêm bình luận</span>
+      </div>}
     </div>
   )
 };
@@ -71,7 +88,7 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
-  const { mapReplies } = useSelector((state: AppState) => state.commentReducer);
+  const { mapReplies, mapShowLoadMoreReplies } = useSelector((state: AppState) => state.commentReducer);
 
   const replyRef = useRef<HTMLSpanElement>();
   const dispatch = useDispatch();
@@ -120,6 +137,14 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
     if (!isShowCreateReply) setShowCreateReply(true);
   }
 
+  const loadMoreReplies = () => {
+    const replies = mapReplies[discussion._id];
+    if (!replies.length) return;
+    const limit = LOAD_LIMIT - (replies.length % LOAD_LIMIT);
+    const lastRecord = replies[replies.length - 1];
+    dispatch(fetchRepliesAction({ parentId: discussion._id, limit, lastRecord }));
+  }
+
   return (
     <div className="comment-section-item">
       <div className="main-comment">
@@ -138,11 +163,14 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
         {
           isShowReplies ? (
             <>
-              {mapReplies[discussion._id].map((e) => (
+              {mapReplies[discussion._id]?.map((e) => (
                 <Fragment key={e._id}>
                   <CommentItem isReply={true} user={e.user} {...e} />
                 </Fragment>
               ))}
+              {mapShowLoadMoreReplies[discussion._id] && <div className="load-more reply">
+                <span className="btn-title" onClick={() => loadMoreReplies()}>Xem thêm trả lời</span>
+              </div>}
             </>
           ) : <></>
         }
