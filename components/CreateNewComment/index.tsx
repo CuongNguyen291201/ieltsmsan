@@ -16,7 +16,7 @@ const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply
   return (
     <div className="new-comment">
       <div className="image-avatar">
-        <img src={currentUser.avatar || defaultAvatar} alt="" />
+        <img src={currentUser?.avatar || defaultAvatar} alt="" />
       </div>
       <span className={`main-comment-box${isReply ? ' reply' : ''}`} contentEditable role="textbox" onInput={(e) => { e.preventDefault(); }} ref={ref} />
       <div className="cmt-options">
