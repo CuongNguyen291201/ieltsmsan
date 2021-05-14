@@ -15,8 +15,9 @@ const CommentItem = (props: {
   createDate?: number;
   lastUpdate?: number;
   likes?: Array<string>;
+  totalReplies?: number;
 }) => {
-  const { isReply = false, onShowReply = () => { }, user = null, content = '', createDate = 0, lastUpdate = 0, likes = [] } = props;
+  const { isReply = false, onShowReply = () => { }, user = null, content = '', createDate = 0, lastUpdate = 0, likes = [], totalReplies = 0 } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
 
   const commentDate = useMemo(() => {
@@ -38,7 +39,7 @@ const CommentItem = (props: {
           <div className="like">{`${isUserLiked ? 'Bỏ thích' : 'Thích'}${!!likes.length ? ` (${likes.length})` : ''}`}</div>
           {
             !isReply && (
-              <div className="answer" onClick={onShowReply}>Trả lời</div>
+              <div className="answer" onClick={onShowReply}>{`Trả lời${!!totalReplies ? ` (${totalReplies})` : ''}`}</div>
             )
           }
           <div className="date">{`${!!lastUpdate ? `Chỉnh sửa lúc: ` : ''}${commentDate}`}</div>

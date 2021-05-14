@@ -6,13 +6,13 @@ export async function fetchPaginationAPI<R>(args: {
   lastRecord?: R;
   skip?: number;
   [x: string]: any
-}): Promise<{ total: number; data: R[] }> {
-  const { seekAPI, offsetAPI } = args;
+}): Promise<R[]> {
+  const { seekAPI, offsetAPI, ...reqBody } = args;
   const { data, status } = args.hasOwnProperty('skip')
-    ? await offsetAPI(args)
-    : await seekAPI(args);
+    ? await offsetAPI(reqBody)
+    : await seekAPI(reqBody);
   if (status !== response_status.success && status !== response_status_codes.success) {
-    return { total: 0, data: [] };
+    return [];
   }
   return data;
 }

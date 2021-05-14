@@ -1,9 +1,11 @@
+import { Comment } from '../../custom-types';
 import Discussion from '../../sub_modules/share/model/discussion';
+import { isEqualStringified } from '../../utils';
 import { CommentAction } from '../actions/comment.action';
 import { ActionTypes, Scopes } from '../types';
 
 export interface CommentState {
-  commentsList: Array<Discussion>;
+  commentsList: Array<Comment>;
   mapReplies: {
     [x: string]: Array<Discussion>;
   };
@@ -24,7 +26,7 @@ export function commentReducer(state = initialState, action: CommentAction): Com
   if (action?.scope === Scopes.COMMENT) {
     switch (action.type) {
       case ActionTypes.LOAD_LIST:
-        const list: Discussion[] = action.payload;
+        const list: Comment[] = action.payload;
         const mapRepliesNew = {};
         list.map((e) => {
           mapRepliesNew[e._id] = []
@@ -48,6 +50,9 @@ export function commentReducer(state = initialState, action: CommentAction): Com
           }
         } else {
           const repliesList = state.mapReplies[action.payload.parentId] ?? [];
+          state.commentsList.map((e) => {
+            if (isEqualStringified(e._id, action.payload.parentId)) e.totalReplies += 1;
+          });
           return {
             ...state,
             mapReplies: {
