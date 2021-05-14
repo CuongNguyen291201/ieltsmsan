@@ -25,14 +25,14 @@ export function commentReducer(state = initialState, action: CommentAction): Com
     switch (action.type) {
       case ActionTypes.LOAD_LIST:
         const list: Discussion[] = action.payload;
-        const mapReplies = {};
+        const mapRepliesNew = {};
         list.map((e) => {
-          mapReplies[e._id] = []
+          mapRepliesNew[e._id] = []
         });
         return {
           ...state,
           commentsList: [...state.commentsList, ...list],
-          mapReplies,
+          mapReplies: { ...state.mapReplies, ...mapRepliesNew },
           isShowLoadMoreComments: !!list.length
         }
 
