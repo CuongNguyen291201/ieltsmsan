@@ -53,22 +53,41 @@ export function usePaginationState<R>(args: {
     if (!isInit) init().then(() => setInit(true));
   }, [isInit]);
 
+  useEffect(() => {
+    if (isInit) {
+      setPages({});
+      setInit(false);
+    }
+  }, [itemsPerPage, filters['field'], filters['asc']]);
+
   return { pages, onChangePage };
 }
 
-export function useTotalPagesState(args: { keys: string[]; keyName: string; api: (filter: any) => Promise<{ total: number }>; filters?: any }) {
+export function useTotalPagesState(args: {
+  keys: string[];
+  keyName: string;
+  api: (filter: any) => Promise<{ total: number }>;
+  filters?: any;
+  itemPerPages?: number;
+}) {
   const [isLoaded, setLoaded] = useState(false);
+  const [mapTotal, setMapTotal] = useState<{ [x: string]: number }>({});
   const [mapTotalPages, setMapTotalPages] = useState<{ [x: string]: number }>({});
-  const { keys, keyName, api, filters = {} } = args;
+  const { keys, keyName, api, filters = {}, itemPerPages = 10 } = args;
 
   const init = async () => {
     const initData: { [x: string]: number } = {};
+    const initPage: { [x: string]: number } = {};
     const initRes = await Promise.all(keys.map(async (key) => {
       const { total } = await api({ ...filters, [keyName]: key });
       return { key, total }
     }));
-    initRes.map(({ key, total }) => Object.assign(initData, { [key]: total }));
+    initRes.map(({ key, total }) => {
+      Object.assign(initData, { [key]: Math.ceil((total || 1) / itemPerPages) });
+      Object.assign(initPage, { [key]: total });
+    });
     setMapTotalPages(initData);
+    setMapTotal(initPage);
     setLoaded(true);
   }
 
@@ -78,5 +97,13 @@ export function useTotalPagesState(args: { keys: string[]; keyName: string; api:
     }
   }, [isLoaded]);
 
-  return { mapTotalPages };
+  useEffect(() => {
+    if (isLoaded) {
+      Object.keys(mapTotalPages).map((key) => {
+        mapTotalPages[key] = Math.ceil((mapTotal[key] || 1) / itemPerPages);
+      });
+    }
+  }, [itemPerPages]);
+
+  return { mapTotalPages, mapTotal };
 }

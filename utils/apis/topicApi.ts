@@ -1,4 +1,4 @@
-import { POST_API, POST_REQ } from '../../sub_modules/common/api'
+import { POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
@@ -36,3 +36,31 @@ export const apiGetTopicById = async (topicId: string) => {
   }
   return null;
 }
+
+export const apiSeekRankingsByTopic = (args: {
+  field?: 'score' | 'lastUpdate',
+  topicId: string;
+  limit?: number;
+  lastRecord?: StudyScore;
+  asc?: boolean;
+}) => POST_API('seek-rankings-by-topic', args);
+
+export const apiOffsetRankingsByTopic = (args: {
+  field?: 'score' | 'lastUpdate',
+  topicId: string;
+  limit?: number;
+  skip?: number;
+  asc?: boolean;
+}) => POST_API('offset-rankings-by-topic', args);
+
+export const apiCountTopicStudyScores = async (args: { topicId: string; status?: number | number[] }) => {
+  try {
+    const { data, status } = await POST_API('count-topic-study-scores', args);
+    if (status === response_status_codes.success) return data;
+    return { total: 0 }
+  } catch (e) {
+    return { total: 0 };
+  }
+}
+
+export const apiGetUserExamCardData = async (args: { topicId: string; userId: string; type: number; studyScore: StudyScore }) => POST_API('get-user-exam-card-data', args);

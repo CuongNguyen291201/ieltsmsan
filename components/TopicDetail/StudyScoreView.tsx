@@ -1,12 +1,16 @@
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
+import { prepareGoToGameAction, prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
+import { setUserCardDataAction } from '../../redux/actions/topic.action';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { StudyScore } from '../../sub_modules/share/model/studyScore'
-import { formatDateDMY, formatTimeClock } from '../../utils';
+import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
+import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
+import { formatDateDMY, formatTimeClock, getGameSlug } from '../../utils';
 import { ROUTER_GAME } from '../../utils/router';
 
-const StudyScoreView = (props: { currentTopic: any, studyScore?: StudyScore | null, currentUser: any }) => {
+const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | null, currentUser: UserInfo }) => {
   const { currentTopic, studyScore, currentUser } = props;
   const dispatch = useDispatch();
   const router = useRouter()
@@ -14,12 +18,11 @@ const StudyScoreView = (props: { currentTopic: any, studyScore?: StudyScore | nu
 
   function playGame() {
     if (currentUser) {
-      router.push({
-        pathname: ROUTER_GAME,
-        query: { id: currentTopic._id }
-      })
+      router.push(getGameSlug(currentTopic._id))
     }
   }
+
+  const isPass = ((studyScore.score / 10) * 100) > currentTopic?.topicExercise?.pass;
 
   return (
     <>
@@ -30,7 +33,7 @@ const StudyScoreView = (props: { currentTopic: any, studyScore?: StudyScore | nu
               <span>Ngày: </span><span>{formatDateDMY(studyScore.lastUpdate)}</span>
             </div>
             <div className="time">
-              <span>Thời gian làm bài : </span><span>{formatTimeClock(studyScore.totalTime)}</span>
+              <span>Thời gian làm bài : </span><span>{formatTimeClock(studyScore.studyScoreData?.totalTime)}</span>
             </div>
           </div>
           <div className="score-wrap">
@@ -40,11 +43,9 @@ const StudyScoreView = (props: { currentTopic: any, studyScore?: StudyScore | nu
           <div className="buttons">
             <div className="xem-lai" onClick={() => {
               if (currentUser) {
-                dispatch(prepareReviewGameAction())
-                router.push({
-                  pathname: ROUTER_GAME,
-                  query: { id: currentTopic._id }
-                })
+                dispatch(setUserCardDataAction({ cardData: null, user: null }));
+                dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore }));
+                router.push(getGameSlug(currentTopic._id));
               } else {
                 dispatch(showLoginModalAction())
               }
@@ -57,8 +58,8 @@ const StudyScoreView = (props: { currentTopic: any, studyScore?: StudyScore | nu
           </div>
         </div>
         <div className="section2-right">
-          <img src={`${studyScore ? (studyScore.pass == 1 ? '/topics/pass_exam.png' : '/topics/failure_exam.png') : '/topics/welcome_exam.png'}`} alt="" />
-          <div className="text">{`${studyScore ? (studyScore.pass == 1 ? 'Bạn đã vượt qua bài thi này' : 'Bạn chưa vượt qua bài thi này') : ''}`}</div>
+          <img src={`${studyScore ? (isPass ? '/topics/pass_exam.png' : '/topics/failure_exam.png') : '/topics/welcome_exam.png'}`} alt="" />
+          <div className="text">{`${studyScore ? (isPass ? 'Bạn đã vượt qua bài thi này' : 'Bạn chưa vượt qua bài thi này') : ''}`}</div>
         </div>
       </div>
     </>

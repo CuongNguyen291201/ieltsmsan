@@ -57,11 +57,6 @@ const LessonInfoView = (props: { topic: Topic }) => {
       <PanelContainer title="Hoạt động gần đây">
 
       </PanelContainer>
-
-      <PanelContainer title="Bình luận">
-        <CommentPanel commentScope={CommentScopes.TOPIC} />
-      </PanelContainer>
-
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { Router, useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -9,14 +10,16 @@ import { AppState } from '../../redux/reducers';
 import { getSkills } from '../../sub_modules/game/api/ExamApi';
 import { GAME_STATUS_PLAYING, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { GameData, IGameData } from '../../sub_modules/game/src/game_core/gameData';
-import PracticeView from '../../sub_modules/game/src/main-game/MainGameViewTS';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NONE, CARD_BOX_NO_ANSWER, GAME_TYPE_PRACTICE, GAME_TYPE_TEST, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+// import PracticeView from '../../sub_modules/game/src/main-game/MainGameViewTS';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NONE, CARD_BOX_NO_ANSWER, CARD_HAS_CHILD, GAME_TYPE_PRACTICE, GAME_TYPE_TEST, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { Card } from '../../sub_modules/share/model/card';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import Skill from '../../sub_modules/share/model/skill';
 import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import { getCardByTopicId } from '../../utils/apis/cardApi';
 import './style.scss';
+const MainGameView = dynamic(() => import('../../sub_modules/game/src/main-game/MainGameViewTS'), { ssr: false });
 
 function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[]) {
   let cardCorrectArr: string[] = [];
@@ -25,13 +28,13 @@ function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[])
   // let cardNotAnswerArr: Card[] = [];
   let cardBookMarkArr: string[] = [];
   if (currentTopic && currentTopic.topicExercise) {
-    numCardNotAnswer = currentTopic.topicExercise.questionsNum
+    numCardNotAnswer = currentTopic.topicExercise.questionsNum;
   }
   if (myCardData) {
     let mapBoxNum: { [x: number]: string[] } = {}
-    Object.keys(myCardData.boxCard).map((e: string) => {
-      let boxNum = myCardData.boxCard[e] > 0 ? 1 : 0;
-      mapBoxNum[boxNum] = [...mapBoxNum[boxNum] || [], e];
+    Object.keys(myCardData.boxCard).map((cardId: string) => {
+      let boxNum = myCardData.boxCard[cardId] > 0 ? 1 : 0;
+      mapBoxNum[boxNum] = [...(mapBoxNum[boxNum] || []), cardId];
     });
     cardCorrectArr = mapBoxNum[1] ? mapBoxNum[1] : []
     cardIncorrectArr = mapBoxNum[0] ? mapBoxNum[0] : []
@@ -43,56 +46,50 @@ function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[])
   }
 
   let cardAnswered = cardCorrectArr.concat(cardIncorrectArr)
-  let cardCorrect = []
-  let cardInCorrect = []
-  let cardNoAnswer = []
-  let cardBookmarks = []
+  let cardCorrect: Card[] = []
+  let cardInCorrect: Card[] = []
+  let cardNoAnswer: Card[] = []
+  let cardBookmarks: Card[] = []
 
-  function pushCardToArr(cardIds: any[], cardId: any, cards: any[], card: any) {
-    if (cardIds.includes(cardId)) {
-      if (!cards.includes(card)) {
-        cards.push(card);
-      }
+  function pushCardToArr(cardIds: string[], cards: Card[], card: Card) {
+    if (cardIds.includes(card._id) && !cards.find((e) => e._id === card._id)) cards.push(card);
+  }
+
+  function pushCardParagraphToArr(cardIds: string[], cards: Card[], card: Card) {
+    const hasCard = !!cards.find((e) => e._id === card._id);
+    const childCards = (card.childCards || []).filter((e) => cardIds.includes(e._id));
+    if (!hasCard && !!childCards.length) {
+      card.childCards = childCards;
+      cards.push(card);
     }
   }
 
-  function pushCardParagraphToArr(cardIds: any[], cardId: any, cards: any[], card: any) {
-    if (!cards.includes(card)) {
-      let childCards = card.childCards.filter((e: any) => cardIds.includes(e._id));
-      cards.push({ ...card, childCards });
-    }
+  if (!cardBookMarkArr) {
+    cardBookMarkArr = [];
   }
 
-  if (cardBookMarkArr == undefined) {
-    cardBookMarkArr = []
-  }
-  cards.map(card => {
-    if (card.hasChild == 1) {
-      if (card.childCards) {
-        (card.childCards as any[]).map((childCard) => {
-          pushCardParagraphToArr(cardCorrectArr, childCard._id, cardCorrect, childCard)
-          pushCardParagraphToArr(cardIncorrectArr, childCard._id, cardInCorrect, childCard)
-          pushCardParagraphToArr(cardBookMarkArr, childCard._id, cardBookmarks, childCard)
-          if (!cardAnswered.includes(childCard._id)) {
-            if (!cardNoAnswer.includes(card)) {
-              cardNoAnswer.push(card)
-            }
-          }
-        })
-      }
-    } else {
-      pushCardToArr(cardCorrectArr, card._id, cardCorrect, card)
-      pushCardToArr(cardIncorrectArr, card._id, cardInCorrect, card)
-      pushCardToArr(cardBookMarkArr, card._id, cardBookmarks, card)
-      if (!cardAnswered.includes(card._id)) {
-        if (!cardNoAnswer.includes(card)) {
-          cardNoAnswer.push(card)
+  cards.map((card) => {
+    if (card.hasChild === CARD_HAS_CHILD) {
+      card.childCards?.map((childCard) => {
+        pushCardParagraphToArr(cardCorrectArr, cardCorrect, childCard);
+        pushCardParagraphToArr(cardIncorrectArr, cardInCorrect, childCard);
+        pushCardParagraphToArr(cardBookMarkArr, cardBookmarks, childCard);
+
+        if (!cardAnswered.includes(childCard._id) && !cardNoAnswer.find((e) => e._id === card._id)) {
+          cardNoAnswer.push(card);
         }
+      });
+    } else {
+      pushCardToArr(cardCorrectArr, cardCorrect, card)
+      pushCardToArr(cardIncorrectArr, cardInCorrect, card)
+      pushCardToArr(cardBookMarkArr, cardBookmarks, card)
+      if (!cardAnswered.includes(card._id) && !cardNoAnswer.find((e) => e._id === card._id)) {
+        cardNoAnswer.push(card);
       }
     }
-  })
+  });
 
-  return { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer }
+  return { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer };
 }
 
 function GamePage() {
@@ -101,19 +98,20 @@ function GamePage() {
     gameData: IGameData | null;
     cards: Card[] | null;
     skills: Skill[]
-  }>({ isClient: false, gameData: null, cards: null, skills: [] })
-  const { boxGame } = useSelector((state: AppState) => state.prepareGameReducer);
+  }>({ isClient: false, gameData: null, cards: null, skills: [] });
+  const { boxGame, studyScore } = useSelector((state: AppState) => state.prepareGameReducer);
   let { statusGame } = useSelector((state: AppState) => state.prepareGameReducer);
-  const { studyScore, currentTopic, myCardData } = useSelector((state: AppState) => state.topicReducer)
-  const { currentUser } = useSelector((state: AppState) => state.userReducer)
-  const { modeShowResultImmediately } = useSelector((state: AppState) => state.gameReducer)
-  // const dispatch = useDispatch()
+  const { currentTopic, myCardData: userCardData, reviewer, reviewCardData } = useSelector((state: AppState) => state.topicReducer)
+  const { currentUser: user } = useSelector((state: AppState) => state.userReducer)
+  const { modeShowResultImmediately } = useSelector((state: AppState) => state.gameReducer);
+  const myCardData = !!reviewer ? reviewCardData : userCardData;
+  const currentUser = !!reviewer ? reviewer : user;
   const router = useRouter();
 
   useEffect(() => {
     const parentId = router.query.id
     if (!currentTopic || !parentId) {
-      router.back()
+      router.back();
       return;
     }
 
@@ -128,24 +126,23 @@ function GamePage() {
       questionsPlayNum: currentTopic.topicExercise.questionsPlayNum,
       isBack: true,
       gameType: currentTopic.type == TOPIC_TYPE_EXERCISE ? GAME_TYPE_PRACTICE : GAME_TYPE_TEST,
-      userId: currentUser?._id,
-      userName: currentUser?.name,
+      userId: currentUser._id,
+      userName: currentUser.name,
       bookmark: currentTopic.type == TOPIC_TYPE_TEST,
       pass: currentTopic.type == TOPIC_TYPE_TEST ? currentTopic.topicExercise.pass : 100,
-      // baremScore: currentTopic.topicExercise.baremScore,
       contentType: currentTopic.topicExercise.contentType,
       contentInfo: currentTopic.topicExercise.contentInfo,
-      modeShowResultImmediately: modeShowResultImmediately,
+      modeShowResultImmediately,
       showAnwserSheet: true
     });
     if (gameData.contentType === TOPIC_CONTENT_TYPE_FILE_PDF) {
       gameData.panelId = 'game-file-pdf'
     }
     const getCardByIdsFC = async () => {
-      const [cardsResult, { data: skillsResult }] = await Promise.all([getCardByTopicId(currentTopic._id), getSkills()]);
-      let cards: any[] = []
+      const [cardsResult, { data: skills }] = await Promise.all([getCardByTopicId(currentTopic._id), getSkills()]);
+      let cards: Card[] = []
       if (boxGame != CARD_BOX_NONE) {
-        const { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer } = getCardBoxs(myCardData, currentTopic, cardsResult)
+        const { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer } = getCardBoxs(myCardData, currentTopic, cardsResult as Card[])
         if (boxGame == CARD_BOX_ANSWER_INCORRECT) {
           cards = cardInCorrect
         } else if (boxGame == CARD_BOX_ANSWER_CORRECT) {
@@ -156,24 +153,24 @@ function GamePage() {
           cards = cardNoAnswer
         }
       } else {
-        cards = cardsResult;
+        cards = cardsResult as Card[];
       }
-      setGameOption({ isClient: true, gameData, cards, skills: skillsResult })
+      setGameOption({ isClient: true, gameData, cards, skills });
     }
     // if (statusGame == GAME_STATUS_NONE) {
     //   statusGame = GAME_STATUS_PREPARE_PLAY
     // }
-    if (boxGame != CARD_BOX_NONE) {
+    if (boxGame !== CARD_BOX_NONE) {
       statusGame = GAME_STATUS_PREPARE_REVIEW
     }
     getCardByIdsFC()
     // dispatch(prepareStartGame(statusGame, studyScore, myCardData, false))
-  }, [currentTopic, currentUser])
+  }, []);
   useEffect(() => {
     const message = 'Do you want to leave?';
     const routeChangeStart = (url: string) => {
       if (statusGame == GAME_STATUS_PLAYING) {
-        let currentPath = router.asPath
+        let currentPath = router.asPath;
         if (currentPath !== url) {
           if (!window?.confirm(message)) {
             Router.events.emit('routeChangeError');
@@ -198,7 +195,7 @@ function GamePage() {
       {gameOption.isClient && gameOption.gameData ?
         <>
           {/* <TimeOnSite /> */}
-          <PracticeView
+          <MainGameView
             statusGame={statusGame}
             cards={gameOption.cards}
             gameData={gameOption.gameData}
@@ -208,8 +205,6 @@ function GamePage() {
         </>
         : <></>}
     </div>
-    {/* <LoginModal /> */}
-    {/* <RegisterModal /> */}
   </Layout>
 }
 

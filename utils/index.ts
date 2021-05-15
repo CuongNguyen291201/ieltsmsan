@@ -1,6 +1,7 @@
 import { saveAs } from 'file-saver';
 import { extension } from 'mime-types';
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
+import { ROUTER_GAME } from './router';
 
 export const formatTimeClock = (time: any) => {
   const sec_num = parseInt(time, 10); // don't forget the second param
@@ -56,3 +57,7 @@ export const formatTimeHM = (time: number) => {
 }
 
 export const isEqualStringified = (foo: any, bar: any) => String(foo) === String(bar);
+
+export const getGameSlug = (topicId: string) => ({
+  pathname: ROUTER_GAME, query: { id: topicId }
+});

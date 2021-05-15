@@ -1,5 +1,7 @@
 import { BaseAction } from '.';
+import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import { ActionTypes, Scopes } from '../types';
 
 export interface TopicAction extends BaseAction {
@@ -20,4 +22,8 @@ export const updateTopicExerciseAction = (parentId: string, topicExercise: any, 
   scope: Scopes.TOPIC, type: ActionTypes.TP_UPDATE_TOPIC_DETAIL_EXERCISE, payload: {
     parentId, topicExercise, studyScore, myCardData
   }
+});
+
+export const setUserCardDataAction = (args: { cardData: MyCardData; user: UserInfo }): TopicAction => ({
+  scope: Scopes.TOPIC, type: ActionTypes.TP_SET_USER_CARD_DATA, payload: args
 });

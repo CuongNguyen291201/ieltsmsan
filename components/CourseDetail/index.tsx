@@ -24,24 +24,26 @@ const CourseDetail = (props: { course: Course }) => {
         <div className="course-title">
           {course.name}
         </div>
+        <PanelContainer title="Nội dung">
+          <div className="course-info">
+            <div className="section-heading">
+              Thông tin khoá học
+            </div>
+            <div className="section-sp-line" />
+            <div className="course-desc">
+              {course.shortDesc}
+            </div>
 
-        <div className="course-info">
-          <div className="section-heading">
-            Thông tin khoá học
+            <div className="section-heading">
+              Danh sách bài học
+            </div>
+            <div className="section-sp-line" />
+            <div className="main-topic">
+              <TopicTree />
+            </div>
           </div>
-          <div className="section-sp-line" />
-          <div className="course-desc">
-            {course.shortDesc}
-          </div>
+        </PanelContainer>
 
-          <div className="section-heading">
-            Danh sách bài học
-          </div>
-          <div className="section-sp-line" />
-          <div className="main-topic">
-            <TopicTree />
-          </div>
-        </div>
 
         <PanelContainer title="Hoạt động gần đây">
 

@@ -1,6 +1,7 @@
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import { TopicAction } from '../actions/topic.action';
 import { ActionTypes, Scopes } from '../types';
 
@@ -11,8 +12,10 @@ export interface TopicState {
   currentTopic: Topic | null;
   currentTopicLoading: boolean;
   studyScore: StudyScore | null;
-  myCardData: MyCardData;
+  myCardData: MyCardData | null;
   isLoadedDetailTopic: boolean;
+  reviewer: UserInfo | null;
+  reviewCardData: MyCardData | null;
 }
 
 const initialState: TopicState = {
@@ -23,7 +26,9 @@ const initialState: TopicState = {
   currentTopicLoading: true,
   studyScore: null,
   myCardData: null,
-  isLoadedDetailTopic: false
+  isLoadedDetailTopic: false,
+  reviewer: null,
+  reviewCardData: null
 }
 
 export function topicReducer(state = initialState, action: TopicAction): TopicState {
@@ -59,6 +64,14 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
           studyScore,
           myCardData,
           isLoadedDetailTopic: true
+        }
+
+      case ActionTypes.TP_SET_USER_CARD_DATA:
+        return {
+          ...state,
+          reviewer: action.payload.user,
+          reviewCardData: action.payload.cardData,
+
         }
 
       default:

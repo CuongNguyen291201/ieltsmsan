@@ -1,37 +1,35 @@
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
+import { prepareGoToGameAction, prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
+import { setUserCardDataAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { getCookie, MODE_SHOW_RESULT_EXERCISE } from '../../sub_modules/common/utils/cookie';
+import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import * as Config from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import { formatDateDMY, formatTimeClock } from '../../utils';
+import { formatDateDMY, formatTimeClock, getGameSlug } from '../../utils';
 import { ROUTER_GAME } from '../../utils/router';
 import './topic-content.scss';
 import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
 
-const ExerciseView = (props: { currentTopic: any; studyScore?: StudyScore | null; currentUser: any }) => {
+const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | null; currentUser: any }) => {
   const { currentTopic, studyScore, currentUser } = props;
   const dispatch = useDispatch();
   const router = useRouter();
   function playGame() {
     if (currentUser) {
-      router.push({
-        pathname: ROUTER_GAME,
-        query: { id: currentTopic._id }
-      })
+      router.push(getGameSlug(currentTopic._id));
     }
   }
 
   function review() {
     if (currentUser) {
-      dispatch(prepareReviewGameAction())
-      router.push({
-        pathname: ROUTER_GAME,
-        query: { id: currentTopic._id }
-      })
+      dispatch(setUserCardDataAction({ cardData: null, user: null }));
+      dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore }));
+      router.push(getGameSlug(currentTopic._id));
     }
   }
 
