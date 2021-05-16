@@ -61,3 +61,5 @@ export const isEqualStringified = (foo: any, bar: any) => String(foo) === String
 export const getGameSlug = (topicId: string) => ({
   pathname: ROUTER_GAME, query: { id: topicId }
 });
+
+export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));

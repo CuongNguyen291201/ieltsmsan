@@ -23,7 +23,7 @@ export const createCommentAction = (args: { comment: Discussion; user: UserInfo 
   scope: Scopes.COMMENT, type: ActionTypes.CMT_CREATE_COMMENT, payload: args
 });
 
-export const loadRepliesAction = (args: { parentId: string; replies: Array<Discussion> }): CommentAction => ({
+export const loadRepliesAction = (args: { parentId: string; replies: Array<Discussion>; limit?: number }): CommentAction => ({
   scope: Scopes.COMMENT, type: ActionTypes.CMT_LOAD_REPLIES, payload: args
 });
 

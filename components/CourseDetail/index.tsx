@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
-import { fetchMainTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
 import CommentPanel from '../CommentPanel';
@@ -12,11 +10,11 @@ import TopicTree from './TopicTree';
 const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
   const dispatch = useDispatch();
-  const { mainTopicsLoading } = useSelector((state: AppState) => state.topicReducer);
+  // const { mainTopicsLoading } = useSelector((state: AppState) => state.topicReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  useEffect(() => {
-    if (mainTopicsLoading) dispatch(fetchMainTopicsAction({ courseId: course._id, userId: currentUser?._id ?? null }));
-  }, [mainTopicsLoading])
+  // useEffect(() => {
+  //   if (mainTopicsLoading) dispatch(fetchMainTopicsAction({ courseId: course._id, userId: currentUser?._id ?? null }));
+  // }, [mainTopicsLoading])
 
   return (
     <>
@@ -39,7 +37,7 @@ const CourseDetail = (props: { course: Course }) => {
             </div>
             <div className="section-sp-line" />
             <div className="main-topic">
-              <TopicTree />
+              <TopicTree course={course} />
             </div>
           </div>
         </PanelContainer>

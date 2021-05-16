@@ -16,21 +16,21 @@ function* createComment(args: CommentAction) {
 function* fetchCourseComments(args: CommentAction) {
   const { data, status } = yield call(apiSeekCommentsByCourse, args.payload);
   if (status === response_status_codes.success) {
-    yield put(loadListAction(Scopes.COMMENT, data));
+    yield put(loadListAction(Scopes.COMMENT, { list: data, limit: args.payload?.limit ?? 10 }));
   }
 }
 
 function* fetchTopicComments(args: CommentAction) {
   const { data, status } = yield call(apiSeekCommentsByTopic, args.payload);
   if (status === response_status_codes.success) {
-    yield put(loadListAction(Scopes.COMMENT, data));
+    yield put(loadListAction(Scopes.COMMENT, { list: data, limit: args.payload?.limit ?? 10 }));
   }
 }
 
 function* fetchReplies(args: CommentAction) {
   const { data, status } = yield call(apiSeekDiscussionsByParent, args.payload);
   if (status === response_status_codes.success) {
-    yield put(loadRepliesAction({ parentId: args.payload.parentId, replies: data }));
+    yield put(loadRepliesAction({ parentId: args.payload.parentId, replies: data, limit: args.payload?.limit ?? 10 }));
   }
 }
 

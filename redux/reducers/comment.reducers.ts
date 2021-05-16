@@ -26,7 +26,7 @@ export function commentReducer(state = initialState, action: CommentAction): Com
   if (action?.scope === Scopes.COMMENT) {
     switch (action.type) {
       case ActionTypes.LOAD_LIST:
-        const list: Comment[] = action.payload;
+        const list: Comment[] = action.payload.list;
         const mapRepliesNew = {};
         list.map((e) => {
           mapRepliesNew[e._id] = []
@@ -35,7 +35,7 @@ export function commentReducer(state = initialState, action: CommentAction): Com
           ...state,
           commentsList: [...state.commentsList, ...list],
           mapReplies: { ...state.mapReplies, ...mapRepliesNew },
-          isShowLoadMoreComments: !!list.length
+          isShowLoadMoreComments: !(list.length < (action.payload?.limit ?? 10))
         }
 
       case ActionTypes.CREATE_ONE:
@@ -72,7 +72,7 @@ export function commentReducer(state = initialState, action: CommentAction): Com
           },
           mapShowLoadMoreReplies: {
             ...state.mapShowLoadMoreReplies,
-            [parentId]: !!replies.length
+            [parentId]: !(replies.length < (action.payload?.limit ?? 10))
           }
         }
 
