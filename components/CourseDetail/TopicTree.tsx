@@ -17,7 +17,7 @@ const TopicTree = (props: { course: Course; }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT }));
+    dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex' }));
   }, []);
 
   return (
