@@ -14,7 +14,7 @@ export interface TopicState {
   studyScore: StudyScore | null;
   myCardData: MyCardData | null;
   isLoadedDetailTopic: boolean;
-  reviewer: UserInfo | null;
+  userToReview: UserInfo | null;
   reviewCardData: MyCardData | null;
   mapLoadMoreState: { [x: string]: boolean; };
 }
@@ -28,7 +28,7 @@ const initialState: TopicState = {
   studyScore: null,
   myCardData: null,
   isLoadedDetailTopic: false,
-  reviewer: null,
+  userToReview: null,
   reviewCardData: null,
   mapLoadMoreState: {}
 };
@@ -71,7 +71,7 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
       case ActionTypes.TP_SET_USER_CARD_DATA:
         return {
           ...state,
-          reviewer: action.payload.user,
+          userToReview: action.payload.user,
           reviewCardData: action.payload.cardData,
 
         };

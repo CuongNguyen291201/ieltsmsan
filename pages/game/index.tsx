@@ -99,11 +99,11 @@ function GamePage() {
   }>({ isClient: false, gameData: null, cards: null, skills: [] });
   const { boxGame, studyScore } = useSelector((state: AppState) => state.prepareGameReducer);
   let { statusGame } = useSelector((state: AppState) => state.prepareGameReducer);
-  const { currentTopic, myCardData: userCardData, reviewer, reviewCardData } = useSelector((state: AppState) => state.topicReducer)
+  const { currentTopic, myCardData: userCardData, userToReview, reviewCardData } = useSelector((state: AppState) => state.topicReducer)
   const { currentUser: user } = useSelector((state: AppState) => state.userReducer)
   const { modeShowResultImmediately } = useSelector((state: AppState) => state.gameReducer);
-  const myCardData = !!reviewer ? reviewCardData : userCardData;
-  const currentUser = !!reviewer ? reviewer : user;
+  const myCardData = !!userToReview ? reviewCardData : userCardData;
+  const currentUser = !!userToReview ? userToReview : user;
   const router = useRouter();
 
   useEffect(() => {
