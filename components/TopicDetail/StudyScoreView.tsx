@@ -14,7 +14,7 @@ const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | 
   const { currentTopic, studyScore, currentUser } = props;
   const dispatch = useDispatch();
   const router = useRouter()
-  const colorScore = studyScore.studyScoreData.score * 10 < currentTopic.topicExercise.pass ? '#e54851' : '#6F6F6F'
+  const colorScore = studyScore.studyScoreData.score * 10 < currentTopic.topicExercise.pass ? '#e54851' : '#6F6F6F';
 
   function playGame() {
     if (currentUser) {
@@ -22,7 +22,7 @@ const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | 
     }
   }
 
-  const isPass = ((studyScore.score / 10) * 100) > currentTopic?.topicExercise?.pass;
+  const isPass = ((studyScore.studyScoreData.score / 10) * 100) > currentTopic?.topicExercise?.pass;
 
   return (
     <>
