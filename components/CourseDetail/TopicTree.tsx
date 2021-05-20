@@ -13,19 +13,17 @@ const TopicTree = (props: { course: Course; }) => {
   const { mainTopics, loadMoreMainTopics } = useSelector((state: AppState) => state.topicReducer);
   const { currentUser }: { currentUser?: UserInfo } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(resetTopicsListAction());
-    setTimeout(() => {
-      dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex', userId: currentUser?._id }));
-    }, 500);
+    dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex', userId: currentUser?._id }));
   }, [currentUser]);
 
   return (
     <>
       {(mainTopics || []).map((e) => (
         <Fragment key={e._id}>
-          <TopicTreeNode topic={e} />
+          <TopicTreeNode topic={e} isMain={true} />
         </Fragment>
       ))}
       {loadMoreMainTopics && <div className="load-more">

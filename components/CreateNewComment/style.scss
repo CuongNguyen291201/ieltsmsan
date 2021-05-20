@@ -28,6 +28,7 @@
 
   .cmt-options {
     display: flex;
+    align-self: flex-end;
     .btn {
       background: transparent;
       border: 0;
@@ -46,6 +47,7 @@
   }
 
   .image-avatar{
+    align-self: flex-start;
     width: 40px;
     height: 40px;
     border-radius: 50%;

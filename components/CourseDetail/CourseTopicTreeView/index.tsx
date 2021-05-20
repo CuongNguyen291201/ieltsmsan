@@ -1,10 +1,13 @@
+import { Course } from '../../../sub_modules/share/model/courses';
+import TopicTree from '../TopicTree';
 import './style.scss';
 
-const CourseTopicTreeView = () => {
+const CourseTopicTreeView = (props: { course: Course }) => {
+  const { course } = props;
   return (
-    <>
-      Danh sách bài học
-    </>
+    <div className="main-topic">
+      <TopicTree course={course} />
+    </div>
   )
 }
 

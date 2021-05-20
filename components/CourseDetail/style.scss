@@ -67,6 +67,7 @@
 
 .course-detail {
   margin-top: 12px;
+  margin-bottom: 100px;
   border: 1px solid #9e9e9e;
   border-radius: 0 0 10px 10px;
   overflow: hidden;
@@ -89,65 +90,4 @@
       line-height: 16px;
     }
   }
-  // .course-title {
-  //   margin: 20px 0;
-  //   font-weight: 500;
-  //   font-size: 24px;
-  //   text-align: center;
-  // }
-
-  // .course-info {
-  //   .section-heading {
-  //     margin: 15px;
-  //     font-weight: 500;
-  //     font-size: 18px;
-  //   }
-  //   .section-sp-line {
-  //     width: 100%;
-  //     height: 1px;
-  //     background: #ccc;
-  //     margin: 10px 0;
-  //   }
-  //   .course-desc {
-  //     padding: 16px;
-  //   }
-  //   .main-topic {
-  //     padding: 16px;
-  //     .load-more {
-  //       cursor: pointer;
-  //       &:hover {
-  //         text-decoration: underline;
-  //       }
-  //     }
-
-  //     .topic-item {
-  //       display: flex;
-  //       align-items: center;
-  //       justify-content: space-between;
-  //       cursor: pointer;
-  //       box-shadow: 0 0 5px 0 #aaa;
-  //       border-radius: 10px;
-  //       margin: 12px 0;
-  //       padding: 10px;
-  //       .topic-title {
-  //         display: flex;
-  //         align-items: center;
-  //         .topic-icon {
-  //           margin-right: 10px;
-  //         }
-  //         .sub-title {
-  //           margin-left: 12px;
-  //           color: rgba(255, 0, 0, 0.8);
-  //           font-style: italic;
-  //         }
-  //       }
-  //       .right {
-  //         display: flex;
-  //         width: 120px;
-  //         align-self: center;
-  //         justify-content: space-between;
-  //       }
-  //     }
-  //   }
-  // }
 }

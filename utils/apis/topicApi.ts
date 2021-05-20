@@ -87,3 +87,6 @@ export const apiCountTopicStudyScores = async (args: { topicId: string; status?:
 };
 
 export const apiGetUserExamCardData = async (args: { topicId: string; userId: string; type: number; studyScore: StudyScore; }) => POST_API('get-user-exam-card-data', args);
+
+export const apiUpdateTopicProgress = (args: { topicId: string; progress: number; userId: string }) => POST_API('update-topic-progress', args);
+

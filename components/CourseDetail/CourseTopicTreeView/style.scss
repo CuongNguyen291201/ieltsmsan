@@ -1,0 +1,38 @@
+.main-topic {
+  padding: 16px;
+  .load-more {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .topic-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 0 5px 0 #aaa;
+    border-radius: 10px;
+    margin: 12px 0;
+    padding: 10px;
+    .topic-title {
+      display: flex;
+      align-items: center;
+      .topic-icon {
+        margin-right: 10px;
+      }
+      .sub-title {
+        margin-left: 12px;
+        color: rgba(255, 0, 0, 0.8);
+        font-style: italic;
+      }
+    }
+    .right {
+      display: flex;
+      width: 120px;
+      align-self: center;
+      justify-content: space-between;
+    }
+  }
+}

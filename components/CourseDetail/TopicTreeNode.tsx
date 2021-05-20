@@ -13,12 +13,13 @@ import { response_status } from '../../sub_modules/share/api_services/http_statu
 import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
 import { formatDateDMY, getBrowserSlug, getTimeZeroHour } from '../../utils';
-import { apiSeekTopicsByParentId } from '../../utils/apis/topicApi';
+import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
+import MainTopicNode from './MainTopicNode';
 
 const LOAD_LIMIT = 20;
 
-const TopicTreeNode = (props: { topic: OtsvTopic; }) => {
-  const { topic } = props;
+const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
+  const { topic, isMain = false } = props;
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
@@ -67,6 +68,12 @@ const TopicTreeNode = (props: { topic: OtsvTopic; }) => {
     } else if (topicOptions.isLoadChild) setTopicOptions({ ...topicOptions, isLoadChild: false });
   };
 
+  const updateTopicProgressFC = () => {
+    if (topic.type === TOPIC_TYPE_LESSON && !isTopicHasChild) {
+      apiUpdateTopicProgress({ topicId: topic._id, progress: 100, userId: currentUser._id });
+    }
+  }
+
   const onClickNode = () => {
     if (!currentCourse) return;
     if (isTopicHasChild) {
@@ -79,43 +86,53 @@ const TopicTreeNode = (props: { topic: OtsvTopic; }) => {
         dispatch(showLoginModalAction(true));
         return;
       }
+      updateTopicProgressFC();
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
       router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }
   };
 
   return (
-    <>
-      <div className="topic-item" onClick={() => onClickNode()}>
-        <div className="topic-title">
-          <img className="topic-icon" src={topicIcon} alt={topic.name} />
-          {topic.name}
-          {!isOpen && <span className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</span>}
-        </div>
-        <div className="right">
-          <div className="topic-progress">
-            -
+    isMain
+      ? <MainTopicNode
+        topic={topic}
+        childs={topicOptions.childs}
+        isLoadChild={topicOptions.isLoadChild}
+        isOpen={isOpen}
+        isTopicHasChild={isTopicHasChild}
+        onClickNode={onClickNode}
+      />
+      : <>
+        <div className="topic-item" onClick={() => onClickNode()}>
+          <div className="topic-title">
+            <img className="topic-icon" src={topicIcon} alt={topic.name} />
+            {topic.name}
+            {!isOpen && <span className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</span>}
           </div>
-          {
-            isTopicHasChild && <i className={`fas fa-chevron-${topicOptions.isLoadChild ? 'left' : 'down'}`} />
-          }
+          <div className="right">
+            <div className="topic-progress">
+              -
+            </div>
+            {
+              isTopicHasChild && <i className={`fas fa-chevron-${topicOptions.isLoadChild ? 'left' : 'down'}`} />
+            }
+          </div>
         </div>
-      </div>
 
-      {
-        topicOptions.isLoadChild && topicOptions.childs.map((e, i) => (
-          <div style={{ marginLeft: '15px' }} key={e._id}>
-            <TopicTreeNode topic={e} />
-            {i === topicOptions.childs.length - 1 && mapLoadMoreState[e._id] && <div
-              className="load-more"
-              onClick={() => fetchChildTopics()}
-            >
-              Tải thêm...
-            </div>}
-          </div>
-        ))
-      }
-    </>
+        {
+          topicOptions.isLoadChild && topicOptions.childs.map((e, i) => (
+            <div style={{ marginLeft: '15px' }} key={e._id}>
+              <TopicTreeNode topic={e} />
+              {i === topicOptions.childs.length - 1 && mapLoadMoreState[e._id] && <div
+                className="load-more"
+                onClick={() => fetchChildTopics()}
+              >
+                Tải thêm...
+              </div>}
+            </div>
+          ))
+        }
+      </>
   );
 };
 

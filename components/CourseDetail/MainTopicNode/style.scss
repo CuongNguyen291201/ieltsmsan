@@ -1,0 +1,41 @@
+.main-topic-node {
+  border: 1px solid #dedede;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 15px;
+  .topic-header {
+    background-color: #f9fafe;
+    padding: 5px 0 5px 10px;
+    grid-template-columns: 6.9fr 3.1fr;
+    display: grid;
+    cursor: pointer;
+    .topic-title {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      height: 100%;
+      width: 100%;
+    }
+    .topic-info {
+      display: grid;
+      grid-template-columns: 1fr 6fr 1fr;
+      align-items: center;
+      .topic-progress {
+        width: 40px;
+        height: 40px;
+        margin-left: 10px;
+        .CircularProgressbar-text {
+          font-weight: bolder;
+          fill: #000000;
+        }
+      }
+      .sub-title {
+        color: #555555;
+        text-align: center;
+      }
+      .toggle-main {
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
+  }
+}

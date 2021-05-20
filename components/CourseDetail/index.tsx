@@ -70,39 +70,8 @@ const CourseDetail = (props: { course: Course }) => {
           </div>
         </div>
         {
-          activeTab === Tab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView />
+          activeTab === Tab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />
         }
-        {/* <div className="course-title">
-          {course.name}
-        </div>
-        <PanelContainer title="Nội dung">
-          <div className="course-info">
-            <div className="section-heading">
-              Thông tin khoá học
-            </div>
-            <div className="section-sp-line" />
-            <div className="course-desc">
-              {course.shortDesc}
-            </div>
-
-            <div className="section-heading">
-              Danh sách bài học
-            </div>
-            <div className="section-sp-line" />
-            <div className="main-topic">
-              <TopicTree course={course} />
-            </div>
-          </div>
-        </PanelContainer>
-
-
-        <PanelContainer title="Hoạt động gần đây">
-
-        </PanelContainer>
-
-        <PanelContainer title="Bình luận">
-          <CommentPanel commentScope={CommentScopes.COURSE} />
-        </PanelContainer> */}
       </div>
     </>
   )
