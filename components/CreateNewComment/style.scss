@@ -11,16 +11,16 @@
     resize: none;
     width: 100%;
     border: 1px solid #aaa;
-    border-radius: 3px;
+    border-radius: 23px;
     box-shadow: none;
     outline: none;
     &[contenteditable]:empty::before {
-      content: "Bình luận";
+      content: "Viết bình luận...";
       color: gray;
     }
     &.reply {
       &[contenteditable]:empty::before {
-        content: "Trả lời";
+        content: "Trả lời...";
         color: gray;
       }
     }

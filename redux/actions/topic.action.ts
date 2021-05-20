@@ -23,10 +23,14 @@ export const setUserCardDataAction = (args: { cardData: MyCardData; user: UserIn
   scope: Scopes.TOPIC, type: ActionTypes.TP_SET_USER_CARD_DATA, payload: args
 });
 
-export const fetchTopicsAction = (args: { courseId: string; parentId: string | null; limit?: number; lastRecord?: Topic; field: string }): TopicAction => ({
+export const fetchTopicsAction = (args: { courseId: string; parentId: string | null; limit?: number; lastRecord?: Topic; field: string; userId?: string }): TopicAction => ({
   scope: Scopes.TOPIC, type: ActionTypes.TP_FETCH_TOPICS, payload: args
 });
 
 export const setLoadMoreChildTopicsAction = (args: { topicId: string; isLoadMore: boolean }): TopicAction => ({
   scope: Scopes.TOPIC, type: ActionTypes.TP_SET_LOAD_MORE_CHILD_TOPICS, payload: args
 });
+
+export const resetTopicsListAction = (): TopicAction => ({
+  scope: Scopes.TOPIC, type: ActionTypes.TP_RESET_TOPICS_LIST
+}); 

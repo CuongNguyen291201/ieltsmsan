@@ -1,15 +1,15 @@
+import { OtsvTopic } from '../../custom-types';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
-import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { TopicAction } from '../actions/topic.action';
 import { ActionTypes, Scopes } from '../types';
 
 export interface TopicState {
-  mainTopics: Array<Topic>;
+  mainTopics: Array<OtsvTopic>;
   loadMoreMainTopics: boolean;
   error: boolean;
-  currentTopic: Topic | null;
+  currentTopic: OtsvTopic | null;
   currentTopicLoading: boolean;
   studyScore: StudyScore | null;
   myCardData: MyCardData | null;
@@ -84,6 +84,15 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
             [action.payload.topicId]: action.payload.isLoadMore
           }
         };
+
+      case ActionTypes.TP_RESET_TOPICS_LIST: {
+        return {
+          ...state,
+          mainTopics: [],
+          mapLoadMoreState: {},
+          loadMoreMainTopics: false
+        }
+      }
 
       default:
         return state;

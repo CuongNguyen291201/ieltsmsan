@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { OtsvTopic } from '../../custom-types';
 import exerciseIcon from '../../public/icon/exercise-icon.svg';
 import lessonIcon from '../../public/icon/lesson-icon.svg';
 import testIcon from '../../public/icon/test-icon.svg';
@@ -8,7 +9,7 @@ import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
 import { formatDateDMY, getBrowserSlug, getTimeZeroHour } from '../../utils';
@@ -16,12 +17,12 @@ import { apiSeekTopicsByParentId } from '../../utils/apis/topicApi';
 
 const LOAD_LIMIT = 20;
 
-const TopicTreeNode = (props: { topic: Topic; }) => {
+const TopicTreeNode = (props: { topic: OtsvTopic; }) => {
   const { topic } = props;
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
-  const [topicOptions, setTopicOptions] = useState<{ childs: Topic[], isLoadChild: boolean; }>({
+  const [topicOptions, setTopicOptions] = useState<{ childs: OtsvTopic[], isLoadChild: boolean; }>({
     childs: [],
     isLoadChild: false
   });
@@ -47,7 +48,8 @@ const TopicTreeNode = (props: { topic: Topic; }) => {
       courseId: currentCourse._id ?? topic.courseId,
       field: 'orderIndex',
       limit: LOAD_LIMIT,
-      lastRecord: topicOptions.childs[topicOptions.childs.length - 1]
+      lastRecord: topicOptions.childs[topicOptions.childs.length - 1],
+      userId: currentUser?._id
     });
     if (status === response_status.success) return data as Topic[];
     return [];

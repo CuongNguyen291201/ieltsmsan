@@ -11,6 +11,7 @@ export const apiSeekTopicsByParentId = (args: {
   field?: string;
   lastRecord?: Topic;
   limit?: number;
+  userId?: string;
 }) => POST_REQ('seek-topics-by-parent-id', args);
 
 export const apiOffsetTopicsByParentId = (args: {

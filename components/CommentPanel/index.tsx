@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
-import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction } from '../../redux/actions/comment.action';
+import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction, resetCommentStateAction } from '../../redux/actions/comment.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import Discussion from '../../sub_modules/share/model/discussion';
@@ -27,6 +27,7 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
 
   useEffect(() => {
     if (!courseId && !topicId) return;
+    dispatch(resetCommentStateAction());
     if (commentScope === CommentScopes.COURSE) dispatch(fetchCourseCommentsAction({ courseId }));
     else if (commentScope === CommentScopes.TOPIC) dispatch(fetchTopicCommentsAction({ topicId }));
     else return;
@@ -66,7 +67,6 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
 
   return (
     <div className="comment-section">
-      <CreateNewComment onPushComment={pushComment} ref={commentRef} />
       {commentsList?.map((e) => (
         <Fragment key={e._id}>
           <CommentSectionItem discussion={e} />
@@ -75,6 +75,7 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
       {isShowLoadMoreComments && <div className="load-more">
         <span className="btn-title" onClick={() => loadMoreComments()}>Xem thêm bình luận</span>
       </div>}
+      <CreateNewComment onPushComment={pushComment} ref={commentRef} />
     </div>
   )
 };
@@ -153,10 +154,12 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
             {...discussion}
             user={discussion.user}
             onShowReply={() => handleClickReply()}
+            onToggleReplies={() => showReplies()}
+            isShowReplies={isShowReplies}
           />
-          <div className="btn-show-reply" onClick={() => showReplies()}>
+          {/* <div className="btn-show-reply" onClick={() => showReplies()}>
             <i className={`fas fa-chevron-${isShowReplies ? 'up' : 'down  '}`} />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="reply-comment">
@@ -176,7 +179,7 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
         }
         {
           isShowCreateReply && (
-            <CreateNewComment ref={replyRef} isReply={true} onPushComment={() => pushReply(discussion._id)} />
+            <CreateNewComment ref={replyRef} isReply={true} onPushComment={() => pushReply(discussion._id)} parentId={discussion._id} />
           )
         }
       </div>

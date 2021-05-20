@@ -1,7 +1,9 @@
 import { saveAs } from 'file-saver';
 import { extension } from 'mime-types';
+import moment from 'moment';
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
 import { ROUTER_GAME } from './router';
+moment.locale('vi');
 
 export const formatTimeClock = (time: any) => {
   const sec_num = parseInt(time, 10); // don't forget the second param
@@ -63,3 +65,6 @@ export const getGameSlug = (topicId: string) => ({
 });
 
 export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
+
+export const getRelativeTime = (time: number) => moment(time).fromNow();
+

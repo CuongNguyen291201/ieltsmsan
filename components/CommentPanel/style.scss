@@ -13,10 +13,10 @@
         content: '';
         z-index: -1;
         position: absolute;
-        top: -41px;
-        left: -29px;
-        width: 22px;
-        height: 62px;
+        top: var(--top-new-reply, -60px);
+        left: -30px;
+        width: 30px;
+        height: var(--height-new-reply, 80px);
         background-color: transparent;
         border-bottom-left-radius: 10px;
         border-left: 2px solid #d3d3d3;
@@ -50,8 +50,9 @@
 
   .load-more {
     font-weight: 400;
+    margin-bottom: 10px;
     &.reply {
-      margin-left: 50px;
+      margin-left: 100px;
     }
     .btn-title {
       cursor: pointer;

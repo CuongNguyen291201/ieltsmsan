@@ -1,12 +1,9 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { usePaginationState } from '../../hooks/pagination';
-import { fetchTopicsAction } from '../../redux/actions/topic.action';
+import { fetchTopicsAction, resetTopicsListAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
-import Topic from '../../sub_modules/share/model/topic';
-import { fetchPaginationAPI } from '../../utils/apis/common';
-import { apiOffsetTopicsByParentId, apiSeekTopicsByParentId } from '../../utils/apis/topicApi';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import TopicTreeNode from './TopicTreeNode';
 
 const LOAD_LIMIT = 20;
@@ -14,11 +11,15 @@ const LOAD_LIMIT = 20;
 const TopicTree = (props: { course: Course; }) => {
   const { course } = props;
   const { mainTopics, loadMoreMainTopics } = useSelector((state: AppState) => state.topicReducer);
+  const { currentUser }: { currentUser?: UserInfo } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
-    dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex' }));
-  }, []);
+    dispatch(resetTopicsListAction());
+    setTimeout(() => {
+      dispatch(fetchTopicsAction({ courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex', userId: currentUser?._id }));
+    }, 500);
+  }, [currentUser]);
 
   return (
     <>
