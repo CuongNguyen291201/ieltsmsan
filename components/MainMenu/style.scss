@@ -7,8 +7,9 @@
     align-items: center;
   }
   .search{
-    background: #fff;
-    // box-shadow: inset -10px -10px 30px rgba(255, 255, 255, 0.7), inset 10px 10px 30px rgba(174, 174, 192, 0.4);
+    background: #F5F5F5;
+    box-shadow: inset -10px -10px 30px rgb(255 255 255 / 70%), inset 10px 10px 30px rgb(174 174 192 / 40%);
+    border-radius: 100px;
     height: 30px;
     display: flex;
     padding: 4px 12px;
