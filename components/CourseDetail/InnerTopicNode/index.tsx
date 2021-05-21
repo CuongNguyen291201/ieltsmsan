@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react';
 import { formatDateDMY } from '../../../utils';
 import TopicTreeNode, { TopicNodeProps } from '../TopicTreeNode';
 import './style.scss';
+import OvalRecButton from '../../buttons/OvalRecButton';
 
 const InnerTopicNode = (props: TopicNodeProps) => {
   const {
@@ -10,7 +11,9 @@ const InnerTopicNode = (props: TopicNodeProps) => {
     isOpen = false,
     isTopicHasChild = false,
     isLoadChild = false,
-    onClickNode = () => { }
+    onClickNode = () => { },
+    isLoadMoreChilds = false,
+    loadMoreChildFC = () => {}
   } = props;
   const isFinished = useMemo(() => (topic.topicProgress?.progress ?? 0) === 100, [topic]);
   return (
@@ -30,9 +33,16 @@ const InnerTopicNode = (props: TopicNodeProps) => {
       </div>
 
       <div className="inner-topic-content">
-        {!!childs.length && isLoadChild && childs.map((e) => (
+        {!!childs.length && isLoadChild && childs.map((e, i) => (
           <div style={{ marginLeft: '17px'}} key={e._id}>
             <TopicTreeNode topic={e} />
+            {i === childs.length - 1 && isLoadMoreChilds && <div className="flex-center" style={{ margin: '12px 0' }}>
+              <OvalRecButton
+                title="TẢI THÊM"
+                onClick={loadMoreChildFC}
+                fontSize="10px"
+              />
+            </div>}
           </div>
         ))}
       </div>

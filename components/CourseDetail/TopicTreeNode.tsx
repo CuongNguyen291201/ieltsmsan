@@ -22,13 +22,16 @@ export type TopicNodeProps = {
   isLoadChild?: boolean;
   isTopicHasChild?: boolean;
   isOpen?: boolean;
-  onClickNode?: () => void
+  onClickNode?: () => void;
+  isLoadMoreChilds?: boolean;
+  loadMoreChildFC?: () => void; 
 }
 
 const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
   const { topic, isMain = false } = props;
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
   const [topicOptions, setTopicOptions] = useState<{ childs: OtsvTopic[], isLoadChild: boolean; }>({
     childs: [],
     isLoadChild: false
@@ -93,6 +96,17 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
     }
   };
 
+  const loadMoreChilds = () => {
+    fetchChildTopicsFC()
+      .then((data) => {
+        setTopicOptions({
+          ...topicOptions,
+          childs: [...topicOptions.childs, ...data],
+        });
+        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as Topic[]).length >= LOAD_LIMIT }));
+      });
+  }
+
   return (
     isMain
       ? <MainTopicNode
@@ -102,6 +116,8 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         isOpen={isOpen}
         isTopicHasChild={isTopicHasChild}
         onClickNode={onClickNode}
+        isLoadMoreChilds={mapLoadMoreState[topic._id]}
+        loadMoreChildFC={loadMoreChilds}
       />
       : (isTopicHasChild
         ? <InnerTopicNode
@@ -111,6 +127,8 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
           isLoadChild={topicOptions.isLoadChild}
           isTopicHasChild={isTopicHasChild}
           onClickNode={onClickNode}
+          isLoadMoreChilds={mapLoadMoreState[topic._id]}
+          loadMoreChildFC={loadMoreChilds}
         />
         : <LeafTopicNode
           topic={topic}

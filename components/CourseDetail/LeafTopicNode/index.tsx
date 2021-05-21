@@ -23,20 +23,6 @@ const LeafTopicNode = (props: TopicNodeProps) => {
           </div>
         </div>
       </div>
-
-      {/* {
-        topicOptions.isLoadChild && topicOptions.childs.map((e, i) => (
-          <div style={{ marginLeft: '15px' }} key={e._id}>
-            <TopicTreeNode topic={e} />
-            {i === topicOptions.childs.length - 1 && mapLoadMoreState[e._id] && <div
-              className="load-more"
-              onClick={() => fetchChildTopics()}
-            >
-              Tải thêm...
-            </div>}
-          </div>
-        ))
-      } */}
     </>
   );
 };

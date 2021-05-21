@@ -2,6 +2,7 @@ import { Fragment, memo, useMemo } from 'react';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { formatDateDMY } from '../../../utils';
+import OvalRecButton from '../../buttons/OvalRecButton';
 import TopicIcon from '../TopicIcon';
 import TopicTreeNode, { TopicNodeProps } from '../TopicTreeNode';
 import './style.scss';
@@ -13,7 +14,9 @@ const MainTopicNode = (props: TopicNodeProps) => {
     isLoadChild = false,
     isTopicHasChild = false,
     isOpen = true,
-    onClickNode = () => { }
+    onClickNode = () => { },
+    isLoadMoreChilds,
+    loadMoreChildFC = () => { }
   } = props;
 
   const progress = useMemo(() => {
@@ -45,10 +48,17 @@ const MainTopicNode = (props: TopicNodeProps) => {
         </div>
       </div>
       <div className="main-topic-content">
-        {!!childs.length && isLoadChild && childs.map((e) => (
+        {!!childs.length && isLoadChild && childs.map((e, i) => (
           <Fragment key={e._id}>
             <div className="line-sep" />
             <TopicTreeNode topic={e} />
+            {i === childs.length - 1 && isLoadMoreChilds && <div className="flex-center" style={{ margin: '12px 0' }}>
+              <OvalRecButton
+                title="TẢI THÊM"
+                onClick={loadMoreChildFC}
+                fontSize="11px"
+              />
+            </div>}
           </Fragment>
         ))}
       </div>

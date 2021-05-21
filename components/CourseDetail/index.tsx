@@ -22,15 +22,6 @@ const CourseDetail = (props: { course: Course }) => {
     setActiveTab(currentUser ? Tab.COURSE_TOPIC_TREE : Tab.COURSE_CONTENT);
   }, [currentUser]);
 
-  // useEffect(() => {
-  //   if (activeTab === Tab.COURSE_CONTENT) dispatch(resetCommentStateAction());
-  // }, [activeTab]);
-  // const dispatch = useDispatch();
-  // const { mainTopicsLoading } = useSelector((state: AppState) => state.topicReducer);
-  // useEffect(() => {
-  //   if (mainTopicsLoading) dispatch(fetchMainTopicsAction({ courseId: course._id, userId: currentUser?._id ?? null }));
-  // }, [mainTopicsLoading])
-
   return (
     <>
       <div className="course-info" style={{
