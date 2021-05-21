@@ -1,0 +1,39 @@
+.progress-topic-icon {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  margin-right: 8px;
+  background-color: #fff;
+  & .done-icon {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: -7px;
+    right: -7px;
+  }
+  & .topic-icon {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 3px;
+    left: 7px;
+  }
+  & .progress-background {
+    position: absolute;
+    width: 23px;
+    height: 4px;
+    background: #dedede;
+    bottom: 3px;
+    left: 4px;
+    border-radius: 4px;
+  }
+  & .progress-value {
+    position: absolute;
+    bottom: 3px;
+    left: 4px;
+    height: 4px;
+    border-radius: 4px;
+  }
+}

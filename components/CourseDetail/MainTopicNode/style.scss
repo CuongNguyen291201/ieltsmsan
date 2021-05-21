@@ -2,8 +2,8 @@
   border: 1px solid #dedede;
   border-radius: 0 0 10px 10px;
   margin-bottom: 15px;
+  background-color: #f9fafe;
   .topic-header {
-    background-color: #f9fafe;
     padding: 5px 0 5px 10px;
     grid-template-columns: 6.9fr 3.1fr;
     display: grid;
@@ -36,6 +36,13 @@
         font-size: 16px;
         color: rgba(0, 0, 0, 0.54);
       }
+    }
+  }
+  .main-topic-content {
+    padding: 0 10px;
+    .line-sep {
+      width: 100%;
+      border-top: 1px solid #d6e7fc;
     }
   }
 }
