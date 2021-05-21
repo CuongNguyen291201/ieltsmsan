@@ -5,12 +5,15 @@ import { AppState } from '../../redux/reducers';
 import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
 import { getExamScoreDetails, getSkills } from '../../sub_modules/game/api/ExamApi';
 import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import Skill from '../../sub_modules/share/model/skill';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import NoTestView from './NoTestView';
 import StudyScoreView from './StudyScoreView';
 import { MyCardDataView, StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
 
-const StatisticSkillView = (props: { currentTopic: any; studyScore?: StudyScore | null, currentUser: any }) => {
+const StatisticSkillView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, currentUser: UserInfo }) => {
   const { currentTopic, currentUser, studyScore } = props;
   const [statisticSkill, setStatisticSkill] = useState([]);
   useEffect(() => {
@@ -28,10 +31,11 @@ const StatisticSkillView = (props: { currentTopic: any; studyScore?: StudyScore 
 
       const skillRes = await getSkills();
       const mapSkill = {};
-      (skillRes.data as any[]).map((e) => {
+      if (!skillRes.data.length) return;
+      (skillRes.data).map((e) => {
         mapSkill[e.value] = e;
         if (e.childSkills) {
-          (e.childSkills as any[]).map((ce) => {
+          (e.childSkills).map((ce) => {
             mapSkill[ce.value] = ce;
           })
         }

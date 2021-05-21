@@ -4,8 +4,11 @@ import { MutableRefObject, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { ROUTER_GAME } from '../../utils/router';
-
+import PanelContainer from '../containers/PanelContainer';
+import './pre-game.scss';
+import { TopicInfoCommonView } from './TopicWidget';
 
 const PreGameView = (props: { topic: any }) => {
   const { topic } = props;
@@ -70,32 +73,14 @@ const PreGameView = (props: { topic: any }) => {
   //   getCardByTopicId()
   // }, [])
   return (
-    <>
-      <div className="head">
-        <div className="question-num">
-          <i className="fas fa-chevron-circle-down"></i>
-          {currentTopic.topicExercise.questionsNum} câu hỏi
+    <div className="topic-test-view">
+      <TopicInfoCommonView currentTopic={currentTopic} />
+      <div className="pre-game-start" onClick={playGame}>
+        <div className="start-game-btn">
+          Làm bài
         </div>
-        <div className="duration">
-          <i className="fas fa-clock"></i>
-          {currentTopic.topicExercise.duration} phút
-        </div>
-        <div className="lam-bai-button" onClick={playGame}>Làm bài</div>
       </div>
-      <div className="test-sentence-list">
-        {/* {cardOption.loading ? <div>loading....</div> :
-          (cardOption.cards && cardOption.cards.length ?
-            <div ref={mainGameViewPanel}>
-              {cardOption.cards.map((card, index) => {
-                return <div key={card._id} className="question-section">
-                  {card.hasChild == 1 ? <ParagraphView card={card} sentenceNum={index + 1} /> : <QuizView card={card} sentenceNum={index + 1} />}
-                </div>
-              })}
-            </div> :
-            <div>Không có câu hỏi hiển thị </div>)
-        } */}
-      </div>
-    </>
+    </div>
   )
 }
 

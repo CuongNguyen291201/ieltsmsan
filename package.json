@@ -13,6 +13,7 @@
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
+    "axios": "^0.21.1",
     "file-saver": "^2.0.5",
     "mime-types": "^2.1.30",
     "next": "10.0.1",

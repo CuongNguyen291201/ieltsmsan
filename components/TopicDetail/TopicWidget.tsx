@@ -5,12 +5,14 @@ import bookmarkAnswerIcon from '../../public/icon/bookmark-answer-icon.svg';
 import correctAnswerIcon from '../../public/icon/correct-answer-icon.svg';
 import incorrectAnswerIcon from '../../public/icon/incorrect-answer-icon.svg';
 import notAnswerIcon from '../../public/icon/not-answer-icon.svg';
-import { prepareGameReviewBoxAction } from '../../redux/actions/prepareGame.actions';
+import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
-import { genUnitScore } from '../../utils';
-import { ROUTER_GAME } from '../../utils/router';
+import Topic from '../../sub_modules/share/model/topic';
+import { genUnitScore, getGameSlug } from '../../utils';
 // TOPIC INFO COMMON VIEW
 export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: StudyScore | null }) => {
   const { currentTopic, studyScore } = props;
@@ -70,20 +72,20 @@ export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: Stu
 
 
 // MY CARD DATA VIEW
-function getNumCardBox(myCardData: any, currentTopic: any) {
-  let cardCorrectArr = [];
-  let cardIncorrectArr = [];
+function getNumCardBox(myCardData: MyCardData, currentTopic: Topic) {
+  let cardCorrectArr: string[] = [];
+  let cardIncorrectArr: string[] = [];
   let numCardNotAnswer = 0;
-  let cardBookMark = []
+  let cardBookMark: string[] = []
   if (currentTopic?.topicExercise) {
     numCardNotAnswer = currentTopic.topicExercise.questionsNum;
   }
   if (myCardData) {
-    const mapBoxNum = {}
-    Object.keys(myCardData.boxCard).map(e => {
+    const mapBoxNum: { [x: number]: string[] } = {};
+    Object.keys(myCardData.boxCard).map((e: string) => {
       const boxNum = myCardData.boxCard[e] > 0 ? 1 : 0;
       mapBoxNum[boxNum] = [...mapBoxNum[boxNum] || [], e];
-    })
+    });
     cardCorrectArr = mapBoxNum[1] ? mapBoxNum[1] : [];
     cardIncorrectArr = mapBoxNum[0] ? mapBoxNum[0] : [];
     numCardNotAnswer = numCardNotAnswer - cardCorrectArr.length - cardIncorrectArr.length;
@@ -95,18 +97,15 @@ function getNumCardBox(myCardData: any, currentTopic: any) {
   return { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark }
 }
 
-export const MyCardDataView = (props: { currentTopic: any; studyScore?: StudyScore | null, myCardData: any }) => {
+export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData }) => {
   const { currentTopic, studyScore, myCardData } = props;
   const dispatch = useDispatch();
   const router = useRouter();
   const { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark } = getNumCardBox(myCardData, currentTopic);
 
   const onClick = (box: number) => {
-    dispatch(prepareGameReviewBoxAction(box));
-    router.push({
-      pathname: ROUTER_GAME,
-      query: { id: currentTopic._id }
-    });
+    dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore, boxGame: box }));
+    router.push(getGameSlug(currentTopic._id));
   }
 
   return (

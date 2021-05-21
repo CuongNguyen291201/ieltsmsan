@@ -6,6 +6,7 @@ import { courseReducer, CourseState } from './course.reducer';
 import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
 import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
 import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
+import { commentReducer, CommentState } from './comment.reducers';
 
 export interface AppState {
   categoryReducer: CategoryState;
@@ -15,6 +16,7 @@ export interface AppState {
   prepareGameReducer: PrepareGameState;
   gameReducer: IGameState;
   scenarioReducer: ScenarioState;
+  commentReducer: CommentState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -24,5 +26,6 @@ export const rootReducer = combineReducers<AppState>({
   courseReducer,
   prepareGameReducer,
   gameReducer,
-  scenarioReducer
+  scenarioReducer,
+  commentReducer
 });

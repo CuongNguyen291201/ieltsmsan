@@ -14,3 +14,7 @@ export const loadListAction = (scope: Scopes, payload?: any, target?: string): B
 export const failureAction = (scope: Scopes, payload?: any, target?: string): BaseAction => ({
   type: ActionTypes.FAILURE, scope, payload, target
 });
+
+export const createOneAction = (scope: Scopes, payload?: any): BaseAction => ({
+  type: ActionTypes.CREATE_ONE, scope, payload
+});

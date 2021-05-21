@@ -1,9 +1,9 @@
 import { Fragment, useMemo } from 'react';
 import { OtsvCategory } from '../../custom-types';
-import { usePaginationState } from '../../hooks/pagination';
+import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { Course } from '../../sub_modules/share/model/courses';
 import { fetchPaginationAPI } from '../../utils/apis/common';
-import { apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
+import { apiCountCategoryCourses, apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
 import CourseItem from '../CourseItem';
 import GridTemplate2 from '../grid/GridTemplate2';
 import Pagination from '../Pagination';
@@ -18,7 +18,9 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
     return fetchPaginationAPI<Course>({ ...args, seekAPI: apiSeekCoursesByCategory, offsetAPI: apiOffsetCoursesByCategory });
   }
 
+
   const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId' });
+  const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
 
   return (
     <>
@@ -54,9 +56,9 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
                 </GridTemplate2>
 
                 <div className="pagination">
-                  {pages[e._id]?.totalPages > 1 &&
+                  {(mapTotalPages[e._id] || 0) > 1 &&
                     <Pagination
-                      total={pages[e._id]?.totalPages}
+                      total={mapTotalPages[e._id]}
                       active={pages[e._id]?.currentPage}
                       start={1}
                       onClick={(page) => onChangePage({ key: e._id, page })}

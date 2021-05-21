@@ -1,4 +1,5 @@
 import { POST_API, POST_REQ } from '../../sub_modules/common/api'
+import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { Course, ICourse } from '../../sub_modules/share/model/courses'
 
 export const apiSeekCoursesByCategory = (args: {
@@ -18,3 +19,13 @@ export const apiOffsetCoursesByCategory = (args: {
 }) => POST_REQ('offset-courses-by-category', args);
 
 export const apiGetCourseById = (courseId: string) => POST_API('get-course-by-id', { courseId });
+
+export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot?: boolean }): Promise<{ total: number; }> => {
+  try {
+    const { data, status } = await POST_API('count-category-courses', args);
+    if (status === response_status_codes.success) return data;
+    return { total: 0 };
+  } catch (e) {
+    return { total: 0 };
+  }
+}

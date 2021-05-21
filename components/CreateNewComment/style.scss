@@ -18,6 +18,12 @@
       content: "Bình luận";
       color: gray;
     }
+    &.reply {
+      &[contenteditable]:empty::before {
+        content: "Trả lời";
+        color: gray;
+      }
+    }
   }
 
   .cmt-options {
