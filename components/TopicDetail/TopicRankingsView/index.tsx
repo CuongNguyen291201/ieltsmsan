@@ -50,7 +50,7 @@ const TopicRankingsView = (props: { topic: Topic }) => {
     else if (value === SCORE_ASC.key) options = SCORE_ASC.value;
     else if (value === LATEST.key) options = LATEST.value;
     else if (value === EARLIEST.key) options = EARLIEST.value;
-    if (options) setSortOpts({ ...sortingOpts, ...options });
+    if (options) setSortOpts({ ...sortingOpts, sortBy: options.field, asc: options.asc });
   }
 
   const handleChangeLimit = (e: ChangeEvent<HTMLSelectElement>) => {
