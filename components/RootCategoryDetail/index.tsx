@@ -20,7 +20,7 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
 
 
   const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId' });
-  const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
+  const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: true } });
 
   return (
     <>
