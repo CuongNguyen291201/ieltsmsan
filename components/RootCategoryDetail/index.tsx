@@ -10,16 +10,16 @@ import Pagination from '../Pagination';
 import SearchBox from '../SearchBox';
 import './style.scss';
 
-const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[] }) => {
+const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
   const { category, childCategories = [] } = props;
   const childCategoryIds = useMemo(() => childCategories.map(({ _id }) => String(_id)), [childCategories]);
 
-  const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number }) => {
+  const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number; }) => {
     return fetchPaginationAPI<Course>({ ...args, seekAPI: apiSeekCoursesByCategory, offsetAPI: apiOffsetCoursesByCategory });
-  }
+  };
 
 
-  const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId' });
+  const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId', filters: { field: 'name' } });
   const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
 
   return (
@@ -71,7 +71,7 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
         ))}
       </div>
     </>
-  )
-}
+  );
+};
 
 export default RootCategoryDetail;
