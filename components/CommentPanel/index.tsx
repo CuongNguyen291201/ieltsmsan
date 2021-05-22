@@ -8,6 +8,7 @@ import Discussion from '../../sub_modules/share/model/discussion';
 import CommentItem from '../CommentItem';
 import CreateNewComment from '../CreateNewComment';
 import './style.scss';
+import DOMPurify from 'isomorphic-dompurify';
 
 const LOAD_LIMIT = 10;
 
@@ -42,7 +43,7 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     }
     dispatch(createCommentAction({
       comment: new Discussion({
-        content,
+        content: DOMPurify.sanitize(content),
         courseId,
         topicId,
         userId: currentUser._id,
@@ -104,7 +105,7 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
     if (!content) return;
     dispatch(createCommentAction({
       comment: new Discussion({
-        content,
+        content: DOMPurify.sanitize(content),
         conversationId: null,
         courseId,
         topicId,

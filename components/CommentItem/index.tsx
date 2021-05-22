@@ -1,10 +1,10 @@
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
 import { AppState } from '../../redux/reducers';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import { formatDateDMY, formatTimeHM, getRelativeTime, isEqualStringified } from '../../utils';
-// import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
+import { getRelativeTime, isEqualStringified } from '../../utils';
+import SanitizedDiv from '../SanitizedDiv';
 import './style.scss';
 
 const CommentItem = (props: {
@@ -68,11 +68,7 @@ const CommentItem = (props: {
       <div className="comment-main">
         <div className="comment-content">
           <div className="usr-name">{user?.name || ''}</div>
-          <div className="comment-text" dangerouslySetInnerHTML={{ __html: content }} />
-          {/* <div className="row1">
-        </div>
-        <div className="row2">
-      </div> */}
+          <SanitizedDiv className="comment-text" content={content} />
         </div>
         <div className="comment-stat">
           <div className="like">{`${isUserLiked ? 'Bỏ thích' : 'Thích'}${!!likes.length ? ` (${likes.length})` : ''}`}</div>

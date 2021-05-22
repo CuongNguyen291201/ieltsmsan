@@ -40,6 +40,9 @@
       color: #fff;
     }
   }
+  .login, .logout, .signup {
+    cursor: pointer;
+  }
 }
 @media(max-width:600px){
   .main-header{

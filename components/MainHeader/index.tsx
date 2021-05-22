@@ -30,12 +30,11 @@ function MainHeader() {
             <img src="/home/header-mail.png" alt="" />
           </div>
           <div className="text">
-            <span>Email:</span> infor@onthisinhvien.com
+            <span>Email:</span> info@onthisinhvien.com
           </div>
         </div>
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
-          {/* <div className="head">NEW</div> */}
         </div>
         <div className="cart item">
           <div className="image">

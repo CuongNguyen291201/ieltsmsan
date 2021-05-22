@@ -1,11 +1,11 @@
-@import '../CategoryItem/style.scss';
+@import "../CategoryItem/style.scss";
 
 .crs-avatar {
   position: relative;
   cursor: pointer;
   & img {
     @include item-avatar-style;
-    min-height: 146px;
+    min-height: 155px;
   }
 }
 
@@ -14,9 +14,20 @@
   .crs-title {
     font-weight: 700;
     font-size: 15px;
-    color: #EC1F24;
+    color: #ec1f24;
     margin-bottom: 4px;
-    height: 32px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-height: 34px;
+    
+    @supports (-webkit-line-clamp: 2) {
+      overflow: hidden;
+      display: -webkit-box;
+      white-space: initial;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
   }
 
   .crs-desc {
@@ -24,14 +35,14 @@
     color: #9e9e9e;
     font-size: 15px;
     margin-bottom: 8px;
-    height: 32px;
+    min-height: 60px;
   }
 
   .crs-rating {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-    
+
     .crs-point {
       margin-right: 8px;
       font-weight: 700;
@@ -40,10 +51,11 @@
 
     .vote-star {
       margin-right: 8px;
-      .rating{
+      .rating {
         display: flex;
-        .star-full,.star-half{
-          img{
+        .star-full,
+        .star-half {
+          img {
             width: 14px;
             height: 14px;
             margin-right: 2px;
@@ -51,7 +63,7 @@
         }
       }
     }
-    .crs-mem{
+    .crs-mem {
       font-size: 15px;
     }
   }
@@ -61,13 +73,13 @@
     align-items: center;
     margin-bottom: 8px;
     .crs-discount-price {
-      color: #EC1F24;
+      color: #ec1f24;
       font-weight: 700;
       margin-right: 16px;
       letter-spacing: 1px;
     }
     .crs-origin-price {
-      color: #EC1F24;
+      color: #ec1f24;
       font-weight: 700;
       text-decoration: line-through;
       letter-spacing: 1px;
@@ -87,19 +99,35 @@
     color: #ec1f24;
   }
 }
-@media(max-width: 900px){
-  .crs-info{
-    .crs-title{
-      font-size: 14px;
+
+@media (max-width: 900px) {
+  .crs-info {
+    font-size: 14px;
+    .crs-title {
       overflow: hidden;
     }
-    .crs-desc{
-      font-size: 14px;
-    }
-    .crs-price{
-      .crs-origin-price{
+    .crs-price {
+      .crs-origin-price {
         display: none;
       }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .crs-info {
+    margin: 0;
+    padding: 12px;
+    .crs-title {
+      margin-bottom: 8px;
+      font-size: 14px;
+      max-width: 145px;
+      max-height: 45px;
+    }
+  }
+  .crs-avatar {
+    img {
+      min-height: 99.5px;
     }
   }
 }

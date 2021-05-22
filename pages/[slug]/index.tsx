@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
+import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
@@ -70,6 +71,7 @@ const Slug = (props: SlugTypes) => {
       <MainMenu />
       <Breadcrumb items={breadcrumbItems} />
       {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
+      <Footer />
     </Layout>
   )
 }

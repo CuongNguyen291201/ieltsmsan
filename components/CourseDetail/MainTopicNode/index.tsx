@@ -20,7 +20,7 @@ const MainTopicNode = (props: TopicNodeProps) => {
   } = props;
 
   const progress = useMemo(() => {
-    return topic.topicProgress?.progress ?? 0
+    return topic.topicProgress?.progress ?? 0;
   }, [topic]);
   return (
     <div className="main-topic-node">
@@ -30,22 +30,20 @@ const MainTopicNode = (props: TopicNodeProps) => {
           {topic.name}
         </div>
 
-        <div className="topic-info">
-          {!!topic.topicProgress
-            ? <CircularProgressbar
-              value={progress}
-              styles={buildStyles({
-                pathColor: '#58bf80',
-                trailColor: '#a1f3c1'
-              })}
-              text={`${progress}%`}
-              className="topic-progress"
-            />
-            : <div style={{ width: '40px', height: '40px' }} />
-          }
-          {!isOpen ? <div className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</div> : <div />}
-          {isTopicHasChild && <i className={`fas fa-chevron-${isLoadChild ? 'up' : 'down'} toggle-main`} />}
-        </div>
+        {!!topic.topicProgress
+          ? <CircularProgressbar
+            value={progress}
+            styles={buildStyles({
+              pathColor: '#58bf80',
+              trailColor: '#a1f3c1'
+            })}
+            text={`${progress}%`}
+            className="topic-progress"
+          />
+          : <div style={{ width: '40px', height: '40px' }} />
+        }
+        {!isOpen ? <div className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</div> : <div className="sub-title" />}
+        {isTopicHasChild && <i className={`fas fa-chevron-${isLoadChild ? 'up' : 'down'} toggle-main`} />}
       </div>
       <div className="main-topic-content">
         {!!childs.length && isLoadChild && childs.map((e, i) => (
@@ -63,7 +61,7 @@ const MainTopicNode = (props: TopicNodeProps) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default memo(MainTopicNode);

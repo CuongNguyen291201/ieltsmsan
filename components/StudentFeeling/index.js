@@ -16,7 +16,7 @@ function StudentFeeling() {
     }
     else {
       let expectedSlideItemWidth = browserWidth * (93 / 100)
-      console.log(browserWidth);
+      // console.log(browserWidth);
       let slideItemEls = document.getElementsByClassName('student-feeling-slide-item')
       Array.prototype.forEach.call(slideItemEls, function (el) {
         // Do stuff here
