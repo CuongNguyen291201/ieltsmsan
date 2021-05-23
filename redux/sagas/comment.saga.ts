@@ -1,4 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { Comment } from '../../custom-types';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { apiCreateComment, apiSeekCommentsByCourse, apiSeekCommentsByTopic, apiSeekDiscussionsByParent } from '../../utils/apis/commentApi';
 import { createOneAction, loadListAction } from '../actions';
@@ -6,7 +7,9 @@ import { CommentAction, loadRepliesAction } from '../actions/comment.action';
 import { ActionTypes, Scopes } from '../types';
 
 function* createComment(args: CommentAction) {
-  const { data, status } = yield call(apiCreateComment, args.payload.comment);
+  const newComment: Comment = args.payload.comment;
+  newComment.user = args.payload.user;
+  const { data, status } = yield call(apiCreateComment, newComment);
   if (status === response_status_codes.success) {
     data.user = args.payload.user;
     yield put(createOneAction(Scopes.COMMENT, data));

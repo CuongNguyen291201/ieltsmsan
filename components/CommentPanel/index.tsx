@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CommentScopes } from '../../custom-types';
+import { Comment, CommentScopes } from '../../custom-types';
 import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction, resetCommentStateAction } from '../../redux/actions/comment.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -9,6 +9,9 @@ import CommentItem from '../CommentItem';
 import CreateNewComment from '../CreateNewComment';
 import './style.scss';
 import DOMPurify from 'isomorphic-dompurify';
+import { useSocket } from '../../hooks/socket';
+import { createOneAction } from '../../redux/actions';
+import { Scopes } from '../../redux/types';
 
 const LOAD_LIMIT = 10;
 
@@ -17,14 +20,20 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
-  const { commentsList, isShowLoadMoreComments } = useSelector((state: AppState) => state.commentReducer);
-
+  const { commentsList, isShowLoadMoreComments, mapReplies } = useSelector((state: AppState) => state.commentReducer);
   const commentRef = useRef<HTMLSpanElement>();
-
+  
   const { courseId, topicId } = useMemo(() => ({
     courseId: (currentCourse?._id ?? currentTopic?.courseId) || null,
     topicId: currentTopic?._id || null
   }), [currentCourse, currentTopic]);
+  
+  const { socket, leaveRoom } = useSocket({
+    enabled: !!currentUser,
+    roomType: 0,
+    roomId: commentScope  === CommentScopes.COURSE ? courseId : topicId,
+    url: process.env.NEXT_PUBLIC_SOCKET_URL
+  });
 
   useEffect(() => {
     if (!courseId && !topicId) return;
@@ -33,6 +42,20 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     else if (commentScope === CommentScopes.TOPIC) dispatch(fetchTopicCommentsAction({ topicId }));
     else return;
   }, [commentScope, courseId, topicId]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('add-new-comment', (comment: Comment) => {
+        if (comment.userId !== currentUser._id) {
+          dispatch(createOneAction(Scopes.COMMENT, comment));
+        }
+      });
+
+      return () => {
+        leaveRoom();
+      }
+    }
+  }, [socket]);
 
   const dispatch = useDispatch();
   const pushComment = useCallback(() => {
@@ -103,6 +126,9 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
   const pushReply = (parentId: string) => {
     const content = replyRef.current.innerHTML;
     if (!content) return;
+    if (!currentUser) {
+      dispatch(showLoginModalAction(true));
+    }
     dispatch(createCommentAction({
       comment: new Discussion({
         content: DOMPurify.sanitize(content),
