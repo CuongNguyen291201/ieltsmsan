@@ -11,6 +11,7 @@
 
 .crs-info {
   padding: 12px;
+  cursor: pointer;
   .crs-title {
     font-weight: 700;
     font-size: 15px;
@@ -105,6 +106,11 @@
     font-size: 14px;
     .crs-title {
       overflow: hidden;
+    }
+    .crs-rating {
+      .vote-star {
+        margin-right: 3px;
+      }
     }
     .crs-price {
       .crs-origin-price {

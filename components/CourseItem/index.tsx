@@ -23,8 +23,8 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
       <div className="crs-avatar" onClick={onClickItem}>
         <img src={course.avatar || itemAvatar} alt={course.name} />
       </div>
-      <div className="crs-info">
-        <div className="crs-title" onClick={onClickItem}>
+      <div className="crs-info" onClick={onClickItem}>
+        <div className="crs-title">
           {course.name}
         </div>
         <div className="crs-desc">
