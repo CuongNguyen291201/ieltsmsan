@@ -130,6 +130,17 @@
       max-width: 145px;
       max-height: 45px;
     }
+    .crs-rating {
+      .crs-point {
+        font-size: 12px;
+      }
+      .vote-star {
+        margin-right: 2px;
+      }
+      .crs-mem {
+        font-size: 12px;
+      }
+    }
   }
   .crs-avatar {
     img {

@@ -1,4 +1,4 @@
-@import "../../../styles/variables.scss";
+@import '../../../styles/variables.scss';
 
 .main-topic-node {
   border: 1px solid #dedede;
@@ -6,7 +6,7 @@
   margin-bottom: 15px;
   background-color: #f9fafe;
   .topic-header {
-    padding: 5px 0 5px 10px;
+    padding: 5px 1px 5px 10px;
     grid-template-columns: 18fr 2fr 5fr 1fr;
     display: grid;
     position: relative;
@@ -34,7 +34,6 @@
     .toggle-main {
       font-size: 16px;
       color: rgba(0, 0, 0, 0.54);
-      margin-right: 25px;
     }
   }
   .main-topic-content {
@@ -46,10 +45,19 @@
   }
 }
 
+@media (max-width: $h-mobile-max-width) {
+  .main-topic-node {
+    .topic-header {
+      padding-right: 11px;
+    }
+  }
+}
+
 @media (max-width: $mobile-max-width) {
   .main-topic-node {
     .topic-header {
       grid-template-columns: 18fr 7fr 1fr;
+      padding-right: 25px;
       .sub-title {
         width: 0;
         display: none;

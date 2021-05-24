@@ -3,6 +3,8 @@ import { formatDateDMY } from '../../../utils';
 import TopicTreeNode, { TopicNodeProps } from '../TopicTreeNode';
 import './style.scss';
 import OvalRecButton from '../../buttons/OvalRecButton';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../../redux/reducers';
 
 const InnerTopicNode = (props: TopicNodeProps) => {
   const {
@@ -16,6 +18,7 @@ const InnerTopicNode = (props: TopicNodeProps) => {
     loadMoreChildFC = () => {}
   } = props;
   const isFinished = useMemo(() => (topic.topicProgress?.progress ?? 0) === 100, [topic]);
+  const { currentUser } = useSelector((state: AppState) => state.userReducer);
   return (
     <div className="inner-topic-node">
       <div className="inner-topic-header" onClick={onClickNode}>
@@ -25,7 +28,7 @@ const InnerTopicNode = (props: TopicNodeProps) => {
             {topic.name}
           </div>
           <div className={`topic-progress${isFinished ? ' done' : ''}`}>
-            {`: ${topic.topicProgress?.progress ?? 0}%`}
+            {!!currentUser ? `: ${topic.topicProgress?.progress ?? 0}%` : ''}
           </div>
         </div>
         {!isOpen ? <div className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</div> : <div />}

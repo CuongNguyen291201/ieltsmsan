@@ -40,10 +40,10 @@ const MainTopicNode = (props: TopicNodeProps) => {
             text={`${progress}%`}
             className="topic-progress"
           />
-          : <div style={{ width: '40px', height: '40px' }} />
+          : <div style={{ width: '40px', height: '40px' }} className="topic-progress" />
         }
         {!isOpen ? <div className="sub-title">{`Ngày phát hành: ${formatDateDMY(topic.startTime)}`}</div> : <div className="sub-title" />}
-        {isTopicHasChild && <i className={`fas fa-chevron-${isLoadChild ? 'up' : 'down'} toggle-main`} />}
+        {isTopicHasChild ? <i className={`fas fa-chevron-${isLoadChild ? 'up' : 'down'} toggle-main`} /> : <i className="toggle-main" />}
       </div>
       <div className="main-topic-content">
         {!!childs.length && isLoadChild && childs.map((e, i) => (
