@@ -91,7 +91,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         dispatch(showLoginModalAction(true));
         return;
       }
-      if (!ReactPlayer.canPlay(topic.description)) {
+      if (topic.type !== TOPIC_TYPE_LESSON) {
         updateTopicProgressFC();
       }
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);

@@ -12,13 +12,12 @@ const LessonVideoView = (props: {
   topic: Topic,
 }) => {
   const { topic } = props;
-  const url = topic.description;
+  const url = topic.videoUrl;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const [topicProgress, setTopicProgress] = useState<TopicProgress | null>(null);
   const [isUpdateProgress, setUpdateProgress] = useState(false);
 
   useEffect(() => {
-    if (!currentUser) return;
     if (!topicProgress) {
       apiGetTopicProgress({ courseId: topic.courseId, parentId: topic.parentId, topicId: topic._id, userId: currentUser._id })
         .then(({ data, status }) => {
@@ -27,20 +26,23 @@ const LessonVideoView = (props: {
           }
         });
     }
-  }, [currentUser]);
+  }, []);
 
-  const onProgress = (played: number) => {
-    if (!currentUser) return;
-    if (played >= 0.5 && !isUpdateProgress && !!topicProgress) {
-      if (topicProgress.progress === 100) {
-        setUpdateProgress(true);
-        return;
-      }
+  useEffect(() => {
+    if (isUpdateProgress && (topicProgress?.progress ?? 0) < 100) {
       apiUpdateTopicProgress({
         topicId: topic._id,
         userId: currentUser._id,
         progress: 100
-      }).then(() => setUpdateProgress(true));
+      });
+    }
+  }, [isUpdateProgress]);
+
+  const onProgress = (played: number) => {
+    if (!currentUser) return;
+    if (played >= 0.5 && !isUpdateProgress && !!topicProgress) {
+      setUpdateProgress(true);
+      return;
     }
   };
 

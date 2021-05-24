@@ -1,10 +1,14 @@
+import { useEffect } from 'react';
 import ReactPlayer from 'react-player';
+import { useSelector } from 'react-redux';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
+import { AppState } from '../../redux/reducers';
 import Document from '../../sub_modules/share/model/document';
 import Topic from '../../sub_modules/share/model/topic';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
+import { apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
 import './lesson-info.scss';
@@ -12,6 +16,7 @@ import LessonVideoView from './LessonVideoView';
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
+  const { currentUser } = useSelector((state: AppState) => state.userReducer);
 
   const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
     return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
@@ -24,13 +29,20 @@ const LessonInfoView = (props: { topic: Topic }) => {
   });
 
   const { mapTotalPages } = useTotalPagesState({ keys: [topic._id], keyName: 'parentId', api: apiCountDocumentsByTopic });
+  useEffect(() => {
+    if (!currentUser) return;
+    if (!topic.videoUrl) {
+      apiUpdateTopicProgress({
+        topicId: topic._id, userId: currentUser._id, progress: 100
+      });
+    }
+  }, [currentUser]);
 
   return (
     <div className="lesson-detail">
       <PanelContainer title="Mô tả">
-        {!ReactPlayer.canPlay(topic.description)
-          ? <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
-          : <LessonVideoView topic={topic} />}
+          <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
+          {!!topic.videoUrl && <LessonVideoView topic={topic} />}
       </PanelContainer>
 
       <PanelContainer title="Tài liệu tham khảo">
