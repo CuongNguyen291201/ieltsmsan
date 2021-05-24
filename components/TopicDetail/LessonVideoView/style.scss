@@ -1,9 +1,21 @@
 .lesson-video-view {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   .lesson-video-player-wrapper {
-    iframe, video, .react-player__preview {
+    width: auto;
+    height: auto;
+    .lesson-video-player {
+      position: relative;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      & > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    iframe,
+    video,
+    .react-player__preview {
       border-radius: 18px;
     }
   }

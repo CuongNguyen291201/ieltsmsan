@@ -48,9 +48,10 @@ const LessonVideoView = (props: {
     <div className="lesson-video-view">
       <div className="lesson-video-player-wrapper">
         <ReactPlayer
-          className="lesson-video-react-player"
-          width="854px"
-          height="480px"
+          className="lesson-video-player"
+          style={{ maxWidth: 1000, maxHeight: 600, margin: '0 auto' }}
+          width="100%"
+          height="100%"
           url={url}
           playing={true}
           pip={false}
