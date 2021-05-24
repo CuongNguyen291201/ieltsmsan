@@ -52,12 +52,13 @@ const LessonVideoView = (props: {
           width="854px"
           height="480px"
           url={url}
-          playing={false}
+          playing={true}
           pip={false}
           playsinline={false}
           onProgress={(e) => onProgress(e.played)}
           controls={true}
           loop={false}
+          light="https://storage.googleapis.com/comaiphuong-edu-media/images/images_default_videojs.jpg"
           config={{
             file: {
               attributes: {
