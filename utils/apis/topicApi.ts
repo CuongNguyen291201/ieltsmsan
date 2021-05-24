@@ -4,6 +4,7 @@ import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { TopicExercise } from '../../sub_modules/share/model/topicExercise';
+import { ITopicProgress } from '../../sub_modules/share/model/topicProgress';
 
 export const apiSeekTopicsByParentId = (args: {
   parentId: string | null; courseId: string;
@@ -89,4 +90,6 @@ export const apiCountTopicStudyScores = async (args: { topicId: string; status?:
 export const apiGetUserExamCardData = async (args: { topicId: string; userId: string; type: number; studyScore: StudyScore; }) => POST_API('get-user-exam-card-data', args);
 
 export const apiUpdateTopicProgress = (args: { topicId: string; progress: number; userId: string }) => POST_API('update-topic-progress', args);
+
+export const apiGetTopicProgress = (args: ITopicProgress) => POST_API('get-topic-progress', args);
 

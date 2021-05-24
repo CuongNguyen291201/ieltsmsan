@@ -1,15 +1,14 @@
-import { useRef } from 'react';
-import { CommentScopes } from '../../custom-types';
+import ReactPlayer from 'react-player';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import Document from '../../sub_modules/share/model/document';
 import Topic from '../../sub_modules/share/model/topic';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
-import CommentPanel from '../CommentPanel';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
 import './lesson-info.scss';
+import LessonVideoView from './LessonVideoView';
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
@@ -29,7 +28,9 @@ const LessonInfoView = (props: { topic: Topic }) => {
   return (
     <div className="lesson-detail">
       <PanelContainer title="Mô tả">
-        <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
+        {!ReactPlayer.canPlay(topic.description)
+          ? <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
+          : <LessonVideoView topic={topic} />}
       </PanelContainer>
 
       <PanelContainer title="Tài liệu tham khảo">

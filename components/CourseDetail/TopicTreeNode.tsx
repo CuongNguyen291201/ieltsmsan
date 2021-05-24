@@ -14,6 +14,7 @@ import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/api
 import InnerTopicNode from './InnerTopicNode';
 import LeafTopicNode from './LeafTopicNode';
 import MainTopicNode from './MainTopicNode';
+import ReactPlayer from 'react-player';
 
 const LOAD_LIMIT = 20;
 export type TopicNodeProps = {
@@ -90,7 +91,9 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         dispatch(showLoginModalAction(true));
         return;
       }
-      updateTopicProgressFC();
+      if (!ReactPlayer.canPlay(topic.description)) {
+        updateTopicProgressFC();
+      }
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
       router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }
