@@ -22,7 +22,7 @@ const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | 
     }
   }
 
-  const isPass = ((studyScore.studyScoreData.score / 10) * 100) > currentTopic?.topicExercise?.pass;
+  const isPass = ((studyScore.studyScoreData.score / 10) * 100) >= currentTopic?.topicExercise?.pass;
 
   return (
     <>
