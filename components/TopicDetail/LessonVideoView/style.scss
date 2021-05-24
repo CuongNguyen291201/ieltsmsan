@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   .lesson-video-player-wrapper {
-    iframe {
+    iframe, video {
       border-radius: 18px;
     }
   }
