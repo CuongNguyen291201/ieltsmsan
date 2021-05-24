@@ -46,9 +46,9 @@ const LessonVideoView = (props: {
 
   return (
     <div className="lesson-video-view">
-      <div className="player-wrapper">
+      <div className="lesson-video-player-wrapper">
         <ReactPlayer
-          className="react-player"
+          className="lesson-video-react-player"
           width="854px"
           height="480px"
           url={url}
