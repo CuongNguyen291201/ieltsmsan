@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { AppState } from '../../redux/reducers';

@@ -14,7 +14,6 @@ import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/api
 import InnerTopicNode from './InnerTopicNode';
 import LeafTopicNode from './LeafTopicNode';
 import MainTopicNode from './MainTopicNode';
-import ReactPlayer from 'react-player';
 
 const LOAD_LIMIT = 20;
 export type TopicNodeProps = {
