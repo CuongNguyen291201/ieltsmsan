@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import defaultAvatar from '../../../public/default/default_avatar_otsv.jpg';
+import { AppState } from '../../../redux/reducers';
+import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { TOPIC_DETAIL_PAGE_TYPE, USER_ACTIVITY_LESSON, USER_ACTIVITY_PLAY_GAME_PARACTICE, USER_ACTIVITY_PLAY_GAME_TEST, USER_ACTIVITY_WATCH_VIDEO } from '../../../sub_modules/share/constraint';
 import { StudyScoreData } from '../../../sub_modules/share/model/studyScoreData';
 import Topic from '../../../sub_modules/share/model/topic';
@@ -16,6 +19,8 @@ const UserActivityItem = (props: {
 }) => {
   const { activity: { type, user, item, createDate, lastUpdate }, dimBackground, isLastItem } = props;
   const router = useRouter();
+  const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const dispatch = useDispatch();
   const { content, time } = useMemo(() => {
     let content = '';
     let time = lastUpdate || createDate;
@@ -45,6 +50,10 @@ const UserActivityItem = (props: {
       topic = item as Topic;
     }
     if (!topic) return;
+    if (!currentUser) {
+      dispatch(showLoginModalAction(true));
+      return;
+    }
     router.push({
       pathname: getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id),
       query
