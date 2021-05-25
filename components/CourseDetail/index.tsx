@@ -45,24 +45,26 @@ const CourseDetail = (props: { course: Course }) => {
           </div>
         </div>
       </div>
-      <div className="container course-detail">
-        <div className="tab-header">
-          <div
-            className={`tab-title${activeTab === Tab.COURSE_CONTENT ? ' active' : ''}`}
-            onClick={() => setActiveTab(Tab.COURSE_CONTENT)}
-          >
-            MÔ TẢ KHOÁ HỌC
+      <div className="container">
+        <div className="course-detail">
+          <div className="tab-header">
+            <div
+              className={`tab-title${activeTab === Tab.COURSE_CONTENT ? ' active' : ''}`}
+              onClick={() => setActiveTab(Tab.COURSE_CONTENT)}
+            >
+              MÔ TẢ KHOÁ HỌC
+            </div>
+            <div
+              className={`tab-title${activeTab === Tab.COURSE_TOPIC_TREE ? ' active' : ''}`}
+              onClick={() => setActiveTab(Tab.COURSE_TOPIC_TREE)}
+            >
+              DANH SÁCH BÀI HỌC
+            </div>
           </div>
-          <div
-            className={`tab-title${activeTab === Tab.COURSE_TOPIC_TREE ? ' active' : ''}`}
-            onClick={() => setActiveTab(Tab.COURSE_TOPIC_TREE)}
-          >
-            DANH SÁCH BÀI HỌC
-          </div>
+          {
+            activeTab === Tab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />
+          }
         </div>
-        {
-          activeTab === Tab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />
-        }
       </div>
     </>
   )

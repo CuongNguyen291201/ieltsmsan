@@ -1,4 +1,5 @@
-@import "../CategoryItem/style.scss";
+@import '../CategoryItem/style.scss';
+@import '../../styles/variables.scss';
 
 .crs-avatar {
   position: relative;
@@ -21,7 +22,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     min-height: 34px;
-    
+    white-space: nowrap;
+
     @supports (-webkit-line-clamp: 2) {
       overflow: hidden;
       display: -webkit-box;
@@ -73,6 +75,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+    min-height: 34px;
     .crs-discount-price {
       color: #ec1f24;
       font-weight: 700;
@@ -101,7 +104,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: $h-mobile-max-width) {
   .crs-info {
     font-size: 14px;
     .crs-title {
@@ -112,15 +115,10 @@
         margin-right: 3px;
       }
     }
-    .crs-price {
-      .crs-origin-price {
-        display: none;
-      }
-    }
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $mobile-max-width) {
   .crs-info {
     margin: 0;
     padding: 12px;

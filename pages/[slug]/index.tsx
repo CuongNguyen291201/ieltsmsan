@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
 import Footer from '../../components/Footer';
@@ -65,6 +65,14 @@ const Slug = (props: SlugTypes) => {
     }
     return items;
   }, [type]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, []);
+
   return (
     <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
       <MainHeader />

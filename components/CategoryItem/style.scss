@@ -56,13 +56,13 @@
     color: #ec1f24;
     margin-bottom: 18px;
     white-space: nowrap;
-    min-width: 175px;
     overflow: hidden;
     text-overflow: ellipsis;
     min-height: 42px;
 
     @supports (-webkit-line-clamp: 2) {
       overflow: hidden;
+      display: -webkit-box;
       white-space: initial;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -86,8 +86,9 @@
     .cat-title {
       font-size: 15px;
       margin-bottom: 8px;
-      min-width: 145px;
+      max-width: 145px;
       min-height: 30px;
+      max-height: 45px;
     }
   }
   .cat-avatar {
