@@ -24,7 +24,7 @@ export type TopicNodeProps = {
   isOpen?: boolean;
   onClickNode?: () => void;
   isLoadMoreChilds?: boolean;
-  loadMoreChildFC?: () => void; 
+  loadMoreChildFC?: () => void;
 }
 
 const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
@@ -56,7 +56,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
       lastRecord: topicOptions.childs[topicOptions.childs.length - 1],
       userId: currentUser?._id
     });
-    if (status === response_status.success) return data as Topic[];
+    if (status === response_status.success) return data as OtsvTopic[];
     return [];
   };
 
@@ -68,12 +68,12 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         childs: [...topicOptions.childs, ...data],
         isLoadChild: true,
       });
-      dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as Topic[]).length >= LOAD_LIMIT }));
+      dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
     } else if (topicOptions.isLoadChild) setTopicOptions({ ...topicOptions, isLoadChild: false });
   };
 
   const updateTopicProgressFC = () => {
-    if (topic.type === TOPIC_TYPE_LESSON && !isTopicHasChild) {
+    if (topic.type === TOPIC_TYPE_LESSON && !isTopicHasChild && (topic.topicProgress?.progress ?? 0) < 100 && !topic.videoUrl) {
       apiUpdateTopicProgress({ topicId: topic._id, progress: 100, userId: currentUser._id });
     }
   }
@@ -90,9 +90,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         dispatch(showLoginModalAction(true));
         return;
       }
-      if (topic.type !== TOPIC_TYPE_LESSON) {
-        updateTopicProgressFC();
-      }
+      updateTopicProgressFC();
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
       router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }
@@ -105,7 +103,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
           ...topicOptions,
           childs: [...topicOptions.childs, ...data],
         });
-        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as Topic[]).length >= LOAD_LIMIT }));
+        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
       });
   }
 

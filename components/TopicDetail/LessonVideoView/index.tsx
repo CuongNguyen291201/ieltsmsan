@@ -51,7 +51,7 @@ const LessonVideoView = (props: {
       <div className="lesson-video-player-wrapper">
         <ReactPlayer
           className="lesson-video-player"
-          style={{ maxWidth: 1000, maxHeight: 600, margin: '0 auto' }}
+          style={{ maxWidth: 1024, maxHeight: 576, margin: '0 auto' }}
           width="100%"
           height="100%"
           url={url}
@@ -61,7 +61,7 @@ const LessonVideoView = (props: {
           onProgress={(e) => onProgress(e.played)}
           controls={true}
           loop={false}
-          light="https://storage.googleapis.com/comaiphuong-edu-media/images/images_default_videojs.jpg"
+          light="/default/video-thumbnail-default.jpg"
           config={{
             file: {
               attributes: {

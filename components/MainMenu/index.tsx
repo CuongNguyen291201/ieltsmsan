@@ -12,7 +12,7 @@ function MainMenu() {
           <div className="icon">
             <img src="/home/search-icon.png" alt="" />
           </div>
-          <input type="text" placeholder="tìm kiếm" />
+          <input type="text" placeholder="Tìm kiếm" />
         </div>
         <div className={`${isActiveOnMobile ? 'active-on-mobile' : ''} menu`}>
           <div className="close-menu-icon" onClick={() => { setisActiveOnMobile(false) }}>
