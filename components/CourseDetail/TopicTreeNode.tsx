@@ -7,10 +7,11 @@ import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON } from '../../sub_modules/share/constraint';
+import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
 import { getBrowserSlug, getTimeZeroHour } from '../../utils';
 import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
+import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
 import InnerTopicNode from './InnerTopicNode';
 import LeafTopicNode from './LeafTopicNode';
 import MainTopicNode from './MainTopicNode';
@@ -78,6 +79,17 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
     }
   }
 
+  const updateTimeActivityFC = () => {
+    if (topic.type === TOPIC_TYPE_LESSON) {
+      apiUpdateTimeActivity({
+        courseId: topic.courseId,
+        type: !!topic.videoUrl ? USER_ACTIVITY_WATCH_VIDEO : USER_ACTIVITY_LESSON,
+        itemId: topic._id,
+        userId: currentUser._id
+      });
+    }
+  }
+
   const onClickNode = () => {
     if (!currentCourse) return;
     if (isTopicHasChild) {
@@ -91,6 +103,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         return;
       }
       updateTopicProgressFC();
+      updateTimeActivityFC();
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
       router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }

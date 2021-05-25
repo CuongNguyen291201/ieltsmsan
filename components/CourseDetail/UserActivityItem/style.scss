@@ -1,0 +1,66 @@
+@import '../../../styles/variables.scss';
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  min-height: 78.5px;
+  padding: 0 30px;
+  position: relative;
+  &.dim-bgr {
+    background-color: #f9fafe;
+  }
+  border-bottom: 0.5px solid #dedede;
+  &.last-item {
+    border-bottom: none;
+  }
+  .activity-content {
+    cursor: pointer;
+  }
+  .activity-info {
+    display: flex;
+    align-items: center;
+    .user-info {
+      position: absolute;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+      & > div {
+        font-weight: 600;
+      }
+    }
+    .activity-date {
+      position: absolute;
+      right: 30px;
+      color: #929292;
+      font-style: italic;
+    }
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .activity-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    & > div {
+      min-height: 34px;
+    }
+    .activity-info {
+      width: 100%;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      .user-info, .activity-date {
+        position: relative;
+        left: 0;
+      }
+      align-self: flex-end;
+    }
+  }
+}

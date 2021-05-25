@@ -65,10 +65,6 @@ const LessonInfoView = (props: { topic: Topic }) => {
           />
         </div>}
       </PanelContainer>
-
-      <PanelContainer title="Hoạt động gần đây">
-
-      </PanelContainer>
     </div>
   );
 }
