@@ -14,10 +14,8 @@ import './style.scss';
 
 const UserActivityItem = (props: {
   activity: UserActivity;
-  dimBackground?: boolean;
-  isLastItem?: boolean;
 }) => {
-  const { activity: { type, user, item, createDate, lastUpdate }, dimBackground, isLastItem } = props;
+  const { activity: { type, user, item, createDate, lastUpdate } } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
@@ -61,17 +59,13 @@ const UserActivityItem = (props: {
   }, [props.activity]);
 
   return (
-    <div className={`activity-item${dimBackground ? ' dim-bgr' : ''}${isLastItem ? ' last-item' : ''}`}>
-      <div onClick={onClickItem}>
-        <SanitizedDiv className="activity-content" content={content} />
-      </div>
-
-      <div className="activity-info">
-        <div className="user-info">
-          <img src={user.avatar || defaultAvatar} alt="user-avatar" />
-          <div>{user.name}</div>
+    <div className="activity-item">
+      <img src={user.avatar || defaultAvatar} alt="user-avatar" className="user-avatar" />
+      <div className="activity-info" onClick={onClickItem}>
+        <div className="user-name">
+          {user.name}
         </div>
-
+        <SanitizedDiv className="activity-content" content={content} />
         <div className="activity-date">{formatFullDateTime(time)}</div>
       </div>
     </div>

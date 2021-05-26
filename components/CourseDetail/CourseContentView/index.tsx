@@ -23,13 +23,9 @@ const CourseContentView = (props: { course: Course }) => {
 
       <Container2 title="Hoạt động gần đây">
         <div className="recent-activity-wrap">
-          {!!userActivities.length && userActivities.map((e, i) => (
+          {!!userActivities.length && userActivities.map((e) => (
             <Fragment key={e._id}>
-              <UserActivityItem
-                activity={e}
-                dimBackground={(i % 2) === 0}
-                isLastItem={i === userActivities.length - 1}
-              />
+              <UserActivityItem activity={e} />
             </Fragment>
           ))}
         </div>

@@ -1,3 +1,5 @@
+@import '../../../styles/variables.scss';
+
 .course-content-view {
   .course-content {
     padding: 20px 12px 24px 12px;
@@ -5,5 +7,18 @@
   .recent-activity-wrap {
     border: 1px solid #98a4b3;
     margin: 12px 12px 24px 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+  }
+}
+
+@media(max-width: $mobile-max-width) {
+  .course-content-view {
+    .recent-activity-wrap {
+      max-height: 230px;
+      overflow-y: auto;
+      grid-template-columns: 1fr;
+    }
   }
 }
