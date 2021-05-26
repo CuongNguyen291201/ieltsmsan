@@ -1,6 +1,7 @@
 import { Fragment, useMemo } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
+import { useScrollToTop } from '../../hooks/scrollToTop';
 import { Course } from '../../sub_modules/share/model/courses';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountCategoryCourses, apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
@@ -21,6 +22,7 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
 
   const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId', filters: { field: 'name' } });
   const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
+  useScrollToTop();
 
   return (
     <>

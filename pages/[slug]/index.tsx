@@ -66,13 +66,6 @@ const Slug = (props: SlugTypes) => {
     return items;
   }, [type]);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }, []);
-
   return (
     <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
       <MainHeader />

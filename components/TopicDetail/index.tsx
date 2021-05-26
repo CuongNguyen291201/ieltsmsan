@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
+import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
@@ -32,6 +33,7 @@ const TopicDetail = (props: { topic: Topic; }) => {
     }
   }, []);
 
+  useScrollToTop();
   return !currentUser ? <></> : (
     <div className="topic-detail">
       <div className="container">

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useScrollToTop } from '../../hooks/scrollToTop';
 import bannerDefault from '../../public/default/banner-default.jpg';
 import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
@@ -22,6 +23,7 @@ const CourseDetail = (props: { course: Course }) => {
     setActiveTab(currentUser ? Tab.COURSE_TOPIC_TREE : Tab.COURSE_CONTENT);
   }, [currentUser]);
 
+  useScrollToTop();
   return (
     <>
       <div className="course-info" style={{
