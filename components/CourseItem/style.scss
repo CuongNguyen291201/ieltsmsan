@@ -16,7 +16,7 @@
   .crs-title {
     font-weight: 700;
     font-size: 15px;
-    color: #ec1f24;
+    color: $root-color;
     margin-bottom: 4px;
     overflow: hidden;
     white-space: nowrap;
@@ -77,13 +77,13 @@
     margin-bottom: 8px;
     min-height: 34px;
     .crs-discount-price {
-      color: #ec1f24;
+      color: $root-color;
       font-weight: 700;
       margin-right: 16px;
       letter-spacing: 1px;
     }
     .crs-origin-price {
-      color: #ec1f24;
+      color: $root-color;
       font-weight: 700;
       text-decoration: line-through;
       letter-spacing: 1px;
@@ -100,7 +100,7 @@
     height: 24px;
     width: 69px;
     font-weight: bold;
-    color: #ec1f24;
+    color: $root-color;
   }
 }
 

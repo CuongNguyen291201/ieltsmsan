@@ -1,31 +1,90 @@
-.main-header{
+@import '../../styles/variables.scss';
+@mixin item-with-icon {
+  display: flex;
+  align-items: center;
+  img {
+    margin-right: 8px;
+  }
+}
+
+.main-header {
   background-image: url(/home/header-bg.png);
-  .container{
+  .container {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     height: 56px;
   }
-  .logo{
-        margin-left: 0;
+  .logo {
+    margin-left: 0;
     margin-right: auto;
   }
-  .item{
+  .item {
     margin-left: 26px;
   }
-  .text{
+  .text {
     color: #fff;
   }
-  .phone,.mail{
-    display: flex;
-    .image{
-      margin-right: 8px;
+  .phone,
+  .mail,
+  .lang {
+    @include item-with-icon;
+  }
+
+  .lang {
+    .toggle-dropdown-menu {
+      margin-left: 10px;
+      .toggle-button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      i {
+        color: #fff;
+      }
+      position: relative;
+      .toggle-options {
+        position: absolute;
+        top: 30px;
+        left: -85px;
+        z-index: 1;
+        background-color: #fff;
+        width: 130px;
+        border-radius: 10px;
+        -webkit-box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
+        -moz-box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
+        box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
+        .toggle-item {
+          cursor: pointer;
+          border-radius: 10px;
+          padding: 0 10px;
+          &:hover {
+            background-color: $root-color;
+            color: #fff;
+          }
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          .icon-wrap {
+            margin: 10px 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+              max-width: 100%;
+            }
+          }
+        }
+      }
     }
   }
-  .deal-shock{
+
+  .deal-shock {
     position: relative;
     margin-right: 26px;
-    .head{
+    .head {
       position: absolute;
       top: -10px;
       right: -32px;
@@ -34,63 +93,88 @@
       color: #fff;
     }
   }
-  .current-user-wrap{
+  .current-user-wrap {
+    @include item-with-icon;
     margin-left: 26px;
-    .current-user-text{
-      color: #fff;
+    position: relative;
+    .user-menu-panel {
+      border-radius: 10px;
+      position: absolute;
+      z-index: 1;
+      background-color: #fff;
+      display: flex;
+      top: 36px;
+      left: -212px;
+      .user-profile {
+        border-radius: 10px 10px 0 0;
+        padding: 15px;
+        background: url(https://storage.googleapis.com/kslearning/bg-profile-dropdown.png) no-repeat !important;
+        background-size: 100% 100% !important;
+        display: flex;
+        align-items: center;
+        img {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+        }
+      }
     }
   }
-  .login, .logout, .signup {
+  .login,
+  .logout,
+  .signup {
     cursor: pointer;
   }
+
+  .login {
+    @include item-with-icon;
+  }
 }
-@media(max-width:600px){
-  .main-header{
+@media (max-width: 600px) {
+  .main-header {
     padding: 16px;
-    .container{
+    .container {
       display: grid;
-      grid-template-areas: "phone phone mail mail" "dealshock cart login signup";
+      grid-template-areas: 'phone phone mail mail' 'dealshock cart login signup';
       justify-content: space-between;
       height: auto;
     }
-    .logo{
+    .logo {
       display: none;
     }
-    .item{
+    .item {
       margin: 0;
       // padding: 10px 16px;
     }
-    .phone{
+    .phone {
       grid-area: phone;
       margin-bottom: 12px;
-      .text{
-        span{
+      .text {
+        span {
           display: none;
         }
       }
     }
-    .mail{
+    .mail {
       grid-area: mail;
       margin-bottom: 12px;
-      .text{
-        span{
+      .text {
+        span {
           display: none;
         }
       }
     }
-    .deal-shock{
+    .deal-shock {
       grid-area: dealshock;
-      
     }
-    .cart{
+    .cart {
       grid-area: cart;
     }
-    .login{
+    .login {
       grid-area: login;
     }
-    .signup{
+    .signup {
       grid-area: signup;
     }
-    
   }
 }

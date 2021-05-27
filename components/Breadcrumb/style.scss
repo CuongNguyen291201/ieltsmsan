@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .breadcrumb {
   border-bottom: 1px solid #ccc;
   .main-content {
@@ -11,10 +13,10 @@
       transition: all 0.2s;
       &:hover {
         text-decoration: underline;
-        color: #ec1f24;
+        color: $root-color;
       }
       &.active {
-        color: #ec1f24;
+        color: $root-color;
       }
     }
   }

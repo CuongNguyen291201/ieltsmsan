@@ -1,3 +1,4 @@
+@import '../../styles/variables.scss';
 .course-info {
   .title {
     padding: 20px 0;
@@ -52,7 +53,7 @@
     line-height: 21px;
     text-align: center;
     letter-spacing: -0.02em;
-    color: #ec1f24;
+    color: $root-color;
     padding: 8px 0;
     .discount-price {
       margin-right: 12px;
