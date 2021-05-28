@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import React, { FC } from 'react';
+import 'antd/dist/antd.css';
 
 const Layout: FC<{ addMathJax?: boolean }> = (props) => {
 	const { addMathJax, children } = props

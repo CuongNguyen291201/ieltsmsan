@@ -6,11 +6,36 @@ import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
+import { Menu, Dropdown, Row, Col } from 'antd';
 import './style.scss'
 function MainHeader() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const router = useRouter();
+
+  const menu = (
+    <Menu className="menu-notif">
+      <Menu.Item key="0">
+        <div className="notify-text">
+          Thông báo
+        </div>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1">
+        <a href="#" className="notify-a" style={{ width: '275px' }}>
+          <img className="img-notif" src="https://storage.googleapis.com/ielts-fighters.appspot.com/images/admin?t=1621992874279&amp;ignoreCache=1" />
+          <div className="content_">
+            admin đã bình luận trong khoá TÍNH NĂNG
+          </div>
+        </a>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <a href="#">2nd menu item</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="3">3rd menu item</Menu.Item>
+    </Menu>
+  )
   return (
     <div className="main-header">
       <div className="container">
@@ -40,6 +65,13 @@ function MainHeader() {
           <div className="image">
             <img src="/home/header-cart.png" alt="" />
           </div>
+        </div>
+        <div className="notification-item item">
+          <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
+            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              <i className="far fa-bell notification"></i>
+            </a>
+          </Dropdown>
         </div>
         {
           currentUser ? (
