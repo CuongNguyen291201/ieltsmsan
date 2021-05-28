@@ -54,7 +54,7 @@ export const apiGetDataDetailExercise = async (args: {
 };
 
 export const apiGetTopicById = async (topicId: string) => {
-  const response = await POST_API('get-topic-by-id', { topicId });
+  const response = await POST_API('get-topic-by-id', { topicId, withCourse: true });
   if (response.status === response_status_codes.success) {
     return response.data;
   }

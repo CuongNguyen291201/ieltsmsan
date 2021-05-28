@@ -5,7 +5,7 @@ import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
 import { AppState } from '../../redux/reducers'
 import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
-import { showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
+import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import './style.scss'
 function MainHeader() {
@@ -13,12 +13,17 @@ function MainHeader() {
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const router = useRouter();
   const toggleLangMenuRef = useRef<HTMLDivElement>();
+  const toggleUserMenuRef = useRef<HTMLDivElement>();
   const [isShowLangOptions, setShowLangOptions] = useState(false);
+  const [isShowUserMenu, setShowUserMenu] = useState(false);
 
-  const toggleLanguageEvent = (e: Event) => {
+  const toggleEvent = (e: Event) => {
     const target = e.target as Node;
     if (!toggleLangMenuRef.current?.contains(target)) {
       setShowLangOptions(false);
+    }
+    if (!toggleUserMenuRef.current?.contains(target)) {
+      setShowUserMenu(false);
     }
   }
 
@@ -28,8 +33,8 @@ function MainHeader() {
   }
 
   useEffect(() => {
-    document.addEventListener('click', toggleLanguageEvent);
-    return () => document.removeEventListener('click', toggleLanguageEvent);
+    document.addEventListener('click', toggleEvent);
+    return () => document.removeEventListener('click', toggleEvent);
   }, []);
 
   // useEffect(() => {
@@ -101,33 +106,37 @@ function MainHeader() {
         {
           currentUser ? (
             <>
-              <div className="current-user-wrap">
-                <img src="/home/header-user.png" alt="" />
-                <div className="user-menu-panel">
+              <div className="current-user-wrap item">
+                <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
+                  <img src="/home/header-user.png" alt="" />
+                </div>
+                {isShowUserMenu && (<div className="user-menu-panel">
                   <div className="user-profile">
                     <img src={currentUser.avatar || defaultAvatar} alt="" />
-                    <div>
-                      <div className="user-name">{currentUser.name}</div>
-                      <div className="user-email">{currentUser.email || ''}</div>
+                    <div className="user-info">
+                      <div className="info-text">{currentUser.name}</div>
+                      <div className="info-text">{currentUser.email}</div>
                     </div>
                   </div>
-                </div>
-                <div className="user-menu">
-                  <div className="menu-item">
-                    Lịch sử giao dịch
+                  <div className="user-menu">
+                    <div className="menu-item">
+                      <i className="fas fa-exchange-alt" />
+                      Lịch sử giao dịch
+                    </div>
+                    <div className="menu-item">
+                      <i className="fas fa-graduation-cap" />
+                      Khoá học của tôi
+                    </div>
+                    <div className="menu-item" onClick={() => {
+                      removeCookie(TOKEN);
+                      dispatch(loginSuccessAction(null));
+                    }}>
+                      <i className="fas fa-sign-out" />
+                      Đăng xuất
+                    </div>
                   </div>
-                  <div className="menu-item">
-                    Khoá học của tôi
-                  </div>
-                  <div className="menu-item">
-                    Đăng xuất
-                  </div>
-                </div>
+                </div>)}
               </div>
-              <div className="logout text item" onClick={() => {
-                removeCookie(TOKEN);
-                router.reload();
-              }}>Đăng xuất</div>
             </>
           ) : (
             <>
