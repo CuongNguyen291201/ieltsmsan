@@ -2,11 +2,12 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
+import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { COURSE_DETAIL_PAGE_TYPE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
-import { getTimeZeroHour } from '../../utils';
+import { getBrowserSlug, getTimeZeroHour } from '../../utils';
 import CommentPanel from '../CommentPanel';
 import PanelContainer from '../containers/PanelContainer';
 import LessonInfoView from './LessonInfoView';
@@ -17,11 +18,13 @@ import TopicRankingsView from './TopicRankingsView';
 const TopicDetail = (props: { topic: Topic; }) => {
   const { topic } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const dispatch = useDispatch();
   const router = useRouter();
   useEffect(() => {
     if (!currentUser) {
-      dispatch(showLoginModalAction(true));
+      router.push({
+        pathname: getBrowserSlug(topic.course.slug, COURSE_DETAIL_PAGE_TYPE, topic.course._id),
+        query: { root: router.query.root as string }
+      });
       return;
     }
   }, [currentUser]);
@@ -32,6 +35,7 @@ const TopicDetail = (props: { topic: Topic; }) => {
     }
   }, []);
 
+  useScrollToTop();
   return !currentUser ? <></> : (
     <div className="topic-detail">
       <div className="container">

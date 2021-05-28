@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 // import { getSkills } from '../../api/cardApi';
 // import { getCardByTopicId } from '../../api/topicApi';
 import Layout from '../../components/Layout';
+import { useScrollToTop } from '../../hooks/scrollToTop';
 // import { actSetCurrentTopic } from '../../redux/actions/topicActions';
 import { AppState } from '../../redux/reducers';
 import { getSkills } from '../../sub_modules/game/api/ExamApi';
@@ -105,6 +106,7 @@ function GamePage() {
   const myCardData = !!userToReview ? reviewCardData : userCardData;
   const currentUser = !!userToReview ? userToReview : user;
   const router = useRouter();
+  useScrollToTop();
 
   useEffect(() => {
     const parentId = router.query.id

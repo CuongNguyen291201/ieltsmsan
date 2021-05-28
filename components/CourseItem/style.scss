@@ -1,4 +1,5 @@
-@import "../CategoryItem/style.scss";
+@import '../CategoryItem/style.scss';
+@import '../../styles/variables.scss';
 
 .crs-avatar {
   position: relative;
@@ -15,13 +16,14 @@
   .crs-title {
     font-weight: 700;
     font-size: 15px;
-    color: #ec1f24;
+    color: $root-color;
     margin-bottom: 4px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     min-height: 34px;
-    
+    white-space: nowrap;
+
     @supports (-webkit-line-clamp: 2) {
       overflow: hidden;
       display: -webkit-box;
@@ -73,14 +75,15 @@
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+    min-height: 34px;
     .crs-discount-price {
-      color: #ec1f24;
+      color: $root-color;
       font-weight: 700;
       margin-right: 16px;
       letter-spacing: 1px;
     }
     .crs-origin-price {
-      color: #ec1f24;
+      color: $root-color;
       font-weight: 700;
       text-decoration: line-through;
       letter-spacing: 1px;
@@ -97,11 +100,11 @@
     height: 24px;
     width: 69px;
     font-weight: bold;
-    color: #ec1f24;
+    color: $root-color;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: $h-mobile-max-width) {
   .crs-info {
     font-size: 14px;
     .crs-title {
@@ -112,15 +115,10 @@
         margin-right: 3px;
       }
     }
-    .crs-price {
-      .crs-origin-price {
-        display: none;
-      }
-    }
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $mobile-max-width) {
   .crs-info {
     margin: 0;
     padding: 12px;

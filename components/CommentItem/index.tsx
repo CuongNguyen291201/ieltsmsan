@@ -83,7 +83,7 @@ const CommentItem = (props: {
           {!isReply && !!totalReplies && (
             <>
               <span className="delimiter">.</span>
-              <div className="load-more-reply" onClick={() => onToggleReplies()}>{isShowReplies ? 'Ẩn trả lời...' : 'Hiện trả lời...'}</div>
+              <div className="load-more-reply" onClick={() => onToggleReplies()}>{isShowReplies ? 'Ẩn trả lời' : 'Hiện trả lời'}</div>
             </>
           )}
         </div>

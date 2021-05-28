@@ -19,13 +19,13 @@ import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
 
-const isServer = typeof window === 'undefined'
-const WOW = !isServer ? require('wow.js') : null
-
 const Index = (props: { homeCategories: OtsvCategory[] }) => {
   useEffect(() => {
-    new WOW().init();
-  }, [])
+    if (typeof window !== 'undefined') {
+      const WOW = require('wow.js');
+      new WOW().init();
+    }
+  }, [typeof window]);
 
   return (
     <Layout>

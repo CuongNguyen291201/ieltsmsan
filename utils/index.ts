@@ -68,3 +68,5 @@ export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
 
 export const getRelativeTime = (time: number) => moment(time).fromNow();
 
+export const formatFullDateTime = (time: number) => moment(time).format('HH:mm:ss DD/MM/YYYY');
+

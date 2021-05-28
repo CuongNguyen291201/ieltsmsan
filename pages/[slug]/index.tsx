@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
 import Footer from '../../components/Footer';
@@ -8,7 +8,7 @@ import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
 import TopicDetail from '../../components/TopicDetail';
-import { OtsvCategory } from '../../custom-types';
+import { OtsvCategory, OtsvTopic } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
@@ -65,6 +65,7 @@ const Slug = (props: SlugTypes) => {
     }
     return items;
   }, [type]);
+
   return (
     <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
       <MainHeader />
@@ -121,10 +122,9 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       let category: OtsvCategory = null;
       let course: Course = null;
       store.dispatch(setCurrrentTopicAction(null, true));
-      const topic = await apiGetTopicById(id);
+      const topic: OtsvTopic = await apiGetTopicById(id);
       if (!topic) return { props: { type: ERROR_PAGE } };
-      const courseRes = await apiGetCourseById(topic.courseId);
-      if (courseRes.status === response_status_codes.success) course = courseRes.data;
+      course = topic.course;
       if (root) {
         const { data, status } = await apiGetCategoryById(root as string);
         if (status === response_status.success) category = data;
