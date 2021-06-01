@@ -14,19 +14,27 @@ export function useSocket(args: {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
+    console.log('url: ', url);
     if (!url) return;
     if (!enabled) return;
-    const socket = sockerIo(url, {
+    const socket = sockerIo(`${url}/comment`, {
       path: '/socket-io/',
       transports: ['websocket']
     });
 
     socket.emit('join-room', { type: roomType, roomId });
     socket.on('connect', () => {
+      console.log('socket connected');
       if (onConnected) onConnected();
     });
 
+    socket.on('disconnect', () => {
+      console.log('disconnect socket');
+      return;
+    });
+
     socket.on('reconnect', () => {
+      console.log('reconnect socket');
       socket.emit('join-room', { type: roomType, roomId });
     });
 
@@ -38,6 +46,53 @@ export function useSocket(args: {
     socket, leaveRoom: () => {
       if (socket) {
         socket.emit('leave-room', { type: roomType, roomId });
+      }
+    }
+  };
+}
+
+export function useSocketNotification(args: {
+  url?: string;
+  enabled?: boolean;
+  userId?: string;
+  onConnected?: () => void;
+}) {
+  const { enabled = true, userId = '', onConnected = () => { }, url = '' } = args;
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    console.log('url: ', url);
+    if (!url) return;
+    if (!enabled) return;
+    const socket = sockerIo(`${url}/notification`, {
+      path: '/socket-io/',
+      transports: ['websocket']
+    });
+
+    socket.emit('join-room', { userId });
+    socket.on('connect', () => {
+      console.log('socket connected');
+      if (onConnected) onConnected();
+    });
+
+    socket.on('disconnect', () => {
+      console.log('disconnect socket');
+      return;
+    });
+
+    socket.on('reconnect', () => {
+      console.log('reconnect socket');
+      socket.emit('join-room', { type: userId });
+    });
+
+    setSocket(socket);
+
+    return () => { socket.disconnect(); };
+  }, [enabled]);
+  return {
+    socket, leaveRoom: () => {
+      if (socket) {
+        socket.emit('leave-room', { userId });
       }
     }
   };

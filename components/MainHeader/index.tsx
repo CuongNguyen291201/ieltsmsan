@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { notification } from 'antd';
 import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
 import { AppState } from '../../redux/reducers'
 import LoginModal from '../../sub_modules/common/components/loginModal'
@@ -8,11 +9,19 @@ import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { Menu, Dropdown, Row, Col } from 'antd';
+import { useSocketNotification } from '../../hooks/socket';
 import './style.scss'
 function MainHeader() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const router = useRouter();
+
+  const { socket, leaveRoom } = useSocketNotification({
+    enabled: !!currentUser,
+    // roomType: 0,
+    userId: `notif_${currentUser._id}`,
+    url: process.env.NEXT_PUBLIC_SOCKET_URL
+  });
 
   const menu = (
     <Menu className="menu-notif">
@@ -61,6 +70,30 @@ function MainHeader() {
     document.addEventListener('click', toggleEvent);
     return () => document.removeEventListener('click', toggleEvent);
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('add-new-notification', (comment: any) => {
+        if (comment.userId !== currentUser._id) {
+          console.log('add-new-notification: ', comment)
+          notification.info({
+            message: `${comment.user.name} đã trả lời bình luận của bạn`,
+            description: comment.content,
+            placement: 'bottomLeft',
+            duration: 10,
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+        }
+      });
+
+      return () => {
+        console.log('leave-room')
+        leaveRoom();
+      }
+    }
+  }, [socket]);
 
   // useEffect(() => {
   //   document.documentElement.lang = 'vi';

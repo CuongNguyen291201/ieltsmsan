@@ -22,16 +22,16 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
   const { commentsList, isShowLoadMoreComments, mapReplies } = useSelector((state: AppState) => state.commentReducer);
   const commentRef = useRef<HTMLSpanElement>();
-  
+
   const { courseId, topicId } = useMemo(() => ({
     courseId: (currentCourse?._id ?? currentTopic?.courseId) || null,
     topicId: currentTopic?._id || null
   }), [currentCourse, currentTopic]);
-  
+
   const { socket, leaveRoom } = useSocket({
     enabled: !!currentUser,
     roomType: 0,
-    roomId: commentScope  === CommentScopes.COURSE ? courseId : topicId,
+    roomId: commentScope === CommentScopes.COURSE ? courseId : topicId,
     url: process.env.NEXT_PUBLIC_SOCKET_URL
   });
 
@@ -46,12 +46,14 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   useEffect(() => {
     if (socket) {
       socket.on('add-new-comment', (comment: Comment) => {
+        console.log('add-new-comment: ', comment)
         if (comment.userId !== currentUser._id) {
           dispatch(createOneAction(Scopes.COMMENT, comment));
         }
       });
 
       return () => {
+        console.log('leave-room')
         leaveRoom();
       }
     }
@@ -137,7 +139,8 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
         topicId,
         parentId,
         userId: currentUser._id,
-        userName: currentUser.name
+        userName: currentUser.name,
+        userParentId: discussion.userId,
       }),
       user: currentUser
     }));
