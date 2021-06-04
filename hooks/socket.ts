@@ -64,6 +64,7 @@ export function useSocketNotification(args: {
     console.log('url: ', url);
     if (!url) return;
     if (!enabled) return;
+    if (!userId) return;
     const socket = sockerIo(`${url}/notification`, {
       path: '/socket-io/',
       transports: ['websocket']

@@ -11,41 +11,23 @@ import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
 import './style.scss'
+
+let dataNotification = []
+let dataNotiCount = []
+
 function MainHeader() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const router = useRouter();
-
+  const [dataNoti, setDataNoti] = useState([]);
+  const [dataCount, setDataCount] = useState([]);
   const { socket, leaveRoom } = useSocketNotification({
     enabled: !!currentUser,
     // roomType: 0,
-    userId: `notif_${currentUser._id}`,
+    userId: currentUser?._id ? `notif_${currentUser?._id}` : null,
     url: process.env.NEXT_PUBLIC_SOCKET_URL
   });
 
-  const menu = (
-    <Menu className="menu-notif">
-      <Menu.Item key="0">
-        <div className="notify-text">
-          Thông báo
-        </div>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="1">
-        <a href="#" className="notify-a" style={{ width: '275px' }}>
-          <img className="img-notif" src="https://storage.googleapis.com/ielts-fighters.appspot.com/images/admin?t=1621992874279&amp;ignoreCache=1" />
-          <div className="content_">
-            admin đã bình luận trong khoá TÍNH NĂNG
-          </div>
-        </a>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <a href="#">2nd menu item</a>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="3">3rd menu item</Menu.Item>
-    </Menu>
-  )
   const toggleLangMenuRef = useRef<HTMLDivElement>();
   const toggleUserMenuRef = useRef<HTMLDivElement>();
   const [isShowLangOptions, setShowLangOptions] = useState(false);
@@ -73,16 +55,20 @@ function MainHeader() {
 
   useEffect(() => {
     if (socket) {
-      socket.on('add-new-notification', (comment: any) => {
-        if (comment.userId !== currentUser._id) {
-          console.log('add-new-notification: ', comment)
+      socket.on('add-new-notification', (dataArr: any) => {
+        if (dataArr.userId !== currentUser._id) {
+          dataNotification = [dataArr, ...dataNotification]
+          dataNotiCount = [dataArr, ...dataNotiCount]
+          setDataNoti([...dataNotification])
+          setDataCount([...dataNotiCount])
           notification.info({
-            message: `${comment.user.name} đã trả lời bình luận của bạn`,
-            description: comment.content,
+            message: `${dataArr.user?.name} đã trả lời bình luận của bạn trong ${dataArr.topicName ? `bài học ${dataArr.topicName}` : `khóa học ${dataArr.courseName}`}`,
+            description: dataArr.content,
             placement: 'bottomLeft',
-            duration: 10,
+            duration: 20,
+            icon: <img src={dataArr.user?.avatar || defaultAvatar} style={{ width: '24px', height: '24px', borderRadius: '30px' }} alt="" />,
             onClick: () => {
-              console.log('Notification Clicked!');
+              document.location.href = dataArr.href
             },
           });
         }
@@ -119,7 +105,7 @@ function MainHeader() {
           </div>
         </div>
         <div className="lang item">
-          <img src="/home/header-lang.png" alt="" />
+          <img className="img" src="/home/header-lang.png" alt="" />
           <div className="text">Ngôn ngữ</div>
           <div className="toggle-dropdown-menu" ref={toggleLangMenuRef} >
             <div className="toggle-button"
@@ -162,9 +148,36 @@ function MainHeader() {
           <img src="/home/header-cart.png" alt="" />
         </div>
         <div className="notification-item item">
-          <Dropdown overlay={menu} placement="bottomRight" trigger={['click']}>
-            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+          <Dropdown
+            // key={key}
+            overlay={
+              <Menu className="menu-notif">
+                <Menu.Item key="0" style={{ minWidth: '275px' }}>
+                  <div className="notify-text">
+                    Thông báo
+        </div>
+                </Menu.Item>
+                <Menu.Divider />
+                {dataNoti?.map(item => (
+                  <Menu.Item key={item._id}>
+                    <a href={item.href} className="notify-a" style={{ width: '275px' }}>
+                      <img className="img-notif" src={item.user?.avatar || defaultAvatar} />
+                      <div className="content_">
+                        <strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicName ? `bài học ${item.topicName}` : `khóa học ${item.courseName}`}: {item.content}
+                      </div>
+                    </a>
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+            placement="bottomRight"
+            trigger={['click']}
+          >
+            <a className="ant-dropdown-link" onClick={e => { e.preventDefault(); dataNotiCount = []; setDataCount([]) }}>
               <i className="far fa-bell notification"></i>
+              {dataCount?.length > 0 &&
+                <span className="notification-number">{dataCount.length}</span>
+              }
             </a>
           </Dropdown>
         </div>

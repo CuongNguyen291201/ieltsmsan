@@ -22,6 +22,18 @@
         font-size: 20px;
         cursor: pointer;
       }
+      .notification-number {
+        background: #ec1f24;
+        color: white;
+        font-weight: bold;
+        position: absolute;
+        top: -8px;
+        left: 5px;
+        padding: 0px 5px;
+        border-radius: 30px;
+        font-size: 10px;
+        z-index: 1;
+      }
       #content-notify-main {
         padding: 5px;
         overflow-y: auto;
@@ -130,7 +142,8 @@
       z-index: 1;
       background-color: #fff;
       top: 30px;
-      left: -212px;
+      right: 0px;
+      // left: -212px;
       overflow: hidden;
       border: 1px solid #ccc;
       .user-profile {
@@ -229,6 +242,17 @@
     .container {
       position: relative;
       justify-content: flex-start;
+      .lang {
+          position: absolute;
+          right: 110px;
+          .img, .text {
+            display: none;
+        }
+      }
+      .notification-item {
+        position:absolute;
+        right: 73px;
+      }
       // display: grid;
       // grid-template-columns: 5fr repeat(2, 2fr);
       // justify-content: space-between;
@@ -244,18 +268,19 @@
       }
     }
     .deal-shock {
-      right: 80px;
+      // display: none;
+      right: 165px;
     }
     .cart {
-      right: 40px;
+      right: 43px;
     }
     .current-user-wrap, .login {
       display: initial;
       right: 10px;
     }
-    .logo {
-      display: none;
-    }
+    // .logo {
+    //   display: none;
+    // }
     .item {
       margin: 0;
       // padding: 10px 16px;
@@ -270,4 +295,11 @@
       width: 0;
     }
   }
+}
+
+.ant-notification-topLeft .ant-notification-notice, .ant-notification-bottomLeft .ant-notification-notice {
+  cursor: pointer;
+}
+.ant-notification-notice-with-icon .ant-notification-notice-message {
+  font-weight: 500;
 }

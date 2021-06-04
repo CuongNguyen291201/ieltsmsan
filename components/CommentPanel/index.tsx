@@ -141,6 +141,9 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
         userId: currentUser._id,
         userName: currentUser.name,
         userParentId: discussion.userId,
+        href: window.location.href,
+        courseName: currentCourse?.name || null,
+        topicName: currentTopic?.name || null,
       }),
       user: currentUser
     }));
