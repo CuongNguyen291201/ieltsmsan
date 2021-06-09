@@ -7,9 +7,12 @@ import { AppState } from '../../redux/reducers'
 import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
+import { apiListNotificationByTarget, apiUpdateReadStatusNotification } from '../../utils/apis/notificationApi';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
+import { formatFullDateTime, getBrowserSlug } from '../../utils';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
+import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import './style.scss'
 
 let dataNotification = []
@@ -54,13 +57,29 @@ function MainHeader() {
   }, []);
 
   useEffect(() => {
+    if (currentUser?._id) {
+      apiListNotificationByTarget({ target: currentUser?._id, offset: 0 })
+        .then((data) => {
+          if (data?.data?.length > 0) {
+            dataNotification = [...data.data]
+            dataNotiCount = [...data.data]
+            setDataNoti([...data.data])
+            setDataCount(data.data?.filter(item => item.readStatus === 0) || [])
+          }
+        });
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
     if (socket) {
       socket.on('add-new-notification', (dataArr: any) => {
         if (dataArr.userId !== currentUser._id) {
-          dataNotification = [dataArr, ...dataNotification]
-          dataNotiCount = [dataArr, ...dataNotiCount]
+          let dataNew = dataArr
+          dataNew.readStatus = 0
+          dataNotification = [dataNew, ...dataNotification]
+          dataNotiCount = [dataNew, ...dataNotiCount]
           setDataNoti([...dataNotification])
-          setDataCount([...dataNotiCount])
+          setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])
           notification.info({
             message: `${dataArr.user?.name} đã trả lời bình luận của bạn trong ${dataArr.topicName ? `bài học ${dataArr.topicName}` : `khóa học ${dataArr.courseName}`}`,
             description: dataArr.content,
@@ -81,10 +100,27 @@ function MainHeader() {
     }
   }, [socket]);
 
+  const handleMore = () => {
+    if (currentUser?._id) {
+      apiListNotificationByTarget({ target: currentUser?._id, offset: dataNoti?.length || 0 })
+        .then((data) => {
+          if (data?.data?.length > 0) {
+            dataNotification = [...dataNotification, ...data.data]
+            dataNotiCount = [...dataNotiCount, ...data.data]
+            setDataNoti([...dataNotification])
+            setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])
+          }
+        });
+    }
+  }
+
+  const handleReadStatus = (value) => {
+    apiUpdateReadStatusNotification({ notificationId: value })
+  }
+
   // useEffect(() => {
   //   document.documentElement.lang = 'vi';
   // }, []); // TODO: set a language dependency here
-
 
   return (
     <div className="main-header">
@@ -147,40 +183,64 @@ function MainHeader() {
         <div className="cart item">
           <img src="/home/header-cart.png" alt="" />
         </div>
-        <div className="notification-item item">
+        {currentUser?._id && <div className="notification-item item">
           <Dropdown
             // key={key}
+            overlayStyle={{
+              overflow: "auto",
+              maxHeight: '400px',
+              boxShadow: '0 3px 8px rgb(0 0 0 / 20%)'
+            }}
             overlay={
               <Menu className="menu-notif">
                 <Menu.Item key="0" style={{ minWidth: '275px' }}>
                   <div className="notify-text">
                     Thông báo
-        </div>
+                  </div>
                 </Menu.Item>
                 <Menu.Divider />
                 {dataNoti?.map(item => (
-                  <Menu.Item key={item._id}>
-                    <a href={item.href} className="notify-a" style={{ width: '275px' }}>
+                  <Menu.Item key={item._id} style={{ background: item.readStatus === 0 ? '#f5f5f5' : '' }}>
+                    <a
+                      // href={item.href}
+                      onClick={() => {
+                        handleReadStatus(item._id)
+                        if (item.href) {
+                          document.location.href = item.href
+                        } else {
+                          router.push({
+                            pathname: getBrowserSlug(item.topic?.slug || item.course?.slug, item.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, item.topic?._id || item.course?._id),
+                            // query: { root: router.query.root as string }
+                          });
+                        }
+                      }}
+                      className="notify-a"
+                      style={{ width: '275px' }}>
                       <img className="img-notif" src={item.user?.avatar || defaultAvatar} />
                       <div className="content_">
-                        <strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicName ? `bài học ${item.topicName}` : `khóa học ${item.courseName}`}: {item.content}
+                        <div className="notification-content"><strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicId ? `bài học ${item.topicName || item?.topic?.name}` : `khóa học ${item.courseName || item?.course?.name}`}: {item.content}</div>
+                        <div className="notification-date">{formatFullDateTime(item.createdDate || item.createDate)}</div>
                       </div>
                     </a>
                   </Menu.Item>
                 ))}
+                {dataNoti?.length >= 9 &&
+                  <div key="-1" className="notify-text-more" onClick={() => handleMore()}>
+                    Xem thêm...
+                </div>}
               </Menu>
             }
             placement="bottomRight"
             trigger={['click']}
           >
-            <a className="ant-dropdown-link" onClick={e => { e.preventDefault(); dataNotiCount = []; setDataCount([]) }}>
+            <a className="ant-dropdown-link" onClick={e => { e.preventDefault(); }}>
               <i className="far fa-bell notification"></i>
               {dataCount?.length > 0 &&
-                <span className="notification-number">{dataCount.length}</span>
+                <span className="notification-number">{dataCount.length > 9 ? '9+' : dataCount.length}</span>
               }
             </a>
           </Dropdown>
-        </div>
+        </div>}
         {
           currentUser ? (
             <>

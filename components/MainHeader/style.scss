@@ -23,7 +23,7 @@
         cursor: pointer;
       }
       .notification-number {
-        background: #ec1f24;
+        background: #b91300;
         color: white;
         font-weight: bold;
         position: absolute;
@@ -211,6 +211,20 @@
 .notify-text {
   text-align: center;
 }
+.notify-text-more {
+  text-align: center;
+  display: none;
+  text-align: center;
+  padding: 5px 0;
+  cursor: pointer;
+}
+.ant-dropdown {
+  ul {
+    .notify-text-more{
+      display: block !important;
+    }
+  }
+}
 .menu-notif {
   .notify-a {
     opacity: .9;
@@ -232,6 +246,21 @@
     .content_ {
       font-size: 12px;
       white-space: break-spaces;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      .notification-content {
+        display: -webkit-box;
+        white-space: initial;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .notification-date {
+        font-style: italic;
+        color: #929292;
+        font-size: 12px;
+      }
     }
   }
 }
