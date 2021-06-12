@@ -255,6 +255,9 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+        .text-html {
+          display: inline-flex;
+        }
       }
       .notification-date {
         font-style: italic;
@@ -263,6 +266,10 @@
       }
     }
   }
+}
+
+.description-html {
+  display: flex;
 }
 
 @media (max-width: 600px) {

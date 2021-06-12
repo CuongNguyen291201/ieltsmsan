@@ -7,12 +7,13 @@ import { AppState } from '../../redux/reducers'
 import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
-import { apiListNotificationByTarget, apiUpdateReadStatusNotification } from '../../utils/apis/notificationApi';
+import { apiListNotificationByTarget, apiUpdateReadStatusNotification, apiListNotificationByReadStatus } from '../../utils/apis/notificationApi';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { formatFullDateTime, getBrowserSlug } from '../../utils';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
-import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
 
 let dataNotification = []
@@ -62,10 +63,13 @@ function MainHeader() {
         .then((data) => {
           if (data?.data?.length > 0) {
             dataNotification = [...data.data]
-            dataNotiCount = [...data.data]
             setDataNoti([...data.data])
-            setDataCount(data.data?.filter(item => item.readStatus === 0) || [])
           }
+        });
+      apiListNotificationByReadStatus({ target: currentUser?._id, offset: 0 })
+        .then((data) => {
+          dataNotiCount = data.data || []
+          setDataCount(data?.data || [])
         });
     }
   }, [currentUser]);
@@ -74,20 +78,24 @@ function MainHeader() {
     if (socket) {
       socket.on('add-new-notification', (dataArr: any) => {
         if (dataArr.userId !== currentUser._id) {
+          console.log('dataArr: ', dataArr);
           let dataNew = dataArr
-          dataNew.readStatus = 0
           dataNotification = [dataNew, ...dataNotification]
           dataNotiCount = [dataNew, ...dataNotiCount]
           setDataNoti([...dataNotification])
           setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])
           notification.info({
-            message: `${dataArr.user?.name} đã trả lời bình luận của bạn trong ${dataArr.topicName ? `bài học ${dataArr.topicName}` : `khóa học ${dataArr.courseName}`}`,
-            description: dataArr.content,
+            message: `${dataArr.user?.name} đã trả lời bình luận của bạn trong ${dataArr.topicId ? `bài học ${dataArr?.topic?.name}` : `khóa học ${dataArr?.course?.name}`}`,
+            description: <SanitizedDiv className="description-html" content={dataArr.content} />,
             placement: 'bottomLeft',
             duration: 20,
             icon: <img src={dataArr.user?.avatar || defaultAvatar} style={{ width: '24px', height: '24px', borderRadius: '30px' }} alt="" />,
             onClick: () => {
-              document.location.href = dataArr.href
+              handleReadStatus(dataArr._id)
+              router.push({
+                pathname: getBrowserSlug(dataArr.topic?.slug || dataArr.course?.slug, dataArr.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, dataArr.topic?._id || dataArr.course?._id),
+                query: { discussionsId: dataArr.discussionsId || dataArr.parentId as string }
+              });
             },
           });
         }
@@ -106,9 +114,9 @@ function MainHeader() {
         .then((data) => {
           if (data?.data?.length > 0) {
             dataNotification = [...dataNotification, ...data.data]
-            dataNotiCount = [...dataNotiCount, ...data.data]
+            // dataNotiCount = [...dataNotiCount, ...data.data]
             setDataNoti([...dataNotification])
-            setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])
+            // setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])
           }
         });
     }
@@ -210,7 +218,7 @@ function MainHeader() {
                         } else {
                           router.push({
                             pathname: getBrowserSlug(item.topic?.slug || item.course?.slug, item.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, item.topic?._id || item.course?._id),
-                            // query: { root: router.query.root as string }
+                            query: { discussionsId: item.discussionsId || item.parentId as string }
                           });
                         }
                       }}
@@ -218,7 +226,9 @@ function MainHeader() {
                       style={{ width: '275px' }}>
                       <img className="img-notif" src={item.user?.avatar || defaultAvatar} />
                       <div className="content_">
-                        <div className="notification-content"><strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicId ? `bài học ${item.topicName || item?.topic?.name}` : `khóa học ${item.courseName || item?.course?.name}`}: {item.content}</div>
+                        <div className="notification-content"><strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicId ? `bài học ${item.topicName || item?.topic?.name}` : `khóa học ${item.courseName || item?.course?.name}`}:
+                        &nbsp;<SanitizedDiv className="text-html" content={item.content} />
+                        </div>
                         <div className="notification-date">{formatFullDateTime(item.createdDate || item.createDate)}</div>
                       </div>
                     </a>
@@ -264,6 +274,10 @@ function MainHeader() {
                     <div className="menu-item">
                       <i className="fas fa-graduation-cap" />
                       Khoá học của tôi
+                    </div>
+                    <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', REPLY_COMMENT_PAGE_TYPE, 'comment'))} >
+                      <i className="fas fa-wrench"></i>
+                      Trả lời bình luận
                     </div>
                     <div className="menu-item" onClick={() => {
                       removeCookie(TOKEN);
