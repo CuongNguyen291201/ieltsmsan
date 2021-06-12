@@ -67,9 +67,15 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   useEffect(() => {
     if (commentsList?.length > 0) {
       if (router.query?.discussionsId && dataCommentFirst?._id) {
+        // console.log('dataCommentFirst: ', dataCommentFirst, commentsList);
+
         const data = commentsList.filter(item => item._id !== dataCommentFirst._id)
         const data1 = commentsList.find(item => item._id === dataCommentFirst._id)
-        setDataComment([data1, ...data])
+        if (data1) {
+          setDataComment([data1, ...data])
+        } else {
+          setDataComment([dataCommentFirst, ...data])
+        }
       } else {
         setDataComment([...commentsList])
       }
