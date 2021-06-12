@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux';
 import { Comment, CommentScopes } from '../../custom-types';
 import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction, resetCommentStateAction } from '../../redux/actions/comment.action';
@@ -12,15 +13,20 @@ import DOMPurify from 'isomorphic-dompurify';
 import { useSocket } from '../../hooks/socket';
 import { createOneAction } from '../../redux/actions';
 import { Scopes } from '../../redux/types';
+import { apiDiscussionsById } from '../../utils/apis/notificationApi';
+import { route } from 'next/dist/next-server/server/router';
 
 const LOAD_LIMIT = 10;
 
 const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { commentScope } = props;
+  const routers = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
   const { commentsList, isShowLoadMoreComments, mapReplies } = useSelector((state: AppState) => state.commentReducer);
+  const [dataComment, setDataComment] = useState([]);
+  const [dataCommentFirst, setDataCommentFirst] = useState<Discussion>();
   const commentRef = useRef<HTMLSpanElement>();
 
   const { courseId, topicId } = useMemo(() => ({
@@ -59,6 +65,27 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     }
   }, [socket]);
 
+  useEffect(() => {
+    if (commentsList?.length > 0) {
+      if (routers.query?.discussionsId && dataCommentFirst?._id) {
+        const data = commentsList.filter(item => item._id !== dataCommentFirst._id)
+        const data1 = commentsList.find(item => item._id === dataCommentFirst._id)
+        setDataComment([data1, ...data])
+      } else {
+        setDataComment([...commentsList])
+      }
+    }
+  }, [commentsList, dataCommentFirst]);
+
+  useEffect(() => {
+    if (currentUser?._id && routers.query?.discussionsId) {
+      apiDiscussionsById({ _id: routers.query?.discussionsId as string })
+        .then((data) => {
+          setDataCommentFirst(data?.data)
+        });
+    }
+  }, [currentUser]);
+
   const dispatch = useDispatch();
   const pushComment = useCallback(() => {
     const content = commentRef.current.innerHTML;
@@ -81,21 +108,22 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   }, [currentUser]);
 
   const loadMoreComments = () => {
-    if (!commentsList.length) return;
-    const limit = LOAD_LIMIT - (commentsList.length % LOAD_LIMIT);
-    const lastRecord = commentsList[commentsList.length - 1];
+    if (!dataComment.length) return;
+    const limit = LOAD_LIMIT - (dataComment.length % LOAD_LIMIT);
+    const lastRecord = dataComment[dataComment.length - 1];
     const args = { limit, lastRecord };
     (commentScope === CommentScopes.COURSE
       ? dispatch(fetchCourseCommentsAction({ ...args, courseId }))
       : dispatch(fetchTopicCommentsAction({ ...args, topicId }))
     );
   };
+  // console.log('dataComment: ', dataComment);
 
   return (
     <div className="comment-section">
-      {commentsList?.map((e) => (
+      {dataComment?.map((e) => (
         <Fragment key={e._id}>
-          <CommentSectionItem discussion={e} />
+          <CommentSectionItem discussionId={dataCommentFirst?._id || null} discussion={e} />
         </Fragment>
       ))}
       {isShowLoadMoreComments && <div className="load-more">
@@ -106,8 +134,8 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   )
 };
 
-const CommentSectionItem = (props: { discussion: Discussion }) => {
-  const { discussion } = props;
+const CommentSectionItem = (props: { discussion: Discussion, discussionId: string }) => {
+  const { discussion, discussionId } = props;
 
   const [isShowCreateReply, setShowCreateReply] = useState(false);
   const [isShowReplies, setShowReplies] = useState(false);
@@ -180,7 +208,7 @@ const CommentSectionItem = (props: { discussion: Discussion }) => {
   }
 
   return (
-    <div className="comment-section-item">
+    <div className="comment-section-item" style={{ background: discussionId === discussion._id ? '#f0f2f5' : 'none', borderRadius: discussionId === discussion._id ? '10px' : '0px', padding: discussionId === discussion._id ? '5px' : '0px', marginBottom: discussionId === discussion._id ? '5px' : '0px' }}>
       <div className="main-comment">
         <div className="flex-space">
           <CommentItem
