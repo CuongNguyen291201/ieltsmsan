@@ -14,13 +14,12 @@ import { useSocket } from '../../hooks/socket';
 import { createOneAction } from '../../redux/actions';
 import { Scopes } from '../../redux/types';
 import { apiDiscussionsById } from '../../utils/apis/notificationApi';
-import { route } from 'next/dist/next-server/server/router';
 
 const LOAD_LIMIT = 10;
 
 const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { commentScope } = props;
-  const routers = useRouter();
+  const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
@@ -67,7 +66,7 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
 
   useEffect(() => {
     if (commentsList?.length > 0) {
-      if (routers.query?.discussionsId && dataCommentFirst?._id) {
+      if (router.query?.discussionsId && dataCommentFirst?._id) {
         const data = commentsList.filter(item => item._id !== dataCommentFirst._id)
         const data1 = commentsList.find(item => item._id === dataCommentFirst._id)
         setDataComment([data1, ...data])
@@ -78,8 +77,8 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   }, [commentsList, dataCommentFirst]);
 
   useEffect(() => {
-    if (currentUser?._id && routers.query?.discussionsId) {
-      apiDiscussionsById({ _id: routers.query?.discussionsId as string })
+    if (currentUser?._id && router.query?.discussionsId) {
+      apiDiscussionsById({ _id: router.query?.discussionsId as string })
         .then((data) => {
           setDataCommentFirst(data?.data)
         });
