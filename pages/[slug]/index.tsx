@@ -7,6 +7,7 @@ import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
+import ReplyComment from '../../components/ReplyComment';
 import TopicDetail from '../../components/TopicDetail';
 import { OtsvCategory, OtsvTopic } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
@@ -15,7 +16,7 @@ import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses';
 import Topic from '../../sub_modules/share/model/topic';
 import { getBrowserSlug } from '../../utils';
@@ -42,6 +43,7 @@ const Slug = (props: SlugTypes) => {
     [CATEGORY_DETAIL_PAGE_TYPE]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [COURSE_DETAIL_PAGE_TYPE]: <CourseDetail course={props.course} />,
     [TOPIC_DETAIL_PAGE_TYPE]: <TopicDetail topic={props.topic} />,
+    [REPLY_COMMENT_PAGE_TYPE]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
     [DEFAULT_PAGE_TYPE]: <div>404</div>,
     [ERROR_PAGE]: <div>500</div>
   }
@@ -66,15 +68,24 @@ const Slug = (props: SlugTypes) => {
     return items;
   }, [type]);
 
-  return (
-    <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
-      <MainHeader />
-      <MainMenu />
-      <Breadcrumb items={breadcrumbItems} />
-      {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
-      <Footer />
-    </Layout>
-  )
+  if ((type ?? DEFAULT_PAGE_TYPE) === REPLY_COMMENT_PAGE_TYPE) {
+    return (
+      <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
+        <MainHeader />
+        {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
+      </Layout>
+    )
+  } else {
+    return (
+      <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
+        <MainHeader />
+        <MainMenu />
+        <Breadcrumb items={breadcrumbItems} />
+        {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
+        <Footer />
+      </Layout>
+    )
+  }
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
@@ -132,6 +143,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       store.dispatch(setCurrrentTopicAction(topic));
       return {
         props: { id, slug, type, category, course, topic }
+      }
+    } else if (type === REPLY_COMMENT_PAGE_TYPE) {
+      return {
+        props: { id, slug, type }
       }
     }
     return;

@@ -1,4 +1,4 @@
-import { POST_API, POST_REQ } from '../../sub_modules/common/api'
+import { POST_API, POST_REQ, GET_API } from '../../sub_modules/common/api'
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { Course, ICourse } from '../../sub_modules/share/model/courses'
 
@@ -29,3 +29,6 @@ export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot
     return { total: 0 };
   }
 }
+
+export const apiGetAllCourse = () => GET_API('get-all-courses');
+

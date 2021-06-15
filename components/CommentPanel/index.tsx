@@ -17,8 +17,8 @@ import { apiDiscussionsById } from '../../utils/apis/notificationApi';
 
 const LOAD_LIMIT = 10;
 
-const CommentPanel = (props: { commentScope: CommentScopes }) => {
-  const { commentScope } = props;
+const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discussion }) => {
+  const { commentScope, discussions } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
@@ -36,7 +36,7 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
   const { socket, leaveRoom } = useSocket({
     enabled: !!currentUser,
     roomType: 0,
-    roomId: commentScope === CommentScopes.COURSE ? courseId : topicId,
+    roomId: commentScope === CommentScopes.COURSE ? courseId || discussions?.courseId : topicId || discussions?.topicId,
     url: process.env.NEXT_PUBLIC_SOCKET_URL
   });
 
@@ -47,6 +47,12 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     else if (commentScope === CommentScopes.TOPIC) dispatch(fetchTopicCommentsAction({ topicId }));
     else return;
   }, [commentScope, courseId, topicId]);
+
+  useEffect(() => {
+    if (discussions?._id) {
+      setDataComment([discussions])
+    }
+  }, [discussions]);
 
   useEffect(() => {
     if (socket) {
@@ -118,8 +124,8 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     const lastRecord = dataComment[dataComment.length - 1];
     const args = { limit, lastRecord };
     (commentScope === CommentScopes.COURSE
-      ? dispatch(fetchCourseCommentsAction({ ...args, courseId }))
-      : dispatch(fetchTopicCommentsAction({ ...args, topicId }))
+      ? dispatch(fetchCourseCommentsAction({ ...args, courseId: courseId || discussions?.courseId }))
+      : dispatch(fetchTopicCommentsAction({ ...args, topicId: topicId || discussions?.topicId }))
     );
   };
   // console.log('dataComment: ', dataComment);
@@ -128,19 +134,19 @@ const CommentPanel = (props: { commentScope: CommentScopes }) => {
     <div className="comment-section">
       {dataComment?.map((e) => (
         <Fragment key={e._id}>
-          <CommentSectionItem discussionId={dataCommentFirst?._id || null} discussion={e} />
+          <CommentSectionItem commentId={discussions?._id} discussionId={dataCommentFirst?._id || null} discussion={e} />
         </Fragment>
       ))}
       {isShowLoadMoreComments && <div className="load-more">
         <span className="btn-title" onClick={() => loadMoreComments()}>Xem thêm bình luận</span>
       </div>}
-      <CreateNewComment onPushComment={pushComment} ref={commentRef} />
+      {!discussions?._id && <CreateNewComment onPushComment={pushComment} ref={commentRef} />}
     </div>
   )
 };
 
-const CommentSectionItem = (props: { discussion: Discussion, discussionId: string }) => {
-  const { discussion, discussionId } = props;
+const CommentSectionItem = (props: { discussion: Discussion, discussionId: string, commentId?: string }) => {
+  const { discussion, discussionId, commentId } = props;
 
   const [isShowCreateReply, setShowCreateReply] = useState(false);
   const [isShowReplies, setShowReplies] = useState(false);
@@ -154,8 +160,8 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
   const dispatch = useDispatch();
 
   const { courseId, topicId } = useMemo(() => ({
-    courseId: (currentCourse?._id ?? currentTopic?.courseId) || null,
-    topicId: currentTopic?._id || null
+    courseId: (currentCourse?._id ?? currentTopic?.courseId) || discussion?.courseId || null,
+    topicId: currentTopic?._id || discussion?.topicId || null
   }), [currentCourse, currentTopic]);
 
   const pushReply = (parentId: string) => {
@@ -222,6 +228,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
             onShowReply={() => handleClickReply()}
             onToggleReplies={() => showReplies()}
             isShowReplies={isShowReplies}
+            commentId={commentId}
           />
           {/* <div className="btn-show-reply" onClick={() => showReplies()}>
             <i className={`fas fa-chevron-${isShowReplies ? 'up' : 'down  '}`} />
@@ -234,7 +241,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
             <>
               {mapReplies[discussion._id]?.map((e) => (
                 <Fragment key={e._id}>
-                  <CommentItem isReply={true} user={e.user} {...e} />
+                  <CommentItem commentId={commentId} isReply={true} user={e.user} {...e} />
                 </Fragment>
               ))}
               {mapShowLoadMoreReplies[discussion._id] && <div className="load-more reply">

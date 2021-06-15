@@ -61,9 +61,9 @@ function MainHeader() {
     if (currentUser?._id) {
       apiListNotificationByTarget({ target: currentUser?._id, offset: 0 })
         .then((data) => {
-          if (data?.data?.length > 0) {
-            dataNotification = [...data.data]
-            setDataNoti([...data.data])
+          if (data?.data?.result?.length > 0) {
+            dataNotification = [...data.data.result]
+            setDataNoti([...data.data.result])
           }
         });
       apiListNotificationByReadStatus({ target: currentUser?._id, offset: 0 })
@@ -78,7 +78,7 @@ function MainHeader() {
     if (socket) {
       socket.on('add-new-notification', (dataArr: any) => {
         if (dataArr.userId !== currentUser._id) {
-          console.log('dataArr: ', dataArr);
+          // console.log('dataArr: ', dataArr);
           let dataNew = dataArr
           dataNotification = [dataNew, ...dataNotification]
           dataNotiCount = [dataNew, ...dataNotiCount]
@@ -112,8 +112,8 @@ function MainHeader() {
     if (currentUser?._id) {
       apiListNotificationByTarget({ target: currentUser?._id, offset: dataNoti?.length || 0 })
         .then((data) => {
-          if (data?.data?.length > 0) {
-            dataNotification = [...dataNotification, ...data.data]
+          if (data?.data?.result?.length > 0) {
+            dataNotification = [...dataNotification, ...data.data.result]
             // dataNotiCount = [...dataNotiCount, ...data.data]
             setDataNoti([...dataNotification])
             // setDataCount(dataNotiCount?.filter(item => item.readStatus === 0) || [])

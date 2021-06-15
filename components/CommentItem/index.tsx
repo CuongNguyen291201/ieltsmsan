@@ -20,6 +20,7 @@ const CommentItem = (props: {
   lastUpdate?: number;
   likes?: Array<string>;
   totalReplies?: number;
+  commentId?: string
 }) => {
   const {
     _id,
@@ -34,6 +35,7 @@ const CommentItem = (props: {
     lastUpdate = 0,
     likes = [],
     totalReplies = 0,
+    commentId,
   } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapReplies } = useSelector((state: AppState) => state.commentReducer);
@@ -66,7 +68,7 @@ const CommentItem = (props: {
 
       <div className="avatar"><img src={user?.avatar || defaultAvatar} alt="" /></div>
       <div className="comment-main">
-        <div className="comment-content">
+        <div className="comment-content" style={{ maxWidth: commentId ? '510px' : 'unset' }}>
           <div className="usr-name">{user?.name || ''}</div>
           <SanitizedDiv className="comment-text" content={content} />
         </div>
