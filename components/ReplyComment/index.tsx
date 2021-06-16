@@ -33,12 +33,19 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
 
   useEffect(() => {
     if (currentUser?._id) {
+      const queryName = {
+        target: currentUser?._id,
+        offset: 0,
+        limit: 20,
+        replyStatus: 0
+      }
       apiListNotificationByFilter({ target: currentUser?._id, offset: 0, limit: 20, replyStatus: 0 })
         .then((data) => {
           if (data?.data?.result) {
             setDataNoti([...data.data.result])
             setTotal(data.data.total)
             setLoading(false)
+            setDataFilter(queryName)
           }
         });
       apiGetAllCourse()
@@ -76,13 +83,14 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
       title: 'STT',
       dataIndex: null,
       width: '5%',
+      // fixed: true,
       render: (text, row, index) => <span style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{index + 1}</span>,
     },
     {
       title: 'Nội dung',
       name: 'content',
       dataIndex: 'content',
-      width: '50%',
+      width: '46%',
       render: (text, row, index) => (
         <React.Fragment>
           <div>
@@ -109,7 +117,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
     {
       title: 'Trạng thái',
       name: 'replyStatus',
-      width: '15%',
+      width: '19%',
       dataIndex: 'replyStatus',
       render: (text, row, index) => (
         <React.Fragment>
@@ -336,7 +344,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
             position: ['bottomRight'],
           }}
           loading={loading}
-          scroll={{ y: '65vh' }}
+          scroll={{ x: '100vh', y: '65vh' }}
         />
       </div>
       <Modal
