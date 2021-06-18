@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import bannerDefault from '../../public/default/banner-default.jpg';
@@ -16,11 +17,16 @@ enum Tab {
 
 const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
+  const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const [activeTab, setActiveTab] = useState(Tab.COURSE_CONTENT);
 
   useEffect(() => {
-    setActiveTab(currentUser ? Tab.COURSE_TOPIC_TREE : Tab.COURSE_CONTENT);
+    if (currentUser && router.query?.activeTab) {
+      setActiveTab(Tab.COURSE_CONTENT);
+    } else {
+      setActiveTab(currentUser ? Tab.COURSE_TOPIC_TREE : Tab.COURSE_CONTENT);
+    }
   }, [currentUser]);
 
   useScrollToTop();

@@ -74,7 +74,10 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   const handleRouter = (row) => {
     router.push({
       pathname: getBrowserSlug(row.topic?.slug || row.course?.slug, row.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, row.topic?._id || row.course?._id),
-      query: { discussionsId: row.parentId || row._id }
+      query: {
+        discussionsId: row.parentId || row._id,
+        activeTab: '1'
+      }
     });
   }
 
