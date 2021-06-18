@@ -7,7 +7,7 @@ import { AppState } from '../../redux/reducers'
 import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { formatFullDateTime, getBrowserSlug } from '../../utils';
 import { useScrollToTop } from '../../hooks/scrollToTop';
-import { apiListNotificationByTarget, apiDiscussionsById, apiUpdateReply, apiListNotificationByFilter } from '../../utils/apis/notificationApi';
+import { apiListNotificationByTarget, apiDiscussionsById, apiUpdateReply, apiListDiscussionsByFilter } from '../../utils/apis/notificationApi';
 import { apiGetAllCourse } from '../../utils/apis/courseApi';
 import './style.scss';
 import SanitizedDiv from '../SanitizedDiv';
@@ -39,7 +39,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
         limit: 20,
         replyStatus: 0
       }
-      apiListNotificationByFilter({ target: currentUser?._id, offset: 0, limit: 20, replyStatus: 0 })
+      apiListDiscussionsByFilter({ offset: 0, limit: 20, replyStatus: 0 })
         .then((data) => {
           if (data?.data?.result) {
             setDataNoti([...data.data.result])
@@ -74,7 +74,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   const handleRouter = (row) => {
     router.push({
       pathname: getBrowserSlug(row.topic?.slug || row.course?.slug, row.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, row.topic?._id || row.course?._id),
-      query: { discussionsId: row.discussionsId || row.parentId as string }
+      query: { discussionsId: row.parentId || row._id }
     });
   }
 
@@ -94,7 +94,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
       render: (text, row, index) => (
         <React.Fragment>
           <div>
-            <strong style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{row.user?.name}</strong> đã trả lời bình luận của bạn trong {row.topicId ? `bài học ${row.topicName || row?.topic?.name}` : `khóa học ${row.courseName || row?.course?.name}`}
+            <strong style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{row.user?.name}</strong> đã bình luận trong {row.topicId ? `bài học ${row.topicName || row?.topic?.name}` : `khóa học ${row.courseName || row?.course?.name}`}
           </div>
           <div>
             <SanitizedDiv className="text-html" content={row.content} />
@@ -107,8 +107,8 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
     },
     {
       title: 'Ngày tạo',
-      name: 'createdDate',
-      dataIndex: 'createdDate',
+      name: 'createDate',
+      dataIndex: 'createDate',
       width: '15%',
       render: text => (
         <span>{formatFullDateTime(text)}</span>
@@ -188,7 +188,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
     if (values.replyStatus === -1) {
       delete queryName.replyStatus;
     }
-    apiListNotificationByFilter(queryName)
+    apiListDiscussionsByFilter(queryName)
       .then((data) => {
         if (data?.data?.result) {
           setDataNoti([...data.data.result])
@@ -219,7 +219,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   };
 
   const handleReply = (row) => {
-    apiDiscussionsById({ _id: row.discussionsId as string })
+    apiDiscussionsById({ _id: row.parentId || row._id })
       .then((data) => {
         setDiscussions(data?.data)
         showModal();
@@ -229,7 +229,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   const onPageChange = (newPage: number, newPageSize?: number) => {
     const data = dataFilter
     data.offset = (newPage - 1) * 20
-    apiListNotificationByFilter(data)
+    apiListDiscussionsByFilter(data)
       .then((data) => {
         if (data?.data?.result) {
           setDataNoti([...data.data.result])
@@ -244,7 +244,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   };
 
   const handleUpdateReply = (id: string, replyStatus: number, index: number) => {
-    apiUpdateReply({ notificationId: id, replyStatus })
+    apiUpdateReply({ discussionId: id, replyStatus })
       .then((data) => {
         if (data.data?.message === 'success') {
           const dataTemp = [...dataNoti]

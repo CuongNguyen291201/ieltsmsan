@@ -17,10 +17,10 @@ export const apiUpdateReadStatusNotification = (args: { notificationId: string }
   return POST_API('put-read-status-notification', args);
 }
 
-export const apiUpdateReply = (args: { notificationId: string, replyStatus: number }) => {
-  return POST_API('put-reply-status', args);
+export const apiUpdateReply = (args: { discussionId: string, replyStatus: number }) => {
+  return POST_API('put-discussions-by-reply-status', args);
 }
 
-export const apiListNotificationByFilter = (args: { target: string, offset: number, limit?: number, replyStatus?: number, courseId?: string, topicId?: string }) => {
-  return POST_API('get-notification-by-filter', args);
+export const apiListDiscussionsByFilter = (args: { offset: number, limit?: number, replyStatus?: number, courseId?: string, topicId?: string }) => {
+  return POST_API('get-discussions-by-filter', args);
 }
