@@ -21,7 +21,7 @@ function MainMenu() {
           <div className="menu-item" onClick={() => router.push('/')}>
             Trang chủ
           </div>
-          <div className="menu-item document">
+          <div className="menu-item document" onClick={() => router.push('/document')}>
             Tài liệu
           </div>
           <div className="menu-item">
