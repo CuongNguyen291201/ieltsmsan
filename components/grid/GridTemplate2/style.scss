@@ -3,7 +3,7 @@
 .grid-template-2 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 32px;
+  gap: 20px;
 }
 
 @media (max-width: $h-mobile-max-width) {
