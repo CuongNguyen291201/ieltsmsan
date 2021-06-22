@@ -12,7 +12,7 @@ import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { formatFullDateTime, getBrowserSlug } from '../../utils';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
-import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE, COURSE_ORDER_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
 
@@ -22,9 +22,12 @@ let dataNotiCount = []
 function MainHeader() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
+  const courseId = useSelector((state: AppState) => state.courseReducer.courseId)
+  const removeCourseId = useSelector((state: AppState) => state.courseReducer.removeCourseId)
   const router = useRouter();
   const [dataNoti, setDataNoti] = useState([]);
   const [dataCount, setDataCount] = useState([]);
+  const [dataCountOrder, setDataCountOrder] = useState(0);
   const { socket, leaveRoom } = useSocketNotification({
     enabled: !!currentUser,
     // roomType: 0,
@@ -73,6 +76,16 @@ function MainHeader() {
         });
     }
   }, [currentUser]);
+  useEffect(() => {
+
+    setDataCountOrder(localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.length : 0)
+  }, [courseId]);
+
+  useEffect(() => {
+    if (removeCourseId) {
+      setDataCountOrder(localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.length : 0)
+    }
+  }, [removeCourseId]);
 
   useEffect(() => {
     if (socket) {
@@ -188,8 +201,12 @@ function MainHeader() {
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
         </div>
-        <div className="cart item">
-          <img src="/home/header-cart.png" alt="" />
+        <div className="cart item" onClick={() => router.push(getBrowserSlug('cart', COURSE_ORDER_PAGE_TYPE, 'course'))}>
+          <i className="far fa-shopping-cart shopping-cart"></i>
+          {/* <img style={{ cursor: "pointer" }} onClick={() => router.push(getBrowserSlug('cart', COURSE_ORDER_PAGE_TYPE, 'course'))} src="/home/header-cart.png" alt="" /> */}
+          {dataCountOrder > 0 &&
+            <span className="cart-number">{dataCountOrder}</span>
+          }
         </div>
         {currentUser?._id && <div className="notification-item item">
           <Dropdown
@@ -256,7 +273,8 @@ function MainHeader() {
             <>
               <div className="current-user-wrap item">
                 <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
-                  <img src="/home/header-user.png" alt="" />
+                  {/* <img src="/home/header-user.png" alt="" /> */}
+                  <i className="fas fa-user-circle user-acc"></i>
                 </div>
                 {isShowUserMenu && (<div className="user-menu-panel">
                   <div className="user-profile">

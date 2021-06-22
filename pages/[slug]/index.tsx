@@ -9,6 +9,7 @@ import MainMenu from '../../components/MainMenu';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
 import ReplyComment from '../../components/ReplyComment';
 import TopicDetail from '../../components/TopicDetail';
+import CourseOder from '../../components/CourseOder';
 import { OtsvCategory, OtsvTopic } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
@@ -16,7 +17,7 @@ import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE, COURSE_ORDER_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses';
 import Topic from '../../sub_modules/share/model/topic';
 import { getBrowserSlug } from '../../utils';
@@ -44,6 +45,7 @@ const Slug = (props: SlugTypes) => {
     [COURSE_DETAIL_PAGE_TYPE]: <CourseDetail course={props.course} />,
     [TOPIC_DETAIL_PAGE_TYPE]: <TopicDetail topic={props.topic} />,
     [REPLY_COMMENT_PAGE_TYPE]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
+    [COURSE_ORDER_PAGE_TYPE]: <CourseOder category={props.category} childCategories={props.childCategories} />,
     [DEFAULT_PAGE_TYPE]: <div>404</div>,
     [ERROR_PAGE]: <div>500</div>
   }
@@ -145,6 +147,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         props: { id, slug, type, category, course, topic }
       }
     } else if (type === REPLY_COMMENT_PAGE_TYPE) {
+      return {
+        props: { id, slug, type }
+      }
+    } else if (type === COURSE_ORDER_PAGE_TYPE) {
       return {
         props: { id, slug, type }
       }

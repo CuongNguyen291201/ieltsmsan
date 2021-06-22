@@ -10,7 +10,7 @@
     }
     .breadcrumb-item {
       cursor: pointer;
-      transition: all 0.2s;
+      // transition: all 0.2s;
       &:hover {
         text-decoration: underline;
         color: $root-color;

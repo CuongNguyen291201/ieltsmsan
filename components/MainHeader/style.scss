@@ -129,11 +129,33 @@
 
   .cart {
     justify-self: flex-end;
+    position: relative;
+    cursor: pointer;
+    .shopping-cart {
+      color: #fff;
+      font-size: 20px;
+    }
+    .cart-number {
+      background: #b91300;
+      color: white;
+      font-weight: bold;
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      padding: 0px 5px;
+      border-radius: 30px;
+      font-size: 10px;
+      z-index: 1;
+    }
   }
 
   .current-user-wrap {
     .user-menu-icon {
       cursor: pointer;
+      .user-acc {
+        color: #fff;
+        font-size: 24px;
+      }
     }
     position: relative;
     .user-menu-panel {
