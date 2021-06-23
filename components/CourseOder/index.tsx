@@ -13,7 +13,7 @@ import { useScrollToTop } from '../../hooks/scrollToTop';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import './style.scss';
 
-const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
+const CourseOder = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -119,4 +119,4 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   );
 };
 
-export default ReplyComment;
+export default CourseOder;

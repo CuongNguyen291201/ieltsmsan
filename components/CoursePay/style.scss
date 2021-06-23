@@ -82,11 +82,11 @@
         }
       }
       #payment-methods .item-checkbox {
-        margin: 5px 0;
+        margin: 5px 2px;
         border: 1px solid #ddd;
         border-radius: 5px;
         display: inline-block;
-        width: calc(50% - 2px);
+        width: calc(50% - 6px);
         a[data-parent="#payment-methods"] {
           width: 100%;
           display: block;
@@ -99,6 +99,22 @@
         .item-checkbox a {
           text-decoration: none;
           color: #333;
+        }
+        i, span {
+          color: #333;
+        }
+      }
+      .panel-collapse {
+        border: 1px solid #ddd;
+        .panel-body {
+          padding: 15px;
+        }
+      }
+      .course-item-empty {
+        padding-top: 10px;
+        a {
+          color: #337ab7;
+          text-decoration: none;
         }
       }
     }

@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
+import randomstring from 'randomstring'
 import { Row, Col, Rate } from 'antd';
 import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { OtsvCategory } from '../../custom-types';
@@ -13,13 +14,15 @@ import { useScrollToTop } from '../../hooks/scrollToTop';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import './style.scss';
 
-const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
+const CoursePay = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [dataOrder, setDataOrder] = useState([])
   const [dataTotal, setDataTotal] = useState(0)
+  const [checkTick, setCheckTick] = useState(0)
+  const [dataRamdom, setDataRamdom] = useState('')
 
   useEffect(() => {
     if (currentUser?._id) {
@@ -33,6 +36,11 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
               priceTotal += item.cost - item.discountPrice
             })
             setDataTotal(priceTotal)
+            setDataRamdom(randomstring.generate({
+              length: 6,
+              charset: 'alphabetic',
+              capitalization: 'uppercase'
+            }))
           })
       }
     }
@@ -46,6 +54,14 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
     localStorage.setItem('courseIds', courseIds.join())
   }
 
+  const onChangeCheck = (value) => {
+    if (value === 1) {
+      setCheckTick(checkTick == 1 ? 0 : 1)
+    } else {
+      setCheckTick(checkTick == 2 ? 0 : 2)
+    }
+  }
+
   return (
     <React.Fragment>
       <div className="course-pay">
@@ -56,32 +72,43 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                 <Col xs={24} className="custom-reset-row-col right-panel">
                   <label><strong>1. Thông tin thanh toán</strong></label>
                   <div className="transactionCode">
-                    <span>Mã đơn hàng: </span> <span style={{ color: "#ff0000" }}>YTYSKK</span>
+                    <span>Mã đơn hàng: </span> <span style={{ color: "#ff0000" }}>{dataRamdom}</span>
                   </div>
 
                   <div className="content-block-panel left-panel-background">
                     <div className="main-block-content-panel" >
                       <div className="header-left-panel">
-                        <label><span className="count-course-number">3 Khoá học</span></label>
+                        <label><span className="count-course-number">{dataOrder?.length || 0} Khoá học</span></label>
                       </div>
-                      <div className="item-course-bought">
-                        <div>
-                          <label>MOS EXCEL 2016 - CAM KẾT ĐẦU RA</label>
-                          <span className="price-html"><div><strong>399,000 VND</strong></div><div className="discount">999,000 VND</div></span>
+                      {dataOrder?.length > 0 && dataOrder?.map(item =>
+                        <div className="item-course-bought">
+                          <div>
+                            <label>{item.name}</label>
+                            <span className="price-html">
+                              <div>
+                                <strong>{numberFormat.format(item.cost - item.discountPrice)} VND</strong>
+                              </div>
+                              {item.discountPrice !== 0 && <div className="discount">{numberFormat.format(item.cost)} VNĐ</div>}
+                            </span>
+                          </div>
+                          <span className="remove-course-item" onClick={() => onRemove(item._id)}><i className="fa fa-times"></i></span>
                         </div>
-                        <span className="remove-course-item" ><i className="fa fa-times"></i></span>
-                      </div>
+                      )}
+                      {dataOrder?.length === 0 &&
+                        <div className="course-item-empty">
+                          Khoá học không tồn tại hoặc bạn chưa chọn khoá học nào ! Quay lại trang <a onClick={() => router.push('/')}>Mua khoá học</a>.
+                        </div>}
                     </div>
                     <div className="membership-info-panel">
                       <div className="new-price-display-temp-panel flex">
                         <span>Tạm tính</span>
-                        <span id="new-template-price_">1,998,000 VND</span>
+                        <span id="new-template-price_">{numberFormat.format(dataTotal)} VND</span>
                       </div>
                     </div>
                     <div className="total-price-info-panel">
                       <div className="new-price-display-panel flex">
                         <span>Tổng cộng</span>
-                        <span className="new-total-price">1,998,000 VND</span>
+                        <span className="new-total-price">{numberFormat.format(dataTotal)} VND</span>
                       </div>
                     </div>
                   </div>
@@ -89,20 +116,39 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                 <Col xs={24} className="custom-reset-row-col left-panel">
                   <div className="content-block-panel">
                     <div className="main-block-content-panel">
-                      <div className="payment-method">
+                      {/* <div className="payment-method">
                         <label><strong>1. Thông tin khách hàng (*)</strong></label>
-                      </div>
+                      </div> */}
                       <div className="panel-group payment-method" id="payment-methods">
-                        <label><strong>2. Chọn phương thức thanh toán</strong></label>
+                        <label><strong>Chọn phương thức thanh toán</strong></label>
                         <div>
 
-                          <div className="item-checkbox">
-                            <a data-toggle="collapse" data-parent="#payment-methods" href="#method-1">
+                          <div className="item-checkbox" onClick={() => onChangeCheck(1)}>
+                            <a data-toggle="collapse" data-parent="#payment-methods" >
                               <i className="icon-before"></i>
+                              {checkTick === 1 ?
+                                <i className="far fa-check-circle"></i>
+                                :
+                                <i className="far fa-circle"></i>}
+                              &nbsp;
                               <span>Thanh toán qua ví Momo</span>
                             </a>
                           </div>
-                          <div id="method-1" className="panel-collapse collapse " data-method="1">
+                          <div className="item-checkbox" onClick={() => onChangeCheck(2)}>
+                            <a data-toggle="collapse" data-parent="#payment-methods" >
+                              <i className="icon-before"></i>
+                              <span>
+                                {checkTick === 2 ?
+                                  <i className="far fa-check-circle"></i>
+                                  :
+                                  <i className="far fa-circle"></i>}
+                                &nbsp;
+                                Thanh toán qua ngân hàng
+
+                              </span>
+                            </a>
+                          </div>
+                          {checkTick === 1 && <div id="method-1" className="panel-collapse collapse " data-method="1" aria-expanded="false">
                             <div className="panel-body">
                               <p className="payment-content">
 
@@ -111,24 +157,14 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                               </p>
                               <div>
                                 <strong>
-                                  Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang
+                                  Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang&nbsp;
                                   <a href="/lich-su-giao-dich">Lịch sử giao dịch</a> của bạn
 
                                 </strong>
                               </div>
                             </div>
-                          </div>
-                          <div className="item-checkbox">
-                            <a data-toggle="collapse" data-parent="#payment-methods" href="#method-2">
-                              <i className="icon-before"></i>
-                              <span>
-
-                                Thanh toán qua ngân hàng
-
-                              </span>
-                            </a>
-                          </div>
-                          <div id="method-2" className="panel-collapse collapse " data-method="2">
+                          </div>}
+                          {checkTick === 2 && <div id="method-2" className="panel-collapse collapse " data-method="2">
                             <div className="panel-body">
                               <span className="payment-content">
 
@@ -137,13 +173,13 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                               </span>
                               <div>
                                 <strong>
-                                  Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang
+                                  Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang&nbsp;
                                   <a href="/lich-su-giao-dich">Lịch sử giao dịch</a> của bạn
 
                                 </strong>
                               </div>
                             </div>
-                          </div>
+                          </div>}
                         </div>
                       </div>
                       <Col xs={24} className="no-padding-mobile">
@@ -153,12 +189,12 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                         <div>
                           - Sau khi <strong>thanh toán thành công</strong>,
                           Bạn vào trang <strong><a href="/lich-su-giao-dich" className="history">lịch sử giao dịch </a></strong>
-                          để nhận mã code hoặc kiểm tra email <span id="email-show-info"><a href="mailto:trongtu@gmail.com">trongtu@gmail.com</a></span>.
+                          để nhận mã code hoặc kiểm tra email <span id="email-show-info"><a href="mailto:trongtu@gmail.com">{currentUser?.account}</a></span>.
                         </div>
                       </Col>
                     </div>
                     <div className="payment-button">
-                      <button className="button-on-right-panel">Quay lại </button>
+                      <button className="button-on-right-panel" onClick={() => router.push(getBrowserSlug('course', COURSE_ORDER_PAGE_TYPE, 'cart'))}>Quay lại </button>
                       <button className="button-on-right-panel background-color-main" >Tiếp tục</button>
                     </div>
                   </div>
@@ -172,4 +208,4 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
   );
 };
 
-export default ReplyComment;
+export default CoursePay;
