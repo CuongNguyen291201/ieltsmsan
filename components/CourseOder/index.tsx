@@ -71,7 +71,7 @@ const CourseOder = () => {
                           <div>
                             <span >(500) </span>
                             <span>
-                              <Rate style={{ fontSize: '15px' }} disabled allowHalf defaultValue={4.5} />
+                              <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
                             </span>
                           </div>
                           <div className="dot-3" >

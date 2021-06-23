@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
+import { Rate } from 'antd';
 import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses';
 import { getBrowserSlug, numberFormat } from '../../utils';
@@ -39,7 +40,12 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
             <PopupShowQuickView showPopup={showPopup} course={course} showPopupFunction={() => {
               setShowPopup(false)
             }} />
-            <button>Mua ngay </button>
+            <button
+              onClick={() => router.push({
+                pathname: 'course-pay',
+                query: { courseIds: course?._id }
+              })}
+            >Mua ngay </button>
           </div>
         </div>
       </div>
@@ -53,7 +59,7 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
         <div className="crs-rating">
           <div className="crs-point">{String(4.6).replace('.', ',')}</div>
           <div className="vote-star">
-            <Ratings point={4.6} />
+            <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
           </div>
           <div className="crs-mem">({500})</div>
         </div>

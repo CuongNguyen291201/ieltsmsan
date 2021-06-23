@@ -98,7 +98,12 @@ const PopupShowQuickView = (props: {
           <div className="des-course">{course.shortDesc}</div>
           <div className="optional">
             <button onClick={() => onChangeOrder(course?._id)}>Thêm vào giỏ hàng</button>
-            <button>Mua Khoá học</button>
+            <button
+              onClick={() => router.push({
+                pathname: 'course-pay',
+                query: { courseIds: course?._id }
+              })}
+            >Mua Khoá học</button>
           </div>
         </div>
       </Dialog>
