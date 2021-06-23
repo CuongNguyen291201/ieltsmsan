@@ -1,0 +1,155 @@
+.course-pay {
+  padding: 10px 0;
+  .casc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .transactionCode {
+    font-size: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .content-block-panel {
+    border: 1px solid #ddd;
+    background: white;
+    margin-bottom: 10px !important;
+    display: flex;
+    flex-direction: column;
+    .main-block-content-panel {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      .header-left-panel {
+        border-bottom: 1px solid #ddd;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        .count-course-number {
+          color: #2090FE;
+          display: inline-block;
+          max-width: 100%;
+          margin-bottom: 5px;
+          font-weight: 700;
+        }
+      }
+      .item-course-bought {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #ddd;
+        padding-top: 15px;
+        padding-bottom: 5px;
+        .price-html {
+          text-align: left;
+          .discount {
+            text-decoration: line-through;
+            color: #ec1f24;
+            font-size: 0.9em;
+          }
+        }
+        .remove-course-item {
+          position: absolute;
+          z-index: 2;
+          top: calc(50% - 10px);
+          right: 0;
+          width: 23px;
+          height: 23px;
+          padding: 3px 4px 4px 7px;
+          background: #ddd;
+          color: #676767;
+          border-radius: 100%;
+          cursor: pointer;
+          font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+          font-size: 12px;
+          line-height: 1.42857143;
+        }
+        .remove-course-item:hover {
+          background: #ec1f24;
+          color: #fff;
+        }
+        >div {
+          display: flex;
+          flex-direction: column;
+        }
+        label {
+          display: inline-block;
+          max-width: 100%;
+          margin-bottom: 5px;
+          font-weight: 700;
+        }
+      }
+      #payment-methods .item-checkbox {
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: inline-block;
+        width: calc(50% - 2px);
+        a[data-parent="#payment-methods"] {
+          width: 100%;
+          display: block;
+          padding: 10px;
+        }
+        #payment-methods a[data-parent="#payment-methods"] i.icon-before:BEFORE {
+          content: "\f111";
+          font-weight: 400;
+        }
+        .item-checkbox a {
+          text-decoration: none;
+          color: #333;
+        }
+      }
+    }
+    .membership-info-panel {
+      background: white;
+      padding: 10px;
+      .new-price-display-temp-panel {
+        justify-content: space-between;
+        display: flex;
+        span:first-child {
+          font-weight: bold;
+        }
+      }
+    }
+    .total-price-info-panel {
+      .new-price-display-panel {
+        background: white;
+        justify-content: space-between;
+        padding: 10px;
+        display: flex;
+        span:first-child {
+          font-weight: bold;
+        }
+        .new-total-price {
+          color: #ff8200;
+          font-weight: bold;
+          font-size: 1.2em;
+        }
+      }
+    }
+    .payment-button {
+      background: #ddd;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .button-on-right-panel {
+        cursor: pointer;
+        border-radius: 2px;
+        padding: 6px 15px !important;
+        margin-left: 30px;
+      }
+      .background-color-main {
+        background-color: #ec1f24;
+        color: #fff;
+      }
+    }
+    .no-padding-mobile {
+      .history {
+        color: #333;
+      }
+    }
+  }
+}

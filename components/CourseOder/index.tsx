@@ -7,7 +7,8 @@ import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { AppState } from '../../redux/reducers'
-import { numberFormat } from '../../utils';
+import { numberFormat, getBrowserSlug } from '../../utils';
+import { COURSE_PAY_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import './style.scss';
@@ -26,7 +27,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
       if (courseIds?.length > 0) {
         apiGetCourseByIds(courseIds)
           .then(data => {
-            setDataOrder(data?.data)
+            setDataOrder(data?.data?.reverse())
             let priceTotal = 0
             data?.data?.map(item => {
               priceTotal += item.cost - item.discountPrice
@@ -63,7 +64,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                           <div className="gwt-HTML">{item.name}</div>
                         </strong>
                         <div>
-                          <span >(500)</span>
+                          <span >(500) </span>
                           <span>
                             <Rate style={{ fontSize: '15px' }} disabled allowHalf defaultValue={4.5} />
                           </span>
@@ -95,7 +96,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
                     <strong>Tổng tiền</strong>
                     <div className="gwt-HTML">{numberFormat.format(dataTotal)} VND</div>
                   </div>
-                  <button type="button" className="button-pay">Thanh toán</button>
+                  <button type="button" className="button-pay" onClick={() => router.push(getBrowserSlug('course', COURSE_PAY_PAGE_TYPE, 'pay'))}>Thanh toán</button>
                 </div>
               </Col>
             </Row>
