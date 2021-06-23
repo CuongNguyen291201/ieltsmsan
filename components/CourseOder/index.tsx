@@ -23,24 +23,24 @@ const CourseOder = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (currentUser?._id) {
-      const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',') : []
-      if (courseIds?.length > 0) {
-        apiGetCourseByIds(courseIds)
-          .then(data => {
-            setDataOrder(data?.data?.reverse())
-            let priceTotal = 0
-            data?.data?.map(item => {
-              priceTotal += item.cost - item.discountPrice
-            })
-            setDataTotal(priceTotal)
-            setLoading(false)
+    // if (currentUser?._id) {
+    const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',') : []
+    if (courseIds?.length > 0) {
+      apiGetCourseByIds(courseIds)
+        .then(data => {
+          setDataOrder(data?.data?.reverse())
+          let priceTotal = 0
+          data?.data?.map(item => {
+            priceTotal += item.cost - item.discountPrice
           })
-      } else {
-        setLoading(false)
-      }
+          setDataTotal(priceTotal)
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
     }
-  }, [currentUser]);
+    // }
+  }, []);
 
   const onRemove = (value) => {
     const data = dataOrder?.filter(item => item._id !== value)

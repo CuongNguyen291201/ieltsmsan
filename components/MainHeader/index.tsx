@@ -15,6 +15,7 @@ import { useSocketNotification } from '../../hooks/socket';
 import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE, COURSE_ORDER_PAGE_TYPE } from '../../sub_modules/share/constraint';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
+import { route } from 'next/dist/next-server/server/router';
 
 let dataNotification = []
 let dataNotiCount = []
@@ -299,7 +300,8 @@ function MainHeader() {
                     </div>
                     <div className="menu-item" onClick={() => {
                       removeCookie(TOKEN);
-                      dispatch(loginSuccessAction(null));
+                      // dispatch(loginSuccessAction(null));
+                      router.reload()
                     }}>
                       <i className="fas fa-sign-out" />
                       Đăng xuất

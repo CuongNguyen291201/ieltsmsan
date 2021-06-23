@@ -27,37 +27,37 @@ const CoursePay = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (currentUser?._id) {
-      const courseIdsQuery: string = router.query?.courseIds as string
-      const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
-      if (courseIds?.length > 0) {
-        apiGetCourseByIds(courseIds)
-          .then(data => {
-            setDataOrder(data?.data?.reverse())
-            let priceTotal = 0
-            data?.data?.map(item => {
-              priceTotal += item.cost - item.discountPrice
-            })
-            setDataTotal(priceTotal)
-            setDataRamdom(randomstring.generate({
-              length: 6,
-              charset: 'alphabetic',
-              capitalization: 'uppercase'
-            }))
-            setLoading(false)
+    // if (currentUser?._id) {
+    const courseIdsQuery: string = router.query?.courseIds as string
+    const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
+    if (courseIds?.length > 0) {
+      apiGetCourseByIds(courseIds)
+        .then(data => {
+          setDataOrder(data?.data?.reverse())
+          let priceTotal = 0
+          data?.data?.map(item => {
+            priceTotal += item.cost - item.discountPrice
           })
-      } else {
-        setLoading(false)
-      }
+          setDataTotal(priceTotal)
+          setDataRamdom(randomstring.generate({
+            length: 6,
+            charset: 'alphabetic',
+            capitalization: 'uppercase'
+          }))
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
     }
-  }, [currentUser]);
+    // }
+  }, []);
 
   const onRemove = (value) => {
     const data = dataOrder?.filter(item => item._id !== value)
     // const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
     dispatch(removeCourseOrderAction(value));
     setDataOrder(data)
-    const dataCourse = data?.map(item=>item._id)
+    const dataCourse = data?.map(item => item._id)
     // localStorage.setItem('courseIds', courseIds.join())
     router.push(`?courseIds=${dataCourse.join()}`, undefined, { shallow: true })
   }
