@@ -1,0 +1,47 @@
+.event-page {
+  max-width: 100vw;
+  max-height: 100vh;
+  color: #FFFFFF;
+  position: relative;
+  font-style: normal;
+  font-weight: normal;
+  .event-content {
+    width: 705px;
+    padding-left: 207px;
+    padding-top: 130px;
+    position: absolute;
+    top: 0;
+    .event-name {
+      font-weight: bold;
+      font-size: 40px;
+      line-height: 62px;
+      margin-bottom: 11px;
+      display: flex;
+      flex-direction: column;
+    }
+    .event-detail {
+      font-size: 23px;
+      text-align: justify;
+    }
+    .event-exam {
+      font-weight: bold;
+      font-size: 16px;
+      color: #0F5764;
+      background-color: #FFFFFF;
+      padding: 29px 54px 26px 56px;
+      border-radius: 60px;
+      margin-top: 34px;
+    }
+    .event-end {
+      font-style: italic;
+      font-size: 23px;
+      margin-top: 11px;
+      text-align: center;
+    }
+  }
+  .image-event {
+    // position: absolute;
+    // top: 0;
+    width: 100%;
+  }
+}
