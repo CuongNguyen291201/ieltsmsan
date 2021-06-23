@@ -15,10 +15,10 @@ body {
   background-color: #fefefe;
 }
 
-.container {
-  max-width: $container-max-width;
-  margin: auto;
-}
+// .container {
+//   max-width: $container-max-width;
+//   margin: auto;
+// }
 .home-section-title {
   font-weight: 900;
   font-size: 36px;
@@ -46,11 +46,11 @@ body {
   align-items: center;
 }
 
-@media (max-width: $container-max-width) {
-  .container {
-    padding: 0 10px;
-  }
-}
+// @media (max-width: $container-max-width) {
+//   .container {
+//     padding: 0 10px;
+//   }
+// }
 
 @media (max-width: $mobile-max-width) {
   .home-section-title {
@@ -58,5 +58,37 @@ body {
   }
   .home-section-title {
     padding: 0 16px;
+  }
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
   }
 }
