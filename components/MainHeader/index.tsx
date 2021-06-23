@@ -201,7 +201,7 @@ function MainHeader() {
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
         </div>
-        <div className="cart item" onClick={() => router.push(getBrowserSlug('course', COURSE_ORDER_PAGE_TYPE, 'cart'))}>
+        <div className="cart item" onClick={() => router.push('course-order')}>
           <i className="far fa-shopping-cart shopping-cart"></i>
           {/* <img style={{ cursor: "pointer" }} onClick={() => router.push(getBrowserSlug('cart', COURSE_ORDER_PAGE_TYPE, 'course'))} src="/home/header-cart.png" alt="" /> */}
           {dataCountOrder > 0 &&
