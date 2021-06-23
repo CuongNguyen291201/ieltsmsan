@@ -32,3 +32,11 @@ export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot
 
 export const apiGetAllCourse = () => GET_API('get-all-courses');
 
+export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
+  try {
+    const res = await POST_API('get-user-courses', { userId });
+    return res.data;
+  } catch (e) {
+    return [];
+  }
+}
