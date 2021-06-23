@@ -1,3 +1,4 @@
+import { Tooltip } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
 import { OtsvCategory } from '../../custom-types';
@@ -11,6 +12,7 @@ import Ratings from '../Ratings';
 import './style.scss';
 
 
+
 const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
   const { category, course } = props;
   const router = useRouter();
@@ -22,6 +24,8 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
   const clickShowPopup = () => {
     setShowPopup(true)
   }
+  const shortDesc = course.shortDesc;
+  const nameCourse = course.name
   return (
     <Container1>
       <div className="crs-avatar">
@@ -40,12 +44,12 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
         </div>
       </div>
       <div className="crs-info" onClick={onClickItem}>
-        <div className="crs-title">
-          {course.name}
-        </div>
-        <div className="crs-desc">
-          {course.shortDesc}
-        </div>
+        {nameCourse.length > 40 ? <Tooltip title={nameCourse} placement="bottom">
+          <div className="crs-title dot-1">{nameCourse} </div>
+        </Tooltip> : <div className="crs-title dot-1">{nameCourse} </div>}
+        {shortDesc.length > 60 ? <Tooltip title={shortDesc} placement="bottom">
+          <div className="crs-desc dot-2">{shortDesc} </div>
+        </Tooltip> : <div className="crs-desc dot-2">{shortDesc} </div>}
         <div className="crs-rating">
           <div className="crs-point">{String(4.6).replace('.', ',')}</div>
           <div className="vote-star">

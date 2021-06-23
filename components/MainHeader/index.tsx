@@ -227,7 +227,7 @@ function MainHeader() {
                       <img className="img-notif" src={item.user?.avatar || defaultAvatar} />
                       <div className="content_">
                         <div className="notification-content"><strong>{item.user?.name}</strong> đã trả lời bình luận của bạn trong {item.topicId ? `bài học ${item.topicName || item?.topic?.name}` : `khóa học ${item.courseName || item?.course?.name}`}:
-                        &nbsp;<SanitizedDiv className="text-html" content={item.content} />
+                          &nbsp;<SanitizedDiv className="text-html" content={item.content} />
                         </div>
                         <div className="notification-date">{formatFullDateTime(item.createdDate || item.createDate)}</div>
                       </div>
@@ -237,7 +237,7 @@ function MainHeader() {
                 {dataNoti?.length >= 9 &&
                   <div key="-1" className="notify-text-more" onClick={() => handleMore()}>
                     Xem thêm...
-                </div>}
+                  </div>}
               </Menu>
             }
             placement="bottomRight"
@@ -271,7 +271,7 @@ function MainHeader() {
                       <i className="fas fa-exchange-alt" />
                       Lịch sử giao dịch
                     </div>
-                    <div className="menu-item">
+                    <div className="menu-item" onClick={() => router.push('/khoa-hoc-cua-toi')}>
                       <i className="fas fa-graduation-cap" />
                       Khoá học của tôi
                     </div>
