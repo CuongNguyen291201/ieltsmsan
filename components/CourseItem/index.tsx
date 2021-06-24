@@ -33,7 +33,7 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
         {/* <img src={course.avatar || itemAvatar} alt={course.name} /> */}
         <div className="hover-cat-item">
           <div className="image-corse-item_">
-            <img src={category.avatar || itemAvatar} alt={category.name} />
+            <img src={course.avatar || itemAvatar} alt={course.name} />
           </div>
           <div className="button-hover-course-item">
             <button onClick={clickShowPopup}>Xem nhanh</button>

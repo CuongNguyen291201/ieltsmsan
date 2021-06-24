@@ -4,4 +4,7 @@
   // box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.1);
   box-shadow: -5px -5px 10px rgb(255 255 255 / 70%), 5px 5px 10px rgb(174 174 192 / 40%);
   overflow: hidden;
+  @media (max-width: 768px) {
+    border-radius: unset;
+  }
 }

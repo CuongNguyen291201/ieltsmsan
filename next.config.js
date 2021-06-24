@@ -7,9 +7,7 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 	exportPathMap: (
 		defaultPathMap,
 		{ dev, dir, outDir, distDir, buildId }
-	) => ({
-		'/khoa-hoc-cua-toi': { page: '/my-courses' }
-	}),
+	) => { },
 	env: {
 		REACT_APP_ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT,
 		REACT_APP_PREFIX: process.env.NEXT_PUBLIC_PREFIX
