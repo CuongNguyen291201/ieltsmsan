@@ -95,6 +95,50 @@
   }
   
 }
+.wrapper-active-course{
+  text-align: center;
+  .title-active-course{
+    h2{
+      margin-bottom: 0;
+    }
+  }
+  .insert-code{
+    margin: 10px 0;
+    input{
+      border: 0;
+      outline: none;
+      background-color: #ecedf1;
+      padding: 7px 40px;
+      text-transform: uppercase;
+    }
+  }
+  .search-code{
+    button{
+      border: 0;
+      background-color: #ffb400;
+      color: white;
+      padding: 7px 30px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+  }
+}
+.giai-dap-thac-mac{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  color: red;
+  font-size: 17px;
+  margin: 10px 0;
+  font-weight: 600;
+  @media(max-width:600px){
+    display: unset;
+  }
+    svg{
+      transform: rotateY(200deg);
+    }
+}
 @media(max-width:600px){
   .main-menu{
     position: relative;
