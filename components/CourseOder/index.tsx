@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux'
 import { Row, Col, Rate, Spin } from 'antd';
 import { removeCourseOrderAction } from '../../redux/actions/course.actions';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { AppState } from '../../redux/reducers'
@@ -101,14 +102,23 @@ const CourseOder = () => {
                       <strong>Tổng tiền</strong>
                       <div className="gwt-HTML">{numberFormat.format(dataTotal)} VND</div>
                     </div>
-                    <button
-                      type="button"
-                      className="button-pay"
-                      onClick={() => router.push({
-                        pathname: 'course-pay',
-                        query: { courseIds: localStorage.getItem('courseIds') }
-                      })}
-                    >Thanh toán</button>
+                    {currentUser ?
+                      <button
+                        type="button"
+                        className="button-pay"
+                        onClick={() => router.push({
+                          pathname: 'course-pay',
+                          query: { courseIds: localStorage.getItem('courseIds') }
+                        })}
+                      >Thanh toán
+                      </button>
+                      :
+                      <button
+                        type="button"
+                        className="button-pay"
+                        onClick={() => dispatch(showLoginModalAction(true))}
+                      >Thanh toán
+                      </button>}
                   </div>
                 </Col>
               </Row>
