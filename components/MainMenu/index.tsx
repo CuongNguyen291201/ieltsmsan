@@ -41,7 +41,6 @@ function MainMenu() {
           <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
-
         </div>
         <div className="menu-icon" onClick={() => setisActiveOnMobile(true)}>
           <i className="fas fa-bars"></i>
