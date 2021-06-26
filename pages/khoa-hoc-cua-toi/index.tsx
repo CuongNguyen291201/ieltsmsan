@@ -22,7 +22,8 @@ import { useRouter } from "next/router";
 import { OtsvCategory } from "../../custom-types";
 import { Course } from "../../sub_modules/share/model/courses";
 import { Tooltip } from "@material-ui/core";
-import Footer from "../../components/Footer/index"
+import Footer from "../../components/Footer/index";
+import { Rate } from "antd";
 const MyCoursePage = (props: { category?: OtsvCategory; course: Course }) => {
     const { category, course } = props;
     const [{ courses }, dispatch] = useReducer(myCourseReducer, myCourseInitState);
@@ -78,10 +79,17 @@ const MyCoursePage = (props: { category?: OtsvCategory; course: Course }) => {
                                                 <div className="crs-desc dot-2">{shortDesc} </div>
                                             </Tooltip> : <div className="crs-desc dot-2">{shortDesc} </div>}
                                         </div>
+                                        {/* <div className="crs-rating">
+                                            <div className="crs-point">{String(4.6).replace('.', ',')}</div>
+                                            <div className="vote-star">
+                                                <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
+                                            </div>
+                                            <div className="crs-mem">({500})</div>
+                                        </div> */}
                                         <div className="crs-rating">
                                             <div className="crs-point">{String(4.6).replace('.', ',')}</div>
                                             <div className="vote-star">
-                                                <Ratings point={4.6} />
+                                                <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
                                             </div>
                                             <div className="crs-mem">({500})</div>
                                         </div>

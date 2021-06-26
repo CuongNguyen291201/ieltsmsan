@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
+import { Modal, Button, Space } from 'antd';
 import './style.scss'
-
+import { PhoneOutlined } from '@ant-design/icons'
 function MainMenu() {
   const router = useRouter();
   const [isActiveOnMobile, setisActiveOnMobile] = useState(false)
+  const [showModalAct, setShowModalAct] = useState(false)
+  const showModalActiveCourse = () => {
+    setShowModalAct(true)
+  }
+  const hideModal = () => {
+    setShowModalAct(false)
+  }
   return (
     <div className="main-menu">
       <div className="container">
@@ -30,10 +38,9 @@ function MainMenu() {
           <div className="menu-item">
             Liên hệ
           </div>
-          <div className="active-course">
+          <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
-
         </div>
         <div className="menu-icon" onClick={() => setisActiveOnMobile(true)}>
           <i className="fas fa-bars"></i>
@@ -42,7 +49,32 @@ function MainMenu() {
 
         </div>
       </div>
-
+      <div className="modal-active-course">
+        <Modal
+          title="Kích hoạt khoá học "
+          visible={showModalAct}
+          onCancel={hideModal}
+          cancelText="Cancel"
+          footer=""
+        >
+          <div className="wrapper-active-course">
+            <div className="title-active-course">
+              <div>
+                Nhập mã kích hoạt mã học vào ô bên dưới
+              </div>
+            </div>
+            <div className="insert-code">
+              <input type="text" />
+            </div>
+            <div className="search-code">
+              <button>Tìm kiếm</button>
+            </div>
+          </div>
+          <div className="giai-dap-thac-mac">
+            <div>Giải đáp thắc mắc Hotline:</div> <div><PhoneOutlined /> 0947090981</div>
+          </div>
+        </Modal>
+      </div>
     </div>
   )
 }
