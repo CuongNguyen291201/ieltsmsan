@@ -59,7 +59,7 @@ const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
         <div className="crs-rating">
           <div className="crs-point">{String(4.6).replace('.', ',')}</div>
           <div className="vote-star">
-            <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
+            <Rate className="vote-rate" disabled allowHalf defaultValue={4.5} />
           </div>
           <div className="crs-mem">({500})</div>
         </div>

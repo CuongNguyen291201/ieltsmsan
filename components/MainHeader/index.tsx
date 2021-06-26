@@ -35,6 +35,7 @@ function MainHeader() {
     userId: currentUser?._id ? `notif_${currentUser?._id}` : null,
     url: process.env.NEXT_PUBLIC_SOCKET_URL
   });
+  const [lang, setLang] = useState('vi');
 
   const toggleLangMenuRef = useRef<HTMLDivElement>();
   const toggleUserMenuRef = useRef<HTMLDivElement>();
@@ -52,11 +53,14 @@ function MainHeader() {
   }
 
   const onSelectLanguage = (lang: string) => {
-    console.log(lang);
+    // console.log(lang);
+    setLang(lang)
+    localStorage.setItem('language', lang)
     setShowLangOptions(false);
   }
 
   useEffect(() => {
+    setLang(localStorage.getItem('language'))
     document.addEventListener('click', toggleEvent);
     return () => document.removeEventListener('click', toggleEvent);
   }, []);
@@ -148,22 +152,25 @@ function MainHeader() {
     <div className="main-header">
       <div className="container">
         <div className="logo" onClick={() => router.push('/')}>
-          <img src="/home/logo.png" alt="" />
+          <img src="/home/logo-02-3.png" alt="" />
         </div>
         <div className="phone item">
-          <img src="/home/header-phone.png" alt="" />
+          {/* <img src="/home/header-phone.png" alt="" /> */}
+          <i className="fas fa-phone header-icon"></i>
           <div className="text">
             <span>Hotline:</span> 0947 0909 81
           </div>
         </div>
         <div className="mail item">
-          <img src="/home/header-mail.png" alt="" />
+          {/* <img src="/home/header-mail.png" alt="" /> */}
+          <i className="fas fa-envelope header-icon"></i>
           <div className="text">
             <span>Email:</span> info@onthisinhvien.com
           </div>
         </div>
         <div className="lang item">
-          <img className="img" src="/home/header-lang.png" alt="" />
+          {/* <img className="img" src="/home/header-lang.png" alt="" /> */}
+          <i className="fal fa-globe header-icon"></i>
           <div className="text">Ngôn ngữ</div>
           <div className="toggle-dropdown-menu" ref={toggleLangMenuRef} >
             <div className="toggle-button"
@@ -171,7 +178,10 @@ function MainHeader() {
                 setShowLangOptions(!isShowLangOptions);
               }}
             >
-              <img src="/home/icon-vietnam-flag.png" />
+              {lang === 'en' ?
+                <img className="flag-icon" src="/home/Flag_of_the_United_Kingdom.svg" />
+                :
+                <img className="flag-icon" src="/home/Flag_of_Vietnam.svg" />}
               <i className={`fas fa-caret-${isShowLangOptions ? 'up' : 'down'}`} />
             </div>
 
@@ -183,7 +193,7 @@ function MainHeader() {
                 onClick={() => onSelectLanguage('vi')}
               >
                 <div className="icon-wrap">
-                  <img src="/home/icon-vietnam-flag.png" />
+                  <img src="/home/Flag_of_Vietnam.svg" />
                 </div>
                 Tiếng Việt
               </div>
@@ -192,7 +202,7 @@ function MainHeader() {
                 onClick={() => onSelectLanguage('en')}
               >
                 <div className="icon-wrap">
-                  <img src="/home/icon-english.png" />
+                  <img src="/home/Flag_of_the_United_Kingdom.svg" />
                 </div>
                 Tiếng Anh
               </div>
@@ -314,7 +324,8 @@ function MainHeader() {
             <>
 
               <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
-                <img src="/home/header-user.png" alt="" />
+                {/* <img src="/home/header-user.png" alt="" /> */}
+                <i className="fas fa-user-circle header-icon"></i>
                 <div className="text">Đăng nhập</div>
               </div>
               <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>

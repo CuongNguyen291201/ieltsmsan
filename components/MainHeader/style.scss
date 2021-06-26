@@ -1,4 +1,4 @@
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
 @mixin item-with-icon {
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
     .notification-item {
       position: relative;
       .notification {
-        color:#fff;
+        color: #fff;
         font-size: 20px;
         cursor: pointer;
       }
@@ -50,11 +50,24 @@
         }
       }
     }
+    .header-icon {
+      color: #fff;
+      font-size: 20px;
+      margin-right: 8px;
+    }
   }
   .logo {
     margin-left: 0;
     margin-right: auto;
+<<<<<<< HEAD
     cursor: pointer;
+=======
+    img {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+    }
+>>>>>>> 5bab27ed11777f7f5e98e2655d9328c31417ecb5
   }
   .item {
     margin-left: 26px;
@@ -72,6 +85,12 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        .flag-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50px;
+          object-fit: cover;
+        }
       }
       i {
         color: #fff;
@@ -84,13 +103,13 @@
         z-index: 1;
         background-color: #fff;
         width: 130px;
-        border-radius: 10px;
+        border-radius: 3px;
         -webkit-box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
         -moz-box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
         box-shadow: 5px 5px 5px 0px rgba(214, 203, 214, 1);
         .toggle-item {
           cursor: pointer;
-          border-radius: 10px;
+          border-radius: 3px;
           padding: 0 10px;
           &:hover {
             background-color: $root-color;
@@ -227,7 +246,7 @@
   min-width: 100px;
   box-sizing: border-box;
   background: white;
-  border: solid 1px rgba(100, 100, 100, .20);
+  border: solid 1px rgba(100, 100, 100, 0.2);
   -webkit-box-shadow: 0 3px 8px rgb(0 0 0 / 20%);
   z-index: 10;
   color: #333;
@@ -244,14 +263,14 @@
 }
 .ant-dropdown {
   ul {
-    .notify-text-more{
+    .notify-text-more {
       display: block !important;
     }
   }
 }
 .menu-notif {
   .notify-a {
-    opacity: .9;
+    opacity: 0.9;
     align-items: flex-start;
     padding: 5px;
     border-bottom: 1px solid #ddd;
@@ -303,14 +322,16 @@
       position: relative;
       justify-content: flex-start;
       .lang {
-          position: absolute;
-          right: 110px;
-          .img, .text {
-            display: none;
+        position: absolute;
+        right: 110px;
+        .img,
+        .text,
+        .header-icon {
+          display: none;
         }
       }
       .notification-item {
-        position:absolute;
+        position: absolute;
         right: 73px;
       }
       // display: grid;
@@ -323,7 +344,8 @@
     .current-user-wrap,
     .login {
       position: absolute;
-      img {
+      img,
+      .header-icon {
         margin: 0;
       }
     }
@@ -334,7 +356,8 @@
     .cart {
       right: 43px;
     }
-    .current-user-wrap, .login {
+    .current-user-wrap,
+    .login {
       display: initial;
       right: 10px;
     }
@@ -357,7 +380,8 @@
   }
 }
 
-.ant-notification-topLeft .ant-notification-notice, .ant-notification-bottomLeft .ant-notification-notice {
+.ant-notification-topLeft .ant-notification-notice,
+.ant-notification-bottomLeft .ant-notification-notice {
   cursor: pointer;
 }
 .ant-notification-notice-with-icon .ant-notification-notice-message {

@@ -4,6 +4,14 @@ const withImages = require('next-images');
 const withPlugins = require('next-compose-plugins');
 
 module.exports = withPlugins([withCSS, withSass, withImages, {
+	async rewrites() {
+		return [
+		  {
+			source: '/document/:any*',
+			destination: '/document/',
+		  },
+		];
+	  },
 	exportPathMap: (
 		defaultPathMap,
 		{ dev, dir, outDir, distDir, buildId }
