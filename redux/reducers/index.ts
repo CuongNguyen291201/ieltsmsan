@@ -20,7 +20,7 @@ export interface AppState {
   gameReducer: IGameState;
   scenarioReducer: ScenarioState;
   commentReducer: CommentState;
-  documentReducer: DocumentModuleState
+  documentState: DocumentModuleState
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -32,5 +32,5 @@ export const rootReducer = combineReducers<AppState>({
   gameReducer,
   scenarioReducer,
   commentReducer,
-  documentReducer: documentModuleReducers
+  documentState: documentModuleReducers
 });
