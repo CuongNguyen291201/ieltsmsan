@@ -112,7 +112,10 @@ function MainHeader() {
               handleReadStatus(dataArr._id)
               router.push({
                 pathname: getBrowserSlug(dataArr.topic?.slug || dataArr.course?.slug, dataArr.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, dataArr.topic?._id || dataArr.course?._id),
-                query: { discussionsId: dataArr.discussionsId || dataArr.parentId as string }
+                query: {
+                  discussionsId: dataArr.discussionsId || dataArr.parentId as string,
+                  activeTab: '1'
+                }
               });
             },
           });
@@ -246,7 +249,10 @@ function MainHeader() {
                         } else {
                           router.push({
                             pathname: getBrowserSlug(item.topic?.slug || item.course?.slug, item.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, item.topic?._id || item.course?._id),
-                            query: { discussionsId: item.discussionsId || item.parentId as string }
+                            query: {
+                              discussionsId: item.discussionsId || item.parentId as string,
+                              activeTab: '1'
+                            }
                           });
                         }
                       }}

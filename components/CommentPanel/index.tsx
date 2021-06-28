@@ -106,7 +106,7 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
     }
     dispatch(createCommentAction({
       comment: new Discussion({
-        content: DOMPurify.sanitize(content),
+        content: DOMPurify.sanitize(content?.replaceAll('<div><br></div>', '')),
         courseId,
         topicId,
         userId: currentUser._id,
