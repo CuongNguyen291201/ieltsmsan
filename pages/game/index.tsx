@@ -10,6 +10,7 @@ import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
 import { getSkills } from '../../sub_modules/game/api/ExamApi';
 import { GAME_STATUS_PLAYING, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
+import LoadingGame from '../../sub_modules/game/src/game_components/loadingGame';
 import { GameData, IGameData } from '../../sub_modules/game/src/game_core/gameData';
 import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NONE, CARD_BOX_NO_ANSWER, CARD_HAS_CHILD, GAME_TYPE_PRACTICE, GAME_TYPE_TEST, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { Card } from '../../sub_modules/share/model/card';
@@ -18,30 +19,34 @@ import Skill from '../../sub_modules/share/model/skill';
 import Topic from '../../sub_modules/share/model/topic';
 import { getCardByTopicId } from '../../utils/apis/cardApi';
 import './style.scss';
-const MainGameView = dynamic(() => import('../../sub_modules/game/src/main-game/MainGameViewTS'), { ssr: false });
 
-function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[]) {
-  let cardCorrectArr: string[] = [];
-  let cardIncorrectArr: string[] = [];
-  let numCardNotAnswer = 0;
-  // let cardNotAnswerArr: Card[] = [];
-  let cardBookMarkArr: string[] = [];
-  if (currentTopic && currentTopic.topicExercise) {
-    numCardNotAnswer = currentTopic.topicExercise.questionsNum;
-  }
+const MainGameView = dynamic(
+  () => import('../../sub_modules/game/src/main-game/MainGameViewTS'),
+  { ssr: false, loading: () => <LoadingGame /> }
+);
+
+function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[], boxGame: number) {
+  const cardCorrectArr: string[] = [];
+  const cardIncorrectArr: string[] = [];
+  // let numCardNotAnswer = 0;
+  // let cardNotAnswerArr: string[] = [];
+  const cardBookMarkArr: string[] = [];
+  // if (currentTopic && currentTopic.topicExercise) {
+  //   numCardNotAnswer = currentTopic.topicExercise.questionsNum;
+  // }
   if (myCardData) {
-    let mapBoxNum: { [x: number]: string[] } = {}
-    Object.keys(myCardData.boxCard).map((cardId: string) => {
-      let boxNum = myCardData.boxCard[cardId] > 0 ? 1 : 0;
-      mapBoxNum[boxNum] = [...(mapBoxNum[boxNum] || []), cardId];
-    });
-    cardCorrectArr = mapBoxNum[1] ? mapBoxNum[1] : []
-    cardIncorrectArr = mapBoxNum[0] ? mapBoxNum[0] : []
-    numCardNotAnswer = numCardNotAnswer - cardCorrectArr.length - cardIncorrectArr.length
-    if (numCardNotAnswer < 0) {
-      numCardNotAnswer = 0
-    }
-    cardBookMarkArr = myCardData.cardBookmarks
+    const mapBoxNum: { [box: number]: string[] } = Object.keys(myCardData.boxCard).reduce((map, cardId: string) => {
+      const boxNum = myCardData.boxCard[cardId] > 0 ? 1 : 0;
+      map[boxNum] = [...map[boxNum], cardId];
+      return map;
+    }, { 0: [], 1: [] });
+    cardCorrectArr.push(...mapBoxNum[1]);
+    cardIncorrectArr.push(...mapBoxNum[0]);
+    // numCardNotAnswer = numCardNotAnswer - cardCorrectArr.length - cardIncorrectArr.length
+    // if (numCardNotAnswer < 0) {
+    //   numCardNotAnswer = 0
+    // }
+    cardBookMarkArr.push(...(myCardData.cardBookmarks ?? []));
   }
 
   let cardAnswered = cardCorrectArr.concat(cardIncorrectArr)
@@ -50,53 +55,106 @@ function getCardBoxs(myCardData: MyCardData, currentTopic: Topic, cards: Card[])
   let cardNoAnswer: Card[] = []
   let cardBookmarks: Card[] = []
 
-  function pushCardToArr(cardIds: string[], cards: Card[], card: Card) {
-    if (cardIds.includes(card._id) && !cards.find((e) => e._id === card._id)) cards.push(card);
-  }
-
-  function pushCardParagraphToArr(cardIds: string[], cards: Card[], card: Card) {
-    const hasCard = !!cards.find((e) => e._id === card._id);
-    const childCards = (card.childCards || []).filter((e) => cardIds.includes(e._id));
-    if (!hasCard && !!childCards.length) {
-      card.childCards = childCards;
+  function pushCardToArr(cardIds: string[], cardId: string, cards: Card[], card: Card) {
+    if (cardIds.includes(cardId) && !cards.includes(card)) {
       cards.push(card);
     }
   }
 
-  if (!cardBookMarkArr) {
-    cardBookMarkArr = [];
+  function pushCardParagraphToArr(cardIds: string[], childCard: Card, cards: Card[], card: Card) {
+    const cardIdx = cards.findIndex((cardE) => cardE._id === card._id);
+    if (childCard.hasChild === CARD_HAS_CHILD) {
+      const leafCards = childCard.childCards.filter((e) => cardIds.includes(e._id));
+      if (leafCards.length > 0) {
+        // childCard.childCards = leafCards
+        const newChild = { ...childCard, childCards: leafCards };
+        const childIdx = card.childCards.findIndex(({ _id }) => newChild._id === _id);
+        card.childCards.splice(childIdx, 1, newChild);
+        if (cardIdx === -1) {
+          cards.push(card);
+        } else {
+          const cardIdx = cards.findIndex(({ _id }) => card._id === _id);
+          cards.splice(cardIdx, 1, card)
+        }
+      }
+    } else {
+      let childCards = card.childCards.filter((e) => cardIds.includes(e._id));
+      if (cardIdx === -1 && childCards.length > 0) {
+        let newCard = { ...card, childCards };
+        cards.push(newCard);
+      }
+    }
   }
 
   cards.map((card) => {
-    if (card.hasChild === CARD_HAS_CHILD) {
-      card.childCards?.map((childCard) => {
-        pushCardParagraphToArr(cardCorrectArr, cardCorrect, childCard);
-        pushCardParagraphToArr(cardIncorrectArr, cardInCorrect, childCard);
-        pushCardParagraphToArr(cardBookMarkArr, cardBookmarks, childCard);
-
-        if (!cardAnswered.includes(childCard._id) && !cardNoAnswer.find((e) => e._id === card._id)) {
-          cardNoAnswer.push(card);
+    if (boxGame === CARD_BOX_ANSWER_CORRECT) {
+      if (card.hasChild === CARD_HAS_CHILD) {
+        card.childCards?.map((childCard) => {
+          pushCardParagraphToArr(cardCorrectArr, childCard, cardCorrect, card);
+        });
+      } else {
+        pushCardToArr(cardCorrectArr, card._id, cardCorrect, card)
+      }
+    } else if (boxGame === CARD_BOX_ANSWER_INCORRECT) {
+      if (card.hasChild === CARD_HAS_CHILD) {
+        card.childCards?.map((childCard) => {
+          pushCardParagraphToArr(cardIncorrectArr, childCard, cardInCorrect, card);
+        });
+      } else {
+        pushCardToArr(cardIncorrectArr, card._id, cardInCorrect, card)
+      }
+    } else if (boxGame === CARD_BOX_ANSWER_BOOKMARK) {
+      if (card.hasChild === CARD_HAS_CHILD) {
+        card.childCards?.map((childCard) => {
+          pushCardParagraphToArr(cardBookMarkArr, childCard, cardBookmarks, card);
+        });
+      } else {
+        pushCardToArr(cardBookMarkArr, card._id, cardBookmarks, card)
+      }
+    } else if (boxGame === CARD_BOX_NO_ANSWER) {
+      if (card.hasChild === CARD_HAS_CHILD) {
+        card.childCards?.map((childCard) => {
+          if (childCard.hasChild === CARD_HAS_CHILD) {
+            const notAnswerChilds = childCard.childCards.filter((e) => !cardAnswered.includes(e._id));
+            if (!!notAnswerChilds.length) {
+              const newChild = { ...childCard, childCards: notAnswerChilds };
+              const childIdx = card.childCards.findIndex(({ _id }) => childCard._id === _id);
+              card.childCards.splice(childIdx, 1, newChild);
+              const cardIdxNoAnswer = cardNoAnswer.findIndex(({ _id }) => card._id === _id);
+              if (cardIdxNoAnswer === -1) {
+                cardNoAnswer.push(card);
+              } else {
+                cardNoAnswer.splice(cardIdxNoAnswer, 1, card);
+              }
+            }
+          } else {
+            if (!cardAnswered.includes(childCard._id)) {
+              if (!cardNoAnswer.includes(card)) {
+                cardNoAnswer.push(card);
+              }
+            }
+          }
+        });
+      } else {
+        if (!cardAnswered.includes(card._id)) {
+          if (!cardNoAnswer.includes(card)) {
+            cardNoAnswer.push(card);
+          }
         }
-      });
-    } else {
-      pushCardToArr(cardCorrectArr, cardCorrect, card)
-      pushCardToArr(cardIncorrectArr, cardInCorrect, card)
-      pushCardToArr(cardBookMarkArr, cardBookmarks, card)
-      if (!cardAnswered.includes(card._id) && !cardNoAnswer.find((e) => e._id === card._id)) {
-        cardNoAnswer.push(card);
       }
     }
   });
 
-  return { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer };
+  if (boxGame === CARD_BOX_ANSWER_CORRECT) return cardCorrect;
+  else if (boxGame === CARD_BOX_ANSWER_INCORRECT) return cardInCorrect;
+  else if (boxGame === CARD_BOX_ANSWER_BOOKMARK) return cardBookmarks;
+  else if (boxGame === CARD_BOX_NO_ANSWER) return cardNoAnswer;
+  return [];
 }
 
 function GamePage() {
   const [gameOption, setGameOption] = useState<{
-    isClient: boolean;
-    gameData: IGameData | null;
-    cards: Card[] | null;
-    skills: Skill[]
+    isClient: boolean; gameData: IGameData | null; cards: Card[] | null; skills: Skill[]
   }>({ isClient: false, gameData: null, cards: null, skills: [] });
   const { boxGame, studyScore } = useSelector((state: AppState) => state.prepareGameReducer);
   let { statusGame } = useSelector((state: AppState) => state.prepareGameReducer);
@@ -139,22 +197,8 @@ function GamePage() {
       gameData.panelId = 'game-file-pdf'
     }
     const getCardByIdsFC = async () => {
-      const [cardsResult, { data: skills }] = await Promise.all([getCardByTopicId(currentTopic._id), getSkills()]);
-      let cards: Card[] = []
-      if (boxGame != CARD_BOX_NONE) {
-        const { cardCorrect, cardInCorrect, cardBookmarks, cardNoAnswer } = getCardBoxs(myCardData, currentTopic, cardsResult as Card[])
-        if (boxGame == CARD_BOX_ANSWER_INCORRECT) {
-          cards = cardInCorrect
-        } else if (boxGame == CARD_BOX_ANSWER_CORRECT) {
-          cards = cardCorrect
-        } else if (boxGame == CARD_BOX_ANSWER_BOOKMARK) {
-          cards = cardBookmarks
-        } else if (boxGame == CARD_BOX_NO_ANSWER) {
-          cards = cardNoAnswer
-        }
-      } else {
-        cards = cardsResult as Card[];
-      }
+      const [cardsResult1, { data: skills }] = await Promise.all([getCardByTopicId(currentTopic._id), getSkills()]);
+      const cards: Card[] = boxGame !== CARD_BOX_NONE ? getCardBoxs(myCardData, currentTopic, cardsResult1, boxGame) : cardsResult1;
       setGameOption({ isClient: true, gameData, cards, skills });
     }
     // if (statusGame == GAME_STATUS_NONE) {
