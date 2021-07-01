@@ -9,7 +9,6 @@ import './style.scss';
 
 const CategoryItem = (props: {
   category: OtsvCategory
-  showPopup: boolean
 }) => {
   const { category } = props;
   const router = useRouter()

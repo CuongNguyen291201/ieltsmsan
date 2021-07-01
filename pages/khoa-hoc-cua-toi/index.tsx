@@ -1,50 +1,44 @@
+import { Tooltip } from "@material-ui/core";
+import { Rate } from "antd";
 import { GetServerSideProps } from "next";
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Footer from "../../components/Footer/index";
+import Header from '../../components/MainHeader/index';
+import Menu from '../../components/MainMenu/index';
+import SearchBox from "../../components/SearchBox";
+import itemAvatar from '../../public/default/item-avatar.png';
 import { AppState } from "../../redux/reducers";
 import { wrapper } from "../../redux/store";
 import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
 import { removeCookie, TOKEN } from "../../sub_modules/common/utils/cookie";
-import { apiGetMyCourses } from "../../utils/apis/courseApi";
-import myCourseReducer, { myCourseInitState } from './myCourseReducer';
-import { loadMyCourseAction } from "./ActionMyCourse"
-import itemAvatar from '../../public/default/item-avatar.png';
-import Header from '../../components/MainHeader/index'
-import Menu from '../../components/MainMenu/index'
-import Breadcrumb from '../../components/Breadcrumb/index'
-import { getBrowserSlug, numberFormat } from '../../utils';
-import SearchBox from "../../components/SearchBox";
-import Ratings from '../../components/Ratings/index';
 import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import './style.scss';
-import { useRouter } from "next/router";
-import { OtsvCategory } from "../../custom-types";
 import { Course } from "../../sub_modules/share/model/courses";
-import { Tooltip } from "@material-ui/core";
-import Footer from "../../components/Footer/index";
-import { Rate } from "antd";
-const MyCoursePage = (props: { category?: OtsvCategory; course: Course }) => {
-    const { category, course } = props;
-    const [{ courses }, dispatch] = useReducer(myCourseReducer, myCourseInitState);
+import { getBrowserSlug, numberFormat } from '../../utils';
+import { apiGetMyCourses } from "../../utils/apis/courseApi";
+import './style.scss';
+const MyCoursePage = () => {
     const router = useRouter();
+    const [courses, setCourses] = useState([]);
+    const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
 
+    
+    useEffect(() => {
+        if (!!currentUser) {
+            apiGetMyCourses(currentUser?._id)
+            .then((courses) => {
+                setCourses(courses);
+            })
+        }
+    }, [currentUser]);
+    
     const onClickItem = useCallback((course: Course) => {
         const courseSlug = getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id);
         router.push({ pathname: courseSlug });
     }, [courses]);
-
-    const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
-    useEffect(() => {
-        if (!!currentUser) {
-            apiGetMyCourses(currentUser?._id)
-                .then((courses) => {
-                    dispatch(loadMyCourseAction(courses));
-                })
-        }
-    }, [currentUser]);
-
-
+    
     return (
         <div className="my-course">
             <Header />
