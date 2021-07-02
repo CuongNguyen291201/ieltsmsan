@@ -51,7 +51,11 @@ const LessonInfoView = (props: { topic: Topic }) => {
       </PanelContainer>
 
       <PanelContainer title="Nội dung">
-        {topic._id === scenario.topicId && <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(scenario)} />}
+        {topic._id === scenario.topicId &&
+          <div className="scenario-video">
+            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(scenario)} />
+          </div>
+        }
       </PanelContainer>
 
       <PanelContainer title="Tài liệu tham khảo">

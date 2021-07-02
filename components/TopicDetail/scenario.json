@@ -16,26 +16,27 @@
       "status": 1,
       "type": 0,
       "startTime": 30,
-      "timePractice": 300,
+      "timePractice": 120,
       "_id": "5fa3a43173bddd0edd7cc673",
       "title": "1",
       "cardIds": [
-        "60829440c2127922156708cd",
-        "608295b6c2127922156708ce"
+        "60df3ffa7d48290dc53a12d6",
+        "60df40ff7d48290dc53a12d7"
       ]
     },
     {
       "index": 1,
       "status": 1,
       "type": 0,
-      "startTime": 60,
-      "timePractice": 300,
+      "startTime": 180,
+      "timePractice": 120,
       "_id": "5fa3a73f73bddd0edd7cc687",
       "title": "2",
       "cardIds": [
-        "60829651c2127922156708cf"
+        "60df417e7d48290dc53a12d9",
+        "60df42037d48290dc53a12da"
       ]
     }
   ],
-  "title": "Anh văn 12"
+  "title": "KỊCH BẢN"
 }
