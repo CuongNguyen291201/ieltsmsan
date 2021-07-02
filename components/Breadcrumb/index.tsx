@@ -13,7 +13,7 @@ const _BreadcrumbItem = (props: { name: string; slug?: string; isEnd?: boolean; 
       }}>
         {name}
       </span>
-      {!isEnd && <span className="breadcrumb-slash">/</span>} 
+      {!isEnd && <span className="breadcrumb-slash">/</span>}
       {/* <i className="fas fa-caret-right breadcrumb-caret" />} */}
     </>
   )
