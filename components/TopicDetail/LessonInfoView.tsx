@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { AppState } from '../../redux/reducers';
@@ -9,7 +9,7 @@ import Topic from '../../sub_modules/share/model/topic';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
-import { apiUpdateTopicProgress } from '../../utils/apis/topicApi';
+import { apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
 import './lesson-info.scss';
@@ -22,6 +22,7 @@ const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/S
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const [dataScenario, setDataScenario] = useState<ScenarioInfo>();
 
   const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
     return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
@@ -41,7 +42,15 @@ const LessonInfoView = (props: { topic: Topic }) => {
         topicId: topic._id, userId: currentUser._id, progress: 100
       });
     }
+    if (topic?._id) {
+      fetchDataScenario()
+    }
   }, [currentUser]);
+
+  const fetchDataScenario = async () => {
+    const dataArrTemp = await getOneVideoScenarioAPI({ topicId: topic?._id })
+    setDataScenario(dataArrTemp?.scenarioInfos?.[0] ?? [])
+  }
 
   return (
     <div className="lesson-detail">
@@ -51,9 +60,9 @@ const LessonInfoView = (props: { topic: Topic }) => {
       </PanelContainer>
 
       <PanelContainer title="Nội dung">
-        {topic._id === scenario.topicId &&
+        {topic._id === dataScenario?.topicId &&
           <div className="scenario-video">
-            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(scenario)} />
+            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
           </div>
         }
       </PanelContainer>
