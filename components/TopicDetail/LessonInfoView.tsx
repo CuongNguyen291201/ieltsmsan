@@ -1,8 +1,10 @@
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { AppState } from '../../redux/reducers';
 import Document from '../../sub_modules/share/model/document';
+import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
 import Topic from '../../sub_modules/share/model/topic';
 import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
@@ -12,6 +14,10 @@ import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
 import './lesson-info.scss';
 import LessonVideoView from './LessonVideoView';
+import scenario from './scenario.json';
+
+const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
+
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
@@ -40,8 +46,16 @@ const LessonInfoView = (props: { topic: Topic }) => {
   return (
     <div className="lesson-detail">
       <PanelContainer title="Mô tả">
-          <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
-          {!!topic.videoUrl && <LessonVideoView topic={topic} />}
+        <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
+        {!!topic.videoUrl && <LessonVideoView topic={topic} />}
+      </PanelContainer>
+
+      <PanelContainer title="Nội dung">
+        {topic._id === scenario.topicId &&
+          <div className="scenario-video">
+            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(scenario)} />
+          </div>
+        }
       </PanelContainer>
 
       <PanelContainer title="Tài liệu tham khảo">

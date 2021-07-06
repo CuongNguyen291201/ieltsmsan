@@ -21,7 +21,7 @@ const { SCORE_DESC, SCORE_ASC, LATEST, EARLIEST } = SortingOpts;
 const TopicRankingsView = (props: { topic: Topic }) => {
   const { topic } = props;
   const [sortingOpts, setSortOpts] = useState<{ numRanks: number; sortBy: TypeSort; asc: boolean }>({
-    numRanks: 20, sortBy: 'score', asc: false
+    numRanks: 20, sortBy: 'currentIndex', asc: false
   });
   const dispatch = useDispatch();
   const router = useRouter();
@@ -45,7 +45,7 @@ const TopicRankingsView = (props: { topic: Topic }) => {
   const handleChangeFilter = (e: ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     const value = e.target.value;
-    let options: { field: 'score' | 'lastUpdate'; asc: boolean };
+    let options: { field: 'currentIndex' | 'lastUpdate'; asc: boolean };
     if (value === SCORE_DESC.key) options = SCORE_DESC.value;
     else if (value === SCORE_ASC.key) options = SCORE_ASC.value;
     else if (value === LATEST.key) options = LATEST.value;

@@ -9,7 +9,7 @@ import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userA
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
 import scenario from './scenario.json';
-const ScenarioGame = dynamic(import('../../sub_modules/scenario/src/components/ScenarioGame'), { ssr: false });
+const ScenarioGame = dynamic(import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false });
 
 const VideoScenario = () => {
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
