@@ -93,3 +93,12 @@ export const apiUpdateTopicProgress = (args: { topicId: string; progress: number
 
 export const apiGetTopicProgress = (args: ITopicProgress) => POST_API('get-topic-progress', args);
 
+export const getOneVideoScenarioAPI = async (object) => {
+  let res = await POST_API(`/get-data-detail-lesson`, object)
+  let data
+  if (res.status === 200) {
+    data = res.data
+  }
+  return data
+}
+

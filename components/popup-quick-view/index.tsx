@@ -78,13 +78,17 @@ const PopupShowQuickView = (props: {
                   </div>
                   <div> 180 Ngày</div>
                 </div>
-                <div className="price-course">
-                  <LocalOfferIcon />
-                  <div className="crs-discount-price">
-                    {numberFormat.format(course.cost - course.discountPrice)} VNĐ
-                  </div>
-                  {course.discountPrice !== 0 && <div className="crs-origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
-                </div>
+                <Row className="price-course">
+                  <Col xs={24} sm={24} md={16} lg={16} xl={16} style={{ display: "contents" }}>
+                    <LocalOfferIcon />
+                    <div className="crs-discount-price">
+                      {numberFormat.format(course.cost - course.discountPrice)} VNĐ
+                    </div>
+                  </Col>
+                  <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+                    {course.discountPrice !== 0 && <div className="crs-origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
+                  </Col>
+                </Row>
                 <div className="item">
                   Tổng số học viên: <span>22 học viên </span>
                 </div>
