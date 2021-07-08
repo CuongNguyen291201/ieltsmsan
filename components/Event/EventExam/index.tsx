@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Row, Col, Statistic } from 'antd';
 import { useRouter } from 'next/router';
 import moment from "moment";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/reducers';
+import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
+import { getGameSlug } from '../../../utils';
 import './style.scss';
 
 const { Countdown } = Statistic;
@@ -11,12 +13,18 @@ const { Countdown } = Statistic;
 const EventExam = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
+    const { currentTopic } = useSelector((state: AppState) => state.topicReducer)
     const router = useRouter();
     const { topicId, endTime } = router.query;
+    // console.log('currenttopic: ', currentTopic);
 
     const time: string = moment(endTime, "x").format("MM-DD-YYYY HH:mm:ss");
     const examCountDown: any = moment(time);
-    
+
+    const playGame = () => {
+        router.push(getGameSlug(topicId as string));
+    }
+
     return (
         <div className="event-exam">
             <div className="main-event-exam">
@@ -24,12 +32,23 @@ const EventExam = () => {
                     <Row>
                         <Col xs={24} sm={24} md={24} lg={8}>
                             <div>
-                                <div className="event-back" onClick={() => router.back()}>
+                                <div className="event-btn" onClick={() => router.back()}>
                                     Quay lại
                                 </div>
-                                <div className="event-back">
+                                <div className="event-btn">
                                     <Countdown className="Countdown" value={examCountDown} />
                                     <div>giờ phút giây</div>
+                                </div>
+                                <div className="event-btn"
+                                    onClick={() => {
+                                        if (currentUser) {
+                                            playGame()
+                                        } else {
+                                            dispatch(showLoginModalAction())
+                                        }
+                                    }}
+                                >
+                                    Làm bài
                                 </div>
                             </div>
                         </Col>

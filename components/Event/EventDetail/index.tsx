@@ -6,12 +6,11 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/reducers';
 import { getEventByTime, getCurrentDateTests } from '../../../utils/apis/eventApi';
+import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
 import './style.scss';
 
 const EventDetail = () => {
-
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
   const [events, setEvents] = useState([]);
   const [exams, setExams] = useState([]);
 
@@ -33,8 +32,8 @@ const EventDetail = () => {
         getCurrentDateTests(item.courseId)
           .then(data => {
             console.log('current tests: ', data);
-            
             setExams(data)
+            dispatch(setCurrrentTopicAction(data))
           })
       ))
     }
