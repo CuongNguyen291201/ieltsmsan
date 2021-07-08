@@ -15,6 +15,14 @@ body {
   background-color: #fefefe;
 }
 
+:root {
+  --game-button-bg: #ec1f24;
+  --game-button-color: #ffffff;
+  --header-quiz-view-uncheck-bg: #dd3639;
+  --header-quiz-view-check-bg: #ec1f24;
+  --main-game-border: 1px solid #ec1f24;
+}
+
 // .container {
 //   max-width: $container-max-width;
 //   margin: auto;
