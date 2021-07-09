@@ -13,8 +13,9 @@ const EventDetail = () => {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
   const [exams, setExams] = useState([]);
+  const [bigEvent, setBigEvent] = useState({});
 
-  useEffect(() => {  
+  useEffect(() => {
     const startOfMonth = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
     const endOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
     const startTime = moment(startOfMonth).valueOf();
@@ -23,8 +24,8 @@ const EventDetail = () => {
     getEventByTime(startTime, endTime)
       .then(data => {
         setEvents(data)
-        console.log(data);
-      })    
+        setBigEvent(data[0])
+      })
   }, [])
 
   useEffect(() => {
@@ -39,10 +40,14 @@ const EventDetail = () => {
     }
   }, [events])
 
+  const style = {
+    backgroundImage: 'url(' + bigEvent.image + ')'
+  }
+
   return (
     <>
       <div className="event-page">
-        <div className="main-event">
+        <div className="main-event" style={style}>
           <div className="container">
             <Row>
               <Col sm={20} md={18} lg={14} xl={12}>
@@ -50,11 +55,10 @@ const EventDetail = () => {
                   <div className="event-notify">
                     <div>Sự kiện:</div>
                     <div className="event-name">
-                      THI THỬ ĐỊNH KỲ THÁNG {moment().month() + 1}
+                      {bigEvent.name}
                     </div>
                   </div>
-                  <div className="event-detail">
-                    Bài thi được mở từ 20h - 21h15. Các em có 15 phút để vào thi, tránh vào cùng một lúc gây ra tinh trạng nghẽn, không vào được bài. Mỗi học sinh chỉ được làm bài 1 lần. Bài thi sẽ kết thúc lúc 21h15 các kết quả sau 21h15 sẽ không được tính.
+                  <div className="event-detail" dangerouslySetInnerHTML={{ __html: bigEvent.description }}>
                   </div>
                   <div className="exams">
                     {

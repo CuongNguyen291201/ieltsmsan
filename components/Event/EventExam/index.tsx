@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Row, Col, Statistic } from 'antd';
 import { useRouter } from 'next/router';
 import moment from "moment";
@@ -6,11 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/reducers';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { getGameSlug } from '../../../utils';
-import { apiGetDataDetailExercise } from '../../../utils/apis/topicApi';
+import { apiGetDataDetailExercise, apiSeekRankingsByTopic } from '../../../utils/apis/topicApi';
 import { updateTopicExerciseAction } from '../../../redux/actions/topic.action';
-import { prepareGoToGameAction } from '../../../redux/actions/prepareGame.actions';
 import { EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../../sub_modules/share/constraint';
-import { GAME_STATUS_PREPARE_CONTINUE } from '../../../sub_modules/game/src/gameConfig';
+import defaultAvatar from '../../../public/event/default-avatar-rank.png';
 import './style.scss';
 
 const { Countdown } = Statistic;
@@ -21,7 +20,7 @@ const EventExam = () => {
     const { currentTopic } = useSelector((state: AppState) => state.topicReducer)
     const { studyScore } = useSelector((state: AppState) => state.topicReducer);
     const parentId = useMemo(() => currentTopic.parentId || currentTopic.courseId, [currentTopic]);
-
+    const [userRank, setUserRank] = useState([]);
     const router = useRouter();
     const { topicId, endTime } = router.query;
     const time: string = moment(endTime, "x").format("MM-DD-YYYY HH:mm:ss");
@@ -43,11 +42,22 @@ const EventExam = () => {
         }
     }, [currentTopic])
 
-    const playGame = () => {
-        if (currentUser && !!studyScore) {
-            dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_CONTINUE, studyScore }))
-            router.push(getGameSlug(topicId as string));
+    useEffect(() => {    
+        const getUserRankingByTopic = async () => {
+            let { data } = await apiSeekRankingsByTopic({
+                field: 'currentIndex',
+                topicId: currentTopic._id,
+                limit: 20,
+                lastRecord: studyScore,
+                asc: true
+            })
+            setUserRank(data);
         }
+        getUserRankingByTopic()
+    }, [currentTopic])
+
+    const playGame = () => {
+        router.push(getGameSlug(topicId as string));
     }
     
     return (
@@ -91,28 +101,21 @@ const EventExam = () => {
                                         <div className="item time">Thời gian</div>
                                         <div className="item score">Điểm</div>
                                     </div>
-
-                                    <div className="high-score-item-panel">
-                                        <div className="item stt stt-first">1</div>
-                                        <div className="item avatar">
-                                            <img className="gwt-Image" src="https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=1426029167752230&amp;width=100&amp;ext=1627695440&amp;hash=AeRkgidrrH_4j1hvOvE" />
-                                        </div>
-                                        <div className="item name">nguyen van anh</div>
-                                        <div className="item correct">49</div>
-                                        <div className="item time">34m:59s</div>
-                                        <div className="item score">9.8 Điểm</div>
-                                    </div>
-
-                                    <div className="high-score-item-panel">
-                                        <div className="item stt stt-second">2</div>
-                                        <div className="item avatar">
-                                            <img className="gwt-Image" src="https://storage.googleapis.com/ielts-fighters.appspot.com/images/admin?t=1625190322055&amp;ignoreCache=1" />
-                                        </div>
-                                        <div className="item name">nguyen thi anh</div>
-                                        <div className="item correct">0</div>
-                                        <div className="item time">33m:59s</div>
-                                        <div className="item score">8 Điểm</div>
-                                    </div>
+                                    {
+                                        userRank &&
+                                        userRank.map((item, index) => (
+                                            <div className="high-score-item-panel" key={item.userId}>
+                                                <div className={`item stt stt-${index + 1}`}>{index + 1}</div>
+                                                <div className="item avatar">
+                                                    <img className="gwt-Image" src={item.studyScoreData.userInfo?.avatar || defaultAvatar} />
+                                                </div>
+                                                <div className="item name">{item.userName}</div>
+                                                <div className="item correct">{item.studyScoreData.correctNum}</div>
+                                                <div className="item time">{item.totalTime}</div>
+                                                <div className="item score">{item.score} Điểm</div>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                             </Col>
                         </Row>
