@@ -47,8 +47,6 @@ export default Index;
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
   const userInfo = await getUserFromToken(req);
   if (userInfo) {
-    console.log("ADADFASDFASDF", userInfo);
-    
     store.dispatch(loginSuccessAction(userInfo));
   } else {
     removeCookie(TOKEN);

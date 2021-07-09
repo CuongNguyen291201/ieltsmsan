@@ -61,7 +61,7 @@ export function useSocketNotification(args: {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    console.log('url: ', url);
+    // console.log('url: ', url);
     if (!url) return;
     if (!enabled) return;
     if (!userId) return;
