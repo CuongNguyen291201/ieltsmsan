@@ -23,6 +23,7 @@ const EventDetail = () => {
     getEventByTime(startTime, endTime)
       .then(data => {
         setEvents(data)
+        console.log(data);
       })    
   }, [])
 
@@ -31,7 +32,6 @@ const EventDetail = () => {
       events.map(item => (
         getCurrentDateTests(item.courseId)
           .then(data => {
-            console.log('current tests: ', data);
             setExams(data)
             dispatch(setCurrrentTopicAction(data))
           })

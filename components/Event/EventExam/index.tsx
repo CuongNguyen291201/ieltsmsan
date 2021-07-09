@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Row, Col, Statistic } from 'antd';
 import { useRouter } from 'next/router';
 import moment from "moment";
@@ -6,6 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../../redux/reducers';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { getGameSlug } from '../../../utils';
+import { apiGetDataDetailExercise } from '../../../utils/apis/topicApi';
+import { updateTopicExerciseAction } from '../../../redux/actions/topic.action';
+import { prepareGoToGameAction } from '../../../redux/actions/prepareGame.actions';
+import { EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../../sub_modules/share/constraint';
+import { GAME_STATUS_PREPARE_CONTINUE } from '../../../sub_modules/game/src/gameConfig';
 import './style.scss';
 
 const { Countdown } = Statistic;
@@ -14,15 +19,37 @@ const EventExam = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
     const { currentTopic } = useSelector((state: AppState) => state.topicReducer)
+    const { studyScore } = useSelector((state: AppState) => state.topicReducer);
+    const parentId = useMemo(() => currentTopic.parentId || currentTopic.courseId, [currentTopic]);
+
     const router = useRouter();
     const { topicId, endTime } = router.query;
     const time: string = moment(endTime, "x").format("MM-DD-YYYY HH:mm:ss");
     const examCountDown: any = moment(time);
 
-    const playGame = () => {
-        router.push(getGameSlug(topicId as string));
-    }
+    useEffect(() => {
+        const getExerciseDetail = async () => {
+            const data = await apiGetDataDetailExercise({
+                topicId: currentTopic._id, userId: currentUser?._id ?? null, type: currentTopic.type
+            });
+            if (!data) return;
+            const { topicExercise, studyScore, myCardData } = data;
+            dispatch(updateTopicExerciseAction(parentId, topicExercise, studyScore, myCardData));
+        }
+        if (currentUser) {
+            getExerciseDetail();
+        } else {
+            dispatch(updateTopicExerciseAction(parentId, null, null, null));
+        }
+    }, [currentTopic])
 
+    const playGame = () => {
+        if (currentUser && !!studyScore) {
+            dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_CONTINUE, studyScore }))
+            router.push(getGameSlug(topicId as string));
+        }
+    }
+    
     return (
         <>
             <div className="event-exam">
@@ -47,7 +74,7 @@ const EventExam = () => {
                                             }
                                         }}
                                     >
-                                        Làm bài
+                                        {(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}
                                     </div>
                                 </div>
                             </Col>
