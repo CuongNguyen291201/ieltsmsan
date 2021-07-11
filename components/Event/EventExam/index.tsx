@@ -21,6 +21,7 @@ const EventExam = () => {
     const { studyScore } = useSelector((state: AppState) => state.topicReducer);
     const parentId = useMemo(() => currentTopic.parentId || currentTopic.courseId, [currentTopic]);
     const [userRank, setUserRank] = useState([]);
+    const [endTest, setEndTest] = useState(false);
     const router = useRouter();
     const { topicId, endTime } = router.query;
     const time: string = moment(endTime, "x").format("MM-DD-YYYY HH:mm:ss");
@@ -44,22 +45,26 @@ const EventExam = () => {
 
     useEffect(() => {    
         const getUserRankingByTopic = async () => {
-            let { data } = await apiSeekRankingsByTopic({
+            let { data, status } = await apiSeekRankingsByTopic({
                 field: 'currentIndex',
                 topicId: currentTopic._id,
                 limit: 20,
                 lastRecord: studyScore,
                 asc: true
             })
-            setUserRank(data);
+            if (status === 200) setUserRank(data);
         }
         getUserRankingByTopic()
-    }, [currentTopic])
+    }, [currentUser, currentTopic])
 
     const playGame = () => {
         router.push(getGameSlug(topicId as string));
     }
-    
+
+    const finishExam = () => {
+        setEndTest(true)
+    }
+
     return (
         <>
             <div className="event-exam">
@@ -72,20 +77,26 @@ const EventExam = () => {
                                         Quay lại
                                     </div>
                                     <div className="event-btn">
-                                        <Countdown className="Countdown" value={examCountDown} />
-                                        <div>giờ phút giây</div>
+                                        <Countdown value={examCountDown} onFinish={finishExam} />
                                     </div>
-                                    <div className="event-btn"
-                                        onClick={() => {
-                                            if (currentUser) {
-                                                playGame()
-                                            } else {
-                                                dispatch(showLoginModalAction())
-                                            }
-                                        }}
-                                    >
-                                        {(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}
-                                    </div>
+                                    {
+                                        !endTest ?
+                                            <div className="event-btn"
+                                                onClick={() => {
+                                                    if (currentUser) {
+                                                        playGame()
+                                                    } else {
+                                                        dispatch(showLoginModalAction())
+                                                    }
+                                                }}
+                                            >
+                                                {(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}
+                                            </div>
+                                        : 
+                                            <div className="event-btn">
+                                                Xem chi tiết
+                                            </div>
+                                    }
                                 </div>
                             </Col>
 
@@ -111,7 +122,7 @@ const EventExam = () => {
                                                 </div>
                                                 <div className="item name">{item.userName}</div>
                                                 <div className="item correct">{item.studyScoreData.correctNum}</div>
-                                                <div className="item time">{item.totalTime}</div>
+                                                <div className="item time">{moment.utc(item.totalTime*1000).format('mm:ss')}s</div>
                                                 <div className="item score">{item.score} Điểm</div>
                                             </div>
                                         ))

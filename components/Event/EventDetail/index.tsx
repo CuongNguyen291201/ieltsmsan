@@ -13,14 +13,16 @@ const EventDetail = () => {
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
   const [exams, setExams] = useState([]);
-  const [bigEvent, setBigEvent] = useState({});
+  const [bigEvent, setBigEvent] = useState({} as any);
 
   useEffect(() => {
     const startOfMonth = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
     const endOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
     const startTime = moment(startOfMonth).valueOf();
     const endTime = moment(endOfMonth).valueOf();
-    
+    const currentTime = moment().format();
+    const currentTimeStamp: any = moment(currentTime).valueOf();
+
     getEventByTime(startTime, endTime)
       .then(data => {
         setEvents(data)
@@ -40,14 +42,10 @@ const EventDetail = () => {
     }
   }, [events])
 
-  const style = {
-    backgroundImage: 'url(' + bigEvent.image + ')'
-  }
-
   return (
     <>
       <div className="event-page">
-        <div className="main-event" style={style}>
+        <div className="main-event" style={{ backgroundImage: 'url(' + bigEvent.image + ')' }}>
           <div className="container">
             <Row>
               <Col sm={20} md={18} lg={14} xl={12}>
