@@ -11,15 +11,24 @@
             .event-btn {
                 text-align: center;
                 margin: 20px auto 0;
-                width: 200px;
+                width: 180px;
                 background-color: #FFFFFF;
                 color: #26ABE6;
                 border-radius: 3px;
                 font-size: 18px;
                 padding: 10px;
                 cursor: pointer;
-                div {
-                    word-spacing: 15px;
+                .statistic-countdown {
+                    background: #D4EEFB;
+                    border-radius: 10px;
+                    border-top: 3px solid #F5FBFE;
+                    border-bottom: 3px solid #F5FBFE;
+                }
+                &:nth-child(2) {
+                    border-radius: 17px;
+                    background: #44AADA;
+                    border-top: 4px solid #58baeb;
+                    border-bottom: 2px solid #1478a7;
                 }
             }
             .table-statistical {

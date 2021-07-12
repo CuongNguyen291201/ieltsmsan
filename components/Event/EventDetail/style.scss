@@ -9,7 +9,6 @@
     .container {
       color: #FFFFFF;
       .event-title {
-        // margin: 110px 0 136px;
         margin: 110px 0 190px;
         .event-notify {
           font-size: 40px;
@@ -36,13 +35,11 @@
             word-spacing: 28px;
           }
         }
-        .event-end {
-          font-style: italic;
-          font-size: 15px;
-          font-weight: 400;
-        }
         .exams {
           text-transform: uppercase;
+          .exam-detail {
+            display: flex;
+          }
           .exam {
             font-size: 14px;
             font-weight: 700;
@@ -60,6 +57,12 @@
               text-align: center;
               margin-right: 10px;
             }          
+          }
+          .event-end {
+            font-style: italic;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 25px;
           }
         }
       }

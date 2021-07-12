@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col } from 'antd';
-import { useRouter } from 'next/router';
 import Link from 'next/link'
 import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../../redux/reducers';
+import { useDispatch } from 'react-redux';
 import { getEventByTime, getCurrentDateTests } from '../../../utils/apis/eventApi';
 import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
 import './style.scss';
@@ -20,8 +18,6 @@ const EventDetail = () => {
     const endOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
     const startTime = moment(startOfMonth).valueOf();
     const endTime = moment(endOfMonth).valueOf();
-    const currentTime = moment().format();
-    const currentTimeStamp: any = moment(currentTime).valueOf();
 
     getEventByTime(startTime, endTime)
       .then(data => {
@@ -62,28 +58,23 @@ const EventDetail = () => {
                     {
                       exams &&
                       exams.map((exam) => (
-                        <Link href={`/event/${exam.slug}?topicId=${exam._id}&endTime=${exam.endTime}`} key={exam._id}>
-                          <div className="exam exam-reading" >
-                            <i className="fas fa-chevron-right"></i>
-                            {exam.name}
-                          </div>
-                        </Link>
+                        <div className="exam-detail" key={exam._id}>
+                          <Link href={`/event/${exam.slug}?topicId=${exam._id}&endTime=${exam.endTime}`}>
+                            <div className="exam exam-reading" >
+                              <i className="fas fa-chevron-right"></i>
+                              {exam.name}
+                            </div>
+                          </Link>
+                          {
+                            exam.endTime === moment(moment().format()).valueOf() && 
+                            <div className="event-end">
+                              Đã kết thúc
+                            </div>
+                          } 
+                        </div>
                       ))
                     }
                   </div>
-
-                  {/* {
-                    examCountDown === currentTime &&
-                    <div className="event-end">
-                    Đã kết thúc
-                    </div>
-                  } */}
-                  {
-                    !exams &&
-                    <div className="event-end">
-                      Đã kết thúc
-                    </div>
-                  }
                 </div>
               </Col>
             </Row>

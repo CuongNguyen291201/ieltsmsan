@@ -76,8 +76,10 @@ const EventExam = () => {
                                     <div className="event-btn" onClick={() => router.back()}>
                                         Quay lại
                                     </div>
-                                    <div className="event-btn">
-                                        <Countdown value={examCountDown} onFinish={finishExam} />
+                                    <div className="event-btn countdown">
+                                        <div className="statistic-countdown">
+                                            <Countdown value={examCountDown} onFinish={finishExam} />
+                                        </div>
                                     </div>
                                     {
                                         !endTest ?
@@ -126,6 +128,41 @@ const EventExam = () => {
                                                 <div className="item score">{item.score} Điểm</div>
                                             </div>
                                         ))
+                                    }
+                                    {
+                                        userRank.length === 0 &&
+                                        <>
+                                            <div className="high-score-item-panel">
+                                                <div className="item stt stt-1">1</div>
+                                                <div className="item avatar">
+                                                    <img className="gwt-Image" src={defaultAvatar} />
+                                                </div>
+                                                <div className="item name">?</div>
+                                                <div className="item correct">--</div>
+                                                <div className="item time">--</div>
+                                                <div className="item score">--</div>
+                                            </div>
+                                            <div className="high-score-item-panel">
+                                                <div className="item stt stt-2">2</div>
+                                                <div className="item avatar">
+                                                    <img className="gwt-Image" src={defaultAvatar} />
+                                                </div>
+                                                <div className="item name">?</div>
+                                                <div className="item correct">--</div>
+                                                <div className="item time">--</div>
+                                                <div className="item score">--</div>
+                                            </div>
+                                            <div className="high-score-item-panel">
+                                                <div className="item stt stt-3">3</div>
+                                                <div className="item avatar">
+                                                    <img className="gwt-Image" src={defaultAvatar} />
+                                                </div>
+                                                <div className="item name">?</div>
+                                                <div className="item correct">--</div>
+                                                <div className="item time">--</div>
+                                                <div className="item score">--</div>
+                                            </div>
+                                        </>
                                     }
                                 </div>
                             </Col>
