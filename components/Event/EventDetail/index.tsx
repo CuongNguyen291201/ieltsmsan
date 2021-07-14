@@ -9,7 +9,6 @@ import './style.scss';
 
 const EventDetail = () => {
   const dispatch = useDispatch();
-  const [events, setEvents] = useState([]);
   const [exams, setExams] = useState([]);
   const [bigEvent, setBigEvent] = useState({} as any);
 
@@ -19,24 +18,29 @@ const EventDetail = () => {
     const startTime = moment(startOfMonth).valueOf();
     const endTime = moment(endOfMonth).valueOf();
 
-    getEventByTime(startTime, endTime)
-      .then(data => {
-        setEvents(data)
-        setBigEvent(data[0])
-      })
+    getEvents(startTime, endTime)
   }, [])
 
-  useEffect(() => {
-    if (events) {
-      events.map(item => (
-        getCurrentDateTests(item.courseId)
-          .then(data => {
-            setExams(data)
-            dispatch(setCurrrentTopicAction(data))
-          })
-      ))
-    }
-  }, [events])
+  const getEvents = async (startTime, endTime) => {
+    const data = await getEventByTime(startTime, endTime);
+    setBigEvent(data[0]);
+    getCurrentTest(data);
+  }
+
+  const getCurrentTest = async (events) => {
+    let dataTemp = [];
+    await events.map(async (item, index) => {
+      const data = await getCurrentDateTests(item.courseId);
+      dataTemp = [...dataTemp, ...data];
+      if ((events.length - 1) === index) {
+        setExams([...dataTemp]);
+      }
+    })
+  }
+
+  const setCurrentTopic = (exam) => {
+    dispatch(setCurrrentTopicAction(exam))
+  }
 
   return (
     <>
@@ -59,22 +63,28 @@ const EventDetail = () => {
                       exams &&
                       exams.map((exam) => (
                         <div className="exam-detail" key={exam._id}>
-                          <Link href={`/event/${exam.slug}?topicId=${exam._id}&endTime=${exam.endTime}`}>
-                            <div className="exam exam-reading" >
+                          <Link href={`/event/${exam.slug}?topicId=${exam._id}`}>
+                            <div className="exam exam-reading" onClick={() => setCurrentTopic(exam)} >
                               <i className="fas fa-chevron-right"></i>
                               {exam.name}
                             </div>
                           </Link>
                           {
-                            exam.endTime === moment(moment().format()).valueOf() && 
+                            exam.endTime <= moment(moment().format()).valueOf() &&
                             <div className="event-end">
                               Đã kết thúc
                             </div>
-                          } 
+                          }
                         </div>
                       ))
                     }
                   </div>
+                  {
+                    exams.length === 0 &&
+                    <div className="all-event-end">
+                      Đã kết thúc
+                    </div>
+                  }
                 </div>
               </Col>
             </Row>

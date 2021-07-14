@@ -21,11 +21,11 @@ const EventExam = () => {
     const { studyScore } = useSelector((state: AppState) => state.topicReducer);
     const parentId = useMemo(() => currentTopic.parentId || currentTopic.courseId, [currentTopic]);
     const [userRank, setUserRank] = useState([]);
-    const [endTest, setEndTest] = useState(false);
     const router = useRouter();
-    const { topicId, endTime } = router.query;
-    const time: string = moment(endTime, "x").format("MM-DD-YYYY HH:mm:ss");
-    const examCountDown: any = moment(time);
+    const { topicId } = router.query;
+    const startTimeTest = currentTopic.startTime;
+    const endTimeTest = currentTopic.endTime;
+    const currentTime = moment(moment().format()).valueOf();
 
     useEffect(() => {
         const getExerciseDetail = async () => {
@@ -43,7 +43,7 @@ const EventExam = () => {
         }
     }, [currentTopic])
 
-    useEffect(() => {    
+    useEffect(() => {
         const getUserRankingByTopic = async () => {
             let { data, status } = await apiSeekRankingsByTopic({
                 field: 'currentIndex',
@@ -55,14 +55,10 @@ const EventExam = () => {
             if (status === 200) setUserRank(data);
         }
         getUserRankingByTopic()
-    }, [currentUser, currentTopic])
+    }, [currentTopic])
 
     const playGame = () => {
         router.push(getGameSlug(topicId as string));
-    }
-
-    const finishExam = () => {
-        setEndTest(true)
     }
 
     return (
@@ -76,28 +72,31 @@ const EventExam = () => {
                                     <div className="event-btn" onClick={() => router.back()}>
                                         Quay lại
                                     </div>
-                                    <div className="event-btn countdown">
-                                        <div className="statistic-countdown">
-                                            <Countdown value={examCountDown} onFinish={finishExam} />
-                                        </div>
-                                    </div>
                                     {
-                                        !endTest ?
-                                            <div className="event-btn"
-                                                onClick={() => {
-                                                    if (currentUser) {
-                                                        playGame()
-                                                    } else {
-                                                        dispatch(showLoginModalAction())
-                                                    }
-                                                }}
-                                            >
-                                                {(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}
+                                        (startTimeTest >= currentTime) &&
+                                        <div className="event-btn countdown">
+                                            <div className="statistic-countdown">
+                                                <Countdown value={startTimeTest} />
                                             </div>
-                                        : 
-                                            <div className="event-btn">
-                                                Xem chi tiết
-                                            </div>
+                                        </div>
+                                    }
+                                    {
+                                        (endTimeTest >= currentTime) &&
+                                        <div className="event-btn"
+                                            onClick={() => {
+                                                if (currentUser) {
+                                                    playGame()
+                                                } else {
+                                                    dispatch(showLoginModalAction())
+                                                }
+                                            }}
+                                        >
+                                            {(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}
+                                        </div>
+                                        // :
+                                        // <div className="event-btn">
+                                        //     Xem chi tiết
+                                        // </div>
                                     }
                                 </div>
                             </Col>
@@ -124,7 +123,7 @@ const EventExam = () => {
                                                 </div>
                                                 <div className="item name">{item.userName}</div>
                                                 <div className="item correct">{item.studyScoreData.correctNum}</div>
-                                                <div className="item time">{moment.utc(item.totalTime*1000).format('mm:ss')}s</div>
+                                                <div className="item time">{moment.utc(item.totalTime * 1000).format('mm:ss')}s</div>
                                                 <div className="item score">{item.score} Điểm</div>
                                             </div>
                                         ))
