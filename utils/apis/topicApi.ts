@@ -62,7 +62,7 @@ export const apiGetTopicById = async (topicId: string) => {
 };
 
 export const apiSeekRankingsByTopic = (args: {
-  field?: 'score' | 'lastUpdate',
+  field?: 'currentIndex' | 'lastUpdate',
   topicId: string;
   limit?: number;
   lastRecord?: StudyScore;
