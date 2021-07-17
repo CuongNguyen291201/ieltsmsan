@@ -6,29 +6,35 @@ import { wrapper } from '../../redux/store';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { GetServerSideProps } from 'next';
-const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
-const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
+// const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
+const LiveGamePage = dynamic(() => import('../../sub_modules/live-game/src/pages/live/game'), { ssr: false });
 
+const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
+// import DocumentUI from '../../sub_modules/document/src/App';
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
+    const userInfo = await getUserFromToken(req);
+    if (userInfo) store.dispatch(loginSuccessAction(userInfo));
+});
 
 const DocumentPage = () => {
     // useEffect(() => {
     //     console.log("isServer", !(typeof window === 'undefined'));
     // }, [])
     const { currentUser } = useSelector((state: any) => state.userReducer);
-
     return (
-        <DocumentUI rootDocumentId={ROOT_DOCUMENT_CATEGORY_ID} />
+        // <DocumentUI rootDocumentId={ROOT_DOCUMENT_CATEGORY_ID} />
         // <div suppressHydrationWarning>
         //     {typeof window === 'undefined' ? null : <DocumentUI rootDocumentId={ROOT_DOCUMENT_CATEGORY_ID} />}
         // </div>
+        <LiveGamePage />
     )
 };
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-        store.dispatch(loginSuccessAction(userInfo));
-    } else {
-        removeCookie(TOKEN);
-    }
-})
+// export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
+//     const userInfo = await getUserFromToken(req);
+//     if (userInfo) {
+//         store.dispatch(loginSuccessAction(userInfo));
+//     } else {
+//         removeCookie(TOKEN);
+//     }
+// })
 export default DocumentPage;
