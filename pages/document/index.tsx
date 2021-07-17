@@ -7,14 +7,14 @@ import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userA
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { GetServerSideProps } from 'next';
 // const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
-const LiveGamePage = dynamic(() => import('../../sub_modules/live-game/src/pages/live/game'), { ssr: false });
+const LiveGamePage = dynamic(() => import('../../sub_modules/live-game/src/index'), { ssr: false });
 
 const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
 // import DocumentUI from '../../sub_modules/document/src/App';
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) store.dispatch(loginSuccessAction(userInfo));
-});
+// export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
+//     const userInfo = await getUserFromToken(req);
+//     if (userInfo) store.dispatch(loginSuccessAction(userInfo));
+// });
 
 const DocumentPage = () => {
     // useEffect(() => {
@@ -26,15 +26,17 @@ const DocumentPage = () => {
         // <div suppressHydrationWarning>
         //     {typeof window === 'undefined' ? null : <DocumentUI rootDocumentId={ROOT_DOCUMENT_CATEGORY_ID} />}
         // </div>
-        <LiveGamePage />
+        <div suppressHydrationWarning>
+            {typeof window === 'undefined' ? null : <LiveGamePage />}
+        </div>
     )
 };
-// export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-//     const userInfo = await getUserFromToken(req);
-//     if (userInfo) {
-//         store.dispatch(loginSuccessAction(userInfo));
-//     } else {
-//         removeCookie(TOKEN);
-//     }
-// })
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
+    const userInfo = await getUserFromToken(req);
+    if (userInfo) {
+        store.dispatch(loginSuccessAction(userInfo));
+    } else {
+        removeCookie(TOKEN);
+    }
+})
 export default DocumentPage;
