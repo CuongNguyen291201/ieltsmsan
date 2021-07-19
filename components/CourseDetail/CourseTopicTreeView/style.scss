@@ -1,0 +1,9 @@
+.main-topic {
+  padding: 16px;
+  .load-more {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

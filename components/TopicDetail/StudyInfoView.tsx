@@ -7,6 +7,7 @@ import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
 import TestInfoView from './TestInfoView';
 import ExerciseInfoView from './ExerciseInfoView';
 import PreGameView from './PreGameView';
+import PanelContainer from '../containers/PanelContainer';
 
 const StudyInfoView = (props: { topic: any }) => {
   const { topic } = props;
@@ -39,13 +40,15 @@ const StudyInfoView = (props: { topic: any }) => {
         !isLoadedDetailTopic
           ? <div>Loading...</div>
           : (
-            studyScore
-              ? (
-                topic.type === TOPIC_TYPE_TEST
-                  ? <TestInfoView topic={topic} />
-                  : <ExerciseInfoView topic={topic} />
-              )
-              : <PreGameView topic={topic} />
+            <PanelContainer title={`Thông tin bài ${topic.type === TOPIC_TYPE_TEST ? 'thi' : 'tập'}`}>
+              {studyScore
+                ? (
+                  topic.type === TOPIC_TYPE_TEST
+                    ? <TestInfoView topic={topic} />
+                    : <ExerciseInfoView topic={topic} />
+                )
+                : <PreGameView topic={topic} />}
+            </PanelContainer>
           )
       }
     </>

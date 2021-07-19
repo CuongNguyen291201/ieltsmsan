@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { OtsvCategory } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { CATEGORY_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
@@ -12,6 +12,7 @@ const CategoryItem = (props: {
 }) => {
   const { category } = props;
   const router = useRouter()
+
   return (
     <Container1>
       <div className="cat-avatar" onClick={() => router.push(getBrowserSlug(category.slug, CATEGORY_DETAIL_PAGE_TYPE, category._id))} >
@@ -25,7 +26,6 @@ const CategoryItem = (props: {
           </div>
         </div>
       </div>
-
       <div className="cat-info">
         <div className="cat-title">
           {category.name}

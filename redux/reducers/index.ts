@@ -4,7 +4,12 @@ import userReducer, { IUserState } from '../../sub_modules/common/redux/reducers
 import { topicReducer, TopicState } from './topic.reducer';
 import { courseReducer, CourseState } from './course.reducer';
 import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
-import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer'
+import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
+import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
+import { commentReducer, CommentState } from './comment.reducers';
+import documentModuleReducers from '../../sub_modules/document/src/redux/reducers';
+import { DocumentModuleState } from '../../sub_modules/document/src/redux/state';
+
 
 export interface AppState {
   categoryReducer: CategoryState;
@@ -12,7 +17,10 @@ export interface AppState {
   topicReducer: TopicState;
   courseReducer: CourseState;
   prepareGameReducer: PrepareGameState;
-  gameReducer: IGameState
+  gameReducer: IGameState;
+  scenarioReducer: ScenarioState;
+  commentReducer: CommentState;
+  documentState: DocumentModuleState
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -21,5 +29,8 @@ export const rootReducer = combineReducers<AppState>({
   topicReducer,
   courseReducer,
   prepareGameReducer,
-  gameReducer
+  gameReducer,
+  scenarioReducer,
+  commentReducer,
+  documentState: documentModuleReducers
 });

@@ -1,10 +1,11 @@
 import { ForwardedRef, forwardRef, memo } from 'react';
+import './style.scss';
 
 const Pagination = forwardRef((props: {
   total: number;
   active: number;
   start?: number;
-  onClick?: (page: number) => any;
+  onClick: (page: number) => any;
 }, ref: ForwardedRef<HTMLDivElement>) => {
   const { total, active, start = 1, onClick } = props;
   if (active > total || active < start) return (<>Error active number</>)

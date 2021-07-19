@@ -1,0 +1,67 @@
+@import '../../../styles/variables.scss';
+
+.main-topic-node {
+  border: 1px solid #dedede;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 15px;
+  background-color: #f9fafe;
+  .topic-header {
+    padding: 5px 1px 5px 10px;
+    grid-template-columns: 18fr 2fr 5fr 1fr;
+    display: grid;
+    position: relative;
+    cursor: pointer;
+    align-items: center;
+    .topic-title {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      height: 100%;
+      width: 100%;
+    }
+    .topic-progress {
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+      .CircularProgressbar-text {
+        font-weight: bolder;
+        fill: #000000;
+      }
+    }
+    .sub-title {
+      color: #555555;
+    }
+    .toggle-main {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.54);
+    }
+  }
+  .main-topic-content {
+    padding: 0 10px;
+    .line-sep {
+      width: 100%;
+      border-top: 1px solid #d6e7fc;
+    }
+  }
+}
+
+@media (max-width: $h-mobile-max-width) {
+  .main-topic-node {
+    .topic-header {
+      padding-right: 11px;
+    }
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .main-topic-node {
+    .topic-header {
+      grid-template-columns: 18fr 7fr 1fr;
+      padding-right: 25px;
+      .sub-title {
+        width: 0;
+        display: none;
+      }
+    }
+  }
+}

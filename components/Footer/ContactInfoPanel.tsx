@@ -27,23 +27,23 @@ const ContactInfoPanel = () => {
 
 
         <div className="text">
-          <p className="text-1">
+          <div className="text-1">
             Công ty Cổ phần Đầu tư và Phát triển Koolsoft
-          </p>
-          <p className="text-2">
-            <div>
+          </div>
+          <div className="text-2">
+            <p>
               <b>MST</b>: 0106353044 do sở kế hoạch và đầu tư thành phố Hà Nội cấp lần đầu ngày 04/11/2013
-            </div>
-            <div>
+            </p>
+            <p>
               <b>Email</b>: info@onthisinhvien.com
-            </div>
-            <div>
+            </p>
+            <p>
               <b>Địa chỉ</b>: Số 5B N2 TT5, Khu đô thị Bắc Linh Đàm Phường Đại Kim, Quận Hoàng Mai, TP Hà Nội
-            </div>
-            <div>
+            </p>
+            <p>
               <b>Hotline</b>: 0947 0909 81
-            </div>
-          </p>
+            </p>
+          </div>
         </div>
       </div>
     </div>

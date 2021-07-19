@@ -13,7 +13,8 @@ const _BreadcrumbItem = (props: { name: string; slug?: string; isEnd?: boolean; 
       }}>
         {name}
       </span>
-      {!isEnd && <i className="fas fa-caret-right breadcrumb-caret" />}
+      {!isEnd && <span className="breadcrumb-slash">/</span>}
+      {/* <i className="fas fa-caret-right breadcrumb-caret" />} */}
     </>
   )
 }
@@ -23,8 +24,8 @@ const BreadcrumbItem = memo(_BreadcrumbItem);
 const Breadcrumb = (props: { items: Array<{ name: string; slug?: string; addRoot?: boolean }> }) => {
   const { items } = props;
   return (
-    <div className="breadcrumb">
-      <div className="container main-content">
+    <div className="container breadcrumb">
+      <div className="main-content">
         <BreadcrumbItem name="Trang chủ" addRoot={false} />
         {items.map((item, index) => (
           <Fragment key={index}>

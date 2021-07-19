@@ -1,79 +1,154 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import exerciseIcon from '../../public/icon/exercise-icon.svg';
-import lessonIcon from '../../public/icon/lesson-icon.svg';
-import testIcon from '../../public/icon/test-icon.svg';
+import { OtsvTopic } from '../../custom-types';
+import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
-import { getBrowserSlug } from '../../utils';
-import { apiGetTopicsByParentId } from '../../utils/apis/topicApi';
+import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { response_status } from '../../sub_modules/share/api_services/http_status';
+import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
+import Topic from '../../sub_modules/share/model/topic';
+import { getBrowserSlug, getTimeZeroHour } from '../../utils';
+import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
+import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
+import InnerTopicNode from './InnerTopicNode';
+import LeafTopicNode from './LeafTopicNode';
+import MainTopicNode from './MainTopicNode';
 
-const TopicTreeNode = (props: { topic: any; }) => {
-  const { topic } = props;
+const LOAD_LIMIT = 20;
+export type TopicNodeProps = {
+  topic: OtsvTopic;
+  childs?: OtsvTopic[];
+  isLoadChild?: boolean;
+  isTopicHasChild?: boolean;
+  isOpen?: boolean;
+  onClickNode?: () => void;
+  isLoadMoreChilds?: boolean;
+  loadMoreChildFC?: () => void;
+}
+
+const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
+  const { topic, isMain = false } = props;
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
-  const { currentUser, callbackType } = useSelector((state: AppState) => state.userReducer);
-  const [topicOptions, setTopicOptions] = useState({
+  const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
+  const [topicOptions, setTopicOptions] = useState<{ childs: OtsvTopic[], isLoadChild: boolean; }>({
     childs: [],
     isLoadChild: false
   });
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { isTopicHasChild, topicIcon } = useMemo(() => {
-    let topicIcon = '';
-    if (topic.type === TOPIC_TYPE_LESSON) topicIcon = lessonIcon;
-    else if (topic.type === TOPIC_TYPE_EXERCISE) topicIcon = exerciseIcon;
-    else if (topic.type === TOPIC_TYPE_TEST) topicIcon = testIcon;
+  const { isTopicHasChild, isOpen } = useMemo(() => {
+    const isTopicHasChild = topic.childType !== TOPIC_TYPE_CHILD_NONE && topic.type === TOPIC_TYPE_LESSON;
     return {
-      isTopicHasChild: topic.childType !== TOPIC_TYPE_CHILD_NONE && topic.type === TOPIC_TYPE_LESSON,
-      topicIcon
-    }
+      isTopicHasChild,
+      isOpen: !isTopicHasChild && topic.startTime === 0 || (getTimeZeroHour() >= topic.startTime),
+    };
   }, [topic]);
+
+  const fetchChildTopicsFC = async () => {
+    const { data, status } = await apiSeekTopicsByParentId({
+      parentId: topic._id,
+      courseId: currentCourse._id ?? topic.courseId,
+      field: 'orderIndex',
+      limit: LOAD_LIMIT,
+      lastRecord: topicOptions.childs[topicOptions.childs.length - 1],
+      userId: currentUser?._id
+    });
+    if (status === response_status.success) return data as OtsvTopic[];
+    return [];
+  };
 
   const fetchChildTopics = async () => {
     if (!topicOptions.isLoadChild) {
-      const { data, status } = await apiGetTopicsByParentId({ parentId: topic._id, courseId: currentCourse._id });
-      if (status === response_status_codes.success) setTopicOptions({ ...topicOptions, childs: data, isLoadChild: true });
+      const data = await fetchChildTopicsFC();
+      setTopicOptions({
+        ...topicOptions,
+        childs: [...topicOptions.childs, ...data],
+        isLoadChild: true,
+      });
+      dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
     } else if (topicOptions.isLoadChild) setTopicOptions({ ...topicOptions, isLoadChild: false });
   };
 
+  const updateTopicProgressFC = () => {
+    if (topic.type === TOPIC_TYPE_LESSON && !isTopicHasChild && (topic.topicProgress?.progress ?? 0) < 100 && !topic.videoUrl) {
+      apiUpdateTopicProgress({ topicId: topic._id, progress: 100, userId: currentUser._id });
+    }
+  }
+
+  const updateTimeActivityFC = () => {
+    if (topic.type === TOPIC_TYPE_LESSON) {
+      apiUpdateTimeActivity({
+        courseId: topic.courseId,
+        type: !!topic.videoUrl ? USER_ACTIVITY_WATCH_VIDEO : USER_ACTIVITY_LESSON,
+        itemId: topic._id,
+        userId: currentUser._id
+      });
+    }
+  }
+
   const onClickNode = () => {
     if (!currentCourse) return;
-    if (isTopicHasChild) return fetchChildTopics();
-    else {
+    if (isTopicHasChild) {
+      return fetchChildTopics();
+    } else if (!isOpen) {
+      showToastifyWarning('Bài học chưa được phát hành.');
+      return;
+    } else {
       if (!currentUser) {
         dispatch(showLoginModalAction(true));
         return;
       }
+      updateTopicProgressFC();
+      updateTimeActivityFC();
       const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
       router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
     }
+  };
+
+  const loadMoreChilds = () => {
+    fetchChildTopicsFC()
+      .then((data) => {
+        setTopicOptions({
+          ...topicOptions,
+          childs: [...topicOptions.childs, ...data],
+        });
+        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
+      });
   }
 
   return (
-    <>
-      <div className="topic-item" onClick={() => onClickNode()}>
-        <div className="topic-title">
-          <img className="topic-icon" src={topicIcon} alt={topic.nam} />
-          {topic.name}
-        </div>
-        {
-          isTopicHasChild && <i className={`fas fa-chevron-${topicOptions.isLoadChild ? 'down' : 'left'}`} />
-        }
-      </div>
-
-      {
-        topicOptions.isLoadChild && topicOptions.childs.map((e) => (
-          <div style={{ marginLeft: '15px' }} key={e._id}>
-            <TopicTreeNode topic={e} />
-          </div>
-        ))
-      }
-    </>
-  );
+    isMain
+      ? <MainTopicNode
+        topic={topic}
+        childs={topicOptions.childs}
+        isLoadChild={topicOptions.isLoadChild}
+        isOpen={isOpen}
+        isTopicHasChild={isTopicHasChild}
+        onClickNode={onClickNode}
+        isLoadMoreChilds={mapLoadMoreState[topic._id]}
+        loadMoreChildFC={loadMoreChilds}
+      />
+      : (isTopicHasChild
+        ? <InnerTopicNode
+          topic={topic}
+          childs={topicOptions.childs}
+          isOpen={isOpen}
+          isLoadChild={topicOptions.isLoadChild}
+          isTopicHasChild={isTopicHasChild}
+          onClickNode={onClickNode}
+          isLoadMoreChilds={mapLoadMoreState[topic._id]}
+          loadMoreChildFC={loadMoreChilds}
+        />
+        : <LeafTopicNode
+          topic={topic}
+          isOpen={isOpen}
+          onClickNode={onClickNode}
+        />)
+  )
 };
 
 export default TopicTreeNode;

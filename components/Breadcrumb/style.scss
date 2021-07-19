@@ -1,19 +1,22 @@
+@import '../../styles/variables.scss';
+
 .breadcrumb {
   border-bottom: 1px solid #ccc;
   .main-content {
-    padding: 7px 0;
-    .breadcrumb-item, .breadcrumb-caret {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    .breadcrumb-item, .breadcrumb-slash {
       margin-right: 7px;
     }
     .breadcrumb-item {
       cursor: pointer;
-      transition: all 0.2s;
+      // transition: all 0.2s;
       &:hover {
         text-decoration: underline;
-        color: #ec1f24;
+        color: $root-color;
       }
       &.active {
-        color: #ec1f24;
+        color: $root-color;
       }
     }
   }

@@ -1,8 +1,13 @@
+@import "../../styles/variables.scss";
+
 @mixin item-avatar-style {
-  min-height: 220px;
+  min-height: 200px;
   max-width: 100%;
   height: auto;
   border-radius: 0 0 20px 0;
+  @media (max-width: 768px) {
+    border-radius: unset;
+  }
 }
 
 .cat-avatar {
@@ -13,6 +18,9 @@
   .avatar-overlay {
     border-radius: 0 0 20px 0;
     position: absolute;
+    @media (max-width: 768px) {
+     display: none;
+    }
     .overlay-title {
       position: absolute;
       color: #ffffff;
@@ -25,7 +33,7 @@
         line-height: 28px;
         font-style: normal;
       }
-      &:hover{
+      &:hover {
         text-decoration: underline;
       }
     }
@@ -41,7 +49,6 @@
     background-color: rgba(236, 31, 36, 0.6);
   }
 }
-
 .cat-info {
   .cat-title {
     font: {
@@ -51,29 +58,53 @@
     }
     line-height: 21px;
     text-transform: uppercase;
-    color: #ec1f24;
+    color: $root-color;
     margin-bottom: 18px;
-    white-space: nowrap; 
-    min-width: 175px; 
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
+    min-height: 42px;
+
+    @supports (-webkit-line-clamp: 2) {
+      overflow: hidden;
+      display: -webkit-box;
+      white-space: initial;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      @media (max-width: 768px) {
+        -webkit-line-clamp: 1;
+      }
+    }
   }
   margin: 16px;
 }
-@media(max-width: 600px){
-  .container-1{
-    .cat-info{
-      margin: 0;
-    padding: 12px;
+
+@media (max-width: $h-mobile-max-width) {
+  .cat-avatar {
+    img {
+      min-height: 156px;
     }
-    .cat-title{
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .cat-info {
+    margin: 0;
+    padding: 7px;
+    .cat-title {
+      font-size: 10px;
       margin-bottom: 8px;
-      font-size: 16px;
+      max-width: unset;
+      min-height: unset;
+      max-height: unset;
     }
-    .cat-avatar{
-      img{
-        min-height: 145px;
-      }
+    .cat-course-info{
+      font-size: 10px;
+    }
+  }
+  .cat-avatar {
+    img {
+      min-height: 99.5px;
     }
   }
 }

@@ -1,0 +1,17 @@
+.leaf-topic-node {
+  padding: 10px;
+  .leaf-topic-header {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 3.5fr 1fr;
+    cursor: pointer;
+    &:hover {
+      background-color: #fff2ec;
+    }
+    .topic-title {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+    }
+  }
+}

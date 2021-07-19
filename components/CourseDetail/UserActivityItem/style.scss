@@ -1,0 +1,38 @@
+.activity-item {
+  display: flex;
+  padding: 10px;
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .activity-info {
+    cursor: pointer;
+    border-bottom: 1px solid #dddddd;
+    width: 100%;
+    & * {
+      margin-bottom: 1.5px;
+    }
+    .user-name {
+      font-weight: 600;
+    }
+    .activity-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @supports (-webkit-line-clamp: 1) {
+        display: -webkit-box;
+        white-space: initial;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+    }
+    .activity-date {
+      font-style: italic;
+      color: #929292;
+      font-size: 12px;
+    }
+  }
+}

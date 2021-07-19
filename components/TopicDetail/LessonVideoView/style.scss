@@ -1,0 +1,23 @@
+.lesson-video-view {
+  margin: 40px 0;
+  .lesson-video-player-wrapper {
+    width: auto;
+    height: auto;
+    .lesson-video-player {
+      position: relative;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      & > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    iframe,
+    video,
+    .react-player__preview {
+      border-radius: 18px;
+    }
+  }
+}

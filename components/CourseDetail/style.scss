@@ -1,46 +1,94 @@
-.course-detail{
-  .course-title {
-    margin: 20px 0;
+@import '../../styles/variables.scss';
+.course-info {
+  .title {
+    padding: 20px 0;
     font-weight: 500;
     font-size: 24px;
-    text-align: center;
+    line-height: 28px;
+    text-transform: uppercase;
   }
-
-.course-info {
-  .section-heading {
-    margin: 15px 0;
-    font-weight: 500;
-    font-size: 18px;
+  .short-desc {
+    font-size: 12px;
+    line-height: 14px;
+    color: #5d5d5d;
   }
-  .section-sp-line {
-    width: 100%;
-    height: 1px;
-    background: #ccc;
-    margin: 10px 0;
-  }
-  .course-desc{
-    padding: 16px;
-  }
-  .main-topic {
-    padding: 16px;
-    .topic-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      box-shadow: 0 0 5px 0 #aaa;
-      border-radius: 10px;
-      margin: 12px 0;
-      padding: 10px;
-      .topic-title {
+  .rating-section {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    .rating-point {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+    .rating-star {
+      margin: 0 8px;
+      .rating {
         display: flex;
         align-items: center;
-        .topic-icon {
-          margin-right: 10px;
+        .star-full,
+        .star-half {
+          img {
+            width: 14px;
+            height: 14px;
+            margin-right: 2px;
+          }
         }
       }
+    }
+    .rating-count {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 21px;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+  }
+  .price {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: $root-color;
+    padding: 8px 0;
+    .discount-price {
+      margin-right: 12px;
+      letter-spacing: 1px;
+    }
+    .origin-price {
+      text-decoration: line-through;
+      letter-spacing: 1px;
     }
   }
 }
 
+.course-detail {
+  margin-top: 12px;
+  margin-bottom: 100px;
+  border: 1px solid #9e9e9e;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  .tab-header {
+    display: flex;
+    cursor: pointer;
+    .tab-title {
+      padding: 17px 0;
+      background-color: #f4f4f4;
+      &.active {
+        background-color: #dedede;
+      }
+      width: 100%;
+
+      text-align: center;
+      vertical-align: middle;
+      align-self: center;
+      justify-self: center;
+      font-weight: 500;
+      line-height: 16px;
+    }
+  }
 }

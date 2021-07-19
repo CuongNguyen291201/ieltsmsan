@@ -1,25 +1,28 @@
 import { GetServerSideProps } from 'next';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
+import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
+import ReplyComment from '../../components/ReplyComment';
 import TopicDetail from '../../components/TopicDetail';
-import { OtsvCategory } from '../../custom-types';
+import { OtsvCategory, OtsvTopic } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
-import { getTopicByIdApi } from '../../sub_modules/common/api/topicApi';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { CATEGORY_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, TOPIC_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { Course } from '../../sub_modules/share/model/courses';
+import Topic from '../../sub_modules/share/model/topic';
 import { getBrowserSlug } from '../../utils';
 import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
+import { apiGetTopicById } from '../../utils/apis/topicApi';
 
 type SlugTypes = {
   slug: string;
@@ -28,7 +31,7 @@ type SlugTypes = {
   category?: OtsvCategory;
   childCategories?: OtsvCategory[];
   course?: Course;
-  topic?: any
+  topic?: Topic
 }
 
 const DEFAULT_PAGE_TYPE = -1;
@@ -40,6 +43,7 @@ const Slug = (props: SlugTypes) => {
     [CATEGORY_DETAIL_PAGE_TYPE]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [COURSE_DETAIL_PAGE_TYPE]: <CourseDetail course={props.course} />,
     [TOPIC_DETAIL_PAGE_TYPE]: <TopicDetail topic={props.topic} />,
+    [REPLY_COMMENT_PAGE_TYPE]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
     [DEFAULT_PAGE_TYPE]: <div>404</div>,
     [ERROR_PAGE]: <div>500</div>
   }
@@ -63,14 +67,25 @@ const Slug = (props: SlugTypes) => {
     }
     return items;
   }, [type]);
-  return (
-    <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
-      <MainHeader />
-      <MainMenu />
-      <Breadcrumb items={breadcrumbItems} />
-      {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
-    </Layout>
-  )
+
+  if ((type ?? DEFAULT_PAGE_TYPE) === REPLY_COMMENT_PAGE_TYPE) {
+    return (
+      <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
+        <MainHeader />
+        {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
+      </Layout>
+    )
+  } else {
+    return (
+      <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
+        <MainHeader />
+        <MainMenu />
+        <Breadcrumb items={breadcrumbItems} />
+        {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
+        <Footer />
+      </Layout>
+    )
+  }
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
@@ -118,10 +133,9 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       let category: OtsvCategory = null;
       let course: Course = null;
       store.dispatch(setCurrrentTopicAction(null, true));
-      const topic = await getTopicByIdApi(id);
+      const topic: OtsvTopic = await apiGetTopicById(id);
       if (!topic) return { props: { type: ERROR_PAGE } };
-      const courseRes = await apiGetCourseById(topic.courseId);
-      if (courseRes.status === response_status_codes.success) course = courseRes.data;
+      course = topic.course;
       if (root) {
         const { data, status } = await apiGetCategoryById(root as string);
         if (status === response_status.success) category = data;
@@ -129,6 +143,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       store.dispatch(setCurrrentTopicAction(topic));
       return {
         props: { id, slug, type, category, course, topic }
+      }
+    } else if (type === REPLY_COMMENT_PAGE_TYPE) {
+      return {
+        props: { id, slug, type }
       }
     }
     return;

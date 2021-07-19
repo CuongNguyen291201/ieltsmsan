@@ -1,23 +1,23 @@
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { prepareResumeGameAction } from '../../redux/actions/prepareGame.actions';
+import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { GAME_STATUS_PREPARE_CONTINUE } from '../../sub_modules/game/src/gameConfig';
 import { EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
-import { formatDateDMY } from '../../utils';
+import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
+import { formatDateDMY, getGameSlug } from '../../utils';
 import { ROUTER_GAME } from '../../utils/router';
 
-const NoTestView = (props: { currentTopic: any, studyScore?: StudyScore | null, currentUser: any }) => {
+const NoTestView = (props: { currentTopic: Topic, studyScore?: StudyScore | null, currentUser: UserInfo }) => {
 	const { currentTopic, studyScore, currentUser } = props;
 	const dispatch = useDispatch()
 	const router = useRouter()
 	function playGame() {
-		if (currentUser) {
-			dispatch(prepareResumeGameAction())
-			router.push({
-				pathname: ROUTER_GAME,
-				query: { id: currentTopic._id }
-			})
+		if (currentUser && !!studyScore) {
+			dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_CONTINUE, studyScore }))
+			router.push(getGameSlug(currentTopic._id));
 		}
 	}
 
@@ -29,17 +29,6 @@ const NoTestView = (props: { currentTopic: any, studyScore?: StudyScore | null, 
 			<img src={`/topics/welcome_exam.png`} alt="" />
 			<div className="lam-lai" onClick={() => {
 				if (currentUser) {
-					// if (isStudyTrialCategory(currentUser, category._id) && currentTopic.status !== STATUS_OPEN) {
-					//     showToastifyWarning('Bạn cần mua khoá học để làm bài tập ')
-					// } else {
-					//     if ((studyScore && studyScore != null)) {
-					//         dispatch(resumGameAction())
-					//     }
-					//     router.push({
-					//         pathname: ROUTER_GAME,
-					//         query: { id: currentTopic._id } //{ id: currentTopic._id }
-					//     })
-					// }
 					playGame()
 				} else {
 					dispatch(showLoginModalAction())

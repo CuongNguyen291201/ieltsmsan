@@ -2,8 +2,14 @@
 
 .grid-template-2 {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: $h-mobile-max-width) {
+  .grid-template-2 {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: $mobile-max-width) {

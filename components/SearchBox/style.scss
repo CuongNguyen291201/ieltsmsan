@@ -1,3 +1,4 @@
+@import '../../styles/variables.scss';
 .search-box {
   display: flex;
   align-items: center;
@@ -10,7 +11,7 @@
   .input {
     padding-left: 30px;
     background-color: #fff6f6;
-    border: 1px solid #EC1F24;
+    border: 1px solid $root-color;
     outline: none;
     width: 250px;
     height: 36px;

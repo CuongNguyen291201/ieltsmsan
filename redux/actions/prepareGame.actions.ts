@@ -1,5 +1,6 @@
 import { BaseAction } from '.';
 import { GAME_STATUS_PREPARE_CONTINUE, GAME_STATUS_PREPARE_REVIEW, GAME_STATUS_REVIEW_BOX } from '../../sub_modules/game/src/gameConfig';
+import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import { ActionTypes, Scopes } from '../types';
 
 export interface PrepareGameAction extends BaseAction {
@@ -20,4 +21,8 @@ export const prepareReviewGameBoxAction = (): PrepareGameAction => ({
 
 export const prepareResumeGameAction = (): PrepareGameAction => ({
   scope: Scopes.PREPARE_GAME, type: ActionTypes.PRE_RESUME_GAME, payload: GAME_STATUS_PREPARE_CONTINUE
+});
+
+export const prepareGoToGameAction = (args: { statusGame: number; studyScore?: StudyScore; boxGame?: number }): PrepareGameAction => ({
+  scope: Scopes.PREPARE_GAME, type: ActionTypes.PRE_GO_TO_GAME, payload: args
 });

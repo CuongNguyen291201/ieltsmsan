@@ -1,43 +1,77 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchMainTopicsAction } from '../../redux/actions/topic.action';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux';
+import { useScrollToTop } from '../../hooks/scrollToTop';
+import bannerDefault from '../../public/default/banner-default.jpg';
 import { AppState } from '../../redux/reducers';
-import { Course } from '../../sub_modules/share/model/courses_ts';
+import { Course } from '../../sub_modules/share/model/courses';
+import { numberFormat } from '../../utils';
+import Ratings from '../Ratings';
+import CourseContentView from './CourseContentView';
+import CourseTopicTreeView from './CourseTopicTreeView';
 import './style.scss';
-import TopicTree from './TopicTree';
+
+enum Tab {
+  COURSE_CONTENT, COURSE_TOPIC_TREE
+}
 
 const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
-  const dispatch = useDispatch();
-  const { mainTopicsLoading } = useSelector((state: AppState) => state.topicReducer);
+  const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  useEffect(() => {
-    if (mainTopicsLoading) dispatch(fetchMainTopicsAction({ courseId: course._id, userId: currentUser?._id ?? null }));
-  }, [mainTopicsLoading])
+  const [activeTab, setActiveTab] = useState(Tab.COURSE_CONTENT);
 
+  useEffect(() => {
+    if (currentUser && router.query?.activeTab) {
+      setActiveTab(Tab.COURSE_CONTENT);
+    } else {
+      setActiveTab(currentUser ? Tab.COURSE_TOPIC_TREE : Tab.COURSE_CONTENT);
+    }
+  }, [currentUser]);
+
+  useScrollToTop();
   return (
     <>
-      <div className="container course-detail">
-        <div className="course-title">
-          {course.name}
+      <div className="course-info" style={{
+        background: `linear-gradient(90deg, #f9f9f9 30.75%, rgba(255, 255, 255, 0) 58.72%), url(${course.avatar || bannerDefault})`
+      }}>
+        <div className="container">
+          <div className="title">{course.name}</div>
+          <div className="short-desc">{course.shortDesc}</div>
+          <div className="rating-section">
+            <div className="rating-point">
+              {String(4.6).replace('.', ',')}
+            </div>
+            <div className="rating-star">
+              <Ratings point={4.6} />
+            </div>
+            <div className="rating-count">({500})</div>
+          </div>
+          <div className="price">
+            <div className="discount-price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
+            {course.discountPrice !== 0 && <div className="origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
+          </div>
         </div>
-
-        <div className="course-info">
-          <div className="section-heading">
-            Thông tin khoá học
+      </div>
+      <div className="container">
+        <div className="course-detail">
+          <div className="tab-header">
+            <div
+              className={`tab-title${activeTab === Tab.COURSE_CONTENT ? ' active' : ''}`}
+              onClick={() => setActiveTab(Tab.COURSE_CONTENT)}
+            >
+              MÔ TẢ KHOÁ HỌC
+            </div>
+            <div
+              className={`tab-title${activeTab === Tab.COURSE_TOPIC_TREE ? ' active' : ''}`}
+              onClick={() => setActiveTab(Tab.COURSE_TOPIC_TREE)}
+            >
+              DANH SÁCH BÀI HỌC
+            </div>
           </div>
-          <div className="section-sp-line" />
-          <div className="course-desc">
-            {course.shortDesc}
-          </div>
-
-          <div className="section-heading">
-            Danh sách bài học
-          </div>
-          <div className="section-sp-line" />
-          <div className="main-topic">
-            <TopicTree />
-          </div>
+          {
+            activeTab === Tab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />
+          }
         </div>
       </div>
     </>

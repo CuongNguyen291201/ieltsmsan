@@ -1,4 +1,9 @@
+import { saveAs } from 'file-saver';
+import { extension } from 'mime-types';
+import moment from 'moment';
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
+import { ROUTER_GAME } from './router';
+moment.locale('vi');
 
 export const formatTimeClock = (time: any) => {
   const sec_num = parseInt(time, 10); // don't forget the second param
@@ -39,3 +44,29 @@ export const genUnitScore = (barem: number) => {
 }
 
 export const numberFormat = new Intl.NumberFormat();
+
+export const downloadFromURL = (url: string, contentType: string = '', filename: string = 'download') => {
+  const fileExtension = extension(contentType);
+  return saveAs(url, `${encodeURIComponent(filename)}${fileExtension ? `.${fileExtension}` : ''}`);
+}
+
+export const formatTimeHM = (time: number) => {
+  const dateTime = new Date(time);
+  const hour = dateTime.getHours();
+  const min = dateTime.getMinutes();
+
+  return `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}` : min}`
+}
+
+export const isEqualStringified = (foo: any, bar: any) => String(foo) === String(bar);
+
+export const getGameSlug = (topicId: string) => ({
+  pathname: ROUTER_GAME, query: { id: topicId }
+});
+
+export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
+
+export const getRelativeTime = (time: number) => moment(time).fromNow();
+
+export const formatFullDateTime = (time: number) => moment(time).format('HH:mm:ss DD/MM/YYYY');
+

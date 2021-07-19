@@ -1,64 +1,28 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useMemo } from 'react';
 import { OtsvCategory } from '../../custom-types';
-import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { Course } from '../../sub_modules/share/model/courses_ts';
-import { apiGetPagedCoursesByCategory, apiGetSkippedCoursesByCategory } from '../../utils/apis/courseApi';
+import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
+import { useScrollToTop } from '../../hooks/scrollToTop';
+import { Course } from '../../sub_modules/share/model/courses';
+import { fetchPaginationAPI } from '../../utils/apis/common';
+import { apiCountCategoryCourses, apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
 import CourseItem from '../CourseItem';
 import GridTemplate2 from '../grid/GridTemplate2';
 import Pagination from '../Pagination';
 import SearchBox from '../SearchBox';
 import './style.scss';
 
-type PaginationCourses = { totalPages: number; data: { [page: number]: Course[] }; currentPage: number };
-
-const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[] }) => {
+const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
   const { category, childCategories = [] } = props;
-  const [isInit, setInit] = useState(false);
-  const [pages, setPages] = useState<{ [categoryId: string]: PaginationCourses }>({});
+  const childCategoryIds = useMemo(() => childCategories.map(({ _id }) => String(_id)), [childCategories]);
 
-  const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number }): Promise<{
-    totalCourses: number; courses: Course[]
-  }> => {
-    const { data, status } = args.hasOwnProperty('skip') ? await apiGetSkippedCoursesByCategory(args) : await apiGetPagedCoursesByCategory(args);
-    if (status === response_status.failure) return { totalCourses: 0, courses: [] };
-    return data;
-  }
+  const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number; }) => {
+    return fetchPaginationAPI<Course>({ ...args, seekAPI: apiSeekCoursesByCategory, offsetAPI: apiOffsetCoursesByCategory });
+  };
 
-  const initCourses = async () => {
-    const initData: { [categoryId: string]: PaginationCourses } = {};
-    const initRes = await Promise.all(childCategories.map(async (e) => {
-      const data = await fetchCourses({ categoryId: e._id });
-      const totalPages = Math.ceil((data.totalCourses || 1) / 10);
-      return { categoryId: e._id as string, totalPages, data: data.courses }
-    }));
-    initRes.map(({ categoryId, data, totalPages }) => {
-      Object.assign(initData, { [categoryId]: { totalPages, data: { 1: data }, currentPage: 1 } });
-    });
-    setPages(initData);
-  }
 
-  const onChangePage = (args: { categoryId: string, page: number }) => {
-    const { categoryId, page } = args;
-    if (!pages.hasOwnProperty(categoryId)) return;
-    const category = pages[categoryId];
-    if (page > category.totalPages) return;
-    if (page === category.currentPage) return;
-    if (category.data.hasOwnProperty(page)) {
-      setPages({ ...pages, [categoryId]: { ...category, currentPage: page } });
-    } else if (category.data.hasOwnProperty(page - 1)) {
-      const [lastRecord] = category.data[page - 1].slice(-1);
-      fetchCourses({ categoryId, lastRecord })
-        .then(({ courses }) => setPages({ ...pages, [categoryId]: { ...category, currentPage: page, data: { ...category.data, [page]: courses } } }));
-    } else {
-      const skip = (page - 1) * 10;
-      fetchCourses({ categoryId, skip })
-        .then(({ courses }) => setPages({ ...pages, [categoryId]: { ...category, currentPage: page, data: { ...category.data, [page]: courses } } }));
-    }
-  }
-
-  useEffect(() => {
-    if (!isInit) initCourses().then(() => setInit(true));
-  }, [isInit]);
+  const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId', filters: { field: 'name' } });
+  const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
+  useScrollToTop();
 
   return (
     <>
@@ -94,12 +58,12 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
                 </GridTemplate2>
 
                 <div className="pagination">
-                  {pages[e._id]?.totalPages > 1 &&
+                  {(mapTotalPages[e._id] || 0) > 1 &&
                     <Pagination
-                      total={pages[e._id]?.totalPages}
+                      total={mapTotalPages[e._id]}
                       active={pages[e._id]?.currentPage}
                       start={1}
-                      onClick={(page) => onChangePage({ categoryId: e._id, page })}
+                      onClick={(page) => onChangePage({ key: e._id, page })}
                     />
                   }
                 </div>
@@ -109,7 +73,7 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
         ))}
       </div>
     </>
-  )
-}
+  );
+};
 
 export default RootCategoryDetail;
