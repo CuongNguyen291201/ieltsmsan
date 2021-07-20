@@ -81,7 +81,7 @@ const EventExam = () => {
                                         </div>
                                     }
                                     {
-                                        (endTimeTest >= currentTime) &&
+                                        (startTimeTest <= currentTime && endTimeTest >= currentTime) &&
                                         <div className="event-btn"
                                             onClick={() => {
                                                 if (currentUser) {
