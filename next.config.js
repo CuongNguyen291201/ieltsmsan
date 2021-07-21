@@ -11,6 +11,10 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 			source: '/document/:any*',
 			destination: '/document/',
 		  },
+		  {
+			source: '/livegame/:any*',
+			destination: '/livegame/',
+		  },
 		];
 	  },
 	exportPathMap: (
@@ -20,5 +24,12 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 	env: {
 		REACT_APP_ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT,
 		REACT_APP_PREFIX: process.env.NEXT_PUBLIC_PREFIX
-	}
+	},
+	typescript: {
+		// !! WARN !!
+		// Dangerously allow production builds to successfully complete even if
+		// your project has type errors.
+		// !! WARN !!
+		ignoreBuildErrors: true,
+	  }
 }]);
