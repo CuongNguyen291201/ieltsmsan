@@ -1,0 +1,89 @@
+.event-page {
+  max-width: 100vw;
+  max-height: 100vh;
+
+  .main-event {
+    width: 100%;
+    // background: url('/event/banner-event.jpg') no-repeat center center;
+    background: no-repeat center center fixed;
+    background-size: cover;
+
+    .container {
+      color: #FFFFFF;
+
+      .event-title {
+        margin: 110px 0 220px;
+
+        .event-notify {
+          font-size: 40px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+
+        .event-detail {
+          font-size: 20px;
+          margin: 46px 0 54px;
+          font-weight: 400;
+          text-align: justify;
+        }
+
+        .list-exam {
+          background: #FFFFFF;
+          border-radius: 60px;
+          font-size: 14px;
+          font-weight: 700;
+          padding: 15px 35px;
+          margin-top: 13px;
+          text-align: center;
+          color: #0F5764;
+          cursor: pointer;
+
+          div {
+            word-spacing: 28px;
+          }
+        }
+
+        .exams {
+          text-transform: uppercase;
+
+          .exam-detail {
+            display: flex;
+          }
+
+          .exam {
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: underline;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+
+            .fas {
+              font-size: 8px;
+              background-color: #FFFFFF;
+              color: #0F5764;
+              border-radius: 50%;
+              padding: 4px 6px;
+              text-align: center;
+              margin-right: 10px;
+            }
+          }
+
+          .event-end {
+            font-style: italic;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 25px;
+          }
+        }
+
+        .all-event-end {
+          font-style: italic;
+          font-size: 20px;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}

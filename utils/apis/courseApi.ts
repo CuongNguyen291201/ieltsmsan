@@ -42,3 +42,8 @@ export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
     return [];
   }
 }
+
+export const apiLoadCourseByCode = (code: string): any => POST_API('load-courses-by-code', { code })
+export const apiGetCodeInfo = (code: string): any => POST_API('get-code-info', { code })
+export const activeCode = (body: { code: string, userBuyId: string, activeDate: number, courseId: string }): any => POST_API('active-course-by-code', body)
+export const apiGetCoursesActivedByUser = (body: { userId: string }): any => POST_API('get-courses_actived_by_user', body)

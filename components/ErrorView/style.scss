@@ -1,0 +1,26 @@
+#_error_view {
+  width: 100vw;
+  background: {
+    image: url(/home/student-feeling-bg.png);
+    size: cover;
+    repeat: no-repeat;
+    position: center center;
+  } 
+  & * {
+    color: #ffffff;
+  }
+  
+  & .error-view {
+    height: 452px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    & a {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

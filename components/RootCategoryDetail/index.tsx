@@ -13,7 +13,7 @@ import './style.scss';
 
 const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
   const { category, childCategories = [] } = props;
-  const childCategoryIds = useMemo(() => childCategories.map(({ _id }) => String(_id)), [childCategories]);
+  const childCategoryIds = useMemo(() => [category, ...childCategories].map(({ _id }) => String(_id)), [childCategories]);
 
   const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number; }) => {
     return fetchPaginationAPI<Course>({ ...args, seekAPI: apiSeekCoursesByCategory, offsetAPI: apiOffsetCoursesByCategory });
@@ -38,14 +38,17 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
           </div>
 
         </div>
-        {childCategories?.map((e) => (
+        {[category, ...childCategories]?.map((e) => (
           <Fragment key={e._id}>
             <div className="child-cat">
-              <div className="title-cat">
-                {e.titleSEO || e.name}
-              </div>
-              <div className="title-line" />
-
+              {e._id !== category._id &&
+                <>
+                  <div className="title-cat">
+                    {e.titleSEO || e.name}
+                  </div>
+                  <div className="title-line" />
+                </>
+              }
               <div className="child-cat-crs">
                 <GridTemplate2>
                   {

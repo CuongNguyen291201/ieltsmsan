@@ -1,0 +1,170 @@
+.event-exam {
+    max-width: 100vw;
+    max-height: 100vh;
+
+    .main-event-exam {
+        width: 100%;
+        height: 100vh;
+        background: url('/event/banner-event.jpg') no-repeat center center fixed;
+        background-size: cover;
+
+        .container {
+            color: #FFFFFF;
+
+            .event-btn {
+                text-align: center;
+                margin: 20px auto 0;
+                width: 180px;
+                background-color: #FFFFFF;
+                color: #26ABE6;
+                border-radius: 3px;
+                font-size: 18px;
+                padding: 10px;
+                cursor: pointer;
+
+                .statistic-countdown {
+                    background: #F0DCD0;
+                    border-radius: 10px;
+                    border-top: 3px solid #F5FBFE;
+                    border-bottom: 3px solid #b3a399;
+                }
+            }
+
+            .countdown {
+                border-radius: 17px;
+                background: #C40018;
+                border-top: 4px solid #e64f62;
+                border-bottom: 2px solid #8e0415;
+            }
+
+            .table-statistical {
+                background-color: #ffffff;
+                color: black;
+                margin-top: 20px;
+                padding: 20px;
+                border-radius: 15px;
+
+                label {
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    text-transform: uppercase;
+                    color: #666;
+                }
+
+                .high-score-item-panel {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border: 1px solid #fb7b1f;
+                    padding: 5px 10px;
+                    margin-bottom: 10px;
+                    text-transform: uppercase;
+                    font-weight: 600;
+                    font-size: 1.2em;
+                    border-radius: 10px;
+
+                    @media (max-width: 768px) {
+                        font-size: 1em;
+                        font-weight: 400;
+                    }
+
+                    @media (max-width: 500px) {
+                        font-size: 0.8em;
+                    }
+
+                    .stt,
+                    .name,
+                    .correct,
+                    .time,
+                    .score {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .stt {
+                        width: 50px;
+                        height: 50px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .stt-1 {
+                        background: url(https://ielts-fighters.appspot.com/resources/images/classes/badge-1.png) no-repeat;
+                        background-size: 50px 50px;
+                        background-position: center 4px;
+                        color: #fff;
+
+                        @media (max-width: 500px) {
+                            background-size: 22px 22px;
+                            background-position: center 15px;
+                        }
+                    }
+
+                    .stt-2 {
+                        background: url(https://ielts-fighters.appspot.com/resources/images/classes/badge-2.png) no-repeat;
+                        background-size: 45px 45px;
+                        background-position: center 5px;
+                        color: #fff;
+
+                        @media (max-width: 500px) {
+                            background-size: 21px 21px;
+                            background-position: center 16px;
+                        }
+                    }
+
+                    .stt-3 {
+                        background: url(https://ielts-fighters.appspot.com/resources/images/classes/badge-3.png) no-repeat;
+                        background-size: 40px 40px;
+                        background-position: center 8px;
+                        color: #fff;
+
+                        @media (max-width: 500px) {
+                            background-size: 20px 20px;
+                            background-position: center 16px;
+                        }
+                    }
+
+                    .name {
+                        text-align: center;
+                        width: 200px;
+                    }
+
+                    .avatar {
+                        width: 70px;
+
+                        .gwt-Image {
+                            width: 40px;
+                            height: 40px;
+
+                            @media (max-width: 500px) {
+                                width: 30px;
+                                height: 30px;
+                            }
+                        }
+                    }
+
+                    .correct,
+                    .time,
+                    .score {
+                        width: 120px;
+                        text-align: center;
+                    }
+
+                    .item:nth-child(4) {
+                        margin-left: 10px;
+                    }
+                }
+
+                .title {
+                    margin-top: 5px;
+                    border: none;
+                    text-align: center;
+                    color: #fff;
+                    background-color: #c21b17;
+                }
+            }
+        }
+    }
+}

@@ -23,6 +23,7 @@ import { getBrowserSlug } from '../../utils';
 import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
 import { apiGetTopicById } from '../../utils/apis/topicApi';
+import ErrorView from '../../components/ErrorView';
 
 type SlugTypes = {
   slug: string;
@@ -44,8 +45,8 @@ const Slug = (props: SlugTypes) => {
     [COURSE_DETAIL_PAGE_TYPE]: <CourseDetail course={props.course} />,
     [TOPIC_DETAIL_PAGE_TYPE]: <TopicDetail topic={props.topic} />,
     [REPLY_COMMENT_PAGE_TYPE]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
-    [DEFAULT_PAGE_TYPE]: <div>404</div>,
-    [ERROR_PAGE]: <div>500</div>
+    [DEFAULT_PAGE_TYPE]: <ErrorView message="Không tìm thấy trang"/>,
+    [ERROR_PAGE]: <ErrorView />
   }
 
   const breadcrumbItems = useMemo(() => {
@@ -80,7 +81,7 @@ const Slug = (props: SlugTypes) => {
       <Layout addMathJax={type === TOPIC_DETAIL_PAGE_TYPE}>
         <MainHeader />
         <MainMenu />
-        <Breadcrumb items={breadcrumbItems} />
+        {type !== DEFAULT_PAGE_TYPE && type !== ERROR_PAGE && <Breadcrumb items={breadcrumbItems} />}
         {mapTypePage[type ?? DEFAULT_PAGE_TYPE]}
         <Footer />
       </Layout>
