@@ -41,11 +41,14 @@ const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: Ot
         {[category, ...childCategories]?.map((e) => (
           <Fragment key={e._id}>
             <div className="child-cat">
-              {e._id !== category._id && <div className="title-cat">
-                {e.titleSEO || e.name}
-              </div>}
-              <div className="title-line" />
-
+              {e._id !== category._id &&
+                <>
+                  <div className="title-cat">
+                    {e.titleSEO || e.name}
+                  </div>
+                  <div className="title-line" />
+                </>
+              }
               <div className="child-cat-crs">
                 <GridTemplate2>
                   {
