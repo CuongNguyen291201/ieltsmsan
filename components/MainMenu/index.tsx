@@ -99,12 +99,16 @@ function MainMenu() {
           >
             Tài liệu
           </div>
-          <div className="menu-item">Tin tức</div>
-          <div className="menu-item">Liên hệ</div>
-          <div
-            onClick={() => showModalActiveCourse()}
-            className="active-course"
-          >
+          <div className="menu-item" onClick={() => router.push('/livegame')}>
+            Live game
+          </div>
+          <div className="menu-item">
+            Tin tức
+          </div>
+          <div className="menu-item">
+            Liên hệ
+          </div>
+          <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
         </div>

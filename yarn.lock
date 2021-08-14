@@ -1351,6 +1351,19 @@
   resolved "https://registry.yarnpkg.com/@redux-saga/types/-/types-1.1.0.tgz#0e81ce56b4883b4b2a3001ebe1ab298b84237204"
   integrity sha512-afmTuJrylUU/0OtqzaRkbyYFFNgCF73Bvel/sw90pvGrWIZ+vyoIJqA6eMSoA6+nb443kTmulmBtC9NerXboNg==
 
+"@rumess/react-flip-countdown@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@rumess/react-flip-countdown/-/react-flip-countdown-1.2.3.tgz#55b0f282cbfe98087813e057c95d688e0425b61a"
+  integrity sha512-DM+ojQlnhOVDy3mCK1ROp7P5i6vMXjsvG5C+IsFAjkSHFAVzgZZlYbP4/xL2hwv0dcKB3HG2F+Ys2cVwt8qg7g==
+  dependencies:
+    moment "^2.26.0"
+
+"@types/@rumess/react-flip-countdown":
+  version "1.2.3"
+  resolved "https://codeload.github.com/rumess/react-flip-countdown/tar.gz/6b7e57ad137029f625a7e8dd11418f8c77b6d56f"
+  dependencies:
+    moment "^2.26.0"
+
 "@types/component-emitter@^1.2.10":
   version "1.2.10"
   resolved "https://registry.yarnpkg.com/@types/component-emitter/-/component-emitter-1.2.10.tgz#ef5b1589b9f16544642e473db5ea5639107ef3ea"
