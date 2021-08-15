@@ -1,5 +1,5 @@
 import { Fragment, useMemo } from 'react';
-import { OtsvCategory } from '../../custom-types';
+import { _Category } from '../../custom-types';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { Course } from '../../sub_modules/share/model/courses';
@@ -11,7 +11,7 @@ import Pagination from '../Pagination';
 import SearchBox from '../SearchBox';
 import './style.scss';
 
-const RootCategoryDetail = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
+const RootCategoryDetail = (props: { category: _Category; childCategories: _Category[]; }) => {
   const { category, childCategories = [] } = props;
   const childCategoryIds = useMemo(() => [category, ...childCategories].map(({ _id }) => String(_id)), [childCategories]);
 

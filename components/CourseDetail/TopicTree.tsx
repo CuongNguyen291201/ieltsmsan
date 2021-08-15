@@ -1,5 +1,6 @@
 import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { _Category } from '../../custom-types';
 import { fetchTopicsAction, resetTopicsListAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
@@ -7,10 +8,10 @@ import { UserInfo } from '../../sub_modules/share/model/user';
 import OvalRecButton from '../buttons/OvalRecButton';
 import TopicTreeNode from './TopicTreeNode';
 
-const LOAD_LIMIT = 20;
+const LOAD_LIMIT = 50;
 
-const TopicTree = (props: { course: Course; }) => {
-  const { course } = props;
+const TopicTree = (props: { category: _Category; course: Course; }) => {
+  const { category, course } = props;
   const { mainTopics, loadMoreMainTopics } = useSelector((state: AppState) => state.topicReducer);
   const { currentUser }: { currentUser?: UserInfo } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const TopicTree = (props: { course: Course; }) => {
     <>
       {(mainTopics || []).map((e) => (
         <Fragment key={e._id}>
-          <TopicTreeNode topic={e} isMain={true} />
+          <TopicTreeNode category={category} topic={e} isMain={true} />
         </Fragment>
       ))}
       {loadMoreMainTopics && <div className="load-more-main flex-center">

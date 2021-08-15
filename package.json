@@ -14,9 +14,6 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@rumess/react-flip-countdown": "^1.2.3",
-    "@types/": "rumess/react-flip-countdown",
-    "@types/lodash": "^4.14.170",
-    "@types/react-table": "7.7.1",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
     "antd": "^4.16.0",
@@ -49,9 +46,11 @@
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.2",
+    "@types/lodash": "^4.14.172",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
+    "@types/react-table": "7.7.1",
     "encoding": "^0.1.13",
     "typescript": "^4.2.4"
   }

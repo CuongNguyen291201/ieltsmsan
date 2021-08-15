@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { PAGE_TOPIC_DETAIL } from '../../../custom-types/PageType';
 import defaultAvatar from '../../../public/default/default_avatar_otsv.jpg';
 import { AppState } from '../../../redux/reducers';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import {
-  TOPIC_DETAIL_PAGE_TYPE,
   USER_ACTIVITY_LESSON,
   USER_ACTIVITY_PLAY_GAME_PARACTICE,
   USER_ACTIVITY_PLAY_GAME_SCENARIO,
@@ -15,7 +15,8 @@ import {
 import { StudyScoreData } from '../../../sub_modules/share/model/studyScoreData';
 import Topic from '../../../sub_modules/share/model/topic';
 import { UserActivity } from '../../../sub_modules/share/model/userActivity';
-import { formatFullDateTime, getBrowserSlug } from '../../../utils';
+import { formatFullDateTime } from '../../../utils';
+import { getBrowserSlug } from '../../../utils/router';
 import SanitizedDiv from '../../SanitizedDiv';
 import './style.scss';
 
@@ -63,7 +64,7 @@ const UserActivityItem = (props: {
       return;
     }
     router.push({
-      pathname: getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id),
+      pathname: getBrowserSlug(topic.slug, PAGE_TOPIC_DETAIL, topic._id),
       query
     });
   }, [props.activity]);

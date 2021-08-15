@@ -1,5 +1,6 @@
 import { POST_API } from '../../sub_modules/common/api';
-import { convertCardsToModel } from '../../sub_modules/share/model/card';
+import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import { Card, convertCardsToModel } from '../../sub_modules/share/model/card';
 
 function sortCard(cardResult: any[]) {
   cardResult.sort((a, b) => {
@@ -20,12 +21,10 @@ function sortCard(cardResult: any[]) {
   })
 }
 
-export const getCardByTopicId = async (topicId: string) => {
-  let res = await POST_API(`get-card-by-topic-id`, { topicId });
-  let data: any = null;
-  if (res.status === 200) {
-    data = convertCardsToModel(res.data)
-    sortCard(data)
+export const getCardByTopicId = async (topicId: string, cardType?: number[]): Promise<Card[]> => {
+  const { data, status } = await POST_API(`get-card-by-topic-id`, { topicId, type: (cardType ?? []) });
+  if (status === response_status_codes.success) {
+    return data as Card[];
   }
-  return data
+  return [];
 };

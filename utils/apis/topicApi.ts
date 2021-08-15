@@ -1,3 +1,4 @@
+import { _Topic } from '../../custom-types';
 import { POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import MyCardData from '../../sub_modules/share/model/myCardData';
@@ -53,7 +54,7 @@ export const apiGetDataDetailExercise = async (args: {
   return null;
 };
 
-export const apiGetTopicById = async (topicId: string) => {
+export const apiGetTopicById = async (topicId: string): Promise<_Topic | null> => {
   const response = await POST_API('get-topic-by-id', { topicId, withCourse: true });
   if (response.status === response_status_codes.success) {
     return response.data;

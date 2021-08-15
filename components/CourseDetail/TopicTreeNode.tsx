@@ -1,39 +1,40 @@
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { OtsvTopic } from '../../custom-types';
+import { _Category, _Topic } from '../../custom-types';
 import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { TOPIC_DETAIL_PAGE_TYPE, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
-import Topic from '../../sub_modules/share/model/topic';
-import { getBrowserSlug, getTimeZeroHour } from '../../utils';
+import { TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
+import { getTimeZeroHour } from '../../utils';
 import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
+import { getTopicPageSlug } from '../../utils/router';
 import InnerTopicNode from './InnerTopicNode';
 import LeafTopicNode from './LeafTopicNode';
 import MainTopicNode from './MainTopicNode';
 
 const LOAD_LIMIT = 20;
 export type TopicNodeProps = {
-  topic: OtsvTopic;
-  childs?: OtsvTopic[];
+  topic: _Topic;
+  childs?: _Topic[];
   isLoadChild?: boolean;
   isTopicHasChild?: boolean;
   isOpen?: boolean;
   onClickNode?: () => void;
   isLoadMoreChilds?: boolean;
   loadMoreChildFC?: () => void;
+  category?: _Category;
 }
 
-const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
-  const { topic, isMain = false } = props;
+const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean }) => {
+  const { category, topic, isMain = false } = props;
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
-  const [topicOptions, setTopicOptions] = useState<{ childs: OtsvTopic[], isLoadChild: boolean; }>({
+  const [topicOptions, setTopicOptions] = useState<{ childs: _Topic[], isLoadChild: boolean; }>({
     childs: [],
     isLoadChild: false
   });
@@ -57,7 +58,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
       lastRecord: topicOptions.childs[topicOptions.childs.length - 1],
       userId: currentUser?._id
     });
-    if (status === response_status.success) return data as OtsvTopic[];
+    if (status === response_status.success) return data as _Topic[];
     return [];
   };
 
@@ -69,7 +70,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         childs: [...topicOptions.childs, ...data],
         isLoadChild: true,
       });
-      dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
+      dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as _Topic[]).length >= LOAD_LIMIT }));
     } else if (topicOptions.isLoadChild) setTopicOptions({ ...topicOptions, isLoadChild: false });
   };
 
@@ -104,8 +105,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
       }
       updateTopicProgressFC();
       updateTimeActivityFC();
-      const topicDetailSlug = getBrowserSlug(topic.slug, TOPIC_DETAIL_PAGE_TYPE, topic._id);
-      router.push({ pathname: topicDetailSlug, query: { root: router.query.root } });
+      router.push(getTopicPageSlug({ category, topic }));
     }
   };
 
@@ -116,7 +116,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
           ...topicOptions,
           childs: [...topicOptions.childs, ...data],
         });
-        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as OtsvTopic[]).length >= LOAD_LIMIT }));
+        dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as _Topic[]).length >= LOAD_LIMIT }));
       });
   }
 
@@ -131,6 +131,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
         onClickNode={onClickNode}
         isLoadMoreChilds={mapLoadMoreState[topic._id]}
         loadMoreChildFC={loadMoreChilds}
+        category={category}
       />
       : (isTopicHasChild
         ? <InnerTopicNode
@@ -142,6 +143,7 @@ const TopicTreeNode = (props: { topic: OtsvTopic; isMain?: boolean }) => {
           onClickNode={onClickNode}
           isLoadMoreChilds={mapLoadMoreState[topic._id]}
           loadMoreChildFC={loadMoreChilds}
+          category={category}
         />
         : <LeafTopicNode
           topic={topic}

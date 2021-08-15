@@ -11,7 +11,7 @@ import Layout from '../components/Layout';
 import MainHeader from '../components/MainHeader';
 import MainMenu from '../components/MainMenu';
 import StudentFeeling from '../components/StudentFeeling';
-import { OtsvCategory } from '../custom-types';
+import { _Category } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { apiGetCategories } from '../utils/apis/categoryApi';
 import Footer from '../components/Footer';
@@ -19,7 +19,7 @@ import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
 
-const Index = (props: { homeCategories: OtsvCategory[] }) => {
+const Index = (props: { homeCategories: _Category[] }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const WOW = require('wow.js');

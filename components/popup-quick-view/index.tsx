@@ -1,25 +1,22 @@
+import { Dialog } from '@material-ui/core';
+import Backdrop from '@material-ui/core/Backdrop';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import { Col, message, Row } from 'antd';
 import { useRouter } from 'next/router';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { message, Row, Col } from 'antd';
-import { OtsvCategory } from '../../custom-types';
+import { _Category } from '../../custom-types';
+import { PAGE_COURSE_DETAIL } from '../../custom-types/PageType';
 import itemAvatar from '../../public/default/item-avatar.png';
-import { CATEGORY_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import { getBrowserSlug, numberFormat } from '../../utils';
-import Container1 from '../containers/Container1';
-import './style.scss';
-import Modal from '@material-ui/core/Modal';
 import { setCourseOrderAction } from '../../redux/actions/course.actions';
 import { Course } from '../../sub_modules/share/model/courses';
-import Backdrop from '@material-ui/core/Backdrop';
-import { Dialog, DialogTitle } from '@material-ui/core';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import { numberFormat } from '../../utils';
+import { getBrowserSlug } from '../../utils/router';
+import './style.scss';
 
 const PopupShowQuickView = (props: {
-  category?: OtsvCategory,
+  category?: _Category,
   showPopup: boolean,
   showPopupFunction: Function,
   course: Course
@@ -27,7 +24,7 @@ const PopupShowQuickView = (props: {
   const { category, showPopup, showPopupFunction, course } = props;
   const dispatch = useDispatch();
   const router = useRouter();
-  const courseBrowserSlug = useMemo(() => getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id), [course]);
+  const courseBrowserSlug = useMemo(() => getBrowserSlug(course.slug, PAGE_COURSE_DETAIL, course._id), [course]);
   const onClickItem = useCallback(() => {
     router.push({ pathname: courseBrowserSlug, query: { root: category?._id ?? '' } });
   }, [course]);

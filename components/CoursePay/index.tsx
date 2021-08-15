@@ -1,19 +1,14 @@
-import { useRouter } from 'next/router'
+import { Col, Row, Spin } from 'antd';
+import { useRouter } from 'next/router';
+import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux'
-import randomstring from 'randomstring'
-import { Row, Col, Rate, Spin } from 'antd';
-import { removeCourseOrderAction } from '../../redux/actions/course.actions';
-import { OtsvCategory } from '../../custom-types';
-import itemAvatar from '../../public/default/item-avatar.png';
-import { AppState } from '../../redux/reducers'
-import { numberFormat, getBrowserSlug } from '../../utils';
-import { COURSE_ORDER_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
+import { removeCourseOrderAction } from '../../redux/actions/course.actions';
+import { AppState } from '../../redux/reducers';
+import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import './style.scss';
-import { route } from 'next/dist/next-server/server/router';
 
 const CoursePay = () => {
   useScrollToTop();

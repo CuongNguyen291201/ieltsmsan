@@ -1,4 +1,4 @@
-import { OtsvTopic } from '../../custom-types';
+import { _Topic } from '../../custom-types';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import { UserInfo } from '../../sub_modules/share/model/user';
@@ -6,10 +6,10 @@ import { TopicAction } from '../actions/topic.action';
 import { ActionTypes, Scopes } from '../types';
 
 export interface TopicState {
-  mainTopics: Array<OtsvTopic>;
+  mainTopics: Array<_Topic>;
   loadMoreMainTopics: boolean;
   error: boolean;
-  currentTopic: OtsvTopic | null;
+  currentTopic: _Topic | null;
   currentTopicLoading: boolean;
   studyScore: StudyScore | null;
   myCardData: MyCardData | null;

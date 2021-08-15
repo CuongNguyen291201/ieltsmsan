@@ -1,21 +1,22 @@
-import { useRouter } from 'next/router'
+import { Button, Col, Form, message, Modal, Row, Select, Table } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux'
-import { Table, Select, Button, Form, Input, Row, Col, Modal, message } from 'antd';
-import { OtsvCategory, CommentScopes } from '../../custom-types';
-import { AppState } from '../../redux/reducers'
-import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
-import { formatFullDateTime, getBrowserSlug } from '../../utils';
+import { useSelector } from 'react-redux';
+import { CommentScopes, _Category } from '../../custom-types';
+import { PAGE_COURSE_DETAIL, PAGE_TOPIC_DETAIL } from '../../custom-types/PageType';
 import { useScrollToTop } from '../../hooks/scrollToTop';
-import { apiListNotificationByTarget, apiDiscussionsById, apiUpdateReply, apiListDiscussionsByFilter } from '../../utils/apis/notificationApi';
+import { AppState } from '../../redux/reducers';
+import { formatFullDateTime } from '../../utils';
 import { apiGetAllCourse } from '../../utils/apis/courseApi';
-import './style.scss';
-import SanitizedDiv from '../SanitizedDiv';
+import { apiDiscussionsById, apiListDiscussionsByFilter, apiUpdateReply } from '../../utils/apis/notificationApi';
+import { getBrowserSlug } from '../../utils/router';
 import CommentPanel from '../CommentPanel';
+import SanitizedDiv from '../SanitizedDiv';
+import './style.scss';
 
 const { Option } = Select;
 
-const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCategory[]; }) => {
+const ReplyComment = (props: { category: _Category; childCategories: _Category[]; }) => {
   useScrollToTop();
   const router = useRouter();
   const { category, childCategories = [] } = props;
@@ -73,7 +74,7 @@ const ReplyComment = (props: { category: OtsvCategory; childCategories: OtsvCate
 
   const handleRouter = (row) => {
     router.push({
-      pathname: getBrowserSlug(row.topic?.slug || row.course?.slug, row.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, row.topic?._id || row.course?._id),
+      pathname: getBrowserSlug(row.topic?.slug || row.course?.slug, row.topic?.type ? PAGE_TOPIC_DETAIL : PAGE_COURSE_DETAIL, row.topic?._id || row.course?._id),
       query: {
         discussionsId: row.parentId || row._id,
         activeTab: '1'

@@ -9,10 +9,11 @@ import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { apiListNotificationByTarget, apiUpdateReadStatusNotification, apiListNotificationByReadStatus } from '../../utils/apis/notificationApi';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
-import { formatFullDateTime, getBrowserSlug } from '../../utils';
+import { formatFullDateTime } from '../../utils';
+import { getBrowserSlug } from '../../utils/router';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
-import { TOPIC_DETAIL_PAGE_TYPE, COURSE_DETAIL_PAGE_TYPE, REPLY_COMMENT_PAGE_TYPE, COURSE_ORDER_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { PAGE_TOPIC_DETAIL, PAGE_COURSE_DETAIL, PAGE_REPLY_COMMENT } from '../../custom-types/PageType';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
 import { route } from 'next/dist/next-server/server/router';
@@ -111,7 +112,7 @@ function MainHeader() {
             onClick: () => {
               handleReadStatus(dataArr._id)
               router.push({
-                pathname: getBrowserSlug(dataArr.topic?.slug || dataArr.course?.slug, dataArr.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, dataArr.topic?._id || dataArr.course?._id),
+                pathname: getBrowserSlug(dataArr.topic?.slug || dataArr.course?.slug, dataArr.topic?.type ? PAGE_TOPIC_DETAIL : PAGE_COURSE_DETAIL, dataArr.topic?._id || dataArr.course?._id),
                 query: {
                   discussionsId: dataArr.discussionsId || dataArr.parentId as string,
                   activeTab: '1'
@@ -248,7 +249,7 @@ function MainHeader() {
                           document.location.href = item.href
                         } else {
                           router.push({
-                            pathname: getBrowserSlug(item.topic?.slug || item.course?.slug, item.topic?.type ? TOPIC_DETAIL_PAGE_TYPE : COURSE_DETAIL_PAGE_TYPE, item.topic?._id || item.course?._id),
+                            pathname: getBrowserSlug(item.topic?.slug || item.course?.slug, item.topic?.type ? PAGE_TOPIC_DETAIL : PAGE_COURSE_DETAIL, item.topic?._id || item.course?._id),
                             query: {
                               discussionsId: item.discussionsId || item.parentId as string,
                               activeTab: '1'
@@ -310,7 +311,7 @@ function MainHeader() {
                       <i className="fas fa-graduation-cap" />
                       Khoá học của tôi
                     </div>
-                    <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', REPLY_COMMENT_PAGE_TYPE, 'comment'))} >
+                    <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
                       <i className="fas fa-wrench"></i>
                       Trả lời bình luận
                     </div>

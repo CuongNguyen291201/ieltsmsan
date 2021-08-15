@@ -18,7 +18,11 @@ export const apiOffsetCoursesByCategory = (args: {
   skip?: number
 }) => POST_REQ('offset-courses-by-category', args);
 
-export const apiGetCourseById = (courseId: string) => POST_API('get-course-by-id', { courseId, isLoadFull: true });
+export const apiGetCourseById = async (courseId: string): Promise<Course | null> => {
+  const { data, status } = await POST_API('get-course-by-id', { courseId, isLoadFull: true });
+  if (status === response_status_codes.success) return data;
+  return null;
+}
 
 export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot?: boolean }): Promise<{ total: number; }> => {
   try {

@@ -1,25 +1,23 @@
 import { Tooltip } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import { useCallback, useMemo, useState } from 'react';
-import { OtsvCategory } from '../../custom-types';
-import itemAvatar from '../../public/default/item-avatar.png';
 import { Rate } from 'antd';
-import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { useRouter } from 'next/router';
+import { useCallback, useState } from 'react';
+import { _Category } from '../../custom-types';
+import itemAvatar from '../../public/default/item-avatar.png';
 import { Course } from '../../sub_modules/share/model/courses';
-import { getBrowserSlug, numberFormat } from '../../utils';
+import { numberFormat } from '../../utils';
+import { getCoursePageSlug } from '../../utils/router';
 import Container1 from '../containers/Container1';
-import PopupShowQuickView from '../popup-quick-view/index'
-import Ratings from '../Ratings';
+import PopupShowQuickView from '../popup-quick-view/index';
 import './style.scss';
 
 
 
-const CourseItem = (props: { category?: OtsvCategory; course: Course }) => {
+const CourseItem = (props: { category?: _Category; course: Course }) => {
   const { category, course } = props;
   const router = useRouter();
-  const courseBrowserSlug = useMemo(() => getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id), [course]);
   const onClickItem = useCallback(() => {
-    router.push({ pathname: courseBrowserSlug, query: { root: category?._id ?? '' } });
+    router.push(getCoursePageSlug({ category, course }));
   }, [course]);
   const [showPopup, setShowPopup] = useState(false)
   const clickShowPopup = () => {

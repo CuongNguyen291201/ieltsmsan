@@ -15,9 +15,10 @@ import { wrapper } from "../../redux/store";
 import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
 import { removeCookie, TOKEN } from "../../sub_modules/common/utils/cookie";
-import { COURSE_DETAIL_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { PAGE_COURSE_DETAIL } from '../../custom-types/PageType';
 import { Course } from "../../sub_modules/share/model/courses";
-import { getBrowserSlug, numberFormat } from '../../utils';
+import { numberFormat } from '../../utils';
+import { getBrowserSlug } from '../../utils/router';
 import { apiGetMyCourses } from "../../utils/apis/courseApi";
 import './style.scss';
 const MyCoursePage = () => {
@@ -36,7 +37,7 @@ const MyCoursePage = () => {
     }, [currentUser]);
 
     const onClickItem = useCallback((course: Course) => {
-        const courseSlug = getBrowserSlug(course.slug, COURSE_DETAIL_PAGE_TYPE, course._id);
+        const courseSlug = getBrowserSlug(course.slug, PAGE_COURSE_DETAIL, course._id);
         router.push({ pathname: courseSlug });
     }, [courses]);
 

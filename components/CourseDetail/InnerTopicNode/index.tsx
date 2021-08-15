@@ -15,7 +15,8 @@ const InnerTopicNode = (props: TopicNodeProps) => {
     isLoadChild = false,
     onClickNode = () => { },
     isLoadMoreChilds = false,
-    loadMoreChildFC = () => {}
+    loadMoreChildFC = () => {},
+    category
   } = props;
   const isFinished = useMemo(() => (topic.topicProgress?.progress ?? 0) === 100, [topic]);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
@@ -38,7 +39,7 @@ const InnerTopicNode = (props: TopicNodeProps) => {
       <div className="inner-topic-content">
         {!!childs.length && isLoadChild && childs.map((e, i) => (
           <div style={{ marginLeft: '17px'}} key={e._id}>
-            <TopicTreeNode topic={e} />
+            <TopicTreeNode category={category} topic={e} />
             {i === childs.length - 1 && isLoadMoreChilds && <div className="flex-center" style={{ margin: '12px 0' }}>
               <OvalRecButton
                 title="TẢI THÊM"

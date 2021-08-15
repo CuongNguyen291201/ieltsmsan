@@ -1,16 +1,13 @@
-import { useRouter } from 'next/router'
+import { Col, Rate, Row, Spin } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux'
-import { Row, Col, Rate, Spin } from 'antd';
-import { removeCourseOrderAction } from '../../redux/actions/course.actions';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions'
-import { OtsvCategory } from '../../custom-types';
-import itemAvatar from '../../public/default/item-avatar.png';
-import { AppState } from '../../redux/reducers'
-import { numberFormat, getBrowserSlug } from '../../utils';
-import { COURSE_PAY_PAGE_TYPE } from '../../sub_modules/share/constraint';
+import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
+import itemAvatar from '../../public/default/item-avatar.png';
+import { removeCourseOrderAction } from '../../redux/actions/course.actions';
+import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import './style.scss';
 

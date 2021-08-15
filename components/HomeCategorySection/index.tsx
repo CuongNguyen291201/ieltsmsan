@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useMemo } from 'react';
-import { OtsvCategory } from '../../custom-types';
+import { _Category } from '../../custom-types';
 import CategoryItem from '../CategoryItem';
 import GridTemplate1 from '../grid/GridTemplate1';
 import SectionLabel from '../SectionLabel';
 import './style.scss';
 
-const HomeCategorySection = (props: { categories?: OtsvCategory[] }) => {
+const HomeCategorySection = (props: { categories?: _Category[] }) => {
   const { categories = [] } = props;
   const sectionRows = useMemo(() => {
     const r = Math.ceil(categories.length / 4);

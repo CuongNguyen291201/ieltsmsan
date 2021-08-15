@@ -33,7 +33,10 @@ const CourseDetail = (props: { course: Course }) => {
   return (
     <>
       <div className="course-info" style={{
-        background: `linear-gradient(90deg, #f9f9f9 30.75%, rgba(255, 255, 255, 0) 58.72%), url(${course.avatar || bannerDefault})`
+        background: `linear-gradient(90deg, #f9f9f9 30.75%, rgba(255, 255, 255, 0) 58.72%), url(${course.avatar || bannerDefault})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
       }}>
         <div className="container">
           <div className="title">{course.name}</div>

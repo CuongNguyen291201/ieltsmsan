@@ -1358,12 +1358,6 @@
   dependencies:
     moment "^2.26.0"
 
-"@types/@rumess/react-flip-countdown":
-  version "1.2.3"
-  resolved "https://codeload.github.com/rumess/react-flip-countdown/tar.gz/6b7e57ad137029f625a7e8dd11418f8c77b6d56f"
-  dependencies:
-    moment "^2.26.0"
-
 "@types/component-emitter@^1.2.10":
   version "1.2.10"
   resolved "https://registry.yarnpkg.com/@types/component-emitter/-/component-emitter-1.2.10.tgz#ef5b1589b9f16544642e473db5ea5639107ef3ea"
@@ -1394,10 +1388,10 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
 
-"@types/lodash@^4.14.170":
-  version "4.14.170"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
-  integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
+"@types/lodash@^4.14.172":
+  version "4.14.172"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.172.tgz#aad774c28e7bfd7a67de25408e03ee5a8c3d028a"
+  integrity sha512-/BHF5HAx3em7/KkzVKm3LrsD6HZAXuXO1AJZQ3cRRBZj4oHZDviWPYu0aEplAqDFNHZPW6d3G7KN+ONcCCC7pw==
 
 "@types/mime-types@^2.1.0":
   version "2.1.0"
@@ -4858,7 +4852,7 @@ moment-duration-format@^2.3.2:
   resolved "https://registry.yarnpkg.com/moment-duration-format/-/moment-duration-format-2.3.2.tgz#5fa2b19b941b8d277122ff3f87a12895ec0d6212"
   integrity sha512-cBMXjSW+fjOb4tyaVHuaVE/A5TqkukDWiOfxxAjY+PEqmmBQlLwn+8OzwPiG3brouXKY5Un4pBjAeB6UToXHaQ==
 
-moment@^2.24.0, moment@^2.25.3, moment@^2.29.1:
+moment@^2.24.0, moment@^2.25.3, moment@^2.26.0, moment@^2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==

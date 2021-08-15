@@ -2,12 +2,14 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
+import { PAGE_COURSE_DETAIL } from '../../custom-types/PageType';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { COURSE_DETAIL_PAGE_TYPE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
-import { getBrowserSlug, getTimeZeroHour } from '../../utils';
+import { getTimeZeroHour } from '../../utils';
+import { getBrowserSlug } from '../../utils/router';
 import CommentPanel from '../CommentPanel';
 import PanelContainer from '../containers/PanelContainer';
 import LessonInfoView from './LessonInfoView';
@@ -22,7 +24,7 @@ const TopicDetail = (props: { topic: Topic; }) => {
   useEffect(() => {
     if (!currentUser) {
       router.push({
-        pathname: getBrowserSlug(topic.course.slug, COURSE_DETAIL_PAGE_TYPE, topic.course._id),
+        pathname: getBrowserSlug(topic.course.slug, PAGE_COURSE_DETAIL, topic.course._id),
         query: { root: router.query.root as string }
       });
       return;

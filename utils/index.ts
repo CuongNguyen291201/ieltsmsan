@@ -28,8 +28,6 @@ export const formatDateDMY = (time: any) => {
   ].join('/');
 }
 
-export const getBrowserSlug = (slug: string, type: number, id: string) => `${encodeURIComponent(slug)}-${type}-${id}`;
-
 export const genUnitScore = (barem: number) => {
   switch (barem) {
     case BAREM_SCORE_SAT_BIO:

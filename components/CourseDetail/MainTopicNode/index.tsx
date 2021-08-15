@@ -16,7 +16,8 @@ const MainTopicNode = (props: TopicNodeProps) => {
     isOpen = true,
     onClickNode = () => { },
     isLoadMoreChilds,
-    loadMoreChildFC = () => { }
+    loadMoreChildFC = () => { },
+    category
   } = props;
 
   const progress = useMemo(() => {
@@ -49,7 +50,7 @@ const MainTopicNode = (props: TopicNodeProps) => {
         {!!childs.length && isLoadChild && childs.map((e, i) => (
           <Fragment key={e._id}>
             <div className="line-sep" />
-            <TopicTreeNode topic={e} />
+            <TopicTreeNode category={category} topic={e} />
             {i === childs.length - 1 && isLoadMoreChilds && <div className="flex-center" style={{ margin: '12px 0' }}>
               <OvalRecButton
                 title="TẢI THÊM"

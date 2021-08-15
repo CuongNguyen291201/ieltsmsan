@@ -1,13 +1,15 @@
-import { OtsvCategory } from '../../custom-types';
+import { _Category } from '../../custom-types';
 import { CategoryAction } from '../actions/category.actions';
 import { ActionTypes, Scopes } from '../types';
 
 export interface CategoryState {
-  homeCategories: Array<OtsvCategory>
+  homeCategories: Array<_Category>;
+  currentCategory: _Category;
 }
 
 const initialState: CategoryState = {
-  homeCategories: []
+  homeCategories: [],
+  currentCategory: null
 }
 
 export function categoryReducer(state = initialState, action: CategoryAction): CategoryState {
@@ -17,6 +19,12 @@ export function categoryReducer(state = initialState, action: CategoryAction): C
         return {
           ...state,
           [action.target ?? 'homeCategories']: action.payload
+        }
+
+      case ActionTypes.CT_SET_CURENTT_CATEGORY:
+        return {
+          ...state,
+          currentCategory: action.payload.category
         }
 
       default:
