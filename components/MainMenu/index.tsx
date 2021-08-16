@@ -6,8 +6,9 @@ import { PhoneOutlined } from "@ant-design/icons";
 import { Course } from "../../sub_modules/share/model/courses";
 import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiLoadCourseByCode } from "../../utils/apis/courseApi";
 import * as Config from "../../utils/contrants"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 function MainMenu() {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -17,6 +18,7 @@ function MainMenu() {
   const [textError, setTextError] = useState<String>("");
   const [listCourseActived, setListCourseActived] = useState([])
   const codeRef = useRef(null);
+  const dispatch = useDispatch();
 
   const showModalActiveCourse = () => {
     setShowModalAct(true);
@@ -50,6 +52,11 @@ function MainMenu() {
   }
 
   const loadCourseByCode = async () => {
+    if (!currentUser) {
+      hideModal();
+      dispatch(showLoginModalAction(true));
+      return;
+    }
     Promise.all([
       getCoursesActivedByUser(),
       getCodeInfo()
