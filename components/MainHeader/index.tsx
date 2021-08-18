@@ -10,7 +10,7 @@ import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } fro
 import { apiListNotificationByTarget, apiUpdateReadStatusNotification, apiListNotificationByReadStatus } from '../../utils/apis/notificationApi';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { formatFullDateTime } from '../../utils';
-import { getBrowserSlug } from '../../utils/router';
+import { getBrowserSlug, ROUTER_CART } from '../../utils/router';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
 import { PAGE_TOPIC_DETAIL, PAGE_COURSE_DETAIL, PAGE_REPLY_COMMENT } from '../../custom-types/PageType';
@@ -216,7 +216,7 @@ function MainHeader(props: { webInfo?: WebInfo }) {
         <div className="deal-shock item">
           <div className="text">Deals Shock</div>
         </div>
-        <div className="cart item" onClick={() => router.push('course-order')}>
+        <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
           <i className="far fa-shopping-cart shopping-cart"></i>
           {/* <img style={{ cursor: "pointer" }} onClick={() => router.push(getBrowserSlug('cart', COURSE_ORDER_PAGE_TYPE, 'course'))} src="/home/header-cart.png" alt="" /> */}
           {dataCountOrder > 0 &&

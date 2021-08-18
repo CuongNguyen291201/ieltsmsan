@@ -40,7 +40,7 @@ type SlugTypes = {
 }
 
 const Slug = (props: SlugTypes) => {
-  const { id, slug, type = PAGE_ERROR } = props;
+  const { id, slug, type = PAGE_NOT_FOUND } = props;
   const mapTypePage = {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} />,

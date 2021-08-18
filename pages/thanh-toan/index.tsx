@@ -8,13 +8,14 @@ import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import Breadcrumb from '../../components/Breadcrumb';
-import CourseOder from '../../components/CourseOder';
+import CoursePay from '../../components/CoursePay';
+import { ROUTER_PAYMENT } from '../../utils/router';
 
-const CourseOrderPage = () => {
+const CoursePayPage = () => {
     return (
         <Layout>
-            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: 'course-order' }]} />
-            <CourseOder />
+            <Breadcrumb items={[{ name: 'Thanh toán', slug: ROUTER_PAYMENT }]} />
+            <CoursePay />
         </Layout>
     );
 };
@@ -24,4 +25,4 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     if (userInfo) store.dispatch(loginSuccessAction(userInfo));
 });
 
-export default CourseOrderPage;
+export default CoursePayPage;

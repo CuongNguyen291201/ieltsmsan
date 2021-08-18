@@ -3,6 +3,9 @@ import { PAGE_CATEGORY_DETAIL, PAGE_COURSE_DETAIL, PAGE_TOPIC_DETAIL } from '../
 import { Course } from '../sub_modules/share/model/courses';
 
 export const ROUTER_GAME = '/game';
+export const ROUTER_CART = '/gio-hang';
+export const ROUTER_PAYMENT = '/thanh-toan';
+export const ROUTER_TRANSACTION_HISTORY = '/lich-su-giao-dich';
 export const ROUTER_NOT_FOUND = '/404';
 export const ROUTER_ERROR = '/500';
 
