@@ -102,6 +102,7 @@ const CoursePay = () => {
       .then(({ status }) => {
         if (status === response_status_codes.success) {
           showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
+          handleCancel();
           setTimeout(() => {
             router.push("/");
           }, 1000);
