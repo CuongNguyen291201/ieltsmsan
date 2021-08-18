@@ -44,8 +44,6 @@ const MyCoursePage = () => {
     return (
         <Layout>
             <div className="my-course">
-                <Header />
-                <Menu />
                 <div className="wrapper-my-course">
                     <div className="container">
                         <div className="title-search">
@@ -105,7 +103,6 @@ const MyCoursePage = () => {
                     </div>
 
                 </div>
-                <Footer />
             </div>
         </Layout>
     )

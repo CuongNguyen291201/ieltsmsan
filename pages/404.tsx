@@ -1,3 +1,4 @@
 import ErrorView from '../components/ErrorView'
+import Layout from '../components/Layout'
 
-export default () => <ErrorView message="Không tìm thấy trang" />
+export default () => <Layout><ErrorView message="Không tìm thấy trang" /></Layout>

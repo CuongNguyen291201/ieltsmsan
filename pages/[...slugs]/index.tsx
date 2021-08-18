@@ -71,12 +71,13 @@ const Slug = (props: SlugTypes) => {
   }, [type]);
 
   return (
-    <Layout addMathJax={type === PAGE_TOPIC_DETAIL}>
-      <MainHeader />
-      {type !== PAGE_REPLY_COMMENT && <MainMenu />}
+    <Layout
+      addMathJax={type === PAGE_TOPIC_DETAIL}
+      hideMenu={type === PAGE_REPLY_COMMENT}
+      hideFooter={type === PAGE_REPLY_COMMENT}
+    >
       {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
-      {type !== PAGE_REPLY_COMMENT && <Footer />}
     </Layout>
   );
 }

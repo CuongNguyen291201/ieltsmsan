@@ -7,9 +7,7 @@ import Event from '../../components/Event/EventDetail';
 
 const EventPage = () => {
     return (
-        <Layout>
-            <MainHeader />
-            <MainMenu />
+        <Layout hideFooter>
             <Event />
         </Layout>
     )

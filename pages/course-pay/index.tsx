@@ -13,11 +13,8 @@ import CoursePay from '../../components/CoursePay';
 const CoursePayPage = () => {
     return (
         <Layout>
-            <MainHeader />
-            <MainMenu />
-            <Breadcrumb items={[{ name: 'Thanh toán', slug: 'course-pay', addRoot: false }]} />
+            <Breadcrumb items={[{ name: 'Thanh toán', slug: 'course-pay' }]} />
             <CoursePay />
-            <Footer />
         </Layout>
     );
 };

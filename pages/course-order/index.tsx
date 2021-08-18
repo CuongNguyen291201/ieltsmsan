@@ -13,11 +13,8 @@ import CourseOder from '../../components/CourseOder';
 const CourseOrderPage = () => {
     return (
         <Layout>
-            <MainHeader />
-            <MainMenu />
-            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: 'course-order', addRoot: false }]} />
+            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: 'course-order' }]} />
             <CourseOder />
-            <Footer />
         </Layout>
     );
 };

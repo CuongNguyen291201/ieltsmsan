@@ -25,13 +25,9 @@ export const apiGetCourseById = async (courseId: string): Promise<Course | null>
 }
 
 export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot?: boolean }): Promise<{ total: number; }> => {
-  try {
-    const { data, status } = await POST_API('count-category-courses', args);
-    if (status === response_status_codes.success) return data;
-    return { total: 0 };
-  } catch (e) {
-    return { total: 0 };
-  }
+  const { data, status } = await POST_API('count-category-courses', args);
+  if (status === response_status_codes.success) return data;
+  return { total: 0 };
 }
 
 export const apiGetAllCourse = () => GET_API('get-all-courses');
@@ -39,12 +35,8 @@ export const apiGetAllCourse = () => GET_API('get-all-courses');
 export const apiGetCourseByIds = (courseIds: string[]) => POST_API('get-courses-by-ids', { courseIds });
 
 export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
-  try {
-    const res = await POST_API('get-user-courses', { userId });
-    return res.data;
-  } catch (e) {
-    return [];
-  }
+  const res = await POST_API('get-user-courses', { userId });
+  return res.data;
 }
 
 export const apiLoadCourseByCode = (code: string): any => POST_API('load-courses-by-code', { code })

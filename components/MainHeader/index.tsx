@@ -16,12 +16,12 @@ import { useSocketNotification } from '../../hooks/socket';
 import { PAGE_TOPIC_DETAIL, PAGE_COURSE_DETAIL, PAGE_REPLY_COMMENT } from '../../custom-types/PageType';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
-import { route } from 'next/dist/next-server/server/router';
+import WebInfo from '../../sub_modules/share/model/webInfo';
 
 let dataNotification = []
 let dataNotiCount = []
 
-function MainHeader() {
+function MainHeader(props: { webInfo?: WebInfo }) {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const courseId = useSelector((state: AppState) => state.courseReducer.courseId)
@@ -162,14 +162,14 @@ function MainHeader() {
           {/* <img src="/home/header-phone.png" alt="" /> */}
           <i className="fas fa-phone header-icon"></i>
           <div className="text">
-            <span>Hotline:</span> 0947 0909 81
+            <span>Hotline:</span> {props.webInfo?.hotLine}
           </div>
         </div>
         <div className="mail item">
           {/* <img src="/home/header-mail.png" alt="" /> */}
           <i className="fas fa-envelope header-icon"></i>
           <div className="text">
-            <span>Email:</span> info@onthisinhvien.com
+            <span>Email:</span> {props.webInfo?.email}
           </div>
         </div>
         <div className="lang item">
@@ -183,9 +183,9 @@ function MainHeader() {
               }}
             >
               {lang === 'en' ?
-                <img className="flag-icon" src="/home/Flag_of_the_United_Kingdom.svg" />
+                <img className="flag-icon" src="/home/Flag_of_the_United_Kingdom.svg" alt="lang-uk" />
                 :
-                <img className="flag-icon" src="/home/Flag_of_Vietnam.svg" />}
+                <img className="flag-icon" src="/home/Flag_of_Vietnam.svg" alt="lang-vi" />}
               <i className={`fas fa-caret-${isShowLangOptions ? 'up' : 'down'}`} />
             </div>
 
@@ -197,7 +197,7 @@ function MainHeader() {
                 onClick={() => onSelectLanguage('vi')}
               >
                 <div className="icon-wrap">
-                  <img src="/home/Flag_of_Vietnam.svg" />
+                  <img src="/home/Flag_of_Vietnam.svg" alt="lang-vi"/>
                 </div>
                 Tiếng Việt
               </div>
@@ -206,7 +206,7 @@ function MainHeader() {
                 onClick={() => onSelectLanguage('en')}
               >
                 <div className="icon-wrap">
-                  <img src="/home/Flag_of_the_United_Kingdom.svg" />
+                  <img src="/home/Flag_of_the_United_Kingdom.svg" alt="lang-uk" />
                 </div>
                 Tiếng Anh
               </div>
