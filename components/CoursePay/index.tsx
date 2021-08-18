@@ -78,6 +78,7 @@ const CoursePay = () => {
     const checkValue = await encodeSHA256Code(order, KEY_ORDER_SECRET);
     try {
       await apiCreateOrder(order, checkValue);
+      handleCancel()
       showToastifySuccess("Tạo đơn thành công, vui lòng chờ xác nhận")
     } catch (err) {
       showToastifyWarning(err)

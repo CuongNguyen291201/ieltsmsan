@@ -6,8 +6,10 @@ import { PhoneOutlined } from "@ant-design/icons";
 import { Course } from "../../sub_modules/share/model/courses";
 import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiLoadCourseByCode } from "../../utils/apis/courseApi";
 import * as Config from "../../utils/contrants"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
+import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
 function MainMenu() {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -17,6 +19,7 @@ function MainMenu() {
   const [textError, setTextError] = useState<String>("");
   const [listCourseActived, setListCourseActived] = useState([])
   const codeRef = useRef(null);
+  const dispatch = useDispatch()
 
   const showModalActiveCourse = () => {
     setShowModalAct(true);
@@ -34,7 +37,7 @@ function MainMenu() {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
       if (codeInfo.data.userBuyId === currentUser._id || codeInfo.data.userBuyId === null) {
-        if (codeInfo.data.startTime <= Date.now() && codeInfo.data.endTime >= Date.now()) {
+        if (codeInfo.data.startTime <= Date.now() && (codeInfo.data.endTime >= Date.now() || codeInfo.data.endTime === 0)) {
           const courses = await apiLoadCourseByCode(codeRef.current.value);
           setCourses(courses.data);
           setTextError("")
@@ -49,27 +52,43 @@ function MainMenu() {
     }
   }
 
+  // useEffect(() => {
+  //   const userActive = apiGetCoursesActivedByUser({ userId: currentUser._id })
+  //   setListCourseActived(userActive.data)
+  // }, [])
+
   const loadCourseByCode = async () => {
-    Promise.all([
-      getCoursesActivedByUser(),
-      getCodeInfo()
-    ])
+    if (currentUser) {
+      Promise.all([
+        getCoursesActivedByUser(),
+        getCodeInfo()
+      ])
+    }
+    else {
+      hideModal()
+      dispatch(showLoginModalAction(true))
+    }
   };
 
   const handleActiveCode = async (course: Course) => {
-    await activeCode({ code: codeRef.current.value, userBuyId: currentUser._id, activeDate: Date.now(), courseId: course._id })
-    const userActive = await apiGetCoursesActivedByUser({ userId: currentUser._id })
-    setListCourseActived(userActive.data)
+    try {
+      await activeCode({ code: codeRef.current.value, userBuyId: currentUser._id, activeDate: Date.now(), courseId: course._id })
+      const userActive = await apiGetCoursesActivedByUser({ userId: currentUser._id })
+      setListCourseActived(userActive.data)
+      showToastifySuccess("Kích hoạt khóa học thành công")
+    }
+    catch (err) {
+      showToastifyWarning(err)
+    }
   }
 
   const checkCourseIsActive = (itemId: string) => {
     if (listCourseActived.length > 0) {
-      return listCourseActived.some(value => value.itemId === itemId)
+      return listCourseActived.some(value => value?.itemId === itemId)
     }
     else {
       return false
     }
-
   }
 
   return (
