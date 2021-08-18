@@ -1,4 +1,4 @@
-import { Col, Row, Spin } from 'antd';
+import { Col, Modal, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
@@ -6,8 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
+import { encodeSHA256Code } from '../../sub_modules/common/utils';
+import { showToastifySuccess, showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { NOT_PAYMENT, PAYMENT_BANK, PAYMENT_MOMO } from '../../sub_modules/share/constraint';
+import Order from '../../sub_modules/share/model/order';
 import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
+import { apiCreateOrder } from '../../utils/apis/orderApi';
+import { KEY_ORDER_SECRET } from '../../utils/contrants';
 import './style.scss';
 
 const CoursePay = () => {
@@ -17,14 +23,24 @@ const CoursePay = () => {
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [dataOrder, setDataOrder] = useState([])
   const [dataTotal, setDataTotal] = useState(0)
-  const [checkTick, setCheckTick] = useState(0)
+  const [paymentType, setPaymentType] = useState<number>(NOT_PAYMENT)
   const [dataRamdom, setDataRamdom] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true)
+  const courseIdsQuery: string = router.query?.courseIds as string
+  const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
 
   useEffect(() => {
     // if (currentUser?._id) {
-    const courseIdsQuery: string = router.query?.courseIds as string
-    const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
     if (courseIds?.length > 0) {
       apiGetCourseByIds(courseIds)
         .then(data => {
@@ -47,6 +63,35 @@ const CoursePay = () => {
     // }
   }, []);
 
+  const createOrder = async () => {
+    const order = new Order({
+      userId: currentUser?._id,
+      codeId: null,
+      serial: dataRamdom,
+      userName: currentUser?.name,
+      email: currentUser?.email,
+      paymentType: paymentType,
+      courseIds: courseIds,
+      createDate: Date.now(),
+      lastUpdate: Date.now(),
+    })
+    const checkValue = await encodeSHA256Code(order, KEY_ORDER_SECRET);
+    try {
+      await apiCreateOrder(order, checkValue);
+      showToastifySuccess("Tạo đơn thành công, vui lòng chờ xác nhận")
+    } catch (err) {
+      showToastifyWarning(err)
+    }
+  }
+
+  const renderModalConfirm = () => {
+    return (
+      <Modal title="Mua khóa học" visible={isModalVisible} onOk={createOrder} onCancel={handleCancel} centered>
+        Xác nhận mua khóa học
+      </Modal>
+    )
+  }
+
   const onRemove = (value) => {
     const data = dataOrder?.filter(item => item._id !== value)
     // const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
@@ -58,15 +103,16 @@ const CoursePay = () => {
   }
 
   const onChangeCheck = (value) => {
-    if (value === 1) {
-      setCheckTick(checkTick == 1 ? 0 : 1)
+    if (value === PAYMENT_MOMO) {
+      setPaymentType(paymentType === PAYMENT_MOMO ? NOT_PAYMENT : PAYMENT_MOMO)
     } else {
-      setCheckTick(checkTick == 2 ? 0 : 2)
+      setPaymentType(paymentType === PAYMENT_BANK ? NOT_PAYMENT : PAYMENT_BANK)
     }
   }
 
   return (
     <React.Fragment>
+      {renderModalConfirm()}
       <div className="course-pay">
         <Spin spinning={loading}>
           <div className="container ">
@@ -132,7 +178,7 @@ const CoursePay = () => {
                             <div className="item-checkbox" onClick={() => onChangeCheck(1)}>
                               <a data-toggle="collapse" data-parent="#payment-methods" >
                                 <i className="icon-before"></i>
-                                {checkTick === 1 ?
+                                {paymentType === PAYMENT_MOMO ?
                                   <i className="far fa-check-circle"></i>
                                   :
                                   <i className="far fa-circle"></i>}
@@ -144,7 +190,7 @@ const CoursePay = () => {
                               <a data-toggle="collapse" data-parent="#payment-methods" >
                                 <i className="icon-before"></i>
                                 <span>
-                                  {checkTick === 2 ?
+                                  {paymentType === PAYMENT_BANK ?
                                     <i className="far fa-check-circle"></i>
                                     :
                                     <i className="far fa-circle"></i>}
@@ -154,7 +200,7 @@ const CoursePay = () => {
                                 </span>
                               </a>
                             </div>
-                            {checkTick === 1 && <div id="method-1" className="panel-collapse collapse " data-method="1" aria-expanded="false">
+                            {paymentType === PAYMENT_MOMO && <div id="method-1" className="panel-collapse collapse " data-method="1" aria-expanded="false">
                               <div className="panel-body">
                                 <p className="payment-content">
 
@@ -170,7 +216,7 @@ const CoursePay = () => {
                                 </div>
                               </div>
                             </div>}
-                            {checkTick === 2 && <div id="method-2" className="panel-collapse collapse " data-method="2">
+                            {paymentType === PAYMENT_BANK && <div id="method-2" className="panel-collapse collapse " data-method="2">
                               <div className="panel-body">
                                 <span className="payment-content">
 
@@ -201,7 +247,7 @@ const CoursePay = () => {
                       </div>
                       <div className="payment-button">
                         <button className="button-on-right-panel" onClick={() => router.push('course-order')}>Quay lại </button>
-                        <button className="button-on-right-panel background-color-main" >Tiếp tục</button>
+                        <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>
                       </div>
                     </div>
                   </Col>
