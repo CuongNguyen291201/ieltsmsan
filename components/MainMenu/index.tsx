@@ -4,7 +4,7 @@ import { Modal, Button, Space } from "antd";
 import "./style.scss";
 import { PhoneOutlined } from "@ant-design/icons";
 import { Course } from "../../sub_modules/share/model/courses";
-import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiLoadCourseByCode } from "../../utils/apis/courseApi";
+import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiGetMyCourses, apiLoadCourseByCode } from "../../utils/apis/courseApi";
 import * as Config from "../../utils/contrants"
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
@@ -16,21 +16,34 @@ function MainMenu() {
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [textError, setTextError] = useState<String>("");
-  const [listCourseActived, setListCourseActived] = useState([])
+  const [userCourses, setUserCourse] = useState([])
   const codeRef = useRef(null);
   const dispatch = useDispatch();
+
+  console.log(userCourses,"userCourses")
+
 
   const showModalActiveCourse = () => {
     setShowModalAct(true);
   };
   const hideModal = () => {
     setShowModalAct(false);
+    resetData()
   };
 
-  const getCoursesActivedByUser = async () => {
-    const userActive = await apiGetCoursesActivedByUser({ userId: currentUser._id })
-    setListCourseActived(userActive.data)
+  const resetData = () => {
+    codeRef.current.value = ''
+    setCourses([])
   }
+
+  useEffect(() => {
+    if (!!currentUser) {
+      apiGetMyCourses(currentUser?._id)
+        .then((courses) => {
+          setUserCourse(courses);
+        })
+    }
+  }, [currentUser]);
 
   const getCodeInfo = async () => {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
@@ -57,26 +70,33 @@ function MainMenu() {
       dispatch(showLoginModalAction(true));
       return;
     }
-    Promise.all([
-      getCoursesActivedByUser(),
-      getCodeInfo()
-    ])
+    getCodeInfo()
   };
 
   const handleActiveCode = async (course: Course) => {
     await activeCode({ code: codeRef.current.value, userBuyId: currentUser._id, activeDate: Date.now(), courseId: course._id })
-    const userActive = await apiGetCoursesActivedByUser({ userId: currentUser._id })
-    setListCourseActived(userActive.data)
+    await apiGetMyCourses(currentUser?._id)
+      .then((courses) => {
+        setUserCourse(courses);
+      })
   }
 
-  const checkCourseIsActive = (itemId: string) => {
-    if (listCourseActived.length > 0) {
-      return listCourseActived.some(value => value.itemId === itemId)
+  const checkExpriseCourse = (_id: string) => {
+    if (userCourses.length > 0) {
+      return userCourses.some(value => value?.course?._id === _id)
     }
     else {
       return false
     }
+  }
 
+  const checkCourseIsActive = (_id: string) => {
+    if (userCourses.length > 0) {
+      return userCourses.some(value => value?.course?._id === _id)
+    }
+    else {
+      return false
+    }
   }
 
   return (
