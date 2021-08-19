@@ -1,4 +1,4 @@
-import { Col, Row, Spin } from 'antd';
+import { Col, Modal, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
@@ -6,48 +6,124 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { encodeSHA256Code } from '../../sub_modules/common/utils';
+import { showToastifySuccess, showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import {
+  NOT_PAYMENT,
+  PAYMENT_BANK,
+  PAYMENT_MOMO
+} from '../../sub_modules/share/constraint';
+import { Course } from '../../sub_modules/share/model/courses';
+import Order from '../../sub_modules/share/model/order';
 import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
+import { apiCreateOrder } from '../../utils/apis/orderApi';
+import { KEY_ORDER_SECRET } from '../../utils/contrants';
+import { ROUTER_CART } from '../../utils/router';
+import Bank from './payment-content/Bank';
+import Momo from './payment-content/Momo';
 import './style.scss';
+
+const PaymentInfo: { [paymentType: number]: { title: string; content: JSX.Element } } = {
+  [PAYMENT_BANK]: {
+    title: "Chuyển khoản ngân hàng",
+    content: <Bank />
+  },
+  [PAYMENT_MOMO]: {
+    title: "Thanh toán qua ví Momo",
+    content: <Momo />
+  }
+}
 
 const CoursePay = () => {
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
-  const [dataOrder, setDataOrder] = useState([])
+  const [dataOrder, setDataOrder] = useState<Course[]>([])
   const [dataTotal, setDataTotal] = useState(0)
-  const [checkTick, setCheckTick] = useState(0)
-  const [dataRamdom, setDataRamdom] = useState('')
+  const [paymentType, setPaymentType] = useState<number>(NOT_PAYMENT)
+  const [serial, setSerial] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true)
+  const courseIdsQuery: string = router.query?.courseIds as string
+  const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
+
+  const showModal = () => {
+    if (!currentUser) {
+      dispatch(showLoginModalAction(true));
+      return;
+    }
+    if (!paymentType || paymentType === NOT_PAYMENT) {
+      showToastifyWarning("Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
 
   useEffect(() => {
-    // if (currentUser?._id) {
-    const courseIdsQuery: string = router.query?.courseIds as string
-    const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
     if (courseIds?.length > 0) {
       apiGetCourseByIds(courseIds)
         .then(data => {
-          setDataOrder(data?.data?.reverse())
-          let priceTotal = 0
-          data?.data?.map(item => {
-            priceTotal += item.cost - item.discountPrice
-          })
-          setDataTotal(priceTotal)
-          setDataRamdom(randomstring.generate({
-            length: 6,
-            charset: 'alphabetic',
-            capitalization: 'uppercase'
-          }))
+          const courses = ((data?.data ?? []) as Course[]).reverse()
+          setDataOrder(courses)
+          const priceTotal = courses.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
+          setDataTotal(priceTotal);
+          setSerial(randomstring.generate({ length: 8, charset: 'alphanumeric', capitalization: 'uppercase' }));
           setLoading(false)
         })
     } else {
       setLoading(false)
     }
-    // }
   }, []);
 
-  const onRemove = (value) => {
+  const createOrder = () => {
+    const order = new Order({
+      userId: currentUser?._id,
+      codeId: null,
+      serial,
+      content: `${currentUser?.email} thanh toán đơn hàng ${serial}`,
+      price: dataTotal,
+      userName: currentUser?.name,
+      email: currentUser?.email,
+      paymentType,
+      courseIds,
+      phone: currentUser?.phoneNumber,
+    });
+    const checkValue = encodeSHA256Code(order, KEY_ORDER_SECRET);
+    apiCreateOrder(order, checkValue)
+      .then(({ status }) => {
+        if (status === response_status_codes.success) {
+          showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
+          handleCancel();
+          setTimeout(() => {
+            router.push("/");
+          }, 1000);
+        } else {
+          showToastifyWarning("Tạo đơn hàng thất bại")
+        }
+      })
+      .catch(() => {
+        showToastifyWarning("Có lỗi xảy ra!")
+      });
+  }
+
+  const renderModalConfirm = () => {
+    return (
+      <Modal title="Mua khóa học" visible={isModalVisible} onOk={createOrder} onCancel={handleCancel} centered>
+        Xác nhận mua khóa học
+      </Modal>
+    )
+  }
+
+  const onRemove = (value: string) => {
     const data = dataOrder?.filter(item => item._id !== value)
     // const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
     dispatch(removeCourseOrderAction(value));
@@ -57,16 +133,14 @@ const CoursePay = () => {
     router.push(`?courseIds=${dataCourse.join()}`, undefined, { shallow: true })
   }
 
-  const onChangeCheck = (value) => {
-    if (value === 1) {
-      setCheckTick(checkTick == 1 ? 0 : 1)
-    } else {
-      setCheckTick(checkTick == 2 ? 0 : 2)
-    }
+  const onChangeCheck = (value: number) => {
+    if (value === paymentType) setPaymentType(NOT_PAYMENT);
+    else setPaymentType(value);
   }
 
   return (
     <React.Fragment>
+      {renderModalConfirm()}
       <div className="course-pay">
         <Spin spinning={loading}>
           <div className="container ">
@@ -76,7 +150,7 @@ const CoursePay = () => {
                   <Col xs={24} className="custom-reset-row-col right-panel">
                     <label><strong>1. Thông tin thanh toán</strong></label>
                     <div className="transactionCode">
-                      <span>Mã đơn hàng: </span> <span style={{ color: "#ff0000" }}>{dataRamdom}</span>
+                      <span>Mã đơn hàng: </span> <span style={{ color: "#ff0000" }}>{serial}</span>
                     </div>
 
                     <div className="content-block-panel left-panel-background">
@@ -84,8 +158,8 @@ const CoursePay = () => {
                         <div className="header-left-panel">
                           <label><span className="count-course-number">{dataOrder?.length || 0} Khoá học</span></label>
                         </div>
-                        {dataOrder?.length > 0 && dataOrder?.map(item =>
-                          <div className="item-course-bought">
+                        {dataOrder?.length > 0 && dataOrder?.map((item, i) =>
+                          <div className="item-course-bought" key={i}>
                             <div>
                               <label>{item.name}</label>
                               <span className="price-html">
@@ -122,68 +196,35 @@ const CoursePay = () => {
                   <Col xs={24} className="custom-reset-row-col left-panel">
                     <div className="content-block-panel">
                       <div className="main-block-content-panel">
-                        {/* <div className="payment-method">
-                        <label><strong>1. Thông tin khách hàng (*)</strong></label>
-                      </div> */}
                         <div className="panel-group payment-method" id="payment-methods">
-                          <label><strong>Chọn phương thức thanh toán</strong></label>
+                          {currentUser && <>
+                            <label><strong>1. Thông tin khách hàng (*)</strong></label>
+                            <div id="customer-info">
+                              <ul>
+                                <li>Tên người dùng: {currentUser.name}</li>
+                                <li>Email: {currentUser.email}</li>
+                                <li>Số điện thoại: {currentUser.phoneNumber}</li>
+                              </ul>
+                            </div>
+                          </>}
+                          <label><strong>
+                            {currentUser ? '2. ' : ''}
+                            Chọn phương thức thanh toán
+                          </strong></label>
                           <div>
-
-                            <div className="item-checkbox" onClick={() => onChangeCheck(1)}>
-                              <a data-toggle="collapse" data-parent="#payment-methods" >
-                                <i className="icon-before"></i>
-                                {checkTick === 1 ?
-                                  <i className="far fa-check-circle"></i>
-                                  :
-                                  <i className="far fa-circle"></i>}
-                                &nbsp;
-                                <span>Thanh toán qua ví Momo</span>
-                              </a>
-                            </div>
-                            <div className="item-checkbox" onClick={() => onChangeCheck(2)}>
-                              <a data-toggle="collapse" data-parent="#payment-methods" >
-                                <i className="icon-before"></i>
-                                <span>
-                                  {checkTick === 2 ?
-                                    <i className="far fa-check-circle"></i>
-                                    :
-                                    <i className="far fa-circle"></i>}
+                            {[PAYMENT_BANK, PAYMENT_MOMO].map((type, i) => (
+                              <div className="item-checkbox" key={i} onClick={() => onChangeCheck(type)}>
+                                <a data-toggle="collapse" data-parent="#payment-methods">
+                                  <i className="icon-before" />
+                                  <i className={`far ${paymentType === type ? 'fa-check-circle' : 'fa-circle'}`} />
                                   &nbsp;
-                                  Thanh toán qua ngân hàng
-
-                                </span>
-                              </a>
-                            </div>
-                            {checkTick === 1 && <div id="method-1" className="panel-collapse collapse " data-method="1" aria-expanded="false">
-                              <div className="panel-body">
-                                <p className="payment-content">
-
-                                  Sau khi điền thông tin mua hàng và bấm hoàn tất đơn hàng, hệ thống sẽ hiển thị mã QR kèm hướng dẫn. Bạn cần tải và cài ứng dụng Momo trên điện thoại và sử dụng để quét mã QR trên để thanh toán. Momo-Phương thức thanh toán nhanh, tiện lợi, an toàn được cấp phép và quản lý bởi NH Nhà Nước Việt Nam.
-
-                                </p>
-                                <div>
-                                  <strong>
-                                    Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang&nbsp;
-                                    <a href="/lich-su-giao-dich">Lịch sử giao dịch</a> của bạn
-
-                                  </strong>
-                                </div>
+                                  <span>{PaymentInfo[type].title}</span>
+                                </a>
                               </div>
-                            </div>}
-                            {checkTick === 2 && <div id="method-2" className="panel-collapse collapse " data-method="2">
+                            ))}
+                            {paymentType !== NOT_PAYMENT && <div id={`method-${paymentType}`} className="panel-collapse collapse" data-method={paymentType} aria-expanded="false">
                               <div className="panel-body">
-                                <span className="payment-content">
-
-                                  Sau khi điền thông tin mua hàng và bấm hoàn tất đơn hàng, hệ thống sẽ hiển thị mã QR kèm hướng dẫn. Bạn cần sử dụng ứng dụng ngân hàng trên điện thoại và sử dụng để quét mã QR trên để thanh toán. VNPAY-Phương thức thanh toán nhanh, tiện lợi, an toàn được cấp phép và quản lý bởi NH Nhà Nước Việt Nam.
-
-                                </span>
-                                <div>
-                                  <strong>
-                                    Khi thanh toán thành công, mã code sẽ được gửi về email bên dưới và trang&nbsp;
-                                    <a href="/lich-su-giao-dich">Lịch sử giao dịch</a> của bạn
-
-                                  </strong>
-                                </div>
+                                {PaymentInfo[paymentType].content}
                               </div>
                             </div>}
                           </div>
@@ -195,13 +236,13 @@ const CoursePay = () => {
                           <div>
                             - Sau khi <strong>thanh toán thành công</strong>,
                             Bạn vào trang <strong><a href="/lich-su-giao-dich" className="history">lịch sử giao dịch </a></strong>
-                            để nhận mã code hoặc kiểm tra email <span id="email-show-info"><a href="mailto:trongtu@gmail.com">{currentUser?.account}</a></span>.
+                            để nhận mã code hoặc kiểm tra email <span id="email-show-info"><a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a></span>.
                           </div>
                         </Col>
                       </div>
                       <div className="payment-button">
-                        <button className="button-on-right-panel" onClick={() => router.push('course-order')}>Quay lại </button>
-                        <button className="button-on-right-panel background-color-main" >Tiếp tục</button>
+                        <button className="button-on-right-panel" onClick={() => router.push(ROUTER_CART)}>Quay lại </button>
+                        <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>
                       </div>
                     </div>
                   </Col>

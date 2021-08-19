@@ -59,7 +59,7 @@ const GamePage = () => {
       window.removeEventListener('beforeunload', beforeunload);
     };
   }, [statusGame]);
-  return <Layout addMathJax={true} >
+  return <Layout addMathJax={true} hideHeader hideMenu hideFooter>
     <div>
       <GameView
         currentTopic={currentTopic}

@@ -12,7 +12,7 @@ import itemAvatar from '../../public/default/item-avatar.png';
 import { setCourseOrderAction } from '../../redux/actions/course.actions';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
-import { getBrowserSlug } from '../../utils/router';
+import { getBrowserSlug, ROUTER_PAYMENT } from '../../utils/router';
 import './style.scss';
 
 const PopupShowQuickView = (props: {
@@ -105,7 +105,7 @@ const PopupShowQuickView = (props: {
             <button onClick={() => onChangeOrder(course?._id)}>Thêm vào giỏ hàng</button>
             <button
               onClick={() => router.push({
-                pathname: 'course-pay',
+                pathname: ROUTER_PAYMENT,
                 query: { courseIds: course?._id }
               })}
             >Mua Khoá học</button>

@@ -8,7 +8,9 @@ import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiGetMyCourses
 import * as Config from "../../utils/contrants"
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import Link from 'next/link';
+import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
 function MainMenu() {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -18,7 +20,7 @@ function MainMenu() {
   const [textError, setTextError] = useState<String>("");
   const [userCourses, setUserCourse] = useState([])
   const codeRef = useRef(null);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   console.log(userCourses,"userCourses")
 
@@ -49,7 +51,7 @@ function MainMenu() {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
       if (codeInfo.data.userBuyId === currentUser._id || codeInfo.data.userBuyId === null) {
-        if (codeInfo.data.startTime <= Date.now() && codeInfo.data.endTime >= Date.now()) {
+        if (codeInfo.data.startTime <= Date.now() && (codeInfo.data.endTime >= Date.now() || codeInfo.data.endTime === 0)) {
           const courses = await apiLoadCourseByCode(codeRef.current.value);
           setCourses(courses.data);
           setTextError("")
@@ -63,6 +65,11 @@ function MainMenu() {
       }
     }
   }
+
+  // useEffect(() => {
+  //   const userActive = apiGetCoursesActivedByUser({ userId: currentUser._id })
+  //   setListCourseActived(userActive.data)
+  // }, [])
 
   const loadCourseByCode = async () => {
     if (!currentUser) {
@@ -117,24 +124,31 @@ function MainMenu() {
           >
             <i className="fas fa-arrow-right"></i>
           </div>
-          <div className="menu-item" onClick={() => router.push("/")}>
-            Trang chủ
-          </div>
-          <div
-            className="menu-item document"
-            onClick={() => router.push("/document")}
-          >
-            Tài liệu
-          </div>
-          <div className="menu-item" onClick={() => router.push('/livegame')}>
-            Live game
-          </div>
-          <div className="menu-item">
-            Tin tức
-          </div>
-          <div className="menu-item">
-            Liên hệ
-          </div>
+          <Link href="/">
+            <a><div className="menu-item">
+              Trang chủ
+            </div></a>
+          </Link>
+          <Link href="/document">
+            <a><div className="menu-item document">
+              Tài liệu
+            </div></a>
+          </Link>
+          <Link href="/livegame">
+            <a><div className="menu-item">
+              Live game
+            </div></a>
+          </Link>
+          <Link href="/tin-tuc">
+            <a><div className="menu-item">
+              Tin tức
+            </div></a>
+          </Link>
+          <Link href="/lien-he" passHref={true}>
+            <a><div className="menu-item">
+              Liên hệ
+            </div></a>
+          </Link>
           <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>

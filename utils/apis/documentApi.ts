@@ -18,12 +18,8 @@ export const apiOffsetDocumentByTopic = (args: {
 }) => POST_API('offset-document-by-topic', args);
 
 export const apiCountDocumentsByTopic = async (parentId: string): Promise<{ total: number; }> => {
-  try {
-    const { data, status } = await POST_API('count-documents-by-topic', { parentId });
-    if (status === response_status_codes.success) return data;
-    return { total: 0 }
-  } catch (e) {
-    return { total: 0 }
-  }
+  const { data, status } = await POST_API('count-documents-by-topic', { parentId });
+  if (status === response_status_codes.success) return data;
+  return { total: 0 }
 }
 

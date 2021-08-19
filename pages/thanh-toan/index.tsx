@@ -9,15 +9,13 @@ import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import Breadcrumb from '../../components/Breadcrumb';
 import CoursePay from '../../components/CoursePay';
+import { ROUTER_PAYMENT } from '../../utils/router';
 
 const CoursePayPage = () => {
     return (
         <Layout>
-            <MainHeader />
-            <MainMenu />
-            <Breadcrumb items={[{ name: 'Thanh toán', slug: 'course-pay', addRoot: false }]} />
+            <Breadcrumb items={[{ name: 'Thanh toán', slug: ROUTER_PAYMENT }]} />
             <CoursePay />
-            <Footer />
         </Layout>
     );
 };

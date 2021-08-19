@@ -18,8 +18,11 @@ import Footer from '../components/Footer';
 import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
+import { apiWebInfo } from '../utils/apis/webInfoApi';
+import WebInfo from '../sub_modules/share/model/webInfo';
+import WebSeo from '../sub_modules/share/model/webSeo';
 
-const Index = (props: { homeCategories: _Category[] }) => {
+const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const WOW = require('wow.js');
@@ -28,32 +31,31 @@ const Index = (props: { homeCategories: _Category[] }) => {
   }, [typeof window]);
 
   return (
-    <Layout>
-      <MainHeader />
-      <MainMenu />
+    <Layout webInfo={props.webInfo} webSeo={props.webSeo}>
       <HomeBanner />
       <HomeCategorySection categories={props.homeCategories} />
       <StudentFeeling></StudentFeeling>
       <HomeWhy></HomeWhy>
       <HomeUtility></HomeUtility>
       <HomeNews></HomeNews>
-      <Footer />
     </Layout>
   )
 }
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-  const userInfo = await getUserFromToken(req);
-  if (userInfo) {
-    store.dispatch(loginSuccessAction(userInfo));
-  } else {
-    removeCookie(TOKEN);
-  }
-  const { data, status } = await apiGetCategories();
-  const homeCategories = status === 0 ? data : [];
-  return {
-    props: { homeCategories }
-  }
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
+    const userInfo = await getUserFromToken(req);
+    if (userInfo) {
+      store.dispatch(loginSuccessAction(userInfo));
+    } else {
+      removeCookie(TOKEN);
+    }
+    const { data, status } = await apiGetCategories();
+    const { webInfo, webSeo } = await apiWebInfo();
+    
+    const homeCategories = status === 0 ? data : [];
+    return {
+      props: { homeCategories, webInfo, webSeo }
+    }
 });

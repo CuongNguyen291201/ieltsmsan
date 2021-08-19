@@ -28,13 +28,9 @@ export const apiCountTopicsByParentId = async (args: {
   parentId: string | null;
   courseId: string;
 }) => {
-  try {
-    const { data, status } = await POST_API('count-topics-by-parent-id', args);
-    if (status !== response_status_codes.success) return { total: 0 };
-    return data;
-  } catch (e) {
-    return { total: 0 };
-  }
+  const { data, status } = await POST_API('count-topics-by-parent-id', args);
+  if (status !== response_status_codes.success) return { total: 0 };
+  return data;
 };
 
 export const apiGetTopicsByParentId = (args: { parentId: string | null; courseId?: string; userId?: string; }) => POST_API('get-topic-by-parent-id', args);

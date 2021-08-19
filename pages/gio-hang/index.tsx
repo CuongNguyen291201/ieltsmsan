@@ -9,15 +9,13 @@ import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseOder from '../../components/CourseOder';
+import { ROUTER_CART } from '../../utils/router';
 
 const CourseOrderPage = () => {
     return (
         <Layout>
-            <MainHeader />
-            <MainMenu />
-            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: 'course-order', addRoot: false }]} />
+            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: ROUTER_CART }]} />
             <CourseOder />
-            <Footer />
         </Layout>
     );
 };

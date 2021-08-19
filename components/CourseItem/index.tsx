@@ -6,7 +6,7 @@ import { _Category } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
-import { getCoursePageSlug } from '../../utils/router';
+import { getCoursePageSlug, ROUTER_PAYMENT } from '../../utils/router';
 import Container1 from '../containers/Container1';
 import PopupShowQuickView from '../popup-quick-view/index';
 import './style.scss';
@@ -40,7 +40,7 @@ const CourseItem = (props: { category?: _Category; course: Course }) => {
             }} />
             <button
               onClick={() => router.push({
-                pathname: 'course-pay',
+                pathname: ROUTER_PAYMENT,
                 query: { courseIds: course?._id }
               })}
             >Mua ngay </button>

@@ -40,7 +40,7 @@ type SlugTypes = {
 }
 
 const Slug = (props: SlugTypes) => {
-  const { id, slug, type = PAGE_ERROR } = props;
+  const { id, slug, type = PAGE_NOT_FOUND } = props;
   const mapTypePage = {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} />,
@@ -71,12 +71,13 @@ const Slug = (props: SlugTypes) => {
   }, [type]);
 
   return (
-    <Layout addMathJax={type === PAGE_TOPIC_DETAIL}>
-      <MainHeader />
-      {type !== PAGE_REPLY_COMMENT && <MainMenu />}
+    <Layout
+      addMathJax={type === PAGE_TOPIC_DETAIL}
+      hideMenu={type === PAGE_REPLY_COMMENT}
+      hideFooter={type === PAGE_REPLY_COMMENT}
+    >
       {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
-      {type !== PAGE_REPLY_COMMENT && <Footer />}
     </Layout>
   );
 }

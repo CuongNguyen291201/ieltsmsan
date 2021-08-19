@@ -3,13 +3,9 @@ import { response_status_codes } from '../../sub_modules/share/api_services/http
 import { IUserActivity, UserActivity } from '../../sub_modules/share/model/userActivity';
 
 export const apiGetUserActivitiesByCourse = async (args: { courseId: string }): Promise<UserActivity[]> => {
-  try {
-    const { data, status } = await POST_API('get-user-activities-by-course', args);
-    if (status !== response_status_codes.success) return [];
-    return data;
-  } catch (e) {
-    return [];
-  }
+  const { data, status } = await POST_API('get-user-activities-by-course', args);
+  if (status !== response_status_codes.success) return [];
+  return data;
 }
 
 export const apiUpdateTimeActivity = async (args: IUserActivity): Promise<void> => {

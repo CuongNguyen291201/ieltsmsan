@@ -9,6 +9,7 @@ import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
+import { ROUTER_PAYMENT } from '../../utils/router';
 import './style.scss';
 
 const CourseOder = () => {
@@ -104,7 +105,7 @@ const CourseOder = () => {
                         type="button"
                         className="button-pay"
                         onClick={() => router.push({
-                          pathname: 'course-pay',
+                          pathname: ROUTER_PAYMENT,
                           query: { courseIds: localStorage.getItem('courseIds') }
                         })}
                       >Thanh toán
