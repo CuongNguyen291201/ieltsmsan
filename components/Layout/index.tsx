@@ -3,6 +3,7 @@ import Head from 'next/head';
 import React, { FC } from 'react';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
+import WebSocial from '../../sub_modules/share/model/webSocial';
 import Footer from '../Footer';
 import MainHeader from '../MainHeader';
 import MainMenu from '../MainMenu';
@@ -14,6 +15,7 @@ const Layout: FC<{
 	hideHeader?: boolean;
 	hideMenu?: boolean;
 	hideFooter?: boolean;
+	webSocial : WebSocial;
 }> = (props) => {
 	const {
 		addMathJax,
@@ -22,9 +24,12 @@ const Layout: FC<{
 		webSeo,
 		hideHeader = false,
 		hideMenu = false,
-		hideFooter = false
+		hideFooter = false,
+		webSocial,
 	} = props;
 	return (
+		
+		
 		<>
 			<Head>
 				<meta charSet="utf-8" />
@@ -41,7 +46,7 @@ const Layout: FC<{
 			{!hideHeader && <MainHeader webInfo={webInfo} />}
 			{!hideMenu && <MainMenu />}
 			{children}
-			{!hideFooter && <Footer webInfo={webInfo} />}
+			{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
 		</>
 	)
 }

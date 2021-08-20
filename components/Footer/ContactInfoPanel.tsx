@@ -4,9 +4,11 @@ import IconLocation from '../../public/home/icon-location.png';
 import IconPhone from '../../public/home/icon-phone.png';
 import IconEmail from '../../public/home/icon-email.png';
 import WebInfo from '../../sub_modules/share/model/webInfo';
-
-const ContactInfoPanel = (props: { webInfo?: WebInfo }) => {
-  const { webInfo } = props;
+import WebSocial from '../../sub_modules/share/model/webSocial';
+import FacebookIcon from '@material-ui/icons/Facebook';
+const ContactInfoPanel = (props: { webInfo?: WebInfo , webSocial?:WebSocial }) => {
+  const { webInfo ,webSocial} = props;
+  
   return (
     <div className="contact-info-panel">
       <div className="contact-info">
@@ -45,6 +47,9 @@ const ContactInfoPanel = (props: { webInfo?: WebInfo }) => {
             <p>
               <b>Hotline</b>: {webInfo?.hotLine}
             </p>
+            <p>
+              Kết nối với chúng tôi : <a target="_blank" href={webSocial[0]?.fanPage}><i  className="fab fa-facebook"></i></a>
+              </p>
           </div>
         </div>
       </div>

@@ -21,17 +21,18 @@ import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
 import { apiWebInfo } from '../utils/apis/webInfoApi';
 import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';
+import WebSocial from '../sub_modules/share/model/webSocial';
+import { apiWebSocial } from '../utils/apis/webSocial';
 
-const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo }) => {
+const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo ;webSocial?: WebSocial}) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const WOW = require('wow.js');
       new WOW().init();
     }
   }, [typeof window]);
-
   return (
-    <Layout webInfo={props.webInfo} webSeo={props.webSeo}>
+    <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
       <HomeBanner />
       <HomeCategorySection categories={props.homeCategories} />
       <StudentFeeling></StudentFeeling>
@@ -51,11 +52,16 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     } else {
       removeCookie(TOKEN);
     }
+    
     const { data, status } = await apiGetCategories();
     const { webInfo, webSeo } = await apiWebInfo();
+    const {  status:status1 , data:data1 } = await apiWebSocial();
+    
     
     const homeCategories = status === 0 ? data : [];
+    const webSocial = status1 === 200  ? data1 :  [];
+    
     return {
-      props: { homeCategories, webInfo, webSeo }
+      props: { homeCategories, webInfo, webSeo , webSocial}
     }
 });
