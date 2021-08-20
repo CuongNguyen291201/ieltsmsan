@@ -31,7 +31,9 @@ const DocumentPage = () => {
             <Breadcrumb items={[{ name: "Tài liệu", slug: ROUTER_DOCUMENT }]} />
             {
                 rootDocument
-                    ? <DocumentUI rootDocumentId={rootDocument._id} />
+                    ? <DocumentUI rootDocumentId={rootDocument._id}
+                        rootDocumentRouter={ROUTER_DOCUMENT}
+                    />
                     : <></>
 
             }

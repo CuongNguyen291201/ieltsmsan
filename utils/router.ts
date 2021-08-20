@@ -7,7 +7,7 @@ export const ROUTER_NEWS = '/tin-tuc';
 export const ROUTER_CART = '/gio-hang';
 export const ROUTER_PAYMENT = '/thanh-toan';
 export const ROUTER_TRANSACTION_HISTORY = '/lich-su-giao-dich';
-export const ROUTER_DOCUMENT = '/document';
+export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
 export const ROUTER_ERROR = '/500';
 

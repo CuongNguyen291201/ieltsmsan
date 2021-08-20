@@ -8,8 +8,8 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 	async rewrites() {
 		return [
 		  {
-			source: '/document/:any*',
-			destination: '/document/',
+			source: '/tai-lieu/:any*',
+			destination: '/tai-lieu/',
 		  },
 		  {
 			source: '/livegame/:any*',
