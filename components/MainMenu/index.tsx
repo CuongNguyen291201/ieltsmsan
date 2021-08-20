@@ -22,9 +22,6 @@ function MainMenu() {
   const codeRef = useRef(null);
   const dispatch = useDispatch()
 
-  console.log(userCourses,"userCourses")
-
-
   const showModalActiveCourse = () => {
     setShowModalAct(true);
   };
