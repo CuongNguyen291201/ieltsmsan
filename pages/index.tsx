@@ -24,7 +24,7 @@ import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
 import { apiWebSocial } from '../utils/apis/webSocial';
 
-const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo ;webSocial?: WebSocial}) => {
+const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const WOW = require('wow.js');
@@ -46,22 +46,20 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
 export default Index;
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-      store.dispatch(loginSuccessAction(userInfo));
-    } else {
-      removeCookie(TOKEN);
-    }
-    
-    const { data, status } = await apiGetCategories();
-    const { webInfo, webSeo } = await apiWebInfo();
-    const {  status:status1 , data:data1 } = await apiWebSocial();
-    
-    
-    const homeCategories = status === 0 ? data : [];
-    const webSocial = status1 === 200  ? data1 :  [];
-    
-    return {
-      props: { homeCategories, webInfo, webSeo , webSocial}
-    }
+  const userInfo = await getUserFromToken(req);
+  if (userInfo) {
+    store.dispatch(loginSuccessAction(userInfo));
+  } else {
+    removeCookie(TOKEN);
+  }
+
+  const { data, status } = await apiGetCategories();
+  const { webInfo, webSeo } = await apiWebInfo();
+  const webSocial = await apiWebSocial();
+
+  const homeCategories = status === 0 ? data : [];
+
+  return {
+    props: { homeCategories, webInfo, webSeo, webSocial }
+  }
 });

@@ -2,11 +2,7 @@ import { GetServerSideProps } from 'next';
 import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
-import ErrorView from '../../components/ErrorView';
-import Footer from '../../components/Footer';
 import Layout from '../../components/Layout';
-import MainHeader from '../../components/MainHeader';
-import MainMenu from '../../components/MainMenu';
 import ReplyComment from '../../components/ReplyComment';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
 import TopicDetail from '../../components/TopicDetail';
@@ -15,19 +11,23 @@ import {
   PAGE_CATEGORY_DETAIL,
   PAGE_COURSE_DETAIL, PAGE_ERROR, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT, PAGE_TOPIC_DETAIL
 } from '../../custom-types/PageType';
+import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
-import { response_status, response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { Course } from '../../sub_modules/share/model/courses';
 import Topic from '../../sub_modules/share/model/topic';
-import { getBrowserSlug, getCategorySlug, getCoursePageSlug, getTopicPageSlug } from '../../utils/router';
+import WebInfo from '../../sub_modules/share/model/webInfo';
+import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetCategoriesByParent, apiGetCategoryById, apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
 import { apiGetTopicById } from '../../utils/apis/topicApi';
-import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
+import { apiWebInfo } from '../../utils/apis/webInfoApi';
+import { apiWebSocial } from '../../utils/apis/webSocial';
+import { getCategorySlug, getCoursePageSlug, getTopicPageSlug, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
 
 type SlugTypes = {
   slug: string;
@@ -37,6 +37,8 @@ type SlugTypes = {
   childCategories?: _Category[];
   course?: Course;
   topic?: Topic;
+  webInfo?: WebInfo;
+  webSocial?: WebSocial;
 }
 
 const Slug = (props: SlugTypes) => {
@@ -45,9 +47,7 @@ const Slug = (props: SlugTypes) => {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} />,
     [PAGE_TOPIC_DETAIL]: <TopicDetail topic={props.topic} />,
-    [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
-    [PAGE_NOT_FOUND]: <ErrorView message="Không tìm thấy trang" />,
-    [PAGE_ERROR]: <ErrorView />
+    [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />
   }
 
   const breadcrumbItems = useMemo(() => {
@@ -75,6 +75,8 @@ const Slug = (props: SlugTypes) => {
       addMathJax={type === PAGE_TOPIC_DETAIL}
       hideMenu={type === PAGE_REPLY_COMMENT}
       hideFooter={type === PAGE_REPLY_COMMENT}
+      webInfo={props.webInfo}
+      webSocial={props.webSocial}
     >
       {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
@@ -82,18 +84,21 @@ const Slug = (props: SlugTypes) => {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req, res }) => {
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
   try {
+    const { webInfo } = await apiWebInfo();
+    const webSocial = await apiWebSocial();
+
     if (slugs.length === 1) {
       const routePath = slugs[0];
       const items = routePath.split('-');
       const [id] = items.slice(-1);
       const type = Number(...items.slice(-2, -1));
       const slug = items.slice(0, -2).join('-');
-      if (!id || !slug) return;
+      if (!id || !slug) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
 
       if (type === PAGE_CATEGORY_DETAIL) {
         let category: _Category = null;
@@ -106,17 +111,15 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         store.dispatch(setCurrentCategoryAction(category));
         return {
           props: {
-            id, type, slug, category, childCategories
+            id, type, slug, category, childCategories, webInfo, webSocial
           }
         }
       } else if (type === PAGE_REPLY_COMMENT) {
         return {
-          props: { id, slug, type }
+          props: { id, slug, type, webInfo, webSocial }
         }
       }
-      return {
-        props: { type: PAGE_NOT_FOUND }
-      };
+      return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
     } else {
       const [categorySlug, items] = slugs as string[];
       const [id] = items.split('-').slice(-1);
@@ -124,9 +127,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       const slug = items.split('-').slice(0, -2).join('-');
       const category = await apiGetCategoryBySlug(categorySlug);
       store.dispatch(setCurrentCategoryAction(category));
-      if (!id || !slug) return {
-        props: { type: PAGE_NOT_FOUND }
-      }
+
+      if (!id || !slug) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+
+
       let course: Course | null = null;
       let topic: _Topic | null = null;
 
@@ -142,15 +146,13 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       }
       return {
         props: {
-          id, slug, type, category, course, topic
+          id, slug, type, category, course, topic, webInfo, webSocial
         }
       }
     }
   } catch (e) {
     console.log('Internal Server Error', e);
-    return {
-      props: { type: PAGE_ERROR }
-    };
+    return res.writeHead(302, { Location: ROUTER_ERROR }).end();
   }
 });
 

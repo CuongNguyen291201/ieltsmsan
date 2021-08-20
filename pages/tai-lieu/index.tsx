@@ -10,6 +10,11 @@ import { apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
 import Layout from '../../components/Layout';
 import Breadcrumb from '../../components/Breadcrumb';
 import { ROUTER_DOCUMENT } from '../../utils/router';
+import { apiWebInfo } from '../../utils/apis/webInfoApi';
+import { apiWebSocial } from '../../utils/apis/webSocial';
+import WebInfo from '../../sub_modules/share/model/webInfo';
+import WebSeo from '../../sub_modules/share/model/webSeo';
+import WebSocial from '../../sub_modules/share/model/webSocial';
 const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
 
 // const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
@@ -19,7 +24,7 @@ const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), {
 // //     if (userInfo) store.dispatch(loginSuccessAction(userInfo));
 // // });
 
-const DocumentPage = () => {
+const DocumentPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSocial: WebSocial }) => {
     const [rootDocument, setRootDocument] = useState<_Category>();
 
     useEffect(() => {
@@ -27,7 +32,7 @@ const DocumentPage = () => {
             .then((category) => setRootDocument(category))
     }, []);
     return (
-        <Layout hideFooter>
+        <Layout {...props} hideFooter>
             {/* <Breadcrumb items={[{ name: "Tài liệu", slug: ROUTER_DOCUMENT }]} /> */}
             {
                 rootDocument
@@ -50,5 +55,9 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     } else {
         removeCookie(TOKEN);
     }
+    const { webInfo, webSeo } = await apiWebInfo();
+    const webSocial = await apiWebSocial();
+
+    return { props: { webInfo, webSeo, webSocial } }
 })
 export default DocumentPage;

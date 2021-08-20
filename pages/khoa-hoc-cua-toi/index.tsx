@@ -21,7 +21,12 @@ import { numberFormat } from '../../utils';
 import { getBrowserSlug } from '../../utils/router';
 import { apiGetMyCourses } from "../../utils/apis/courseApi";
 import './style.scss';
-const MyCoursePage = () => {
+import { apiWebInfo } from '../../utils/apis/webInfoApi';
+import { apiWebSocial } from '../../utils/apis/webSocial';
+import WebInfo from '../../sub_modules/share/model/webInfo';
+import WebSeo from '../../sub_modules/share/model/webSeo';
+import WebSocial from '../../sub_modules/share/model/webSocial';
+const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial }) => {
     const router = useRouter();
     const [courses, setCourses] = useState([]);
     const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
@@ -42,7 +47,7 @@ const MyCoursePage = () => {
     }, [courses]);
 
     return (
-        <Layout>
+        <Layout {...props}>
             <div className="my-course">
                 <div className="wrapper-my-course">
                     <div className="container">
@@ -117,6 +122,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     } else {
         removeCookie(TOKEN);
     }
+    const { webInfo, webSeo } = await apiWebInfo();
+    const webSocial = await apiWebSocial();
+
+    return { props: { webInfo, webSeo, webSocial } }
 })
 
 export default MyCoursePage;

@@ -15,7 +15,7 @@ const Layout: FC<{
 	hideHeader?: boolean;
 	hideMenu?: boolean;
 	hideFooter?: boolean;
-	webSocial : WebSocial;
+	webSocial?: WebSocial;
 }> = (props) => {
 	const {
 		addMathJax,

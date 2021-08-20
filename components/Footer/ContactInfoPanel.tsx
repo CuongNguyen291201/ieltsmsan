@@ -48,7 +48,7 @@ const ContactInfoPanel = (props: { webInfo?: WebInfo , webSocial?:WebSocial }) =
               <b>Hotline</b>: {webInfo?.hotLine}
             </p>
             <p>
-              Kết nối với chúng tôi : <a target="_blank" href={webSocial[0]?.fanPage}><i  className="fab fa-facebook"></i></a>
+              Kết nối với chúng tôi : <a target="_blank" href={webSocial?.fanPage}><i  className="fab fa-facebook"></i></a>
               </p>
           </div>
         </div>

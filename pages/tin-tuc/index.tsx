@@ -11,11 +11,13 @@ import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import News from '../../sub_modules/share/model/news';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
+import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiNewsCategories } from "../../utils/apis/newsApi";
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
+import { apiWebSocial } from '../../utils/apis/webSocial';
 import { ROUTER_NEWS } from '../../utils/router';
-const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo }) => {
-  const { webInfo, webSeo } = props;
+const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial }) => {
+  const { webInfo, webSeo, webSocial } = props;
   const [categoryNews, setCategoryNews] = useState([])
   const [newsContent, setNewsContent] = useState([])
   useEffect(() => {
@@ -28,7 +30,7 @@ const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo }) => {
   }, [])
 
   return (
-    <Layout webInfo={webInfo} webSeo={webSeo}>
+    <Layout {...props}>
       <div className="content-news">
         <div className="container">
           {categoryNews.map((value, key) => (
@@ -69,10 +71,12 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     removeCookie(TOKEN);
   }
   const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS });
+  const webSocial = await apiWebSocial();
   return {
     props: {
       webInfo: webInfoRes.webInfo,
-      webSeo: webInfoRes.webSeo
+      webSeo: webInfoRes.webSeo,
+      webSocial
     }
   }
 });
