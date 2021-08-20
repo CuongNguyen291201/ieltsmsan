@@ -11,6 +11,7 @@ import { AppState } from "../../redux/reducers";
 import Link from 'next/link';
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
+import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 function MainMenu() {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -126,7 +127,7 @@ function MainMenu() {
               Trang chủ
             </div></a>
           </Link>
-          <Link href="/document">
+          <Link href={ROUTER_DOCUMENT}>
             <a><div className="menu-item document">
               Tài liệu
             </div></a>
@@ -136,7 +137,7 @@ function MainMenu() {
               Live game
             </div></a>
           </Link>
-          <Link href="/tin-tuc">
+          <Link href={ROUTER_NEWS}>
             <a><div className="menu-item">
               Tin tức
             </div></a>

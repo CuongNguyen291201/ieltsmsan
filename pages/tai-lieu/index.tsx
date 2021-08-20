@@ -27,8 +27,8 @@ const DocumentPage = () => {
             .then((category) => setRootDocument(category))
     }, []);
     return (
-        <Layout hideFooter hideMenu>
-            <Breadcrumb items={[{ name: "Tài liệu", slug: ROUTER_DOCUMENT }]} />
+        <Layout hideFooter>
+            {/* <Breadcrumb items={[{ name: "Tài liệu", slug: ROUTER_DOCUMENT }]} /> */}
             {
                 rootDocument
                     ? <DocumentUI rootDocumentId={rootDocument._id}
