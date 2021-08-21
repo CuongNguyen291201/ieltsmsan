@@ -16,6 +16,7 @@
         color: $root-color;
       }
       &.active {
+        text-decoration: none;
         color: $root-color;
       }
     }
