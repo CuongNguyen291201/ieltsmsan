@@ -6,10 +6,6 @@ import FooterNav from './FooterNav';
 import './style.scss';
 
 const Footer = (props: { webInfo?: WebInfo  , webSocial? :  WebSocial}) => {
-  console.log('webInfo1111' , props.webInfo);
-  console.log('WebSocial2' , props.webSocial);
-  
-  
   return (
     <div className="footer">
       <div className="container">

@@ -5,5 +5,5 @@ import WebSocial from '../../sub_modules/share/model/webSocial';
 export const apiWebSocial = async () => {
   const { data, status } = await GET_API('/get-all-web-socials', 'api-cms');
   if (status !== response_status_codes.success) return null;
-  return Array.isArray(data) ? (data as WebSocial[])[0] : null;
+  return (data as WebSocial[])[0] ?? null;
 }
