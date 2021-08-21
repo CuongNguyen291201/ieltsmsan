@@ -57,7 +57,7 @@ const Slug = (props: SlugTypes) => {
       items.push({ name: category.name, slug: getCategorySlug({ category }) });
     } else if (type === PAGE_COURSE_DETAIL) {
       const { category, course } = props;
-      items.push({ name: category.name, slug: getCategorySlug({ category }) });
+      if (category) items.push({ name: category.name, slug: getCategorySlug({ category }) });
       items.push({ name: course.name, slug: getCoursePageSlug({ category, course }) });
     } else if (type === PAGE_TOPIC_DETAIL) {
       const { category, course, topic } = props;
@@ -117,6 +117,15 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       } else if (type === PAGE_REPLY_COMMENT) {
         return {
           props: { id, slug, type, webInfo, webSocial }
+        }
+      } else if (type === PAGE_COURSE_DETAIL) {
+        store.dispatch(setCurrentCourseAction(null, true));
+        const course = await apiGetCourseById(id);
+        store.dispatch(setCurrentCourseAction(course));
+        return {
+          props: {
+            id, type, slug, course, webInfo, webSocial
+          }
         }
       }
       return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();

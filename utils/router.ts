@@ -16,7 +16,7 @@ export const getBrowserSlug = (slug: string, type: number, id: string) => `${enc
 export const getCategorySlug = (args: { category: _Category }) => getBrowserSlug(args.category.slug, PAGE_CATEGORY_DETAIL, args.category._id);
 
 export const getCoursePageSlug = (args: { category: _Category, course: Course }) =>
-  `${encodeURIComponent(args.category.slug)}/${getBrowserSlug(args.course.slug, PAGE_COURSE_DETAIL, args.course._id)}`;
+  `${args.category?.slug ? `${encodeURIComponent(args.category.slug)}/` : ''}${getBrowserSlug(args.course.slug, PAGE_COURSE_DETAIL, args.course._id)}`;
 
 export const getTopicPageSlug = (args: { category: _Category, topic: _Topic }) =>
   `${encodeURIComponent(args.category.slug)}/${getBrowserSlug(args.topic.slug, PAGE_TOPIC_DETAIL, args.topic._id)}`;
