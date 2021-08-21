@@ -8,7 +8,7 @@ import LoginModal from '../../sub_modules/common/components/loginModal'
 import RegisterModal from '../../sub_modules/common/components/registerModal'
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from '../../sub_modules/common/redux/actions/userActions'
 import { apiListNotificationByTarget, apiUpdateReadStatusNotification, apiListNotificationByReadStatus } from '../../utils/apis/notificationApi';
-import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
+import { getCookie, removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { formatFullDateTime } from '../../utils';
 import { getBrowserSlug, ROUTER_CART } from '../../utils/router';
 import { Menu, Dropdown, Row, Col } from 'antd';
@@ -17,6 +17,7 @@ import { PAGE_TOPIC_DETAIL, PAGE_COURSE_DETAIL, PAGE_REPLY_COMMENT } from '../..
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
 import WebInfo from '../../sub_modules/share/model/webInfo';
+import { apiLogout } from '../../utils/apis/auth';
 
 let dataNotification = []
 let dataNotiCount = []
@@ -197,7 +198,7 @@ function MainHeader(props: { webInfo?: WebInfo }) {
                 onClick={() => onSelectLanguage('vi')}
               >
                 <div className="icon-wrap">
-                  <img src="/home/Flag_of_Vietnam.svg" alt="lang-vi"/>
+                  <img src="/home/Flag_of_Vietnam.svg" alt="lang-vi" />
                 </div>
                 Tiếng Việt
               </div>
@@ -316,9 +317,11 @@ function MainHeader(props: { webInfo?: WebInfo }) {
                       Trả lời bình luận
                     </div>
                     <div className="menu-item" onClick={() => {
-                      removeCookie(TOKEN);
-                      // dispatch(loginSuccessAction(null));
-                      router.reload()
+                      const token = getCookie(TOKEN);
+                      if (!!token) apiLogout({ token }).then(() => {
+                        removeCookie(TOKEN);
+                        router.reload()
+                      });
                     }}>
                       <i className="fas fa-sign-out" />
                       Đăng xuất
