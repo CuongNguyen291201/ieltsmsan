@@ -12,6 +12,7 @@ import itemAvatar from '../../public/default/item-avatar.png';
 import { setCourseOrderAction } from '../../redux/actions/course.actions';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
+import orderUtils from '../../utils/payment/orderUtils';
 import { getBrowserSlug, ROUTER_PAYMENT } from '../../utils/router';
 import './style.scss';
 
@@ -30,16 +31,10 @@ const PopupShowQuickView = (props: {
   }, [course]);
 
 
-  const onChangeOrder = (value) => {
-    const dataArr = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',') : []
-    if (value && !dataArr.find(item => item === value)) {
-      dispatch(setCourseOrderAction(value));
-      dataArr.push(value)
-      localStorage.setItem('courseIds', dataArr.join())
-      message.success('Đã thêm vào giỏ hàng!');
-    } else {
-      message.warning('Khóa học đã có trong giỏ hàng');
-    }
+  const onChangeOrder = (courseId: string) => {
+    orderUtils.addCourseToOrder(courseId, () => {
+      dispatch(setCourseOrderAction(courseId));
+    })
     showPopupFunction()
   }
 

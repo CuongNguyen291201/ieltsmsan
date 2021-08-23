@@ -1,41 +1,40 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
-import { useRouter } from 'next/router'
+import { CircularProgress } from '@material-ui/core';
+import { Button, Col, Rate, Row } from 'antd';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { MapUserCourseStatus } from '../../custom-types/MapContraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import bannerDefault from '../../public/default/banner-default.jpg';
+import { setActiveCourseModalVisibleAction, setCourseOrderAction, setUserCourseAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
+import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { STATUS_OPEN } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
+import { apiGetUserCourse, apiJoinCourse } from '../../utils/apis/courseApi';
+import orderUtils from '../../utils/payment/orderUtils';
+import { getPaymentPageSlug } from '../../utils/router';
+import ActiveCourseModal from '../ActiveCourseModal';
 import CourseContentView from './CourseContentView';
-import CourseTopicTreeView from './CourseTopicTreeView';
-import './style.scss';
 import {
   courseDetailInitState,
   courseDetailReducer,
-  CourseTab,
-  setUserCourse,
-  setActiveTab,
-  setLoading
+  CourseTab, setActiveLoading, setActiveTab
 } from './courseDetail.logic';
-import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
-import { apiGetUserCourse, apiJoinCourse } from '../../utils/apis/courseApi';
-import { Button, Col, Spin, Row, Rate } from 'antd';
-import { CachedOutlined } from '@material-ui/icons'
-import { STATUS_OPEN } from '../../sub_modules/share/constraint';
-import { MapUserCourseStatus } from '../../custom-types/MapContraint';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import CourseTopicTreeView from './CourseTopicTreeView';
+import './style.scss';
 
 const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal } = useSelector((state: AppState) => state.courseReducer);
   const [{
     activeTab,
-    userCourse,
-    activeLoading,
-    userCourseLoading,
-    isJoin
+    activeLoading
   }, uiLogic] = useReducer(courseDetailReducer, courseDetailInitState);
   const dispatch = useDispatch();
   const isCourseDiscount = useMemo(() => !!course.cost && !!course.discountPrice, [course]);
@@ -45,13 +44,17 @@ const CourseDetail = (props: { course: Course }) => {
   useEffect(() => {
     uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
     if (!!currentUser) {
-      uiLogic(setLoading(true, 'userCourseLoading'));
       const token = getCookie(TOKEN);
       apiGetUserCourse({ token, courseId: course._id })
         .then((uc) => {
-          uiLogic(setUserCourse(uc));
-          uiLogic(setLoading(false, 'userCourseLoading'));
+          dispatch(setUserCourseAction(uc));
+          uiLogic(setActiveLoading(false));
         })
+        .catch((e) => {
+          showToastifyWarning('Có lỗi xảy ra!');
+        });
+    } else {
+      dispatch(setUserCourseAction(null));
     }
   }, [currentUser]);
 
@@ -61,15 +64,15 @@ const CourseDetail = (props: { course: Course }) => {
       return;
     }
     const token = getCookie(TOKEN);
-    if (!token) return;
+    if (!token || activeLoading || userCourseLoading) return;
     if (course.cost && (!userCourse || userCourse?.isExpired)) {
-      // Kich hoat khoa hoc
+      dispatch(setActiveCourseModalVisibleAction(true));
     } else if (!course.cost && !userCourse) {
-      uiLogic(setLoading(true, 'activeLoading'));
+      uiLogic(setActiveLoading(true));
       apiJoinCourse({ token, courseId: course._id })
         .then((newUserCourse) => {
-          uiLogic(setUserCourse(newUserCourse));
-          uiLogic(setLoading(false, 'activeLoading'));
+          dispatch(setUserCourseAction(newUserCourse))
+          uiLogic(setActiveLoading(false));
         })
         .catch((e) => {
           showToastifyWarning('Có lỗi xảy ra!');
@@ -108,10 +111,12 @@ const CourseDetail = (props: { course: Course }) => {
               </div>
             </div>
             {
-              activeTab === CourseTab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />
+              activeTab !== CourseTab.COURSE_TAB_NONE
+                ? (activeTab === CourseTab.COURSE_CONTENT ? <CourseContentView course={course} /> : <CourseTopicTreeView course={course} />)
+                : <div style={{ textAlign: "center" }}><CircularProgress /></div>
             }
           </Col>
-          <Col span={24} lg={6} style={{ padding: "10px" }}>
+          <Col span={24} lg={6}>
             <div id="course-overview">
               <div className="title-block"><h2>Thông tin khoá học</h2></div>
               <div className="short-desc">
@@ -134,21 +139,28 @@ const CourseDetail = (props: { course: Course }) => {
                 </div>
               </div>
 
-              <span className={`price${isCourseDiscount ? ' discount' : ''}`}>{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</span>
-              {isCourseDiscount && <span className="origin-price">{numberFormat.format(course.cost)} VNĐ</span>}
+              {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
+              <div className="price">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
 
-              {course.status !== STATUS_OPEN
+              {!!course.cost
                 && <div className="button-group">
-                  <Button type="primary" size="large" className="btn bgr-root">Thêm vào <i className="fas fa-cart-plus" /></Button>
-                  <Button type="primary" size="large" className="btn bgr-green">Mua ngay</Button>
+                  <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
+                    orderUtils.addCourseToOrder(course._id, () => {
+                      dispatch(setCourseOrderAction(course._id));
+                    })
+                  }}>Thêm vào <i className="fas fa-cart-plus" /></Button>
+                  <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
+                    orderUtils.setReturnUrl(router.asPath);
+                    router.push(getPaymentPageSlug(course._id));
+                  }}>Mua ngay</Button>
                 </div>}
 
               <div className="button-group">
-                <Button type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
+                <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
                   {activeLoading || userCourseLoading
-                    ? <Spin indicator={<CachedOutlined />} />
+                    ? <CircularProgress style={{ color: "white" }} size={25} />
                     : course.cost
-                      ? (!isJoin ? 'Kích hoạt khoá học' : 'Đã tham gia')
+                      ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
                       : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
                   }
                 </Button>
@@ -157,6 +169,13 @@ const CourseDetail = (props: { course: Course }) => {
           </Col>
         </Row>
       </div>
+      <ActiveCourseModal
+        courseId={course._id}
+        isVisible={isVisibleActiveCourseModal}
+        setVisible={() => {
+          dispatch(setActiveCourseModalVisibleAction(false))
+        }}
+      />
     </>
   )
 }

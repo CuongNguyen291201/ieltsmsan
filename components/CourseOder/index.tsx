@@ -1,4 +1,4 @@
-import { Col, Rate, Row, Spin } from 'antd';
+import { Col, message, Rate, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,6 +34,11 @@ const CourseOder = () => {
           })
           setDataTotal(priceTotal)
           setLoading(false)
+        })
+        .catch(() => {
+          message.warning('Có lỗi xảy ra');
+          setDataOrder([]);
+          setLoading(false);
         })
     } else {
       setLoading(false)

@@ -1,0 +1,33 @@
+@import "../../styles/variables.scss";
+.active-course-modal {
+  width: 600px !important;
+  .active-course-button {
+    background-color: $root-color !important;
+    border-color: $root-color !important;
+    min-width: 104.24px;
+    &:hover {
+      filter: brightness(1.5);
+    }
+  }
+  .m-title-block {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  #active-code-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    label {
+      font-weight: 600;
+    }
+    #active-code-input {
+      width: 60%;
+    }
+  }
+  #buy-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

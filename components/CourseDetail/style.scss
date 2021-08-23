@@ -51,7 +51,9 @@
   }
 
   #course-overview {
+    margin: 12px;
     padding: 10px;
+    margin-right: 0;
     border: 1px solid #ccc;
     .title-block {
       text-align: center;
@@ -76,6 +78,18 @@
         }
       }
     }
+
+    .price,
+    .origin-price {
+      color: $root-color;
+      text-align: center;
+      font-size: 24px;
+      text-transform: uppercase;
+      &.discount {
+        text-decoration: line-through;
+      }
+    }
+
     .rating-star {
       mix-blend-mode: multiply;
       margin-right: 10px;
@@ -83,15 +97,19 @@
     }
 
     .button-group {
+      width: 100%;
       margin-top: 10px;
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 1fr;
-      gap: 10px;
+      display: flex;
+      justify-content: space-between;
       @include responsive(xl) {
-        grid-auto-flow: row;
+        flex-direction: column;
+        gap: 10px;
+      }
+      @include responsive(lg) {
+        flex-direction: row;
       }
       .btn {
+        min-width: 48%;
         &:hover {
           filter: brightness(1.5);
         }

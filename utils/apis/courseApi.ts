@@ -42,7 +42,11 @@ export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
 
 export const apiLoadCourseByCode = (code: string): any => POST_API('load-courses-by-code', { code })
 export const apiGetCodeInfo = (code: string): any => POST_API('get-code-info', { code })
-export const activeCode = (body: { code: string, userBuyId: string, activeDate: number, courseId: string }): any => POST_API('active-course-by-code', body)
+export const apiActiveCode = async (body: { code: string, token: string, courseId: string }): Promise<UserCourse | null> => {
+  const { data, status } = await POST_API('active-course-by-code', body);
+  if (status !== response_status_codes.success) return null;
+  return data;
+}
 export const apiGetCoursesActivedByUser = (body: { userId: string }): any => POST_API('get-courses_actived_by_user', body)
 
 export const apiGetUserCourse = async (args: { token: string; courseId: string }): Promise<UserCourse | null> => {

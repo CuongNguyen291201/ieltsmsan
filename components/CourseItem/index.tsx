@@ -6,6 +6,7 @@ import { _Category } from '../../custom-types';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
+import orderUtils from '../../utils/payment/orderUtils';
 import { getCoursePageSlug, ROUTER_PAYMENT } from '../../utils/router';
 import Container1 from '../containers/Container1';
 import PopupShowQuickView from '../popup-quick-view/index';
@@ -39,10 +40,13 @@ const CourseItem = (props: { category?: _Category; course: Course }) => {
               setShowPopup(false)
             }} />
             <button
-              onClick={() => router.push({
-                pathname: ROUTER_PAYMENT,
-                query: { courseIds: course?._id }
-              })}
+              onClick={() => {
+                orderUtils.setReturnUrl(router.asPath);
+                router.push({
+                  pathname: ROUTER_PAYMENT,
+                  query: { courseIds: course?._id }
+                })
+              }}
             >Mua ngay </button>
           </div>
         </div>

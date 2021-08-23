@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { _Category, _Topic } from '../../custom-types';
+import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -31,7 +32,7 @@ export type TopicNodeProps = {
 
 const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean }) => {
   const { category, topic, isMain = false } = props;
-  const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { currentCourse, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
   const [topicOptions, setTopicOptions] = useState<{ childs: _Topic[], isLoadChild: boolean; }>({
@@ -101,6 +102,10 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
     } else {
       if (!currentUser) {
         dispatch(showLoginModalAction(true));
+        return;
+      }
+      if (!isJoinedCourse) {
+        dispatch(setActiveCourseModalVisibleAction(true));
         return;
       }
       updateTopicProgressFC();

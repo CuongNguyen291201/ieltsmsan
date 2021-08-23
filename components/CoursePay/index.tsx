@@ -21,6 +21,7 @@ import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
+import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_CART } from '../../utils/router';
 import Bank from './payment-content/Bank';
 import Momo from './payment-content/Momo';
@@ -104,7 +105,9 @@ const CoursePay = () => {
           showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
           handleCancel();
           setTimeout(() => {
-            router.push("/");
+            const returnUrl = orderUtils.getReturnUrl();
+            orderUtils.clearReturnUrl();
+            router.push(returnUrl || "/");
           }, 1000);
         } else {
           showToastifyWarning("Tạo đơn hàng thất bại")
@@ -241,7 +244,9 @@ const CoursePay = () => {
                         </Col>
                       </div>
                       <div className="payment-button">
-                        <button className="button-on-right-panel" onClick={() => router.push(ROUTER_CART)}>Quay lại </button>
+                        <button className="button-on-right-panel" onClick={() => {
+                          router.back();
+                        }}>Quay lại </button>
                         <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>
                       </div>
                     </div>

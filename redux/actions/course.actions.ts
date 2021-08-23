@@ -1,5 +1,6 @@
 import { BaseAction } from '.';
 import { Course } from '../../sub_modules/share/model/courses';
+import UserCourse from '../../sub_modules/share/model/userCourse';
 import { ActionTypes, Scopes } from '../types';
 
 export interface CourseAction extends BaseAction {
@@ -15,4 +16,12 @@ export const setCourseOrderAction = (courseId: string): CourseAction => ({
 });
 export const removeCourseOrderAction = (courseId: string): CourseAction => ({
   scope: Scopes.COURSE, type: ActionTypes.CRS_REMOVE_ORDER_COURSE, payload: { courseId }
+});
+
+export const setUserCourseAction = (userCourse: UserCourse | null): CourseAction => ({
+  scope: Scopes.COURSE, type: ActionTypes.CRS_SET_USER_COURSE, payload: { userCourse }
+});
+
+export const setActiveCourseModalVisibleAction = (isVisible: boolean): CourseAction => ({
+  scope: Scopes.COURSE, type: ActionTypes.CRS_SET_ACTIVE_MODAL_VISIBLE, payload: { isVisible }
 });

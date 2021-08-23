@@ -4,7 +4,7 @@ import { Modal, Button, Space } from "antd";
 import "./style.scss";
 import { PhoneOutlined } from "@ant-design/icons";
 import { Course } from "../../sub_modules/share/model/courses";
-import { activeCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiGetMyCourses, apiLoadCourseByCode } from "../../utils/apis/courseApi";
+import { apiActiveCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiGetMyCourses, apiLoadCourseByCode } from "../../utils/apis/courseApi";
 import * as Config from "../../utils/contrants"
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
 import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
+import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 function MainMenu() {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -79,7 +80,9 @@ function MainMenu() {
   };
 
   const handleActiveCode = async (course: Course) => {
-    await activeCode({ code: codeRef.current.value, userBuyId: currentUser._id, activeDate: Date.now(), courseId: course._id })
+    const token = getCookie(TOKEN);
+    if (!token) return;
+    await apiActiveCode({ code: codeRef.current.value, token, courseId: course._id })
     await apiGetMyCourses(currentUser?._id)
       .then((courses) => {
         setUserCourse(courses);

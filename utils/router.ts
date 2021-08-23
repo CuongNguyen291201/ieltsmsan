@@ -20,3 +20,7 @@ export const getCoursePageSlug = (args: { category: _Category, course: Course })
 
 export const getTopicPageSlug = (args: { category: _Category, topic: _Topic }) =>
   `${encodeURIComponent(args.category.slug)}/${getBrowserSlug(args.topic.slug, PAGE_TOPIC_DETAIL, args.topic._id)}`;
+
+export const getPaymentPageSlug = (...courseIds: string[]) =>
+  `${ROUTER_PAYMENT}?courseIds=${courseIds.join(',')}`;
+  
