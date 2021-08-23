@@ -1,10 +1,12 @@
 
+import { message } from 'antd';
 import { useRouter } from 'next/router';
 import { MutableRefObject, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
 import PanelContainer from '../containers/PanelContainer';
 import './pre-game.scss';
@@ -16,6 +18,7 @@ const PreGameView = (props: { topic: any }) => {
   // const [cardOption, setCardOption] = useState({ cards: [], loading: true });
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
+  const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -44,12 +47,16 @@ const PreGameView = (props: { topic: any }) => {
   }
 
   function playGame() {
-    if (currentUser) {
-      // if (isPermissionPlayGame(currentUserUpdate, category)) {
-      router.push({
-        pathname: ROUTER_GAME,
-        query: { id: currentTopic._id }
-      })
+    if (currentUser && !userCourseLoading) {
+      if (canPlayTopic({ topic, isJoinedCourse })) {
+        // if (isPermissionPlayGame(currentUserUpdate, category)) {
+        router.push({
+          pathname: ROUTER_GAME,
+          query: { id: currentTopic._id }
+        })
+      } else {
+        message.warning("Chưa tham gia khoá học!");
+      }
       // } else {
       // showToastifyWarning('Bạn hết thời gian học thử, vui lòng mua khoá học để học tiếp')
       // }

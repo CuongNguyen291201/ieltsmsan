@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +33,7 @@ export type TopicNodeProps = {
 
 const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean }) => {
   const { category, topic, isMain = false } = props;
-  const { currentCourse, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { currentCourse, isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
   const [topicOptions, setTopicOptions] = useState<{ childs: _Topic[], isLoadChild: boolean; }>({
@@ -93,6 +94,7 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
   }
 
   const onClickNode = () => {
+    if (userCourseLoading) return;
     if (!currentCourse) return;
     if (isTopicHasChild) {
       return fetchChildTopics();
@@ -105,8 +107,13 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
         return;
       }
       if (!isJoinedCourse) {
-        dispatch(setActiveCourseModalVisibleAction(true));
-        return;
+        if (!currentCourse.cost) {
+          message.warning("Chưa tham gia khoá học");
+          return;
+        } else {
+          dispatch(setActiveCourseModalVisibleAction(true));
+          return;
+        }
       }
       updateTopicProgressFC();
       updateTimeActivityFC();
