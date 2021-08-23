@@ -1,5 +1,6 @@
 import { POST_API, POST_REQ, GET_API } from '../../sub_modules/common/api'
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import { CODE_ACTIVED, CODE_NOT_MATCH } from '../../sub_modules/share/constraint';
 import { Course, ICourse } from '../../sub_modules/share/model/courses'
 import UserCourse from '../../sub_modules/share/model/userCourse';
 
@@ -44,11 +45,21 @@ export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
   return res.data;
 }
 
-export const apiLoadCourseByCode = (code: string): any => POST_API('load-courses-by-code', { code })
+export const apiLoadCourseByCode = async (code: string): Promise<{ courses?: Course[]; activedIds?: string[] }> => {
+  const { data, status } = await POST_API('load-courses-by-code', { code })
+  if (status !== response_status_codes.success) return {};
+  return data;
+}
 export const apiGetCodeInfo = (code: string): any => POST_API('get-code-info', { code })
 export const apiActiveCode = async (body: { code: string, token: string, courseId: string }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('active-course-by-code', body);
   if (status !== response_status_codes.success) return null;
+
+  if (!!data?.data?.error) {
+    const errMsg = data.message;
+    if (errMsg === `${CODE_ACTIVED}`) throw new Error('Khoá học đã được kích hoạt');
+    throw new Error(errMsg);
+  }
   return data;
 }
 export const apiGetCoursesActivedByUser = (body: { userId: string }): any => POST_API('get-courses_actived_by_user', body)

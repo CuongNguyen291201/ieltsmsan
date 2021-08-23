@@ -1,26 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { Modal, Button, Space } from "antd";
-import "./style.scss";
 import { PhoneOutlined } from "@ant-design/icons";
-import { Course } from "../../sub_modules/share/model/courses";
-import { apiActiveCode, apiGetCodeInfo, apiGetCoursesActivedByUser, apiGetMyCourses, apiLoadCourseByCode } from "../../utils/apis/courseApi";
-import * as Config from "../../utils/contrants"
+import { Button, Modal } from "antd";
+import Link from 'next/link';
+import { useRouter } from "next/router";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
-import Link from 'next/link';
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
-import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
-import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
-function MainMenu() {
+import { Course } from "../../sub_modules/share/model/courses";
+import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
+import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
+import "./style.scss";
+function MainMenu(props: { hotLine?: string }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [textError, setTextError] = useState<String>("");
-  const [userCourses, setUserCourse] = useState([])
+  const [activedIds, setActivedIds] = useState<string[]>([])
   const codeRef = useRef(null);
   const dispatch = useDispatch()
 
@@ -33,26 +31,20 @@ function MainMenu() {
   };
 
   const resetData = () => {
-    codeRef.current.value = ''
+    codeRef.current.value = '';
+    setTextError('');
     setCourses([])
   }
-
-  useEffect(() => {
-    if (!!currentUser) {
-      apiGetMyCourses(currentUser?._id)
-        .then((courses) => {
-          setUserCourse(courses);
-        })
-    }
-  }, [currentUser]);
 
   const getCodeInfo = async () => {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
       if (codeInfo.data.userBuyId === currentUser._id || codeInfo.data.userBuyId === null) {
+        // TODO: Chuyển lên giờ server
         if (codeInfo.data.startTime <= Date.now() && (codeInfo.data.endTime >= Date.now() || codeInfo.data.endTime === 0)) {
-          const courses = await apiLoadCourseByCode(codeRef.current.value);
-          setCourses(courses.data);
+          const { courses, activedIds } = await apiLoadCourseByCode(codeRef.current.value);
+          setCourses(courses ?? []);
+          setActivedIds(activedIds ?? []);
           setTextError("")
         }
         else {
@@ -62,6 +54,8 @@ function MainMenu() {
       else {
         setTextError("Code đã được sử dụng")
       }
+    } else {
+      setTextError('Mã kích hoạt sai!')
     }
   }
 
@@ -80,31 +74,27 @@ function MainMenu() {
   };
 
   const handleActiveCode = async (course: Course) => {
-    const token = getCookie(TOKEN);
-    if (!token) return;
-    await apiActiveCode({ code: codeRef.current.value, token, courseId: course._id })
-    await apiGetMyCourses(currentUser?._id)
-      .then((courses) => {
-        setUserCourse(courses);
-      })
+    try {
+      const token = getCookie(TOKEN);
+      if (!token) return;
+      const userCourse = await apiActiveCode({ code: codeRef.current.value, token, courseId: course._id });
+      setActivedIds([...activedIds, userCourse.courseId]);
+    } catch (e) {
+      setTextError(e?.message);
+    }
   }
 
-  const checkExpriseCourse = (_id: string) => {
-    if (userCourses.length > 0) {
-      return userCourses.some(value => value?.course?._id === _id)
-    }
-    else {
-      return false
-    }
-  }
+  // const checkExpriseCourse = (_id: string) => {
+  //   if (userCourses.length > 0) {
+  //     return userCourses.some(value => value?.course?._id === _id)
+  //   }
+  //   else {
+  //     return false
+  //   }
+  // }
 
   const checkCourseIsActive = (_id: string) => {
-    if (userCourses.length > 0) {
-      return userCourses.some(value => value?.course?._id === _id)
-    }
-    else {
-      return false
-    }
+    return activedIds.length && activedIds.includes(_id);
   }
 
   return (
@@ -208,7 +198,7 @@ function MainMenu() {
           <div className="giai-dap-thac-mac">
             <div>Giải đáp thắc mắc Hotline:</div>{" "}
             <div>
-              <PhoneOutlined /> 0947090981
+              <PhoneOutlined /> {props.hotLine ?? ""}
             </div>
           </div>
         </Modal>

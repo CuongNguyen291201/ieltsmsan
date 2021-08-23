@@ -41,8 +41,8 @@ const ActiveCourseModal = (props: {
         setActivating(false);
         setVisible(false);
       })
-      .catch(() => {
-        message.warning("Kích hoạt thất bại!");
+      .catch((e: Error) => {
+        message.warning(e?.message || 'Có lỗi xảy ra!');
         setActivating(false);
       })
   }

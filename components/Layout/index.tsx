@@ -28,8 +28,8 @@ const Layout: FC<{
 		webSocial,
 	} = props;
 	return (
-		
-		
+
+
 		<>
 			<Head>
 				<meta charSet="utf-8" />
@@ -44,7 +44,7 @@ const Layout: FC<{
 				</script>)}
 			</Head>
 			{!hideHeader && <MainHeader webInfo={webInfo} />}
-			{!hideMenu && <MainMenu />}
+			{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} />}
 			{children}
 			{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
 		</>
