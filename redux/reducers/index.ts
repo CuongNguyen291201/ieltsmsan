@@ -9,6 +9,7 @@ import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/r
 import { commentReducer, CommentState } from './comment.reducers';
 import documentModuleReducers from '../../sub_modules/document/src/redux/reducers';
 import { DocumentModuleState } from '../../sub_modules/document/src/redux/state';
+import { cartReducer, CartState } from './cart.reducer';
 
 
 export interface AppState {
@@ -20,7 +21,8 @@ export interface AppState {
   gameReducer: IGameState;
   scenarioReducer: ScenarioState;
   commentReducer: CommentState;
-  documentState: DocumentModuleState
+  documentState: DocumentModuleState;
+  cartReducer: CartState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -32,5 +34,6 @@ export const rootReducer = combineReducers<AppState>({
   gameReducer,
   scenarioReducer,
   commentReducer,
-  documentState: documentModuleReducers
+  documentState: documentModuleReducers,
+  cartReducer
 });

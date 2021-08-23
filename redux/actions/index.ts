@@ -18,3 +18,7 @@ export const failureAction = (scope: Scopes, payload?: any, target?: string): Ba
 export const createOneAction = (scope: Scopes, payload?: any): BaseAction => ({
   type: ActionTypes.CREATE_ONE, scope, payload
 });
+
+export const removeOneAction = (scope: Scopes, payload?: any): BaseAction => ({
+  type: ActionTypes.REMOVE_ONE, scope, payload
+})

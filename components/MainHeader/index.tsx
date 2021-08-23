@@ -18,6 +18,9 @@ import SanitizedDiv from '../SanitizedDiv';
 import './style.scss'
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { apiLogout } from '../../utils/apis/auth';
+import { loadListAction } from '../../redux/actions';
+import { Scopes } from '../../redux/types';
+import orderUtils from '../../utils/payment/orderUtils';
 
 let dataNotification = []
 let dataNotiCount = []
@@ -27,10 +30,10 @@ function MainHeader(props: { webInfo?: WebInfo }) {
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const courseId = useSelector((state: AppState) => state.courseReducer.courseId)
   const removeCourseId = useSelector((state: AppState) => state.courseReducer.removeCourseId)
+  const { items: cartItems, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
   const router = useRouter();
   const [dataNoti, setDataNoti] = useState([]);
   const [dataCount, setDataCount] = useState([]);
-  const [dataCountOrder, setDataCountOrder] = useState(0);
   const { socket, leaveRoom } = useSocketNotification({
     enabled: !!currentUser,
     // roomType: 0,
@@ -81,18 +84,10 @@ function MainHeader(props: { webInfo?: WebInfo }) {
           dataNotiCount = data.data || []
           setDataCount(data?.data || [])
         });
+
+      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
     }
   }, [currentUser]);
-  useEffect(() => {
-
-    setDataCountOrder(localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.length : 0)
-  }, [courseId]);
-
-  useEffect(() => {
-    if (removeCourseId) {
-      setDataCountOrder(localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.length : 0)
-    }
-  }, [removeCourseId]);
 
   useEffect(() => {
     if (socket) {
@@ -220,8 +215,8 @@ function MainHeader(props: { webInfo?: WebInfo }) {
         <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
           <i className="far fa-shopping-cart shopping-cart"></i>
           {/* <img style={{ cursor: "pointer" }} onClick={() => router.push(getBrowserSlug('cart', COURSE_ORDER_PAGE_TYPE, 'course'))} src="/home/header-cart.png" alt="" /> */}
-          {dataCountOrder > 0 &&
-            <span className="cart-number">{dataCountOrder}</span>
+          {!cartLoading && cartItems.length > 0 &&
+            <span className="cart-number">{cartItems.length}</span>
           }
         </div>
         {currentUser?._id && <div className="notification-item item">

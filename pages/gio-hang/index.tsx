@@ -8,7 +8,7 @@ import Layout from '../../components/Layout';
 import MainHeader from '../../components/MainHeader';
 import MainMenu from '../../components/MainMenu';
 import Breadcrumb from '../../components/Breadcrumb';
-import CourseOder from '../../components/CourseOder';
+import CartPageView from '../../components/CartPageView';
 import { ROUTER_CART } from '../../utils/router';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
@@ -16,11 +16,11 @@ import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
 
-const CourseOrderPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial }) => {
+const CartPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial }) => {
     return (
         <Layout {...props}>
             <Breadcrumb items={[{ name: 'Giỏ hàng', slug: ROUTER_CART }]} />
-            <CourseOder />
+            <CartPageView />
         </Layout>
     );
 };
@@ -34,4 +34,4 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     return { props: { webInfo, webSeo, webSocial } }
 });
 
-export default CourseOrderPage;
+export default CartPage;

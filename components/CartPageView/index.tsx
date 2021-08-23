@@ -4,34 +4,33 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import itemAvatar from '../../public/default/item-avatar.png';
-import { removeCourseOrderAction } from '../../redux/actions/course.actions';
+import { removeOneAction } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
+import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
+import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_PAYMENT } from '../../utils/router';
 import './style.scss';
 
-const CourseOder = () => {
+const CartPageView = () => {
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
-  const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
-  const [dataOrder, setDataOrder] = useState([])
+  const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
+  const { items: courseIds, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
+  const [dataOrder, setDataOrder] = useState<Course[]>([])
   const [dataTotal, setDataTotal] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // if (currentUser?._id) {
-    const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',') : []
-    if (courseIds?.length > 0) {
+    if (!cartLoading && courseIds?.length > 0) {
       apiGetCourseByIds(courseIds)
-        .then(data => {
-          setDataOrder(data?.data?.reverse())
-          let priceTotal = 0
-          data?.data?.map(item => {
-            priceTotal += item.cost - item.discountPrice
-          })
+        .then((courses) => {
+          setDataOrder(courses.reverse());
+          const priceTotal = courses.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
           setDataTotal(priceTotal)
           setLoading(false)
         })
@@ -43,15 +42,16 @@ const CourseOder = () => {
     } else {
       setLoading(false)
     }
-    // }
-  }, []);
+  }, [cartLoading]);
 
-  const onRemove = (value) => {
-    const data = dataOrder?.filter(item => item._id !== value)
-    const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
-    dispatch(removeCourseOrderAction(value));
+  const onRemove = (value: string) => {
+    const data = dataOrder?.filter(item => item._id !== value);
+    const priceTotal = data.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
+    orderUtils.removeCourseFromCart(value, () => {
+      dispatch(removeOneAction(Scopes.CART, value));
+    });
+    setDataTotal(priceTotal);
     setDataOrder(data)
-    localStorage.setItem('courseIds', courseIds.join())
   }
 
   return (
@@ -63,8 +63,8 @@ const CourseOder = () => {
               <Row>
                 <Col xs={24} sm={24} md={16} lg={16} xl={16} className="order-item">
                   <div>
-                    {dataOrder.map(item =>
-                      <Row className="transaction-item">
+                    {dataOrder.map((item, i) =>
+                      <Row className="transaction-item" key={i}>
                         <Col xs={24} sm={6} md={6} lg={6} xl={6}>
                           <img className="gwt-Image" src={item.avatar || itemAvatar} />
                         </Col>
@@ -148,4 +148,4 @@ const CourseOder = () => {
   );
 };
 
-export default CourseOder;
+export default CartPageView;

@@ -4,6 +4,7 @@ export enum Scopes {
   TOPIC,
   PREPARE_GAME,
   COMMENT,
+  CART
 }
 
 export const ActionTypes = {
@@ -12,6 +13,7 @@ export const ActionTypes = {
   FAILURE: 'FAILURE',
   LOAD_LIST: 'LOAD_LIST',
   CREATE_ONE: 'CREATE_ONE',
+  REMOVE_ONE: 'REMOVE_ONE',
   // CATEGORY
   CT_LOAD_CATEGORIES: 'CT_LOAD_CATEGORIES',
   CT_SET_CURENTT_CATEGORY: 'CT_SET_CURENTT_CATEGORY',

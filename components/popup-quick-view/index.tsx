@@ -9,7 +9,8 @@ import { useDispatch } from 'react-redux';
 import { _Category } from '../../custom-types';
 import { PAGE_COURSE_DETAIL } from '../../custom-types/PageType';
 import itemAvatar from '../../public/default/item-avatar.png';
-import { setCourseOrderAction } from '../../redux/actions/course.actions';
+import { createOneAction } from '../../redux/actions';
+import { Scopes } from '../../redux/types';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import orderUtils from '../../utils/payment/orderUtils';
@@ -32,8 +33,8 @@ const PopupShowQuickView = (props: {
 
 
   const onChangeOrder = (courseId: string) => {
-    orderUtils.addCourseToOrder(courseId, () => {
-      dispatch(setCourseOrderAction(courseId));
+    orderUtils.addCourseToCart(courseId, () => {
+      dispatch(createOneAction(Scopes.CART, courseId));
     })
     showPopupFunction()
   }

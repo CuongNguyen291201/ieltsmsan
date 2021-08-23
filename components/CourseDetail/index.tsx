@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MapUserCourseStatus } from '../../custom-types/MapContraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import bannerDefault from '../../public/default/banner-default.jpg';
+import { createOneAction } from '../../redux/actions';
 import { setActiveCourseModalVisibleAction, setCourseOrderAction, setUserCourseAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
+import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
@@ -145,8 +147,8 @@ const CourseDetail = (props: { course: Course }) => {
               {!!course.cost
                 && <div className="button-group">
                   <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
-                    orderUtils.addCourseToOrder(course._id, () => {
-                      dispatch(setCourseOrderAction(course._id));
+                    orderUtils.addCourseToCart(course._id, () => {
+                      dispatch(createOneAction(Scopes.CART, course._id));
                     })
                   }}>Thêm vào <i className="fas fa-cart-plus" /></Button>
                   <Button type="primary" size="large" className="btn bgr-green" onClick={() => {

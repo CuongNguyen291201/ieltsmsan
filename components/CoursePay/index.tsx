@@ -4,8 +4,10 @@ import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
+import { removeOneAction } from '../../redux/actions';
 import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
+import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { encodeSHA256Code } from '../../sub_modules/common/utils';
 import { showToastifySuccess, showToastifyWarning } from '../../sub_modules/common/utils/toastify';
@@ -72,8 +74,7 @@ const CoursePay = () => {
   useEffect(() => {
     if (courseIds?.length > 0) {
       apiGetCourseByIds(courseIds)
-        .then(data => {
-          const courses = ((data?.data ?? []) as Course[]).reverse()
+        .then((courses) => {
           setDataOrder(courses)
           const priceTotal = courses.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
           setDataTotal(priceTotal);
@@ -103,6 +104,7 @@ const CoursePay = () => {
       .then(({ status }) => {
         if (status === response_status_codes.success) {
           showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
+          orderUtils.clearCart();
           handleCancel();
           setTimeout(() => {
             const returnUrl = orderUtils.getReturnUrl();
@@ -128,8 +130,11 @@ const CoursePay = () => {
 
   const onRemove = (value: string) => {
     const data = dataOrder?.filter(item => item._id !== value)
+    const priceTotal = data.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
     // const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
-    dispatch(removeCourseOrderAction(value));
+    orderUtils.removeCourseFromCart(value);
+    dispatch(removeOneAction(Scopes.CART, value))
+    setDataTotal(priceTotal);
     setDataOrder(data)
     const dataCourse = data?.map(item => item._id)
     // localStorage.setItem('courseIds', courseIds.join())
