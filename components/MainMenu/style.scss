@@ -1,4 +1,5 @@
 @import "../../styles/variables.scss";
+@import "../../styles/responsive.scss";
 .main-menu {
   background: #f0f0f3;
   .container {
@@ -138,7 +139,8 @@
     transform: rotateY(200deg);
   }
 }
-@media (max-width: 600px) {
+
+@include responsive(xl) {
   .main-menu {
     position: relative;
     .menu {
@@ -184,6 +186,8 @@
       position: absolute;
       right: 16px;
       top: 20px;
+      height: 30px;
+      width: 30px;
       i {
         font-size: 18px;
         font-weight: 500;

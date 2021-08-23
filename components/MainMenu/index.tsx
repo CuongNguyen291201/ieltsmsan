@@ -147,7 +147,9 @@ function MainMenu(props: { hotLine?: string }) {
         <div
           className="menu-icon"
           onClick={() => setisActiveOnMobile(true)}
-        ></div>
+        >
+          <i className="far fa-bars" />
+        </div>
         <div
           className={`${isActiveOnMobile ? "active-on-mobile" : ""
             } overlay-on-mobile`}
