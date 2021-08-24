@@ -16,7 +16,7 @@ interface CourseDetailAction {
 // States
 
 export enum CourseTab {
-  COURSE_TAB_NONE, COURSE_CONTENT, COURSE_TOPIC_TREE
+  COURSE_TAB_NONE, COURSE_CONTENT, COURSE_TOPIC_TREE, COURSE_MEMBER
 }
 
 type CourseDetailState = {

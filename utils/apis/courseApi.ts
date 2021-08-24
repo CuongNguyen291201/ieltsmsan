@@ -2,7 +2,7 @@ import { POST_API, POST_REQ, GET_API } from '../../sub_modules/common/api'
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import { CODE_ACTIVED, CODE_NOT_MATCH } from '../../sub_modules/share/constraint';
 import { Course, ICourse } from '../../sub_modules/share/model/courses'
-import UserCourse from '../../sub_modules/share/model/userCourse';
+import UserCourse, { IUserCourse } from '../../sub_modules/share/model/userCourse';
 
 export const apiSeekCoursesByCategory = (args: {
   categoryId: string;
@@ -72,6 +72,26 @@ export const apiGetUserCourse = async (args: { token: string; courseId: string }
 
 export const apiJoinCourse = async (args: { token: string; courseId: string }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('join-course', args);
+  if (status !== response_status_codes.success) return null;
+  return data;
+}
+
+export const apiGetCourseMembers = async (args: {
+  token: string;
+  courseId: string;
+  skip?: number;
+  limit?: number;
+  field: keyof IUserCourse;
+  asc?: boolean;
+  status?: number[]
+}): Promise<{ dataList?: UserCourse[], total?: number }> => {
+  const { data, status } = await POST_API('get-course-members', args);
+  if (status !== response_status_codes.success) return {};
+  return data;
+}
+
+export const apiChangeCourseMemberStatus = async (args: { token: string; userId: string; courseId: string; status: number }): Promise<UserCourse | null> => {
+  const { data, status } = await POST_API('change-course-member-status', args);
   if (status !== response_status_codes.success) return null;
   return data;
 }
