@@ -1,7 +1,7 @@
 import { CircularProgress } from '@material-ui/core';
 import { Button, Col, Rate, Row, Skeleton } from 'antd';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MapUserCourseStatus } from '../../custom-types/MapContraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
@@ -34,7 +34,7 @@ const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal } = useSelector((state: AppState) => state.courseReducer);
+  const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal, currentCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const [{
     activeTab,
     activeLoading
@@ -44,22 +44,24 @@ const CourseDetail = (props: { course: Course }) => {
 
   useScrollToTop();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
-    if (!!currentUser) {
-      const token = getCookie(TOKEN);
-      apiGetUserCourse({ token, courseId: course._id })
-        .then((uc) => {
-          dispatch(setUserCourseAction(uc));
-          uiLogic(setActiveLoading(false));
-        })
-        .catch((e) => {
-          showToastifyWarning('Có lỗi xảy ra!');
-        });
-    } else {
-      dispatch(setUserCourseAction(null));
+    if (!currentCourseLoading) {
+      if (!!currentUser) {
+        const token = getCookie(TOKEN);
+        apiGetUserCourse({ token, courseId: course._id })
+          .then((uc) => {
+            dispatch(setUserCourseAction(uc));
+            uiLogic(setActiveLoading(false));
+          })
+          .catch((e) => {
+            showToastifyWarning('Có lỗi xảy ra!');
+          });
+      } else {
+        dispatch(setUserCourseAction(null));
+      }
     }
-  }, [currentUser]);
+  }, [currentUser, currentCourseLoading]);
 
   const joinCourse = () => {
     if (!currentUser) {

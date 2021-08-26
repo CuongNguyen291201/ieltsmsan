@@ -84,10 +84,14 @@ function MainHeader(props: { webInfo?: WebInfo }) {
           dataNotiCount = data.data || []
           setDataCount(data?.data || [])
         });
-
-      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (cartLoading) {
+      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
+    }
+  }, [cartLoading])
 
   useEffect(() => {
     if (socket) {
