@@ -56,7 +56,7 @@ export const apiActiveCode = async (body: { code: string, token: string, courseI
   if (status !== response_status_codes.success) return null;
 
   if (!!data?.data?.error) {
-    const errCode = data.error;
+    const errCode = data.data.error;
     const errMsg = MapActiveCourseErrorStatus[errCode] || 'Có lỗi xảy ra!';
     throw new Error(errMsg);
   }
