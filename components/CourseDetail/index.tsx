@@ -44,7 +44,7 @@ const CourseDetail = (props: { course: Course }) => {
 
   useScrollToTop();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
     if (!currentCourseLoading) {
       if (!!currentUser) {
