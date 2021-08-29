@@ -1,7 +1,7 @@
-import { POST_API, POST_REQ, GET_API } from '../../sub_modules/common/api'
+import { MapActiveCourseErrorStatus } from '../../custom-types/MapContraint';
+import { GET_API, POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
-import { CODE_ACTIVED, CODE_NOT_MATCH } from '../../sub_modules/share/constraint';
-import { Course, ICourse } from '../../sub_modules/share/model/courses'
+import { Course, ICourse } from '../../sub_modules/share/model/courses';
 import UserCourse, { IUserCourse } from '../../sub_modules/share/model/userCourse';
 
 export const apiSeekCoursesByCategory = (args: {
@@ -56,8 +56,8 @@ export const apiActiveCode = async (body: { code: string, token: string, courseI
   if (status !== response_status_codes.success) return null;
 
   if (!!data?.data?.error) {
-    const errMsg = data.message;
-    if (errMsg === `${CODE_ACTIVED}`) throw new Error('Khoá học đã được kích hoạt');
+    const errCode = data.error;
+    const errMsg = MapActiveCourseErrorStatus[errCode] || 'Có lỗi xảy ra!';
     throw new Error(errMsg);
   }
   return data;

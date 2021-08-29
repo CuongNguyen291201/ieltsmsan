@@ -78,7 +78,9 @@ function MainMenu(props: { hotLine?: string }) {
       const token = getCookie(TOKEN);
       if (!token) return;
       const userCourse = await apiActiveCode({ code: codeRef.current.value, token, courseId: course._id });
-      setActivedIds([...activedIds, userCourse.courseId]);
+      if (!!userCourse) {
+        setActivedIds([...activedIds, userCourse.courseId]);
+      }
     } catch (e) {
       setTextError(e?.message);
     }

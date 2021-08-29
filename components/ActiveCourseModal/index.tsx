@@ -37,7 +37,8 @@ const ActiveCourseModal = (props: {
     apiActiveCode({ code, courseId, token })
       .then((uc) => {
         dispatch(setUserCourseAction(uc));
-        message.success("Kích hoạt thành công");
+        if (!!uc) message.success("Kích hoạt thành công");
+        else message.info("Kích hoạt không thành công")
         setActivating(false);
         setVisible(false);
       })
