@@ -1,17 +1,18 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Fragment, memo } from 'react';
 import './style.scss';
 
 const _BreadcrumbItem = (props: { name: string; slug?: string; isEnd?: boolean; }) => {
-  const router = useRouter();
   const { name, slug = '/', isEnd = false } = props;
   return (
     <>
-      <span className={`breadcrumb-item${isEnd ? ' active' : ''}`} onClick={() => {
-        if (!isEnd) router.push(slug);
-      }}>
-        {name}
-      </span>
+
+      {!isEnd ? <Link href={slug}><a>
+        <span className="breadcrumb-item">
+          {name}
+        </span>
+      </a>
+      </Link> : <span className="breadcrumb-item active">{name}</span>}
       {!isEnd && <span className="breadcrumb-slash"><i className="fas fa-caret-right" /></span>}
       {/* <i className="fas fa-caret-right breadcrumb-caret" />} */}
     </>

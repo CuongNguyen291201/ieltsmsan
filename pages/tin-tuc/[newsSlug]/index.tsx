@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import { PropsWithoutRef } from 'react';
+import Breadcrumb from '../../../components/Breadcrumb';
 import Layout from '../../../components/Layout';
 import SanitizedDiv from '../../../components/SanitizedDiv';
 import { wrapper } from '../../../redux/store';
@@ -17,11 +18,15 @@ import { ROUTER_NEWS, ROUTER_NOT_FOUND } from '../../../utils/router';
 
 const NewsDetail = (props: PropsWithoutRef<{ webInfo: WebInfo; news: News; webSeo?: WebSeo }>) => {
   const { webInfo, news, webSeo } = props;
-  return <Layout webInfo={webInfo} webSeo={webSeo}>
+  return <Layout {...props}>
+    <Breadcrumb items={[
+      { name: "Tin tức", slug: ROUTER_NEWS },
+      { name: news.title }
+    ]} />
     <div id="news-detail">
       <div className="wraper-detail-news">
         <div className="container">
-          <Grid xs={12} md={10} xl={9} className="grid-item-news">
+          <Grid item xs={12} md={10} xl={9} className="grid-item-news">
             <h1 className="title">
               {news.title}
             </h1>
