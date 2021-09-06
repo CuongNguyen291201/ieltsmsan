@@ -26,7 +26,7 @@ const NewsCategoryView = (props: {
 
   const onPageChange = async (pageNumber: number) => {
     scrollTo({ top: 0, behavior: "smooth" });
-    let pageSlug = router.pathname;
+    let [pageSlug] = router.asPath.split('?');
     if (pageNumber > 1) pageSlug += `?page=${pageNumber}`;
     router.push(pageSlug);
   };
