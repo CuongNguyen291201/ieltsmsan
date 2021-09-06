@@ -11,6 +11,8 @@ export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
 export const ROUTER_ERROR = '/500';
 
+export const NEWS_ID_PREFIX = 'post';
+
 export const getBrowserSlug = (slug: string, type: number, id: string) => `${encodeURIComponent(slug)}-${type}-${id}`;
 
 export const getCategorySlug = (args: { category: _Category }) => getBrowserSlug(args.category.slug, PAGE_CATEGORY_DETAIL, args.category._id);

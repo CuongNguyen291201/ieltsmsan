@@ -3,13 +3,14 @@ import React, { useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import CourseDetail from '../../components/CourseDetail';
 import Layout from '../../components/Layout';
+import NewsView from '../../components/NewsView';
 import ReplyComment from '../../components/ReplyComment';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
 import TopicDetail from '../../components/TopicDetail';
 import { _Category, _Topic } from '../../custom-types';
 import {
   PAGE_CATEGORY_DETAIL,
-  PAGE_COURSE_DETAIL, PAGE_ERROR, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT, PAGE_TOPIC_DETAIL
+  PAGE_COURSE_DETAIL, PAGE_ERROR, PAGE_NEWS_DETAIL, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT, PAGE_TOPIC_DETAIL
 } from '../../custom-types/PageType';
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
@@ -19,15 +20,17 @@ import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { Course } from '../../sub_modules/share/model/courses';
+import News from '../../sub_modules/share/model/news';
 import Topic from '../../sub_modules/share/model/topic';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetCategoriesByParent, apiGetCategoryById, apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
 import { apiGetCourseById } from '../../utils/apis/courseApi';
+import { apiGetNewsById } from '../../utils/apis/newsApi';
 import { apiGetTopicById } from '../../utils/apis/topicApi';
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
-import { getCategorySlug, getCoursePageSlug, getTopicPageSlug, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
+import { getCategorySlug, getCoursePageSlug, getTopicPageSlug, NEWS_ID_PREFIX, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
 
 type SlugTypes = {
   slug: string;
@@ -39,6 +42,7 @@ type SlugTypes = {
   topic?: Topic;
   webInfo?: WebInfo;
   webSocial?: WebSocial;
+  news?: News;
 }
 
 const Slug = (props: SlugTypes) => {
@@ -47,7 +51,8 @@ const Slug = (props: SlugTypes) => {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} />,
     [PAGE_TOPIC_DETAIL]: <TopicDetail topic={props.topic} />,
-    [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />
+    [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
+    [PAGE_NEWS_DETAIL]: <NewsView news={props.news} />
   }
 
   const breadcrumbItems = useMemo(() => {
@@ -78,7 +83,7 @@ const Slug = (props: SlugTypes) => {
       webInfo={props.webInfo}
       webSocial={props.webSocial}
     >
-      {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && <Breadcrumb items={breadcrumbItems} />}
+      {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && type !== PAGE_NEWS_DETAIL && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
     </Layout>
   );
@@ -98,7 +103,21 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       const [id] = items.slice(-1);
       const type = Number(...items.slice(-2, -1));
       const slug = items.slice(0, -2).join('-');
+
       if (!id || !slug) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+
+      if (id.startsWith(NEWS_ID_PREFIX)) {
+        const newsId = id.slice(NEWS_ID_PREFIX.length);
+        const news = await apiGetNewsById(newsId);
+        if (!news) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+        return {
+          props: {
+            type: PAGE_NEWS_DETAIL,
+            news,
+            webInfo, webSocial
+          }
+        }
+      }
 
       if (type === PAGE_CATEGORY_DETAIL) {
         let category: _Category = null;

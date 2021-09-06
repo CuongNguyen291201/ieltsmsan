@@ -85,6 +85,11 @@
             padding-left: 50px;
             .wraper-item-category-news {
                 .item-category-news {
+                    &.active {
+                        color: $root-color;
+                        font-weight: 500;
+                    }
+                    color: $text-color-1;
                     font-size: 18px;
                     padding: 12px 0;
                     position: relative;
@@ -101,6 +106,9 @@
                         &::after {
                             display: none;
                         }
+                    }
+                    &:hover {
+                        color: $root-color;
                     }
                 }
             }
