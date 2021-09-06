@@ -17,6 +17,7 @@ const NewsCategoryView = (props: {
 }) => {
   const { newsList, totalNews, categoryNews, category, newsLimit = 5 } = props;
   const router = useRouter();
+  const page = +(router.query.page || '1');
 
   const brItems: Array<{ name: string; slug?: string }> = useMemo(() => {
     const items: Array<{ name: string; slug?: string }> = [{ name: "Tin tức", slug: ROUTER_NEWS }];
@@ -67,7 +68,7 @@ const NewsCategoryView = (props: {
                 )
               })}
               <div className="wraper-pagination">
-                <Pagination onChange={onPageChange} total={totalNews} pageSize={newsLimit} hideOnSinglePage />
+                <Pagination current={page} onChange={onPageChange} total={totalNews} pageSize={newsLimit} hideOnSinglePage />
               </div>
             </Col>
             <Col xs={24} sm={24} md={24} lg={8} xl={8} className="right-category">
