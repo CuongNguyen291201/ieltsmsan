@@ -5,7 +5,7 @@ import News from '../../sub_modules/share/model/news';
 import { ROUTER_NEWS } from '../../utils/router';
 import Breadcrumb from '../Breadcrumb';
 import SanitizedDiv from '../SanitizedDiv';
-
+import './style.scss';
 const NewsView = (props: { news: News }) => {
   const { news } = props;
   return (<>

@@ -1,0 +1,27 @@
+#news-detail{
+    .wraper-detail-news{
+        .container{
+            .grid-item-news{
+                margin: auto;
+                .title{
+                    text-align: center;
+                    text-transform: uppercase;
+                    padding-top: 30px;
+                }
+                .createDate{
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .content{
+                    text-align: justify;
+                    .image{
+                        text-align: center;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
