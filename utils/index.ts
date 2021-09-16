@@ -17,15 +17,7 @@ export const formatTimeClock = (time: any) => {
 }
 
 export const formatDateDMY = (time: any) => {
-  const todayTime = new Date(time);
-  const mm = todayTime.getMonth() + 1; // getMonth() is zero-based
-  const dd = todayTime.getDate();
-
-  return [
-    `${dd > 9 ? '' : '0'}${dd}`,
-    `${mm > 9 ? '' : '0'}${mm}`,
-    todayTime.getFullYear(),
-  ].join('/');
+  return moment(time).format("DD/MM/YYYY");
 }
 
 export const genUnitScore = (barem: number) => {
@@ -67,4 +59,6 @@ export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
 export const getRelativeTime = (time: number) => moment(time).fromNow();
 
 export const formatFullDateTime = (time: number) => moment(time).format('HH:mm:ss DD/MM/YYYY');
+
+export const formatTimeHMS = (time: number) => moment(time).format('HH:mm:ss');
 

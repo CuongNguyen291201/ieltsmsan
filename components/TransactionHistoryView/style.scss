@@ -1,8 +1,28 @@
+@import "../../styles/variables.scss";
+@import "../../styles/responsive.scss";
+
 #transaction-history {
   margin-top: 8px;
+  span.emp {
+    color: $root-color;
+    font-weight: 700;
+    mix-blend-mode: darken;
+    font-size: 16px;
+  }
+  .main-transaction-view {
+    @include responsive(md) {
+      flex-direction: column-reverse;
+    }
+  }
   .panel {
     background: #fafafa;
     border: 1px solid #ddd;
+  }
+  .orders-pagination {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .order-list {
     .title {
@@ -14,6 +34,78 @@
       margin: 0;
       font-weight: 700;
       max-width: 100%;
+    }
+    .list {
+      .item {
+        padding: 10px;
+        border-bottom: 1px dashed #aaa;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba($color: gray, $alpha: 0.5) !important;
+        }
+        &.active {
+          background-color: rgba($color: gray, $alpha: 0.3);
+        }
+
+        .item-detail {
+          label {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+  .order-detail {
+    label {
+      font-weight: 700;
+    }
+    .price {
+      color: $root-color;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .info {
+      padding: 10px;
+      border-bottom: 1px dashed #aaa;
+    }
+    .combo {
+      padding: 10px;
+      label {
+        text-decoration: underline;
+      }
+      .course-item {
+        color: #000;
+        &:not(:last-child) {
+          border-bottom: 1px dashed #aaa;
+        }
+        padding: 10px 0;
+        cursor: pointer;
+        .name {
+          color: $root-color;
+          font-size: 18px;
+          text-decoration: underline;
+        }
+        .right-md {
+          display: flex;
+          flex-direction: column;
+          @include responsive(md) {
+            align-items: flex-end;
+          }
+          .origin-price {
+            text-decoration: line-through;
+          }
+          span[role=label] {
+            cursor: default;
+            font-weight: 500;
+          }
+          .active-code {
+            color: $root-color;
+            font-size: 16px;
+            font-weight: bold;
+          }
+        }
+      }
     }
   }
 }

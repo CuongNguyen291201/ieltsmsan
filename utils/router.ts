@@ -6,6 +6,7 @@ export const ROUTER_GAME = '/game';
 export const ROUTER_NEWS = '/tin-tuc';
 export const ROUTER_CART = '/gio-hang';
 export const ROUTER_PAYMENT = '/thanh-toan';
+export const ROUTER_MY_COURSES = '/khoa-hoc-cua-toi';
 export const ROUTER_TRANSACTION_HISTORY = '/lich-su-giao-dich';
 export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
@@ -17,7 +18,7 @@ export const getBrowserSlug = (slug: string, type: number, id: string) => `${enc
 
 export const getCategorySlug = (args: { category: _Category }) => getBrowserSlug(args.category.slug, PAGE_CATEGORY_DETAIL, args.category._id);
 
-export const getCoursePageSlug = (args: { category: _Category, course: Course }) =>
+export const getCoursePageSlug = (args: { category?: _Category, course: Course }) =>
   `${args.category?.slug ? `${encodeURIComponent(args.category.slug)}/` : ''}${getBrowserSlug(args.course.slug, PAGE_COURSE_DETAIL, args.course._id)}`;
 
 export const getTopicPageSlug = (args: { category: _Category, topic: _Topic }) =>

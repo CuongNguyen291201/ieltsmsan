@@ -161,7 +161,7 @@ const CourseDetail = (props: { course: Course }) => {
                 {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
                 <div className="price">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
 
-                {!!course.cost
+                {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
                   && <div className="button-group">
                     <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
                       orderUtils.addCourseToCart(course._id, () => {

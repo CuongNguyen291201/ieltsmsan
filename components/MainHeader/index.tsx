@@ -10,7 +10,7 @@ import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } fro
 import { apiListNotificationByTarget, apiUpdateReadStatusNotification, apiListNotificationByReadStatus } from '../../utils/apis/notificationApi';
 import { getCookie, removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie'
 import { formatFullDateTime } from '../../utils';
-import { getBrowserSlug, ROUTER_CART } from '../../utils/router';
+import { getBrowserSlug, ROUTER_CART, ROUTER_MY_COURSES, ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
 import { Menu, Dropdown, Row, Col } from 'antd';
 import { useSocketNotification } from '../../hooks/socket';
 import { PAGE_TOPIC_DETAIL, PAGE_COURSE_DETAIL, PAGE_REPLY_COMMENT } from '../../custom-types/PageType';
@@ -303,11 +303,11 @@ function MainHeader(props: { webInfo?: WebInfo }) {
                     </div>
                   </div>
                   <div className="user-menu">
-                    <div className="menu-item">
+                    <div className="menu-item" onClick={() => router.push(ROUTER_TRANSACTION_HISTORY)}>
                       <i className="fas fa-exchange-alt" />
                       Lịch sử giao dịch
                     </div>
-                    <div className="menu-item" onClick={() => router.push('/khoa-hoc-cua-toi')}>
+                    <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
                       <i className="fas fa-graduation-cap" />
                       Khoá học của tôi
                     </div>
