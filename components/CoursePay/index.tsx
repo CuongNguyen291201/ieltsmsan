@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { removeOneAction } from '../../redux/actions';
-import { removeCourseOrderAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
 import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -19,28 +18,19 @@ import {
 } from '../../sub_modules/share/constraint';
 import { Course } from '../../sub_modules/share/model/courses';
 import Order from '../../sub_modules/share/model/order';
+import WebInfo from '../../sub_modules/share/model/webInfo';
 import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
 import orderUtils from '../../utils/payment/orderUtils';
-import { ROUTER_CART } from '../../utils/router';
+import { ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
 import Bank from './payment-content/Bank';
 import Momo from './payment-content/Momo';
 import './style.scss';
 
-const PaymentInfo: { [paymentType: number]: { title: string; content: JSX.Element } } = {
-  [PAYMENT_BANK]: {
-    title: "Chuyển khoản ngân hàng",
-    content: <Bank />
-  },
-  [PAYMENT_MOMO]: {
-    title: "Thanh toán qua ví Momo",
-    content: <Momo />
-  }
-}
 
-const CoursePay = () => {
+const CoursePay = (props: { webInfo?: WebInfo }) => {
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -50,9 +40,26 @@ const CoursePay = () => {
   const [paymentType, setPaymentType] = useState<number>(NOT_PAYMENT)
   const [serial, setSerial] = useState('')
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [isOrderCreated, setOrderCreated] = useState(false);
   const courseIdsQuery: string = router.query?.courseIds as string
-  const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : []
+  const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : [];
+
+  const PaymentInfo: { [paymentType: number]: { title: string; content: JSX.Element } } = {
+    [PAYMENT_BANK]: {
+      title: "Chuyển khoản ngân hàng",
+      content: <Bank
+        contactInfo={props.webInfo?.contactInfo}
+        email={props.webInfo?.email}
+        phone={props.webInfo?.hotLine}
+        orderSerial={serial}
+      />
+    },
+    [PAYMENT_MOMO]: {
+      title: "Thanh toán qua ví Momo",
+      content: <Momo />
+    }
+  }
 
   const showModal = () => {
     if (!currentUser) {
@@ -104,14 +111,10 @@ const CoursePay = () => {
     apiCreateOrder(order, checkValue)
       .then(({ status }) => {
         if (status === response_status_codes.success) {
-          showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
+          // showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
           orderUtils.clearCart();
-          handleCancel();
-          setTimeout(() => {
-            const returnUrl = orderUtils.getReturnUrl();
-            orderUtils.clearReturnUrl();
-            router.push(returnUrl || "/");
-          }, 1000);
+          // handleCancel();
+          setOrderCreated(true);
         } else {
           showToastifyWarning("Tạo đơn hàng thất bại")
         }
@@ -123,8 +126,27 @@ const CoursePay = () => {
 
   const renderModalConfirm = () => {
     return (
-      <Modal title="Mua khóa học" visible={isModalVisible} onOk={createOrder} onCancel={handleCancel} centered>
-        Xác nhận mua khóa học
+      <Modal title="Mua khóa học" visible={isModalVisible} onOk={() => {
+        if (isOrderCreated) {
+          router.push(ROUTER_TRANSACTION_HISTORY);
+        } else {
+          createOrder();
+        }
+      }}
+        onCancel={handleCancel}
+        centered
+        okText={isOrderCreated ? 'Lịch sử giao dịch' : 'OK'}
+      >
+        <h2 style={{ textAlign: "center" }}>{isOrderCreated ? 'Đơn hàng đã được tạo thành công!' : 'Xác nhận mua khóa học ?'}</h2>
+        {isOrderCreated && paymentType === PAYMENT_BANK &&
+          <Bank
+            contactInfo={props.webInfo?.contactInfo}
+            email={props.webInfo?.email}
+            phone={props.webInfo?.hotLine}
+            orderSerial={serial}
+            hideHeader
+            hideNotifMessage
+          />}
       </Modal>
     )
   }
@@ -253,7 +275,7 @@ const CoursePay = () => {
                         <button className="button-on-right-panel" onClick={() => {
                           router.back();
                         }}>Quay lại </button>
-                        <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>
+                        {!isOrderCreated && <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>}
                       </div>
                     </div>
                   </Col>

@@ -1,0 +1,19 @@
+#transaction-history {
+  margin-top: 8px;
+  .panel {
+    background: #fafafa;
+    border: 1px solid #ddd;
+  }
+  .order-list {
+    .title {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      font-weight: 700;
+      max-width: 100%;
+    }
+  }
+}

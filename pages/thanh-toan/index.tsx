@@ -20,7 +20,7 @@ const CoursePayPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSocial: Web
     return (
         <Layout {...props}>
             <Breadcrumb items={[{ name: 'Thanh toán', slug: ROUTER_PAYMENT }]} />
-            <CoursePay />
+            <CoursePay webInfo={props.webInfo} />
         </Layout>
     );
 };

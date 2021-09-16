@@ -40,7 +40,7 @@ export const apiGetCourseByIds = async (courseIds: string[]): Promise<Course[]> 
   return data;
 }
 
-export const apiGetMyCourses = async (userId: string): Promise<Course[]> => {
+export const apiGetMyCourses = async (userId: string): Promise<UserCourse[]> => {
   const res = await POST_API('get-user-courses', { userId });
   return res.data;
 }

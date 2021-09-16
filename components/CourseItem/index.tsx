@@ -14,8 +14,8 @@ import './style.scss';
 
 
 
-const CourseItem = (props: { category?: _Category; course: Course }) => {
-  const { category, course } = props;
+const CourseItem = (props: { category?: _Category; course: Course; ownCourse?: boolean }) => {
+  const { category, course, ownCourse } = props;
   const router = useRouter();
   const onClickItem = useCallback(() => {
     router.push(getCoursePageSlug({ category, course }));
@@ -35,19 +35,25 @@ const CourseItem = (props: { category?: _Category; course: Course }) => {
             <img src={course.avatar || itemAvatar} alt={course.name} />
           </div>
           <div className="button-hover-course-item">
-            <button onClick={clickShowPopup}>Xem nhanh</button>
-            <PopupShowQuickView showPopup={showPopup} course={course} showPopupFunction={() => {
-              setShowPopup(false)
-            }} />
-            <button
-              onClick={() => {
-                orderUtils.setReturnUrl(router.asPath);
-                router.push({
-                  pathname: ROUTER_PAYMENT,
-                  query: { courseIds: course?._id }
-                })
-              }}
-            >Mua ngay </button>
+            {ownCourse ?
+              <button onClick={onClickItem}>Chi tiết khoá học</button>
+              : (<>
+                <button onClick={clickShowPopup}>Xem nhanh</button>
+                <PopupShowQuickView showPopup={showPopup} course={course} showPopupFunction={() => {
+                  setShowPopup(false)
+                }} />
+                {!!course.cost && <button
+                  className="btn-hightlight"
+                  onClick={() => {
+                    orderUtils.setReturnUrl(router.asPath);
+                    router.push({
+                      pathname: ROUTER_PAYMENT,
+                      query: { courseIds: course?._id }
+                    })
+                  }}
+                >Mua ngay </button>}
+              </>)
+            }
           </div>
         </div>
       </div>
@@ -67,7 +73,7 @@ const CourseItem = (props: { category?: _Category; course: Course }) => {
         </div>
 
         <div className="crs-price">
-          <div className="crs-discount-price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
+          <div className="crs-discount-price">{!course.cost ? 'Free' : `${numberFormat.format(course.cost - course.discountPrice)} VNĐ`}</div>
           {course.discountPrice !== 0 && <div className="crs-origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
         </div>
         <div className="btn-video">
