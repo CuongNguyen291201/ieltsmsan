@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { MapPaymentType } from '../../custom-types/MapContraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { removeOneAction } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
@@ -45,20 +46,14 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
   const courseIdsQuery: string = router.query?.courseIds as string
   const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : [];
 
-  const PaymentInfo: { [paymentType: number]: { title: string; content: JSX.Element } } = {
-    [PAYMENT_BANK]: {
-      title: "Chuyển khoản ngân hàng",
-      content: <Bank
-        contactInfo={props.webInfo?.contactInfo}
-        email={props.webInfo?.email}
-        phone={props.webInfo?.hotLine}
-        orderSerial={serial}
-      />
-    },
-    [PAYMENT_MOMO]: {
-      title: "Thanh toán qua ví Momo",
-      content: <Momo />
-    }
+  const PaymentInfo: { [paymentType: number]: JSX.Element } = {
+    [PAYMENT_BANK]: <Bank
+      contactInfo={props.webInfo?.contactInfo}
+      email={props.webInfo?.email}
+      phone={props.webInfo?.hotLine}
+      orderSerial={serial}
+    />,
+    [PAYMENT_MOMO]: <Momo />
   }
 
   const showModal = () => {
@@ -249,13 +244,13 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                                   <i className="icon-before" />
                                   <i className={`far ${paymentType === type ? 'fa-check-circle' : 'fa-circle'}`} />
                                   &nbsp;
-                                  <span>{PaymentInfo[type].title}</span>
+                                  <span>{MapPaymentType[type]}</span>
                                 </a>
                               </div>
                             ))}
                             {paymentType !== NOT_PAYMENT && <div id={`method-${paymentType}`} className="panel-collapse collapse" data-method={paymentType} aria-expanded="false">
                               <div className="panel-body">
-                                {PaymentInfo[paymentType].content}
+                                {PaymentInfo[paymentType]}
                               </div>
                             </div>}
                           </div>
