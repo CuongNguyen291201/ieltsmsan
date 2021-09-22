@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Col, message, Pagination, Row, Spin } from 'antd';
+import { Col, message, Empty, Pagination, Row, Spin } from 'antd';
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MapPaymentType } from '../../custom-types/MapContraint';
@@ -104,7 +104,7 @@ const TransactionHistoryView = () => {
           </div>
           <Spin spinning={state.isLoading} indicator={<LoadingOutlined />}>
             <div className="orders-pagination">
-              <Pagination current={state.currentPage} onChange={onChangePage} total={state.total} pageSize={LOAD_LIMIT} showSizeChanger={false} />
+              <Pagination current={state.currentPage} onChange={onChangePage} total={state.total} pageSize={LOAD_LIMIT} showSizeChanger={false} hideOnSinglePage />
             </div>
           </Spin>
         </Col>
@@ -112,77 +112,82 @@ const TransactionHistoryView = () => {
         <Col span={24} md={18}>
           <div className="panel order-detail">
             <Spin spinning={state.isLoading} indicator={<LoadingOutlined />}>
-              <div className="info">
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <div>
-                    <div>
-                      <label>Ngày giao dịch: </label>
-                      {formatFullDateTime(state.activeOrder?.createDate)}
+              {state.total <= 0
+                ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có đơn hàng"/>
+                : <>
+                  <div className="info">
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <div>
+                          <label>Ngày giao dịch: </label>
+                          {formatFullDateTime(state.activeOrder?.createDate)}
+                        </div>
+                        <div>
+                          <label>Mã đơn hàng: </label>
+                          <span className="emp">{state.activeOrder?.serial}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <label>Giá trị: </label>
+                          {numberFormat.format(state.activeOrder?.price)} VNĐ
+                        </div>
+                        <div>
+                          <label>Giảm giá: </label>
+                          {numberFormat.format(state.activeOrder?.discount)} VNĐ
+                        </div>
+                        <div>
+                          <label>Tổng cộng: </label>
+                          <span className="price">{numberFormat.format(state.activeOrder?.price - state.activeOrder?.discount)} VNĐ</span>
+                        </div>
+                      </div>
                     </div>
                     <div>
-                      <label>Mã đơn hàng: </label>
-                      <span className="emp">{state.activeOrder?.serial}</span>
+                      <label>Hình thức thanh toán: </label>
+                      {MapPaymentType[state.activeOrder?.paymentType || 0] || ''}
+                      {state.activeOrder?.paymentType === PAYMENT_BANK &&
+                        <Bank
+                          orderSerial={state.activeOrder?.serial}
+                          hideHeader
+                          hideNotifMessage
+                        />
+                      }
                     </div>
                   </div>
-                  <div>
-                    <div>
-                      <label>Giá trị: </label>
-                      {numberFormat.format(state.activeOrder?.price)} VNĐ
-                    </div>
-                    <div>
-                      <label>Giảm giá: </label>
-                      {numberFormat.format(state.activeOrder?.discount)} VNĐ
-                    </div>
-                    <div>
-                      <label>Tổng cộng: </label>
-                      <span className="price">{numberFormat.format(state.activeOrder?.price - state.activeOrder?.discount)} VNĐ</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label>Hình thức thanh toán: </label>
-                  {MapPaymentType[state.activeOrder?.paymentType || 0] || ''}
-                  {state.activeOrder?.paymentType === PAYMENT_BANK &&
-                    <Bank
-                      orderSerial={state.activeOrder?.serial}
-                      hideHeader
-                      hideNotifMessage
-                    />
-                  }
-                </div>
-              </div>
 
-              <div className="combo">
-                {state.activeOrder?.orderCombo.map((combo: OrderCombo, i) => (
-                  <Fragment key={i}>
-                    <label>{combo.comboName || ''}</label>
-                    <div className="course-list">
-                      {combo.courses.map((course) => (
-                        <a key={course._id} href={getCoursePageSlug({ course })}>
-                          <Row className="course-item" gutter={[8, 8]}>
-                            <Col span={24} md={6}>
-                              <img style={{ width: "100%" }} src={course.avatar || itemAvatar} alt={course.name} />
-                            </Col>
-                            <Col span={24} md={12}>
-                              <div className="name">{course.name}</div>
-                            </Col>
-                            <Col span={24} md={6}>
-                              <Row className="right-md">
-                                {!!course.discountPrice && <div className="origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
-                                <div className="price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
-                                <div>
-                                  <span role="label">Mã code: </span>
-                                  <span className="active-code">{state.activeOrder?.codeId?.serial || 'Đang chờ'}</span>
-                                </div>
+                  <div className="combo">
+                    {state.activeOrder?.orderCombo.map((combo: OrderCombo, i) => (
+                      <Fragment key={i}>
+                        <label>{combo.comboName || ''}</label>
+                        <div className="course-list">
+                          {combo.courses.map((course) => (
+                            <a key={course._id} href={getCoursePageSlug({ course })}>
+                              <Row className="course-item" gutter={[8, 8]}>
+                                <Col span={24} md={6}>
+                                  <img style={{ width: "100%" }} src={course.avatar || itemAvatar} alt={course.name} />
+                                </Col>
+                                <Col span={24} md={12}>
+                                  <div className="name">{course.name}</div>
+                                </Col>
+                                <Col span={24} md={6}>
+                                  <Row className="right-md">
+                                    {!!course.discountPrice && <div className="origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
+                                    <div className="price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
+                                    <div>
+                                      <span role="label">Mã code: </span>
+                                      <span className="active-code">{state.activeOrder?.codeId?.serial || 'Đang chờ'}</span>
+                                    </div>
+                                  </Row>
+                                </Col>
                               </Row>
-                            </Col>
-                          </Row>
-                        </a>
-                      ))}
-                    </div>
-                  </Fragment>
-                ))}
-              </div>
+                            </a>
+                          ))}
+                        </div>
+                      </Fragment>
+                    ))}
+                  </div>
+                </>
+              }
             </Spin>
           </div>
         </Col>
