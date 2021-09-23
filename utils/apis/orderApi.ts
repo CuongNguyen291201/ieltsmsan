@@ -7,6 +7,7 @@ export const apiCreateOrder = (order: Order, checkValue: string) => {
 }
 
 export const apiGetUserOrders = async (args: { token: string; offset: number; limit: number }): Promise<{ total: number; data: Order[] }> => {
-    const { data } = await POST_API(`get-user-orders?offset=${args.offset}&limit=${args.limit}`, { token: args.token });
+    const { data, status } = await POST_API(`get-user-orders?offset=${args.offset}&limit=${args.limit}`, { token: args.token });
+    if (status !== response_status_codes.success) return { total: 0, data: [] }
     return data;
 }
