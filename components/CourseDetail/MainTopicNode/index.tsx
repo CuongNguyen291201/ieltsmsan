@@ -1,6 +1,7 @@
 import { Fragment, memo, useMemo } from 'react';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { STATUS_OPEN } from '../../../sub_modules/share/constraint';
 import { formatDateDMY } from '../../../utils';
 import OvalRecButton from '../../buttons/OvalRecButton';
 import TopicIcon from '../TopicIcon';
@@ -29,7 +30,7 @@ const MainTopicNode = (props: TopicNodeProps) => {
     <div className="main-topic-node">
       <div className="topic-header" onClick={onClickNode}>
         <div className="topic-title">
-          <span className="isStatusDone"></span>{!isTopicHasChild && <TopicIcon topicType={topic.type} isMain={true} />}
+          <span className="isStatusDone"></span>{!isTopicHasChild && <TopicIcon topicType={topic.type} isMain={true} isTopicOpen={topic.status === STATUS_OPEN} />}
           {topic.name}
         </div>
 

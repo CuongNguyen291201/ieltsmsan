@@ -8,9 +8,10 @@ import { TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../.
 import MainTopicIcon from './MainTopicIcon';
 import ProgressTopicIcon from './ProgressTopicIcon';
 import iconClock from '../../../public/default/icon-clock.png';
+import './style.scss';
 
-const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boolean }) => {
-  const { topicType, progress = 0, isMain = false } = props;
+const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boolean; isTopicOpen?: boolean }) => {
+  const { topicType, progress = 0, isMain = false, isTopicOpen = false } = props;
   const { topicIcon } = useMemo(() => {
     let icon = '';
     if (topicType === TOPIC_TYPE_LESSON) icon = lessonIcon;
@@ -20,9 +21,12 @@ const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boole
   }, [topicType]);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
 
-  return isMain
-    ? <MainTopicIcon iconSrc={topicIcon} />
-    : <ProgressTopicIcon iconSrc={topicIcon} isShowProgress={topicType !== TOPIC_TYPE_LESSON && !!currentUser} progress={progress} />
+  return (<div className="_x-topic-icon">
+    {isMain
+      ? <MainTopicIcon iconSrc={topicIcon} />
+      : <ProgressTopicIcon iconSrc={topicIcon} isShowProgress={topicType !== TOPIC_TYPE_LESSON && !!currentUser} progress={progress} />}
+    {isTopicOpen && <div className="free-ico">Free</div>}
+  </div>)
 }
-{/*  */ }
+
 export default memo(TopicIcon);

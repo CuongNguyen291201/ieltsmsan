@@ -5,6 +5,8 @@ import './style.scss';
 import TopicIcon from '../TopicIcon';
 import isPrice from '../../../public/default/isprice.png'
 import isDone from '../../../public/default/isDone.png'
+import { STATUS_OPEN } from '../../../sub_modules/share/constraint';
+
 const LeafTopicNode = (props: TopicNodeProps) => {
   const {
     topic,
@@ -18,7 +20,7 @@ const LeafTopicNode = (props: TopicNodeProps) => {
         <img className="isDone" src={isDone} alt="" />
         <div className="leaf-topic-header">
           <div className="topic-title">
-            <TopicIcon topicType={topic.type} isMain={false} progress={topic.topicProgress?.progress ?? 0} />
+            <TopicIcon topicType={topic.type} isMain={false} progress={topic.topicProgress?.progress ?? 0} isTopicOpen={topic.status === STATUS_OPEN} />
             {topic.name}
           </div>
           <div className="topic-info">

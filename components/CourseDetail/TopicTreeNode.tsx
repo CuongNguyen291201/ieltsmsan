@@ -9,7 +9,7 @@ import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
+import { STATUS_OPEN, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO, USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
 import { getTimeZeroHour } from '../../utils';
 import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
@@ -43,11 +43,12 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { isTopicHasChild, isOpen } = useMemo(() => {
+  const { isTopicHasChild, isOpen, isTopicOpen } = useMemo(() => {
     const isTopicHasChild = topic.childType !== TOPIC_TYPE_CHILD_NONE && topic.type === TOPIC_TYPE_LESSON;
     return {
       isTopicHasChild,
       isOpen: !isTopicHasChild && topic.startTime === 0 || (getTimeZeroHour() >= topic.startTime),
+      isTopicOpen: topic.status === STATUS_OPEN
     };
   }, [topic]);
 
@@ -106,13 +107,15 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
         dispatch(showLoginModalAction(true));
         return;
       }
-      if (!isJoinedCourse) {
-        if (!currentCourse.cost) {
-          message.warning("Chưa tham gia khoá học");
-          return;
-        } else {
-          dispatch(setActiveCourseModalVisibleAction(true));
-          return;
+      if (!isJoinedCourse && currentUser.userType !== USER_TYPE_HAS_ROLE) {
+        if (!isTopicOpen) {
+          if (!currentCourse.cost) {
+            message.warning("Chưa tham gia khoá học");
+            return;
+          } else {
+            dispatch(setActiveCourseModalVisibleAction(true));
+            return;
+          }
         }
       }
       updateTopicProgressFC();

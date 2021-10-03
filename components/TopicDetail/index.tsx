@@ -7,7 +7,7 @@ import { setUserCourseAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { STATUS_OPEN, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import Topic from '../../sub_modules/share/model/topic';
 import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
@@ -41,7 +41,7 @@ const TopicDetail = (props: { topic: Topic; }) => {
   }, [currentUser]);
 
   useEffect(() => {
-    if (!userCourseLoading && !canPlayTopic({ topic, isJoinedCourse })) {
+    if (topic.status !== STATUS_OPEN && !userCourseLoading && !canPlayTopic({ topic, isJoinedCourse })) {
       router.push(ROUTER_NOT_FOUND);
     }
   }, [userCourseLoading]);
