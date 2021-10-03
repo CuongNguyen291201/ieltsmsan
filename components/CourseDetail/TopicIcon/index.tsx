@@ -7,6 +7,7 @@ import { AppState } from '../../../redux/reducers';
 import { TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../../sub_modules/share/constraint';
 import MainTopicIcon from './MainTopicIcon';
 import ProgressTopicIcon from './ProgressTopicIcon';
+import iconClock from '../../../public/default/icon-clock.png';
 
 const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boolean }) => {
   const { topicType, progress = 0, isMain = false } = props;
@@ -19,9 +20,9 @@ const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boole
   }, [topicType]);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
 
-  return isMain 
+  return isMain
     ? <MainTopicIcon iconSrc={topicIcon} />
     : <ProgressTopicIcon iconSrc={topicIcon} isShowProgress={topicType !== TOPIC_TYPE_LESSON && !!currentUser} progress={progress} />
-} 
-
+}
+{/*  */ }
 export default memo(TopicIcon);

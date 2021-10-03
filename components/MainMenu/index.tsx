@@ -2,15 +2,24 @@ import { PhoneOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
-import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
-import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
+import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { getCookie, TOKEN, removeCookie } from '../../sub_modules/common/utils/cookie';
 import { Course } from "../../sub_modules/share/model/courses";
 import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
-import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
+import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
+import { apiLogout } from '../../utils/apis/auth';
+import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
+import chooseLanguage from '../../public/default/language.png'
+import { loadListAction } from '../../redux/actions';
+import { Scopes } from '../../redux/types';
+import orderUtils from '../../utils/payment/orderUtils';
 import "./style.scss";
+import { Grid } from "@material-ui/core";
+import LoginModal from "../../sub_modules/common/components/loginModal";
+import RegisterModal from "../../sub_modules/common/components/registerModal";
 function MainMenu(props: { hotLine?: string }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -19,6 +28,10 @@ function MainMenu(props: { hotLine?: string }) {
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [textError, setTextError] = useState<String>("");
   const [activedIds, setActivedIds] = useState<string[]>([])
+  const { items: cartItems, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
+  const [isShowUserMenu, setShowUserMenu] = useState(false);
+  const toggleUserMenuRef = useRef<HTMLDivElement>();
+
   const codeRef = useRef(null);
   const dispatch = useDispatch()
 
@@ -35,12 +48,15 @@ function MainMenu(props: { hotLine?: string }) {
     setTextError('');
     setCourses([])
   }
-
+  useEffect(() => {
+    if (cartLoading) {
+      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
+    }
+  }, [cartLoading]);
   const getCodeInfo = async () => {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
       if (codeInfo.data.userBuyId === currentUser._id || codeInfo.data.userBuyId === null) {
-        // TODO: Chuyển lên giờ server
         if (codeInfo.data.startTime <= Date.now() && (codeInfo.data.endTime >= Date.now() || codeInfo.data.endTime === 0)) {
           const { courses, activedIds } = await apiLoadCourseByCode(codeRef.current.value);
           setCourses(courses ?? []);
@@ -101,14 +117,19 @@ function MainMenu(props: { hotLine?: string }) {
 
   return (
     <div className="main-menu">
-      <div className="container">
-        <div className="search">
-          <div className="icon">
-            <img src="/home/search-icon.png" alt="" />
+      <div className="layout-header">
+        <Grid md={4} className="left-header">
+          <div className="logo" onClick={() => router.push('/')}>
+            <img src="/hvvv/logo.png" alt="" />
           </div>
-          <input type="text" placeholder="Tìm kiếm" />
-        </div>
-        <div className={`${isActiveOnMobile ? "active-on-mobile" : ""} menu`}>
+          <div className="search">
+            <div className="icon">
+              <img src="/home/search-icon.png" alt="" />
+            </div>
+            <input type="text" placeholder="Tìm kiếm" />
+          </div>
+        </Grid>
+        <Grid md={8} className={`${isActiveOnMobile ? "active-on-mobile" : ""} menu`}>
           <div
             className="close-menu-icon"
             onClick={() => {
@@ -117,41 +138,170 @@ function MainMenu(props: { hotLine?: string }) {
           >
             <i className="fas fa-arrow-right"></i>
           </div>
-          <Link href="/">
-            <a><div className="menu-item">
-              Trang chủ
-            </div></a>
-          </Link>
-          <Link href={ROUTER_DOCUMENT}>
-            <a><div className="menu-item document">
-              Tài liệu
-            </div></a>
-          </Link>
-          <Link href="/livegame">
-            <a><div className="menu-item">
-              Live game
-            </div></a>
-          </Link>
-          <Link href={ROUTER_NEWS}>
-            <a><div className="menu-item">
-              Tin tức
-            </div></a>
-          </Link>
-          <Link href="/lien-he" passHref={true}>
-            <a><div className="menu-item">
-              Liên hệ
-            </div></a>
-          </Link>
+
+          <div className="menu-item" onClick={() => router.push("/")}>
+            Khoá Học
+          </div>
+          <div
+            className="menu-item document"
+            onClick={() => router.push(ROUTER_DOCUMENT)}
+          >
+            Tài liệu
+          </div>
+          <div style={{ display: 'none' }} className="menu-item">
+            Liên hệ
+          </div>
+          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+            Sự Kiện
+          </div>
+          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+            Tin tức
+          </div>
+          {/* <div className="menu-item">
+            Liên hệ
+          </div> */}
           <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
+          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+            <i className="far fa-shopping-cart shopping-cart"></i>
+            {!cartLoading && cartItems.length > 0 &&
+              <span className="cart-number">{cartItems.length}</span>
+            }
+          </div>
+          {
+            currentUser ? (
+              <>
+
+                <div className="current-user-wrap item">
+                  <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
+                    {/* <img src="/home/header-user.png" alt="" /> */}
+                    <i className="fas fa-user-circle user-acc"></i>
+                  </div>
+                  {isShowUserMenu && (<div className="user-menu-panel">
+                    <div className="user-profile">
+                      <img src={currentUser.avatar || defaultAvatar} alt="" />
+                      <div className="user-info">
+                        <div className="info-text">{currentUser.name}</div>
+                        <div className="info-text">{currentUser.email}</div>
+                      </div>
+                    </div>
+                    <div className="user-menu">
+                      <div className="menu-item" onClick={() => router.push(ROUTER_TRANSACTION_HISTORY)}>
+                        <i className="fas fa-exchange-alt" />
+                        Lịch sử giao dịch
+                      </div>
+                      <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
+                        <i className="fas fa-graduation-cap" />
+                        Khoá học của tôi
+                      </div>
+                      {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
+                      <i className="fas fa-wrench"></i>
+                      Trả lời bình luận
+                    </div> */}
+                      <div className="menu-item" onClick={() => {
+                        const token = getCookie(TOKEN);
+                        if (!!token) apiLogout({ token }).then(() => {
+                          removeCookie(TOKEN);
+                          router.reload()
+                        });
+                      }}>
+                        <i className="fas fa-sign-out" />
+                        Đăng xuất
+                      </div>
+                    </div>
+                  </div>)}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
+                  <img src="/home/header-user.png" alt="" />
+                  <i className="fas fa-user-circle header-icon"></i>
+                  <div className="text">Log in</div>
+                </div>
+                <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
+                  Sign up
+                </div>
+              </>
+            )
+          }
+          <div>
+            <img style={{ width: '33px' }} src={chooseLanguage} alt="chooseLanguage" />
+          </div>
+        </Grid>
+        <div className="hideDesktop">
+          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+            <i className="far fa-shopping-cart shopping-cart"></i>
+            {!cartLoading && cartItems.length > 0 &&
+              <span className="cart-number">{cartItems.length}</span>
+            }
+          </div>
+          {
+            currentUser ? (
+              <>
+
+                <div className="current-user-wrap item">
+                  <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
+                    {/* <img src="/home/header-user.png" alt="" /> */}
+                    <i className="fas fa-user-circle user-acc"></i>
+                  </div>
+                  {isShowUserMenu && (<div className="user-menu-panel">
+                    <div className="user-profile">
+                      <img src={currentUser.avatar || defaultAvatar} alt="" />
+                      <div className="user-info">
+                        <div className="info-text">{currentUser.name}</div>
+                        <div className="info-text">{currentUser.email}</div>
+                      </div>
+                    </div>
+                    <div className="user-menu">
+                      <div className="menu-item" onClick={() => router.push(ROUTER_TRANSACTION_HISTORY)}>
+                        <i className="fas fa-exchange-alt" />
+                        Lịch sử giao dịch
+                      </div>
+                      <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
+                        <i className="fas fa-graduation-cap" />
+                        Khoá học của tôi
+                      </div>
+                      {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
+                      <i className="fas fa-wrench"></i>
+                      Trả lời bình luận
+                    </div> */}
+                      <div className="menu-item" onClick={() => {
+                        const token = getCookie(TOKEN);
+                        if (!!token) apiLogout({ token }).then(() => {
+                          removeCookie(TOKEN);
+                          router.reload()
+                        });
+                      }}>
+                        <i className="fas fa-sign-out" />
+                        Đăng xuất
+                      </div>
+                    </div>
+                  </div>)}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
+                  <img src="/home/header-user.png" alt="" />
+                  <i className="fas fa-user-circle header-icon"></i>
+                  <div className="text">Log in</div>
+                </div>
+                <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
+                  Sign up
+                </div>
+              </>
+            )
+          }
+          <div
+            className="menu-icon item"
+            onClick={() => setisActiveOnMobile(true)}
+          >
+            <i className="far fa-bars" />
+          </div>
         </div>
-        <div
-          className="menu-icon"
-          onClick={() => setisActiveOnMobile(true)}
-        >
-          <i className="far fa-bars" />
-        </div>
+
         <div
           className={`${isActiveOnMobile ? "active-on-mobile" : ""
             } overlay-on-mobile`}
@@ -206,6 +356,8 @@ function MainMenu(props: { hotLine?: string }) {
             </div>
           </div>
         </Modal>
+        <LoginModal />
+        <RegisterModal />
       </div>
     </div>
   );

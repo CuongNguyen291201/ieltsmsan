@@ -1,22 +1,56 @@
 @import "../../styles/variables.scss";
 @import "../../styles/responsive.scss";
-.main-menu {
-  background: #f0f0f3;
-  .container {
-    height: 56px;
+@mixin item-with-icon {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ffffff;
+  padding: 5px 15px;
+  color: #ffffff;
+  font-weight: 500;
+  width: 80px;
+  justify-content: center;
+  &:hover{
+    background-color: white;
+    color: #00adee;
+  }
+  img {
+    margin-right: 8px;
+  }
+}
+
+.main-menu{
+  background-color: #3D329A;
+  padding: 15px 0;
+  .layout-header{
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+  .left-header{
+    display: flex;
     align-items: center;
   }
-  .search {
-    background: #f5f5f5;
-    box-shadow: inset -10px -10px 30px rgb(255 255 255 / 70%),
-      inset 10px 10px 30px rgb(174 174 192 / 40%);
-    border-radius: 100px;
-    height: 30px;
+  .logo{
+    cursor: pointer;
+    img{
+      height: 55px;
+    }
+  }
+  .search{
+    // background: #F5F5F5;
+    // box-shadow: inset -10px -10px 30px rgb(255 255 255 / 70%), inset 10px 10px 30px rgb(174 174 192 / 40%);
+    background: #302788;
+    border: 1px solid #4C41B1;
+    box-sizing: border-box;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 50px;
+    height: 40px;
     display: flex;
     padding: 4px 12px;
     align-items: center;
+    width: calc( 80% - 55px );
+    margin-left: 20px;
     .icon {
       margin-right: 8px;
       display: flex;
@@ -27,6 +61,9 @@
       outline: none;
       font-size: 14px;
       background: transparent;
+      width: 100%;
+      padding: 5px;
+      color: white;
     }
   }
   .menu {
@@ -34,18 +71,18 @@
     justify-content: space-between;
     width: 75%;
     align-items: center;
-    .menu-item {
-      color: $root-color;
-      font-weight: 500;
+    .menu-item{
+      color: #ffffff;
+      // font-weight: 500;
       text-align: center;
       position: relative;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 14px;
       &:hover {
         &::after {
           content: "";
           position: absolute;
-          background-color: $root-color;
+          background-color: #ffffff;
           bottom: -7px;
           left: 50%;
           transform: translateX(-50%);
@@ -62,24 +99,45 @@
         }
       }
     }
-    .active-course {
-      background: #f5f5f5;
-      box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.7),
-        5px 5px 10px rgba(174, 174, 192, 0.4);
-      border-radius: 16px;
-      color: $root-color;
-      font-weight: bold;
-      text-transform: uppercase;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 20px;
-      cursor: pointer;
-      &:hover {
-        background: #fdfdfd;
+    .active-course{
+    // background: #F5F5F5;
+    // box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.7), 5px 5px 10px rgba(174, 174, 192, 0.4);
+    border:1px solid #5E52D0;
+    // border-radius: 16px;
+    color: #ABA1FF;
+    font-weight: bold;
+    text-transform: uppercase;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 20px;
+    cursor: pointer;
+    &:hover{
+      background: #fdfdfd;
+    }
+    }
+    .cart {
+      .far{
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
+        margin-top: 5px;
       }
     }
+    .login,
+  .logout,
+  .signup {
+    cursor: pointer;
+  }
+  .login  , .signup{
+    @include item-with-icon;
+  }
+  .login{
+    img , i {
+      display: none;
+    }
+  }
     .close-menu-icon {
       display: none;
     }
@@ -95,6 +153,7 @@
       color: $root-color;
     }
   }
+}
 }
 .wrapper-active-course {
   text-align: center;
@@ -235,7 +294,31 @@
     }
   }
 }
-
+@media (max-width:768px) {
+  .main-menu{
+    .layout-header{
+      .left-header{
+        .logo{
+          display: block;
+        }
+        
+      }
+      .hideDesktop{
+        .menu-icon{
+          display: block;
+        }
+      }
+      .menu{
+        display: unset;
+        width: 70%;
+        .menu-item{
+          color: black;
+          text-align: left;
+        }
+      }
+    }
+  }
+}
 .des-course {
   display: -webkit-box;
   -webkit-line-clamp: 2;

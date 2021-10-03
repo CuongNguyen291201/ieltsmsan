@@ -76,7 +76,7 @@ const Layout: FC<{
 				</script>)}
 			</Head>
 			<div id="header">
-				{!hideHeader && <MainHeader webInfo={webInfo} />}
+				{/* {!hideHeader && <MainHeader webInfo={webInfo} />} */}
 				{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} />}
 			</div>
 			{children}

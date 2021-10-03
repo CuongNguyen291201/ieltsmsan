@@ -13,13 +13,16 @@ import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { STATUS_OPEN } from '../../sub_modules/share/constraint';
+import { USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
+import CourseContent from '../../sub_modules/share/model/courseContent';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import { apiGetUserCourse, apiJoinCourse } from '../../utils/apis/courseApi';
 import orderUtils from '../../utils/payment/orderUtils';
 import { getPaymentPageSlug } from '../../utils/router';
 import ActiveCourseModal from '../ActiveCourseModal';
+import Breadcrumb from '../Breadcrumb';
+import MainMenu from '../MainMenu';
 import CourseContentView from './CourseContentView';
 import {
   courseDetailInitState,
@@ -28,6 +31,12 @@ import {
 } from './courseDetail.logic';
 import CourseTopicTreeView from './CourseTopicTreeView';
 import MemberListView from './MemberListView';
+import iconCircle from '../../public/default/icon-circle.png';
+import iconNewCourse from '../../public/default/new_.png';
+import iconPrice from '../../public/default/icon-price_.png';
+import iconTotalStudent from '../../public/default/total-student.png';
+import iconNumberStudy from '../../public/default/icon-number-study.png';
+import iconClock from '../../public/default/icon-clock_.png';
 import './style.scss';
 
 const CourseDetail = (props: { course: Course }) => {
@@ -45,7 +54,7 @@ const CourseDetail = (props: { course: Course }) => {
   useScrollToTop();
 
   useEffect(() => {
-    uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
+    // uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
     if (!currentCourseLoading) {
       if (!!currentUser) {
         const token = getCookie(TOKEN);
@@ -88,114 +97,120 @@ const CourseDetail = (props: { course: Course }) => {
 
   return (
     <>
-      <div className="course-info" style={{
-        background: `linear-gradient(90deg, #f9f9f9 40%, rgba(255, 255, 255, 0) 60%), url(${course.avatar || bannerDefault})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
-      }}>
-        <div className="container">
-          <div className="title"><h1>{course.name}</h1></div>
-        </div>
-      </div>
-      <div className="container">
-        <Row id="main-course-detail">
-          <Col span={24} lg={18} className="course-detail">
-            <Skeleton loading={userCourseLoading}>
-              <div className="tab-header">
-                <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_CONTENT ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_CONTENT))}
-                >
-                  MÔ TẢ KHOÁ HỌC
+      <div className="wraper-container">
+        <div className="header-course">
+          <MainMenu />
+          <div className="background-header-course">
+            <Breadcrumb items={[{ name: course.name }]} />
+            <div className="container">
+              <div className="title"><h1>{course.name}</h1></div>
+              <div className="description">{course.shortDesc}</div>
+              <div className="overview-item">
+                <div className="item-main">
+                  <span className="ratting">
+                    <Rate className="rating-star" value={4.6} allowHalf disabled defaultValue={course.courseSystem?.vote ?? 4.6} />
+                  </span>
+                  <span className="total-user-rate">(38,820 ratings)<span>{course.courseSystem?.memberNum ?? 1000}k Students</span></span>
                 </div>
-                <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_TOPIC_TREE ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_TOPIC_TREE))}
-                >
-                  DANH SÁCH BÀI HỌC
-                </div>
-                {userCourse?.isTeacher && <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_MEMBER ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_MEMBER))}
-                >
-                  DANH SÁCH HỌC VIÊN
-                </div>}
               </div>
-              {
-                activeTab !== CourseTab.COURSE_TAB_NONE
-                  ? (activeTab === CourseTab.COURSE_CONTENT
-                    ? <CourseContentView course={course} />
-                    : (activeTab === CourseTab.COURSE_TOPIC_TREE
-                      ? <CourseTopicTreeView course={course} />
-                      : <MemberListView course={course} />
-                    ))
-                  : <div style={{ textAlign: "center" }}><CircularProgress /></div>
-              }
-            </Skeleton>
-          </Col>
-          <Col span={24} lg={6}>
-            <div id="course-overview">
-              <Skeleton loading={userCourseLoading}>
-                <div className="title-block"><h2>Thông tin khoá học</h2></div>
-                <div className="short-desc">
-                  {course.shortDesc}
-                </div>
-                <div className="overview-item">
-                  <div className="item-main">
-                    <span>
-                      <Rate className="rating-star" allowHalf disabled defaultValue={course.courseSystem?.vote ?? 4.6} />
-                    </span>
-                    <span>({course.courseSystem?.memberNum ?? 500})</span>
-                  </div>
-                </div>
-
-                <div className="overview-item">
-                  <i className="far fa-clock" />
-                  <div className="item-main">
-                    <span role="label">Thời gian học:</span>
-                    <span>{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
-                  </div>
-                </div>
-
-                {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
-                <div className="price">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
-
-                {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
-                  && <div className="button-group">
-                    <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
-                      orderUtils.addCourseToCart(course._id, () => {
-                        dispatch(createOneAction(Scopes.CART, course._id));
-                      })
-                    }}>Thêm vào <i className="fas fa-cart-plus" /></Button>
-                    <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
-                      orderUtils.setReturnUrl(router.asPath);
-                      router.push(getPaymentPageSlug(course._id));
-                    }}>Mua ngay</Button>
-                  </div>}
-
-                <div className="button-group">
-                  <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
-                    {activeLoading || userCourseLoading
-                      ? <CircularProgress style={{ color: "white" }} size={25} />
-                      : course.cost
-                        ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
-                        : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
-                    }
-                  </Button>
-                </div>
-              </Skeleton>
             </div>
-          </Col>
-        </Row>
+            <div className="tag-course">
+              Video
+            </div>
+          </div>
+        </div>
+        <div style={{ backgroundColor: 'white' }}>
+          <div className="container">
+            <Row id="main-course-detail">
+              <Col span={24} lg={16} className="course-detail">
+                <Skeleton loading={userCourseLoading}>
+                  <div className="course-content">
+                    <h2>Nội dung khóa học</h2>
+                    <div dangerouslySetInnerHTML={{
+                      __html: (course.courseContent as CourseContent)?.desc
+                    }}>
+                    </div>
+                  </div>
+                  <div className="list-topic-tree-item">
+                    <h2>Danh Sách Bài Học</h2>
+                    <div className="course-topic-tree">
+                      <CourseTopicTreeView course={course} />
+                    </div>
+                  </div>
+                </Skeleton>
+              </Col>
+              <Col span={24} lg={8}>
+                <div id="course-overview">
+                  <Skeleton loading={userCourseLoading}>
+                    <div className="information-course">
+                      <div>
+                        <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                      </div>
+                      <div className="discount-price">
+                        GIẢM GIÁ <b>40%</b>
+                      </div>
+                      <div className="time-end-price">
+                        <img style={{ marginRight: '20px' }} src={iconCircle} alt="iconCircle" />  Còn 10h ở mức giá này
+                        <img className="_iconNew" src={iconNewCourse} alt="iconNewCourse" />
+                      </div>
+                      <div className="inf-course_">
+                        <div className="price-and-discount-price item__">
+                          <img src={iconPrice} alt="iconPrice" /> {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
+                          <div className="price-real text">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
+                        </div>
+                        <div className="total-student item__">
+                          <img src={iconTotalStudent} /> <div className="text">Tổng học viên</div> <span className="number__">9999</span>
+                        </div>
+                        <div className="number-study item__">
+                          <img src={iconNumberStudy} alt="iconNumberStudy" /> <div className="text">Số bài học</div> <span className="number__">123</span>
+                        </div>
+                        <div className="time-study item__">
+                          <img src={iconClock} alt="iconClock" /><div className="text">Thời gian học</div><span className="number__">{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
+                      && <div className="button-group">
+                        <div>
+                          <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
+                            orderUtils.setReturnUrl(router.asPath);
+                            router.push(getPaymentPageSlug(course._id));
+                          }}>Mua ngay</Button>
+                        </div>
+                        <div>
+                          <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
+                            orderUtils.addCourseToCart(course._id, () => {
+                              dispatch(createOneAction(Scopes.CART, course._id));
+                            })
+                          }}>Thêm vào giỏ</Button>
+                        </div>
+
+                      </div>}
+
+                    {/* <div className="button-group">
+                      <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
+                        {activeLoading || userCourseLoading
+                          ? <CircularProgress style={{ color: "white" }} size={25} />
+                          : course.cost
+                            ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
+                            : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
+                        }
+                      </Button>
+                    </div> */}
+                  </Skeleton>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <ActiveCourseModal
+          courseId={course._id}
+          isVisible={isVisibleActiveCourseModal}
+          setVisible={() => {
+            dispatch(setActiveCourseModalVisibleAction(false))
+          }}
+        />
       </div>
-      <ActiveCourseModal
-        courseId={course._id}
-        isVisible={isVisibleActiveCourseModal}
-        setVisible={() => {
-          dispatch(setActiveCourseModalVisibleAction(false))
-        }}
-      />
     </>
   )
 }
