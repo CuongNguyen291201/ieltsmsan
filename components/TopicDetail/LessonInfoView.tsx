@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Col, Row } from 'antd';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { AppState } from '../../redux/reducers';
 import Document from '../../sub_modules/share/model/document';
@@ -12,9 +13,12 @@ import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTo
 import { apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
+import StreamComponent from '../Stream';
 import './lesson-info.scss';
 import LessonVideoView from './LessonVideoView';
 import scenario from './scenario.json';
+import CommentPanel from '../CommentPanel';
+import { CommentScopes } from '../../custom-types';
 
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
@@ -51,6 +55,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
     const dataArrTemp = await getOneVideoScenarioAPI({ topicId: topic?._id })
     setDataScenario(dataArrTemp?.scenarioInfos?.[0] ?? [])
   }
+  console.log('dataScenario: ', dataScenario);
 
   return (
     <div className="lesson-detail">
@@ -61,8 +66,25 @@ const LessonInfoView = (props: { topic: Topic }) => {
 
       <PanelContainer title="Nội dung">
         {topic._id === dataScenario?.topicId &&
-          <div className="scenario-video">
-            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+          <div className="video-commponent">
+            {dataScenario?.endTime ? (
+              <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
+                <Col xl={16} md={12} xs={24}>
+                  <div className="streaming">
+                    <StreamComponent dataScenario={new ScenarioInfo(dataScenario)} />
+                  </div>
+                </Col>
+                <Col xl={8} md={12} xs={24}>
+                  <div className="comment">
+                    <CommentPanel commentScope={CommentScopes.TOPIC} />
+                  </div>
+                </Col>
+              </Row>
+            ) : (
+              <div className="scenario-video">
+                <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+              </div>
+            )}
           </div>
         }
       </PanelContainer>

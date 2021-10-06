@@ -1,8 +1,13 @@
 .lesson-detail {
-  .scenario-video {
-    padding: 40px;
-    width: 100%;
-    margin: auto;
+  .video-commponent {
+    padding: 16px;
+    .streaming {
+    }
+    .scenario-video {
+      padding: 40px;
+      width: 100%;
+      margin: auto;
+    }
   }
 }
 

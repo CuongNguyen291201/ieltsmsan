@@ -1,0 +1,160 @@
+.stream-component {
+  figure {
+    background-color: #363533;
+    width: 100%;
+    // height: 250px;
+    margin: 0;
+    // padding-bottom: 56.25%; /* 16:9 */
+    font-size: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding-top: 0;
+    // padding-bottom: 56.25%; /* 16:9 */
+    .react-player-scenario {
+      position: relative;
+      width: 100% !important;
+      height: 100% !important;
+      video {
+        height: auto !important;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+      }
+    }
+    &:hover {
+      .bottom-player-component {
+        transform: translateY(-16px);
+        // transition-delay: 0s !important;
+      }
+    }
+    .bottom-player-component {
+      transition: all 0.2s !important;
+      // transition-delay: 1s !important;
+    }
+  }
+  .top-player-component {
+    padding: 2px 0 3px;
+    display: flex;
+    position: absolute;
+    top: 0px;
+    .live-stream {
+      margin: -10px 0px 0px -10px;
+      position: relative;
+      .stream-image {
+        width: 80px;
+      }
+      .stream-text {
+        font-size: 9px;
+        color: #fff;
+        position: absolute;
+        left: 37px;
+        top: 19.5px;
+      }
+    }
+    .view-stream {
+      position: relative;
+      margin-top: 5px;
+      margin-left: 2px;
+      .stream-image {
+        width: 38px;
+      }
+      .stream-text {
+        font-size: 9px;
+        color: #fff;
+        position: absolute;
+        top: 4.5px;
+        left: 17px;
+      }
+    }
+  }
+  .bottom-player-component {
+    padding: 2px 0 3px;
+    display: flex;
+    position: absolute;
+    bottom: -16px;
+    width: 100%;
+    transform: translateY(100%);
+    transition: all 0.2s;
+    color: black;
+    justify-content: space-between;
+    align-content: center;
+    background: rgba(0, 0, 0, 0.3);
+
+    button {
+      background: none;
+      border: 0;
+      color: white;
+      outline: none;
+    }
+    .stream-progress {
+      width: 90%;
+    }
+    .volume {
+      margin-top: 5px;
+    }
+    img {
+      width: 24px;
+    }
+    .expand {
+      margin-top: 2px;
+      img {
+        width: 28px;
+      }
+    }
+    .fullscreen {
+      padding: 1px 6px 1px 6px;
+      cursor: pointer;
+    }
+    .volume {
+      position: relative;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border-bottom-right-radius: 20px;
+      border-bottom-left-radius: 20px;
+      // &:hover {
+      // .volume-scrub {
+      //   display: block;
+      //   background-color: rgba(85, 85, 85, 0.5);
+      // }
+      // }
+      .volume-button {
+        cursor: pointer;
+      }
+    }
+    .volume-scrub {
+      display: block;
+      z-index: 1;
+      margin-top: 15px;
+      .volume-slider {
+        cursor: pointer;
+      }
+      input {
+        height: 7px;
+        width: 80px;
+        padding: 0 2px;
+      }
+    }
+  }
+  figure {
+    &:fullscreen,
+    &:-webkit-full-screen {
+      max-width: 100%;
+      width: 100%;
+      height: 100vh;
+    }
+  }
+  .no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome, Edge, Opera and Firefox */
+  }
+}
