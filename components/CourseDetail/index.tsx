@@ -41,8 +41,9 @@ import bgPostion from '../../public/default/positionBg.png';
 import './style.scss';
 import { ContentCourse } from './content-course';
 import { InformationCourse } from './information-course';
+import WebInfo from '../../sub_modules/share/model/webInfo';
 
-const CourseDetail = (props: { course: Course }) => {
+const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
   const { course } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
@@ -102,7 +103,7 @@ const CourseDetail = (props: { course: Course }) => {
     <>
       <div className="wraper-container">
         <div className="header-course">
-          <MainMenu />
+          <MainMenu hotLine={props.webInfo?.hotLine} webLogo={props.webInfo?.webLogo} />
           <div className="background-header-course">
             <div className="positionBackground">
               <img src={bgPostion} alt="bgPostion" />

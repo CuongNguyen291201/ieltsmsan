@@ -22,7 +22,7 @@
   }
 }
 .background-header-course{
-  background-color: $root-color-hvvv;
+  background-color: $root-background-color;
   min-height: 500px;
   position: relative;
   .positionBackground{
@@ -53,12 +53,12 @@
   }
   .title{
     h1{
-      color: white;
+      color: $root-title-color;
       margin-bottom: 0.1em;
     }
   }
   .description{
-    color: white;
+    color: $root-title-color;
     width: calc(70% - 50px);
   }
   .overview-item{
@@ -76,7 +76,7 @@
         font-size: 18px;
         span{
           margin-left: 7px;
-          color: white;
+          color: $root-title-color;
         }
       }
     }
@@ -424,8 +424,8 @@
         }
       }
       .bgr-green {
-        background-color: #A168FF;
-        border-color: #A168FF;
+        background-color: green;
+        border-color: green;
         padding: 5px;
       }
       .bgr-root {

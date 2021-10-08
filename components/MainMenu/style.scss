@@ -3,9 +3,9 @@
 @mixin item-with-icon {
   display: flex;
   align-items: center;
-  border: 1px solid #ffffff;
+  border: 1px solid $root-title-color;
   padding: 5px 15px;
-  color: #ffffff;
+  color: $root-title-color;
   font-weight: 500;
   width: 80px;
   justify-content: center;
@@ -19,7 +19,7 @@
 }
 
 .main-menu{
-  background-color: #3D329A;
+  background-color: $root-background-color;
   padding: 15px 0;
   .layout-header{
     display: flex;
@@ -38,7 +38,7 @@
     }
   }
   .search{
-    background: #302788;
+    background: $root-background-color;
     border: 1px solid #4C41B1;
     box-sizing: border-box;
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -62,7 +62,7 @@
       background: transparent;
       width: 100%;
       padding: 5px;
-      color: white;
+      color: $root-title-color;
       &::-webkit-input-placeholder { /* Edge */
         color: #9B92F1;
       }
@@ -82,7 +82,7 @@
     max-width: 55%;
     align-items: center;
     .menu-item{
-      color: #ffffff;
+      color: $root-title-color;
       text-align: center;
       position: relative;
       cursor: pointer;
@@ -91,7 +91,7 @@
         &::after {
           content: "";
           position: absolute;
-          background-color: #ffffff;
+          background-color: $root-title-color;
           bottom: -7px;
           left: 50%;
           transform: translateX(-50%);
@@ -126,7 +126,7 @@
     .cart {
       .far{
         font-size: 20px;
-        color: white;
+        color: $root-title-color;
         cursor: pointer;
         margin-top: 5px;
       }

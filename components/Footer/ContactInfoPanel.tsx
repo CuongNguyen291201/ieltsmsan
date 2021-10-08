@@ -6,13 +6,15 @@ import IconEmail from '../../public/home/icon-email.png';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import FacebookIcon from '@material-ui/icons/Facebook';
-const ContactInfoPanel = (props: { webInfo?: WebInfo , webSocial?:WebSocial }) => {
-  const { webInfo ,webSocial} = props;
-  
+const ContactInfoPanel = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
+  const { webInfo, webSocial } = props;
+
   return (
     <div className="contact-info-panel">
       <div className="contact-info">
-        <img className="logo" src={webInfo?.webLogo || FooterLogo} alt="logo" />
+        <div className="logo-wrap">
+          <img className="logo" src={webInfo?.webLogo || FooterLogo} alt="logo" />
+        </div>
 
         <div className="contact-item">
           <img className="title-mark" src={IconLocation} alt="location" />
@@ -48,8 +50,8 @@ const ContactInfoPanel = (props: { webInfo?: WebInfo , webSocial?:WebSocial }) =
               <b>Hotline</b>: {webInfo?.hotLine}
             </p>
             <p>
-              Kết nối với chúng tôi : <a target="_blank" href={webSocial?.fanPage}><i  className="fab fa-facebook"></i></a> <span style={{marginLeft:'7px'}}> <a target="_blank" href={webSocial?.talkToChat}><i className="fab fa-youtube"></i></a></span>
-              </p>
+              Kết nối với chúng tôi : <a target="_blank" href={webSocial?.fanPage}><i className="fab fa-facebook"></i></a> <span style={{ marginLeft: '7px' }}> <a target="_blank" href={webSocial?.talkToChat}><i className="fab fa-youtube"></i></a></span>
+            </p>
           </div>
         </div>
       </div>

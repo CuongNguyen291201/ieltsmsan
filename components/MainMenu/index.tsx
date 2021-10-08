@@ -22,7 +22,7 @@ import LoginModal from "../../sub_modules/common/components/loginModal";
 import RegisterModal from "../../sub_modules/common/components/registerModal";
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
-function MainMenu(props: { hotLine?: string }) {
+function MainMenu(props: { hotLine?: string, webLogo?: string }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [showModalAct, setShowModalAct] = useState(false);
@@ -118,9 +118,9 @@ function MainMenu(props: { hotLine?: string }) {
   return (
     <div className="main-menu">
       <div className="layout-header">
-        <Grid md={4} className="left-header">
+        <Grid item md={4} className="left-header">
           <div className="logo" onClick={() => router.push('/')}>
-            <img src="/hvvv/logo.png" alt="" />
+            <img src={props.webLogo} alt="logo" />
           </div>
           <div className="search">
             <div className="icon">
@@ -129,7 +129,7 @@ function MainMenu(props: { hotLine?: string }) {
             <input type="text" placeholder="Tìm kiếm khoá học..." />
           </div>
         </Grid>
-        <Grid md={8} className="menu">
+        <Grid item md={8} className="menu">
           <div className="menu-item" onClick={() => router.push("/")}>
             Khoá Học
           </div>
@@ -160,7 +160,7 @@ function MainMenu(props: { hotLine?: string }) {
           </div>
           <MenuDesktop />
           <div>
-            <img style={{ width: '33px' }} src={chooseLanguage} alt="chooseLanguage" />
+            <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
           </div>
         </Grid>
         <div className="hideDesktop">
