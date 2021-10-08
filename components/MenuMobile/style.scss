@@ -1,4 +1,5 @@
 @import '../../styles/variables.scss';
+@import '../../styles/responsive.scss';
 .hideDesktop{
     display: none;
 }
@@ -44,7 +45,7 @@
                     border-radius: 50%;
                     margin-right: 12px;
                     padding: 5px;
-                    background-color: #3D329A;
+                    background-color: $root-background-color;
                 }
                 .icon-close{
                     width: 25px;
@@ -75,7 +76,8 @@
         }
     }
 }
-@media (max-width:900px) {
+
+@include responsive(lg) {
     .hideDesktop{
         display: flex;
         .cart{

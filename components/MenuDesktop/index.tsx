@@ -48,8 +48,7 @@ export const MenuDesktop = () => {
                 Trả lời bình luận
               </div> */}
                                     <div className="menu-item" onClick={() => {
-                                        const token = getCookie(TOKEN);
-                                        if (!!token) apiLogout({ token }).then(() => {
+                                        apiLogout().then(() => {
                                             removeCookie(TOKEN);
                                             router.reload()
                                         });

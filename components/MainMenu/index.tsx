@@ -222,8 +222,8 @@ function MainMenu(props: { hotLine?: string, webLogo?: string }) {
             </div>
           </div>
         </Modal>
-        <LoginModal />
-        <RegisterModal />
+        <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+        <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
       </div>
     </div >
   );

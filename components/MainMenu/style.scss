@@ -205,7 +205,7 @@
   }
 }
 
-@include responsive(xl) {
+@include responsive(lg) {
   .main-menu {
     position: relative;
     .menu {
@@ -239,7 +239,7 @@
     }
   }
 }
-@media (max-width:1400px) {
+@include responsive(xxl) {
   .main-menu {
 
     .layout-header {

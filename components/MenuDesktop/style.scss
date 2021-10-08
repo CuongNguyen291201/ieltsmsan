@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 #menu-desktop{
     display: flex;
     .current-user-wrap{
@@ -5,7 +7,7 @@
         .user-menu-icon{
             cursor: pointer;
             .user-acc{
-                color: #fff;
+                color: $root-title-color;
                 font-size: 24px;
             }
         }
