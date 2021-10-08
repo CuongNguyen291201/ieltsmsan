@@ -12,8 +12,8 @@ import VolumeOffIcon from '../../public/icon/volume_off.svg';
 import LiveStream from '../../public/icon/live-stream.svg';
 import ViewStream from '../../public/icon/view-stream.svg';
 
-const StreamComponent = (props: { dataScenario: ScenarioInfo }) => {
-  const { dataScenario } = props;
+const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo }) => {
+  const { dataTotalUser, dataScenario } = props;
   let screen = null;
   const [volume, setVolume] = useState(0.5);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -100,7 +100,7 @@ const StreamComponent = (props: { dataScenario: ScenarioInfo }) => {
           </div>
           <div className="view-stream">
             <div className="stream-text">
-              100
+              {dataTotalUser}
             </div>
             <img className="stream-image" src={ViewStream} alt="" />
           </div>
