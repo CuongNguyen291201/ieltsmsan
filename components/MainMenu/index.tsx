@@ -20,16 +20,16 @@ import "./style.scss";
 import { Grid } from "@material-ui/core";
 import LoginModal from "../../sub_modules/common/components/loginModal";
 import RegisterModal from "../../sub_modules/common/components/registerModal";
+import { MenuDesktop } from "../MenuDesktop";
+import { MenuMobile } from "../MenuMobile";
 function MainMenu(props: { hotLine?: string }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
-  const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [textError, setTextError] = useState<String>("");
   const [activedIds, setActivedIds] = useState<string[]>([])
   const { items: cartItems, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
-  const [isShowUserMenu, setShowUserMenu] = useState(false);
   const toggleUserMenuRef = useRef<HTMLDivElement>();
 
   const codeRef = useRef(null);
@@ -124,21 +124,12 @@ function MainMenu(props: { hotLine?: string }) {
           </div>
           <div className="search">
             <div className="icon">
-              <img src="/home/search-icon.png" alt="" />
+              <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
             </div>
-            <input type="text" placeholder="Tìm kiếm" />
+            <input type="text" placeholder="Tìm kiếm khoá học..." />
           </div>
         </Grid>
-        <Grid md={8} className={`${isActiveOnMobile ? "active-on-mobile" : ""} menu`}>
-          <div
-            className="close-menu-icon"
-            onClick={() => {
-              setisActiveOnMobile(false);
-            }}
-          >
-            <i className="fas fa-arrow-right"></i>
-          </div>
-
+        <Grid md={8} className="menu">
           <div className="menu-item" onClick={() => router.push("/")}>
             Khoá Học
           </div>
@@ -157,75 +148,17 @@ function MainMenu(props: { hotLine?: string }) {
           <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
             Tin tức
           </div>
-          {/* <div className="menu-item">
-            Liên hệ
-          </div> */}
           <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
+
           <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
             <i className="far fa-shopping-cart shopping-cart"></i>
             {!cartLoading && cartItems.length > 0 &&
               <span className="cart-number">{cartItems.length}</span>
             }
           </div>
-          {
-            currentUser ? (
-              <>
-
-                <div className="current-user-wrap item">
-                  <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
-                    {/* <img src="/home/header-user.png" alt="" /> */}
-                    <i className="fas fa-user-circle user-acc"></i>
-                  </div>
-                  {isShowUserMenu && (<div className="user-menu-panel">
-                    <div className="user-profile">
-                      <img src={currentUser.avatar || defaultAvatar} alt="" />
-                      <div className="user-info">
-                        <div className="info-text">{currentUser.name}</div>
-                        <div className="info-text">{currentUser.email}</div>
-                      </div>
-                    </div>
-                    <div className="user-menu">
-                      <div className="menu-item" onClick={() => router.push(ROUTER_TRANSACTION_HISTORY)}>
-                        <i className="fas fa-exchange-alt" />
-                        Lịch sử giao dịch
-                      </div>
-                      <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
-                        <i className="fas fa-graduation-cap" />
-                        Khoá học của tôi
-                      </div>
-                      {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
-                      <i className="fas fa-wrench"></i>
-                      Trả lời bình luận
-                    </div> */}
-                      <div className="menu-item" onClick={() => {
-                        const token = getCookie(TOKEN);
-                        if (!!token) apiLogout({ token }).then(() => {
-                          removeCookie(TOKEN);
-                          router.reload()
-                        });
-                      }}>
-                        <i className="fas fa-sign-out" />
-                        Đăng xuất
-                      </div>
-                    </div>
-                  </div>)}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
-                  <img src="/home/header-user.png" alt="" />
-                  <i className="fas fa-user-circle header-icon"></i>
-                  <div className="text">Log in</div>
-                </div>
-                <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
-                  Sign up
-                </div>
-              </>
-            )
-          }
+          <MenuDesktop />
           <div>
             <img style={{ width: '33px' }} src={chooseLanguage} alt="chooseLanguage" />
           </div>
@@ -237,76 +170,9 @@ function MainMenu(props: { hotLine?: string }) {
               <span className="cart-number">{cartItems.length}</span>
             }
           </div>
-          {
-            currentUser ? (
-              <>
-
-                <div className="current-user-wrap item">
-                  <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
-                    {/* <img src="/home/header-user.png" alt="" /> */}
-                    <i className="fas fa-user-circle user-acc"></i>
-                  </div>
-                  {isShowUserMenu && (<div className="user-menu-panel">
-                    <div className="user-profile">
-                      <img src={currentUser.avatar || defaultAvatar} alt="" />
-                      <div className="user-info">
-                        <div className="info-text">{currentUser.name}</div>
-                        <div className="info-text">{currentUser.email}</div>
-                      </div>
-                    </div>
-                    <div className="user-menu">
-                      <div className="menu-item" onClick={() => router.push(ROUTER_TRANSACTION_HISTORY)}>
-                        <i className="fas fa-exchange-alt" />
-                        Lịch sử giao dịch
-                      </div>
-                      <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
-                        <i className="fas fa-graduation-cap" />
-                        Khoá học của tôi
-                      </div>
-                      {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
-                      <i className="fas fa-wrench"></i>
-                      Trả lời bình luận
-                    </div> */}
-                      <div className="menu-item" onClick={() => {
-                        const token = getCookie(TOKEN);
-                        if (!!token) apiLogout({ token }).then(() => {
-                          removeCookie(TOKEN);
-                          router.reload()
-                        });
-                      }}>
-                        <i className="fas fa-sign-out" />
-                        Đăng xuất
-                      </div>
-                    </div>
-                  </div>)}
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
-                  <img src="/home/header-user.png" alt="" />
-                  <i className="fas fa-user-circle header-icon"></i>
-                  <div className="text">Log in</div>
-                </div>
-                <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
-                  Sign up
-                </div>
-              </>
-            )
-          }
-          <div
-            className="menu-icon item"
-            onClick={() => setisActiveOnMobile(true)}
-          >
-            <i className="far fa-bars" />
-          </div>
+          <MenuMobile />
         </div>
-
-        <div
-          className={`${isActiveOnMobile ? "active-on-mobile" : ""
-            } overlay-on-mobile`}
-        ></div>
-      </div>
+      </div >
       <div className="modal-active-course">
         <Modal
           title="Kích hoạt khoá học "
@@ -359,7 +225,7 @@ function MainMenu(props: { hotLine?: string }) {
         <LoginModal />
         <RegisterModal />
       </div>
-    </div>
+    </div >
   );
 }
 

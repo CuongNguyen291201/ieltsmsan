@@ -1,0 +1,87 @@
+.hideDesktop{
+    display: none;
+}
+.menu-mobile-{
+    .show-menu{
+        i{
+            font-size: 24px;
+            color: #9B92F1;
+        }
+    }
+    .unActive{
+        display: none;
+    }
+    .showMenuActive{
+        display: block;
+        position: absolute;
+        z-index: 5;
+        right: 0;
+        width: 70%;
+        height: 100vh;
+        background: white;
+        top: 0;
+        transition: all .5s;
+        border-bottom-left-radius:70px;
+        box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
+        .wraper-show{
+            padding: 15px;
+            background-color: #302688;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .fa-times{
+                font-size: 24px;
+                color: #9B92F1;
+            }
+            .user-profile{
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                img{
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 12px;
+                    padding: 5px;
+                    background-color: #3D329A;
+                }
+                .icon-close{
+                    width: 25px;
+                }
+                .user-info{
+                    .info-text{
+                        min-width: 100px;
+                        color: #fff;
+                        margin: 5px 0;
+                    }
+                }
+            }
+        }
+        .wraper-menu-item{
+            .menu-item{
+                font-size: 18px;
+                border-bottom: 1px solid #ccc;
+                padding: 5px;
+                padding-left: 10px;
+                span{
+                    img{
+                        width: 12px;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width:900px) {
+    .hideDesktop{
+        display: flex;
+        .cart{
+            margin-right: 20px;
+            i{
+                font-size: 24px !important;
+                color: #9B92F1 !important;
+            }
+        }
+    }
+}

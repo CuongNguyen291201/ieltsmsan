@@ -37,7 +37,10 @@ import iconPrice from '../../public/default/icon-price_.png';
 import iconTotalStudent from '../../public/default/total-student.png';
 import iconNumberStudy from '../../public/default/icon-number-study.png';
 import iconClock from '../../public/default/icon-clock_.png';
+import bgPostion from '../../public/default/positionBg.png';
 import './style.scss';
+import { ContentCourse } from './content-course';
+import { InformationCourse } from './information-course';
 
 const CourseDetail = (props: { course: Course }) => {
   const { course } = props;
@@ -101,6 +104,9 @@ const CourseDetail = (props: { course: Course }) => {
         <div className="header-course">
           <MainMenu />
           <div className="background-header-course">
+            <div className="positionBackground">
+              <img src={bgPostion} alt="bgPostion" />
+            </div>
             <Breadcrumb items={[{ name: course.name }]} />
             <div className="container">
               <div className="title"><h1>{course.name}</h1></div>
@@ -124,13 +130,7 @@ const CourseDetail = (props: { course: Course }) => {
             <Row id="main-course-detail">
               <Col span={24} lg={16} className="course-detail">
                 <Skeleton loading={userCourseLoading}>
-                  <div className="course-content">
-                    <h2>Nội dung khóa học</h2>
-                    <div dangerouslySetInnerHTML={{
-                      __html: (course.courseContent as CourseContent)?.desc
-                    }}>
-                    </div>
-                  </div>
+                  <ContentCourse course={course} />
                   <div className="list-topic-tree-item">
                     <h2>Danh Sách Bài Học</h2>
                     <div className="course-topic-tree">
@@ -140,65 +140,7 @@ const CourseDetail = (props: { course: Course }) => {
                 </Skeleton>
               </Col>
               <Col span={24} lg={8}>
-                <div id="course-overview">
-                  <Skeleton loading={userCourseLoading}>
-                    <div className="information-course">
-                      <div>
-                        <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-                      </div>
-                      <div className="discount-price">
-                        GIẢM GIÁ <b>40%</b>
-                      </div>
-                      <div className="time-end-price">
-                        <img style={{ marginRight: '20px' }} src={iconCircle} alt="iconCircle" />  Còn 10h ở mức giá này
-                        <img className="_iconNew" src={iconNewCourse} alt="iconNewCourse" />
-                      </div>
-                      <div className="inf-course_">
-                        <div className="price-and-discount-price item__">
-                          <img src={iconPrice} alt="iconPrice" /> {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
-                          <div className="price-real text">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
-                        </div>
-                        <div className="total-student item__">
-                          <img src={iconTotalStudent} /> <div className="text">Tổng học viên</div> <span className="number__">9999</span>
-                        </div>
-                        <div className="number-study item__">
-                          <img src={iconNumberStudy} alt="iconNumberStudy" /> <div className="text">Số bài học</div> <span className="number__">123</span>
-                        </div>
-                        <div className="time-study item__">
-                          <img src={iconClock} alt="iconClock" /><div className="text">Thời gian học</div><span className="number__">{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
-                        </div>
-                      </div>
-                    </div>
-                    {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
-                      && <div className="button-group">
-                        <div>
-                          <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
-                            orderUtils.setReturnUrl(router.asPath);
-                            router.push(getPaymentPageSlug(course._id));
-                          }}>Mua ngay</Button>
-                        </div>
-                        <div>
-                          <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
-                            orderUtils.addCourseToCart(course._id, () => {
-                              dispatch(createOneAction(Scopes.CART, course._id));
-                            })
-                          }}>Thêm vào giỏ</Button>
-                        </div>
-
-                      </div>}
-
-                    {/* <div className="button-group">
-                      <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
-                        {activeLoading || userCourseLoading
-                          ? <CircularProgress style={{ color: "white" }} size={25} />
-                          : course.cost
-                            ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
-                            : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
-                        }
-                      </Button>
-                    </div> */}
-                  </Skeleton>
-                </div>
+                <InformationCourse course={course} />
               </Col>
             </Row>
           </div>

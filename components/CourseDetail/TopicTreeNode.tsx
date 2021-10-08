@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { _Category, _Topic } from '../../custom-types';
 import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
@@ -10,14 +10,20 @@ import { showLoginModalAction } from '../../sub_modules/common/redux/actions/use
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { STATUS_OPEN, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO, USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
+import TopicProgress from '../../sub_modules/share/model/topicProgress';
 import { getTimeZeroHour } from '../../utils';
 import { apiSeekTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
 import { getTopicPageSlug } from '../../utils/router';
+import OvalRecButton from '../buttons/OvalRecButton';
 import InnerTopicNode from './InnerTopicNode';
 import LeafTopicNode from './LeafTopicNode';
 import MainTopicNode from './MainTopicNode';
-
+import { formatDateDMY } from '../../utils';
+import TopicIcon from './TopicIcon';
+import iconLockLession from '../../public/default/lock-course.png'
+import iconIsDone from '../../public/default/isDone.png'
+import releaseDate from '../../public/default/icon-release-date.png'
 const LOAD_LIMIT = 20;
 export type TopicNodeProps = {
   topic: _Topic;
@@ -31,8 +37,8 @@ export type TopicNodeProps = {
   category?: _Category;
 }
 
-const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean }) => {
-  const { category, topic, isMain = false } = props;
+const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean, }) => {
+  const { category, topic, isMain = false, } = props;
   const { currentCourse, isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
@@ -134,37 +140,84 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
         dispatch(setLoadMoreChildTopicsAction({ topicId: topic._id, isLoadMore: (data as _Topic[]).length >= LOAD_LIMIT }));
       });
   }
+  console.log('ismain', isMain);
 
   return (
-    isMain
-      ? <MainTopicNode
-        topic={topic}
-        childs={topicOptions.childs}
-        isLoadChild={topicOptions.isLoadChild}
-        isOpen={isOpen}
-        isTopicHasChild={isTopicHasChild}
-        onClickNode={onClickNode}
-        isLoadMoreChilds={mapLoadMoreState[topic._id]}
-        loadMoreChildFC={loadMoreChilds}
-        category={category}
-      />
-      : (isTopicHasChild
-        ? <InnerTopicNode
-          topic={topic}
-          childs={topicOptions.childs}
-          isOpen={isOpen}
-          isLoadChild={topicOptions.isLoadChild}
-          isTopicHasChild={isTopicHasChild}
-          onClickNode={onClickNode}
-          isLoadMoreChilds={mapLoadMoreState[topic._id]}
-          loadMoreChildFC={loadMoreChilds}
-          category={category}
-        />
-        : <LeafTopicNode
-          topic={topic}
-          isOpen={isOpen}
-          onClickNode={onClickNode}
-        />)
+    <div className="main-topic-node">
+      <div className="topic-header" onClick={onClickNode}>
+        <div>
+          <div className="topic-title">
+            {isTopicHasChild ? <i className={`fas fa-chevron-down ${topicOptions.isLoadChild ? ' open' : 'close'} toggle-main`} /> : <i className="toggle-main isStatusDone" />}
+            <TopicIcon topicType={topic.type} isMain={true} topicVideoUrl={topic.videoUrl} isTopicOpen={topic.status === STATUS_OPEN} />
+            {isMain ? <span style={{ fontWeight: 600 }}>{topic.name}</span> : <div>{topic.name} <div className="relaseDate"><img src={releaseDate} alt="releaseDate" />{`${formatDateDMY(topic.startTime)}`}</div></div>}
+          </div>
+          {isMain ? <div className="icon-lock-course"><img src={iconLockLession} alt="iconLockLession" /></div> : ''}
+        </div>
+        {!!topic.topicProgress
+          // ? <CircularProgressbar
+          //   value={progress}
+          //   styles={buildStyles({
+          //     pathColor: '#58bf80',
+          //     trailColor: '#a1f3c1'
+          //   })}
+          //   text={`${progress}%`}
+          //   className="topic-progress"
+          // />
+          ? (isMain ? <div className="accomplished"><div>{topic.topicProgress.progress}%</div></div> : <div> </div>)
+          : <div style={{ width: '40px', height: '40px' }} className="topic-progress"></div>
+        }
+        {!isMain ? <div className="sub-title">
+          <div className="icon-isDone"><img src={iconIsDone} alt="iconIsDone" /></div>
+        </div> : ''}
+      </div>
+      <div className="main-topic-content">
+        {!!topicOptions.childs.length && topicOptions.isLoadChild && topicOptions.childs.map((e, i) => (
+          <Fragment key={e._id}>
+            <div className="item-main-topic-content">
+              {isMain ? <div className="line-sep" /> : <></>}
+              {isTopicHasChild && <div className="wraper-topic-child"><TopicTreeNode category={category} topic={e} /></div>}
+
+              {i === topicOptions.childs.length - 1 && mapLoadMoreState[topic._id] && <div className="flex-center" style={{ margin: '12px 0' }}>
+                <OvalRecButton
+                  title="TẢI THÊM"
+                  onClick={loadMoreChilds}
+                  fontSize="11px"
+                />
+              </div>}
+            </div>
+          </Fragment>
+        ))}
+      </div>
+    </div>
+    // isMain
+    //   ? <MainTopicNode
+    //     topic={topic}
+    //     childs={topicOptions.childs}
+    //     isLoadChild={topicOptions.isLoadChild}
+    //     isOpen={isOpen}
+    //     isTopicHasChild={isTopicHasChild}
+    //     onClickNode={onClickNode}
+    //     isLoadMoreChilds={mapLoadMoreState[topic._id]}
+    //     loadMoreChildFC={loadMoreChilds}
+    //     category={category}
+    //   />
+    //   : (isTopicHasChild
+    //     ? <InnerTopicNode
+    //       topic={topic}
+    //       childs={topicOptions.childs}
+    //       isOpen={isOpen}
+    //       isLoadChild={topicOptions.isLoadChild}
+    //       isTopicHasChild={isTopicHasChild}
+    //       onClickNode={onClickNode}
+    //       isLoadMoreChilds={mapLoadMoreState[topic._id]}
+    //       loadMoreChildFC={loadMoreChilds}
+    //       category={category}
+    //     />
+    //     : <LeafTopicNode
+    //       topic={topic}
+    //       isOpen={isOpen}
+    //       onClickNode={onClickNode}
+    //     />)
   )
 };
 

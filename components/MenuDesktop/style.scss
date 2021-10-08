@@ -1,0 +1,62 @@
+#menu-desktop{
+    display: flex;
+    .current-user-wrap{
+        position: relative;
+        .user-menu-icon{
+            cursor: pointer;
+            .user-acc{
+                color: #fff;
+                font-size: 24px;
+            }
+        }
+        .user-menu-panel{
+            border-radius: 10px;
+            position: absolute;
+            z-index: 1;
+            background-color: #fff;
+            top: 30px;
+            right: 0px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            z-index: 2;
+            .user-profile{
+                padding: 15px;
+                display: flex;
+                align-items: center;
+                background: url(/bg-profile-dropdown.png) no-repeat !important;
+                background-size: 100% 100% !important;
+                img{
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    margin-right: 12px;
+                }
+                .user-info{
+                    .info-text{
+                        min-width: 100px;
+                        color: #fff;
+                        margin: 5px 0;
+                    }
+                }
+            }
+            .user-menu{
+                color: #333;
+                opacity: .9;
+                .menu-item{
+                    display: flex;
+                    cursor: pointer;
+                    padding: 10px;
+                    color: black;
+                    i{
+                        min-width: 20px;
+                        margin-right: 10px;
+                    }
+                }
+            }
+            
+        }
+    }
+    .item{
+        margin-left: 16px;
+    }
+}

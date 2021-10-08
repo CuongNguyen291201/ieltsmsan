@@ -38,8 +38,6 @@
     }
   }
   .search{
-    // background: #F5F5F5;
-    // box-shadow: inset -10px -10px 30px rgb(255 255 255 / 70%), inset 10px 10px 30px rgb(174 174 192 / 40%);
     background: #302788;
     border: 1px solid #4C41B1;
     box-sizing: border-box;
@@ -55,6 +53,7 @@
       margin-right: 8px;
       display: flex;
       align-items: center;
+      color: #9B92F1;
     }
     input {
       border: none;
@@ -64,16 +63,26 @@
       width: 100%;
       padding: 5px;
       color: white;
+      &::-webkit-input-placeholder { /* Edge */
+        color: #9B92F1;
+      }
+      
+      &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #9B92F1;
+      }
+      
+      &::placeholder {
+        color: #9B92F1;
+      }
     }
   }
   .menu {
     display: flex;
     justify-content: space-between;
-    width: 75%;
+    max-width: 50%;
     align-items: center;
     .menu-item{
       color: #ffffff;
-      // font-weight: 500;
       text-align: center;
       position: relative;
       cursor: pointer;
@@ -100,10 +109,7 @@
       }
     }
     .active-course{
-    // background: #F5F5F5;
-    // box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.7), 5px 5px 10px rgba(174, 174, 192, 0.4);
     border:1px solid #5E52D0;
-    // border-radius: 16px;
     color: #ABA1FF;
     font-weight: bold;
     text-transform: uppercase;
@@ -219,7 +225,7 @@
       .menu-item {
         text-align: left;
         padding: 12px;
-        font-size: 14px;
+        font-size: 15px;
         &:hover {
           text-decoration: underline;
           &::after {
@@ -228,53 +234,23 @@
         }
       }
     }
-    .overlay-on-mobile {
-      &.active-on-mobile {
-        display: block !important;
-        z-index: 2;
-        background-color: rgba(0, 0, 0, 0.15);
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-    }
-    .menu-icon {
-      display: block;
-      position: absolute;
-      right: 16px;
-      top: 20px;
-      height: 30px;
-      width: 30px;
-      i {
-        font-size: 18px;
-        font-weight: 500;
-      }
-    }
-    .close-menu-icon {
-      display: block !important;
-      padding: 12px;
-      background-color: #fff;
-      background-color: #f7e5e5;
-      cursor: pointer;
-
-      i {
-        color: $root-color;
-      }
-    }
-    .active-course {
-      background-color: $root-color !important;
-      color: #fff !important;
-      border-radius: 0 !important;
-      margin: 0 12px;
-    }
     .search {
       margin-left: 16px;
     }
   }
 }
+@media (max-width:1400px) {
+  .main-menu {
 
+    .layout-header {
+      width: 95%;
+      .menu{
+        max-width: 66.67% !important;
+      }
+    }
+    
+  }
+}
 .course-item-modal {
   margin-bottom: 1rem;
   display: flex;
@@ -301,12 +277,11 @@
         .logo{
           display: block;
         }
-        
-      }
-      .hideDesktop{
-        .menu-icon{
-          display: block;
+        .search{
+          width: calc( 100% - 55px );
+          margin-right: 20px;
         }
+        
       }
       .menu{
         display: unset;

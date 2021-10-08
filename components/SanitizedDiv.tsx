@@ -1,14 +1,15 @@
 import DOMPurify from 'isomorphic-dompurify';
-import { memo } from 'react';
+import { CSSProperties, memo, PropsWithoutRef } from 'react';
 
 
-const SanitizedDiv = (props: {
+const SanitizedDiv = (props: PropsWithoutRef<{
   className?: string;
   content?: string;
-}) => {
-  const { className = '', content = '' } = props;
+  style?: CSSProperties
+}>) => {
+  const { className, content = '', style } = props;
   return (
-    <div className={className} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
+    <div style={{ ...style }} {...{ className }} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
   );
 };
 
