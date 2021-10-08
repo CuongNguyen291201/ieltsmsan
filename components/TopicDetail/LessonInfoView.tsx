@@ -17,7 +17,7 @@ import StreamComponent from '../Stream';
 import './lesson-info.scss';
 import LessonVideoView from './LessonVideoView';
 import scenario from './scenario.json';
-import CommentPanel from '../CommentPanel';
+import CommentPanel from '../CommentPanelNew';
 import { CommentScopes } from '../../custom-types';
 
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
