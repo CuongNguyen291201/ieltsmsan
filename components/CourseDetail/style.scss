@@ -581,6 +581,17 @@
     .background-header-course{
     }
   }
+  @media (max-width:1199px) {
+    .hideDesktop{
+      display: flex;
+      align-items: center;
+      .cart{
+        margin-right: 20px;
+        font-size: 24px;
+        color: #9B92F1;
+      }
+    }
+  }
   @media (max-width:768px) {
     .header-course{
       .main-menu{
@@ -718,9 +729,6 @@
           }
         }
       }
-    }
-    .hideDesktop{
-      display: flex;
     }
   }
   @media (max-width:320px) {
