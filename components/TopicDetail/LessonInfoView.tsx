@@ -1,7 +1,9 @@
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Col, Row } from 'antd';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
+import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";
 import { AppState } from '../../redux/reducers';
 import Document from '../../sub_modules/share/model/document';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
@@ -12,17 +14,32 @@ import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTo
 import { apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
 import PanelContainer from '../containers/PanelContainer';
 import Pagination from '../Pagination';
+import StreamComponent from '../Stream';
 import './lesson-info.scss';
 import LessonVideoView from './LessonVideoView';
 import scenario from './scenario.json';
+import CommentPanel from '../CommentPanelNew';
+import { CommentScopes } from '../../custom-types';
 
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
+  const firebaseInstance = useRealtime();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const [dataScenario, setDataScenario] = useState<ScenarioInfo>();
+  const [dataTotalUser, setDataTotalUser] = useState(0);
+
+  useEffect(() => {
+    if (currentUser && topic._id) {
+      firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).on("value", (snapshot) => {
+        setDataTotalUser((snapshot?.val() && Object.values(snapshot?.val())?.length) ?? 0)
+      })
+      firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).set(`${currentUser.name}`)
+      firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).onDisconnect().remove()
+    }
+  }, [topic])
 
   const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
     return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
@@ -51,6 +68,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
     const dataArrTemp = await getOneVideoScenarioAPI({ topicId: topic?._id })
     setDataScenario(dataArrTemp?.scenarioInfos?.[0] ?? [])
   }
+  console.log('dataScenario: ', dataScenario);
 
   return (
     <div className="lesson-detail">
@@ -61,8 +79,31 @@ const LessonInfoView = (props: { topic: Topic }) => {
 
       <PanelContainer title="Nội dung">
         {topic._id === dataScenario?.topicId &&
-          <div className="scenario-video">
-            <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+          <div className="video-commponent">
+            {/* {dataScenario?.endTime ? ( */}
+            <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
+              <Col xl={16} md={12} xs={24}>
+                {!dataScenario?.endTime ? (
+                  <div className="streaming">
+                    <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} />
+                  </div>
+                ) : (
+                  <div className="video-scenario">
+                    <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+                  </div>
+                )}
+              </Col>
+              <Col xl={8} md={12} xs={24}>
+                <div className="comment">
+                  <CommentPanel commentScope={CommentScopes.TOPIC} />
+                </div>
+              </Col>
+            </Row>
+            {/* ) : (
+              <div className="scenario-video">
+                <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+              </div>
+            )} */}
           </div>
         }
       </PanelContainer>

@@ -67,9 +67,9 @@ const TopicDetail = (props: { topic: Topic; }) => {
           <TopicRankingsView topic={topic} />
         </PanelContainer>}
 
-        <PanelContainer title="Bình luận">
+        {/* <PanelContainer title="Bình luận">
           <CommentPanel commentScope={CommentScopes.TOPIC} />
-        </PanelContainer>
+        </PanelContainer> */}
 
       </div>
     </div>
