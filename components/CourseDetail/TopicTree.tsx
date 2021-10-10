@@ -7,6 +7,7 @@ import { Course } from '../../sub_modules/share/model/courses';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import OvalRecButton from '../buttons/OvalRecButton';
 import TopicTreeNode from './TopicTreeNode';
+import newTopic from '../../public/default/newLession.png';
 
 const LOAD_LIMIT = 50;
 
@@ -23,9 +24,13 @@ const TopicTree = (props: { category: _Category; course: Course; }) => {
 
   return (
     <>
-      {(mainTopics || []).map((e) => (
+      {(mainTopics || []).map((e, index) => (
         <Fragment key={e._id}>
-          <TopicTreeNode category={category} topic={e} isMain={true} />
+          <div className="item-tree">
+            <span className="stt-topic">{index + 1}</span>
+            <div className="icon-new-topic"><img src={newTopic} alt="" /></div>
+            <TopicTreeNode category={category} topic={e} isMain={true} />
+          </div>
         </Fragment>
       ))}
       {loadMoreMainTopics && <div className="load-more-main flex-center">

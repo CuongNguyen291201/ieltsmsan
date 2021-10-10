@@ -2,23 +2,36 @@ import { PhoneOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
-import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
-import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
+import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { getCookie, TOKEN, removeCookie } from '../../sub_modules/common/utils/cookie';
 import { Course } from "../../sub_modules/share/model/courses";
 import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
-import { ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
+import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
+import { apiLogout } from '../../utils/apis/auth';
+import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
+import chooseLanguage from '../../public/default/language.png'
+import { loadListAction } from '../../redux/actions';
+import { Scopes } from '../../redux/types';
+import orderUtils from '../../utils/payment/orderUtils';
 import "./style.scss";
-function MainMenu(props: { hotLine?: string }) {
+import { Grid } from "@material-ui/core";
+import LoginModal from "../../sub_modules/common/components/loginModal";
+import RegisterModal from "../../sub_modules/common/components/registerModal";
+import { MenuDesktop } from "../MenuDesktop";
+import { MenuMobile } from "../MenuMobile";
+function MainMenu(props: { hotLine?: string, webLogo?: string }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
-  const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
   const [textError, setTextError] = useState<String>("");
   const [activedIds, setActivedIds] = useState<string[]>([])
+  const { items: cartItems, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
+  const toggleUserMenuRef = useRef<HTMLDivElement>();
+
   const codeRef = useRef(null);
   const dispatch = useDispatch()
 
@@ -35,12 +48,15 @@ function MainMenu(props: { hotLine?: string }) {
     setTextError('');
     setCourses([])
   }
-
+  useEffect(() => {
+    if (cartLoading) {
+      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
+    }
+  }, [cartLoading]);
   const getCodeInfo = async () => {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
       if (codeInfo.data.userBuyId === currentUser._id || codeInfo.data.userBuyId === null) {
-        // TODO: Chuyển lên giờ server
         if (codeInfo.data.startTime <= Date.now() && (codeInfo.data.endTime >= Date.now() || codeInfo.data.endTime === 0)) {
           const { courses, activedIds } = await apiLoadCourseByCode(codeRef.current.value);
           setCourses(courses ?? []);
@@ -101,62 +117,62 @@ function MainMenu(props: { hotLine?: string }) {
 
   return (
     <div className="main-menu">
-      <div className="container">
-        <div className="search">
-          <div className="icon">
-            <img src="/home/search-icon.png" alt="" />
+      <div className="layout-header">
+        <Grid item md={4} className="left-header">
+          <div className="logo" onClick={() => router.push('/')}>
+            <img src={props.webLogo} alt="logo" />
           </div>
-          <input type="text" placeholder="Tìm kiếm" />
-        </div>
-        <div className={`${isActiveOnMobile ? "active-on-mobile" : ""} menu`}>
+          <div className="search">
+            <div className="icon">
+              <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+            </div>
+            <input type="text" placeholder="Tìm kiếm khoá học..." />
+          </div>
+        </Grid>
+        <Grid item md={8} className="menu">
+          <div className="menu-item" onClick={() => router.push("/")}>
+            Khoá Học
+          </div>
           <div
-            className="close-menu-icon"
-            onClick={() => {
-              setisActiveOnMobile(false);
-            }}
+            className="menu-item document"
+            onClick={() => router.push(ROUTER_DOCUMENT)}
           >
-            <i className="fas fa-arrow-right"></i>
+            Tài liệu
           </div>
-          <Link href="/">
-            <a><div className="menu-item">
-              Trang chủ
-            </div></a>
-          </Link>
-          <Link href={ROUTER_DOCUMENT}>
-            <a><div className="menu-item document">
-              Tài liệu
-            </div></a>
-          </Link>
-          <Link href="/livegame">
-            <a><div className="menu-item">
-              Live game
-            </div></a>
-          </Link>
-          <Link href={ROUTER_NEWS}>
-            <a><div className="menu-item">
-              Tin tức
-            </div></a>
-          </Link>
-          <Link href="/lien-he" passHref={true}>
-            <a><div className="menu-item">
-              Liên hệ
-            </div></a>
-          </Link>
+          <div style={{ display: 'none' }} className="menu-item">
+            Liên hệ
+          </div>
+          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+            Sự Kiện
+          </div>
+          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+            Tin tức
+          </div>
           <div onClick={() => showModalActiveCourse()} className="active-course">
             Kích hoạt khóa học
           </div>
+
+          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+            <i className="far fa-shopping-cart shopping-cart"></i>
+            {!cartLoading && cartItems.length > 0 &&
+              <span className="cart-number">{cartItems.length}</span>
+            }
+          </div>
+          <MenuDesktop />
+          <div>
+            <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
+          </div>
+        </Grid>
+        <div className="hideDesktop">
+          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+            <i className="far fa-shopping-cart shopping-cart"></i>
+            {!cartLoading && cartItems.length > 0 &&
+              <span className="cart-number">{cartItems.length}</span>
+            }
+          </div>
+          <MenuMobile />
         </div>
-        <div
-          className="menu-icon"
-          onClick={() => setisActiveOnMobile(true)}
-        >
-          <i className="far fa-bars" />
-        </div>
-        <div
-          className={`${isActiveOnMobile ? "active-on-mobile" : ""
-            } overlay-on-mobile`}
-        ></div>
-      </div>
+      </div >
       <div className="modal-active-course">
         <Modal
           title="Kích hoạt khoá học "
@@ -206,8 +222,10 @@ function MainMenu(props: { hotLine?: string }) {
             </div>
           </div>
         </Modal>
+        <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+        <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
       </div>
-    </div>
+    </div >
   );
 }
 

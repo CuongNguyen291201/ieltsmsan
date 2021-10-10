@@ -13,13 +13,16 @@ import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { STATUS_OPEN } from '../../sub_modules/share/constraint';
+import { USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
+import CourseContent from '../../sub_modules/share/model/courseContent';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import { apiGetUserCourse, apiJoinCourse } from '../../utils/apis/courseApi';
 import orderUtils from '../../utils/payment/orderUtils';
 import { getPaymentPageSlug } from '../../utils/router';
 import ActiveCourseModal from '../ActiveCourseModal';
+import Breadcrumb from '../Breadcrumb';
+import MainMenu from '../MainMenu';
 import CourseContentView from './CourseContentView';
 import {
   courseDetailInitState,
@@ -28,9 +31,19 @@ import {
 } from './courseDetail.logic';
 import CourseTopicTreeView from './CourseTopicTreeView';
 import MemberListView from './MemberListView';
+import iconCircle from '../../public/default/icon-circle.png';
+import iconNewCourse from '../../public/default/new_.png';
+import iconPrice from '../../public/default/icon-price_.png';
+import iconTotalStudent from '../../public/default/total-student.png';
+import iconNumberStudy from '../../public/default/icon-number-study.png';
+import iconClock from '../../public/default/icon-clock_.png';
+import bgPostion from '../../public/default/positionBg.png';
 import './style.scss';
+import { ContentCourse } from './content-course';
+import { InformationCourse } from './information-course';
+import WebInfo from '../../sub_modules/share/model/webInfo';
 
-const CourseDetail = (props: { course: Course }) => {
+const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
   const { course } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
@@ -45,7 +58,7 @@ const CourseDetail = (props: { course: Course }) => {
   useScrollToTop();
 
   useEffect(() => {
-    uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
+    // uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
     if (!currentCourseLoading) {
       if (!!currentUser) {
         const token = getCookie(TOKEN);
@@ -88,114 +101,59 @@ const CourseDetail = (props: { course: Course }) => {
 
   return (
     <>
-      <div className="course-info" style={{
-        background: `linear-gradient(90deg, #f9f9f9 40%, rgba(255, 255, 255, 0) 60%), url(${course.avatar || bannerDefault})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
-      }}>
-        <div className="container">
-          <div className="title"><h1>{course.name}</h1></div>
-        </div>
-      </div>
-      <div className="container">
-        <Row id="main-course-detail">
-          <Col span={24} lg={18} className="course-detail">
-            <Skeleton loading={userCourseLoading}>
-              <div className="tab-header">
-                <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_CONTENT ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_CONTENT))}
-                >
-                  MÔ TẢ KHOÁ HỌC
-                </div>
-                <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_TOPIC_TREE ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_TOPIC_TREE))}
-                >
-                  DANH SÁCH BÀI HỌC
-                </div>
-                {userCourse?.isTeacher && <div
-                  className={`tab-title${activeTab === CourseTab.COURSE_MEMBER ? ' active' : ''}`}
-                  onClick={() => uiLogic(setActiveTab(CourseTab.COURSE_MEMBER))}
-                >
-                  DANH SÁCH HỌC VIÊN
-                </div>}
-              </div>
-              {
-                activeTab !== CourseTab.COURSE_TAB_NONE
-                  ? (activeTab === CourseTab.COURSE_CONTENT
-                    ? <CourseContentView course={course} />
-                    : (activeTab === CourseTab.COURSE_TOPIC_TREE
-                      ? <CourseTopicTreeView course={course} />
-                      : <MemberListView course={course} />
-                    ))
-                  : <div style={{ textAlign: "center" }}><CircularProgress /></div>
-              }
-            </Skeleton>
-          </Col>
-          <Col span={24} lg={6}>
-            <div id="course-overview">
-              <Skeleton loading={userCourseLoading}>
-                <div className="title-block"><h2>Thông tin khoá học</h2></div>
-                <div className="short-desc">
-                  {course.shortDesc}
-                </div>
-                <div className="overview-item">
-                  <div className="item-main">
-                    <span>
-                      <Rate className="rating-star" allowHalf disabled defaultValue={course.courseSystem?.vote ?? 4.6} />
-                    </span>
-                    <span>({course.courseSystem?.memberNum ?? 500})</span>
-                  </div>
-                </div>
-
-                <div className="overview-item">
-                  <i className="far fa-clock" />
-                  <div className="item-main">
-                    <span role="label">Thời gian học:</span>
-                    <span>{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
-                  </div>
-                </div>
-
-                {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
-                <div className="price">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
-
-                {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
-                  && <div className="button-group">
-                    <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
-                      orderUtils.addCourseToCart(course._id, () => {
-                        dispatch(createOneAction(Scopes.CART, course._id));
-                      })
-                    }}>Thêm vào <i className="fas fa-cart-plus" /></Button>
-                    <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
-                      orderUtils.setReturnUrl(router.asPath);
-                      router.push(getPaymentPageSlug(course._id));
-                    }}>Mua ngay</Button>
-                  </div>}
-
-                <div className="button-group">
-                  <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
-                    {activeLoading || userCourseLoading
-                      ? <CircularProgress style={{ color: "white" }} size={25} />
-                      : course.cost
-                        ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
-                        : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
-                    }
-                  </Button>
-                </div>
-              </Skeleton>
+      <div className="wraper-container">
+        <div className="header-course">
+          <MainMenu hotLine={props.webInfo?.hotLine} webLogo={props.webInfo?.webLogo} />
+          <div className="background-header-course">
+            <div className="positionBackground">
+              <img src={bgPostion} alt="bgPostion" />
             </div>
-          </Col>
-        </Row>
+            <Breadcrumb items={[{ name: course.name }]} />
+            <div className="container">
+              <div className="title"><h1>{course.name}</h1></div>
+              <div className="description">{course.shortDesc}</div>
+              <div className="overview-item">
+                <div className="item-main">
+                  <span className="ratting">
+                    <Rate className="rating-star" value={4.6} allowHalf disabled defaultValue={course.courseSystem?.vote ?? 4.6} />
+                  </span>
+                  <span className="total-user-rate">(38,820 ratings)<span>{course.courseSystem?.memberNum ?? 1000}k Students</span></span>
+                </div>
+              </div>
+            </div>
+            <div className="tag-course">
+              Video
+            </div>
+          </div>
+        </div>
+        <div style={{ backgroundColor: 'white' }}>
+          <div className="container">
+            <Row id="main-course-detail">
+              <Col span={24} lg={16} className="course-detail">
+                <Skeleton loading={userCourseLoading}>
+                  <ContentCourse course={course} />
+                  <div className="list-topic-tree-item">
+                    <h2>Danh Sách Bài Học</h2>
+                    <div className="course-topic-tree">
+                      <CourseTopicTreeView course={course} />
+                    </div>
+                  </div>
+                </Skeleton>
+              </Col>
+              <Col span={24} lg={8}>
+                <InformationCourse course={course} />
+              </Col>
+            </Row>
+          </div>
+        </div>
+        <ActiveCourseModal
+          courseId={course._id}
+          isVisible={isVisibleActiveCourseModal}
+          setVisible={() => {
+            dispatch(setActiveCourseModalVisibleAction(false))
+          }}
+        />
       </div>
-      <ActiveCourseModal
-        courseId={course._id}
-        isVisible={isVisibleActiveCourseModal}
-        setVisible={() => {
-          dispatch(setActiveCourseModalVisibleAction(false))
-        }}
-      />
     </>
   )
 }
