@@ -80,24 +80,30 @@ const LessonInfoView = (props: { topic: Topic }) => {
       <PanelContainer title="Nội dung">
         {topic._id === dataScenario?.topicId &&
           <div className="video-commponent">
-            {dataScenario?.endTime ? (
-              <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
-                <Col xl={16} md={12} xs={24}>
+            {/* {dataScenario?.endTime ? ( */}
+            <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
+              <Col xl={16} md={12} xs={24}>
+                {!dataScenario?.endTime ? (
                   <div className="streaming">
                     <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} />
                   </div>
-                </Col>
-                <Col xl={8} md={12} xs={24}>
-                  <div className="comment">
-                    <CommentPanel commentScope={CommentScopes.TOPIC} />
+                ) : (
+                  <div className="video-scenario">
+                    <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
                   </div>
-                </Col>
-              </Row>
-            ) : (
+                )}
+              </Col>
+              <Col xl={8} md={12} xs={24}>
+                <div className="comment">
+                  <CommentPanel commentScope={CommentScopes.TOPIC} />
+                </div>
+              </Col>
+            </Row>
+            {/* ) : (
               <div className="scenario-video">
                 <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
               </div>
-            )}
+            )} */}
           </div>
         }
       </PanelContainer>

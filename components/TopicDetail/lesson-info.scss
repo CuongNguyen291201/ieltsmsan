@@ -3,6 +3,16 @@
     padding: 16px;
     .streaming {
     }
+    .video-scenario {
+      .sm-scenario-game {
+        .player-wrapper {
+          height: 398px;
+        }
+        .video-timeline {
+          margin-top: 60px !important;
+        }
+      }
+    }
     .comment {
       height: 400px;
       overflow: auto;
