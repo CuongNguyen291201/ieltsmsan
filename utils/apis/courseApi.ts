@@ -51,7 +51,7 @@ export const apiLoadCourseByCode = async (code: string): Promise<{ courses?: Cou
   return data;
 }
 export const apiGetCodeInfo = (code: string): any => POST_API('get-code-info', { code })
-export const apiActiveCode = async (body: { code: string, token: string, courseId: string }): Promise<UserCourse | null> => {
+export const apiActiveCode = async (body: { code: string, courseId: string }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('active-course-by-code', body);
   if (status !== response_status_codes.success) return null;
 
@@ -77,7 +77,7 @@ export const apiJoinCourse = async (args: { token: string; courseId: string }): 
 }
 
 export const apiGetCourseMembers = async (args: {
-  token: string;
+  // token: string;
   courseId: string;
   skip?: number;
   limit?: number;
@@ -90,7 +90,7 @@ export const apiGetCourseMembers = async (args: {
   return data;
 }
 
-export const apiChangeCourseMemberStatus = async (args: { token: string; userId: string; courseId: string; status: number }): Promise<UserCourse | null> => {
+export const apiChangeCourseMemberStatus = async (args: { userId: string; courseId: string; status: number }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('change-course-member-status', args);
   if (status !== response_status_codes.success) return null;
   return data;

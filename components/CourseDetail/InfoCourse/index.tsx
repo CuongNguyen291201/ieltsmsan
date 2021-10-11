@@ -6,11 +6,12 @@ import MainMenu from "../../MainMenu"
 import bgPostion from '../../../public/default/positionBg.png';
 import { _Topic } from "../../../custom-types";
 import { useMemo } from "react";
+import { getCoursePageSlug } from '../../../utils/router';
 
 export const InfoCourse = (props: { course: Course, webInfo?: WebInfo, topic?: _Topic }) => {
     const { course, webInfo, topic } = props;
     const breadcrumbItems = useMemo(() => {
-        const items = [{ name: course?.name }];
+        const items: any[] = [{ name: course?.name, slug: getCoursePageSlug({ course }) }];
         if (topic) items.push({ name: topic?.name });
         return items;
     }, [course, topic])

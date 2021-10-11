@@ -21,8 +21,12 @@ export const getCategorySlug = (args: { category: _Category }) => getBrowserSlug
 export const getCoursePageSlug = (args: { category?: _Category, course: Course }) =>
   `${args.category?.slug ? `${encodeURIComponent(args.category.slug)}/` : ''}${getBrowserSlug(args.course.slug, PAGE_COURSE_DETAIL, args.course._id)}`;
 
-export const getTopicPageSlug = (args: { category: _Category, topic: _Topic }) =>
-  `${encodeURIComponent(args.category.slug)}/${getBrowserSlug(args.topic.slug, PAGE_TOPIC_DETAIL, args.topic._id)}`;
+export const getTopicPageSlug = (args: { category?: _Category, topic: _Topic }) => {
+  const slug = `${args.category?.slug ? `${encodeURIComponent(args.category.slug)}/` : ''}${getBrowserSlug(args.topic.slug, PAGE_TOPIC_DETAIL, args.topic._id)}`;
+  console.log(slug);
+  
+  return slug;
+}
 
 export const getPaymentPageSlug = (...courseIds: string[]) =>
   `${ROUTER_PAYMENT}?courseIds=${courseIds.join(',')}`;

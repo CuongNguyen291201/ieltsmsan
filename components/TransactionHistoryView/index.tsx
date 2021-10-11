@@ -28,12 +28,12 @@ const TransactionHistoryView = () => {
   const user: UserInfo = useSelector((state: AppState) => state.userReducer.currentUser);
 
   useEffect(() => {
-    const token = getCookie(TOKEN);
-    if (!token) {
-      setState({ ...state, isLoading: false });
-      return;
-    }
-    apiGetUserOrders({ token, offset: 0, limit: LOAD_LIMIT })
+    // const token = getCookie(TOKEN);
+    // if (!token) {
+    //   setState({ ...state, isLoading: false });
+    //   return;
+    // }
+    apiGetUserOrders({ offset: 0, limit: LOAD_LIMIT })
       .then(({ data, total }) => {
         setState({ ...state, activeOrder: data[0] || null, orders: data, total, isLoading: false })
       })
@@ -47,12 +47,12 @@ const TransactionHistoryView = () => {
   const onChangePage = (page: number) => {
     scroll({ top: 0, behavior: "smooth" });
     setState({ ...state, isLoading: true });
-    const token = getCookie(TOKEN);
-    if (!token) {
-      setState({ ...state, isLoading: false });
-      return;
-    }
-    apiGetUserOrders({ token, offset: (page - 1) * LOAD_LIMIT, limit: LOAD_LIMIT })
+    // const token = getCookie(TOKEN);
+    // if (!token) {
+    //   setState({ ...state, isLoading: false });
+    //   return;
+    // }
+    apiGetUserOrders({ offset: (page - 1) * LOAD_LIMIT, limit: LOAD_LIMIT })
       .then(({ data, total }) => {
         setState({ ...state, activeOrder: data[0] || null, orders: data, total, isLoading: false, currentPage: page })
       })

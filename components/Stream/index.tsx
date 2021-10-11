@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useRef, Fragment } from 'react';
+import React, { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactPlayer from 'react-player';
 import screenfull, { Screenfull } from 'screenfull';
-import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
-import './style.scss';
 import FullscreenIcon from '../../public/icon/fullscreen.svg';
 import ExitFullscreenIcon from '../../public/icon/fullscreen_exit.svg';
-import StreamIcon from '../../public/icon/live_stream.svg';
-import VolumeUpIcon from '../../public/icon/volume_up.svg';
-import VolumeOffIcon from '../../public/icon/volume_off.svg';
 import LiveStream from '../../public/icon/live-stream.svg';
 import ViewStream from '../../public/icon/view-stream.svg';
+import VolumeOffIcon from '../../public/icon/volume_off.svg';
+import VolumeUpIcon from '../../public/icon/volume_up.svg';
+import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
+import './style.scss';
 
 const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo, dataTimeCurrent: Number }) => {
   const { dataTotalUser, dataScenario, dataTimeCurrent } = props;
@@ -22,9 +21,9 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
   const exitHandler = () => {
     if (
       !document.fullscreenElement &&
-      !document.webkitIsFullScreen &&
-      !document.mozFullScreen &&
-      !document.msFullscreenElement
+      !document['webkitIsFullScreen'] &&
+      !document['mozFullScreen'] &&
+      !document['msFullscreenElement']
     ) {
       setIsFullscreen(false)
     }
@@ -44,7 +43,7 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
     };
   }, [exitHandler]);
 
-  const handleVolumeChange = (e) => {
+  const handleVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsMute(false)
     setVolume(parseFloat(e.target.value))
   }
@@ -58,12 +57,12 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
       (screenfull as Screenfull).toggle()
       setIsFullscreen(false)
     } else {
-      (screenfull as Screenfull).request(findDOMNode(screen))
+      (screenfull as Screenfull).request(findDOMNode(screen) as Element)
       setIsFullscreen(true)
     }
   }
 
-  const ref = (player) => {
+  const ref = (player: HTMLElement) => {
     screen = player
   }
 
@@ -85,7 +84,7 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
           onReady={(e) => {
             if (dataScenario.startTime) e.seekTo(Math.round((Number(dataTimeCurrent) - dataScenario.startTime) / 1000));
           }}
-          onContextMenu={e => e.preventDefault()}
+          onContextMenu={(e: any) => e.preventDefault()}
           config={{
             file: {
               attributes: {

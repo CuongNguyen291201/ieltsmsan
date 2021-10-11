@@ -91,9 +91,9 @@ function MainMenu(props: { hotLine?: string, webLogo?: string }) {
 
   const handleActiveCode = async (course: Course) => {
     try {
-      const token = getCookie(TOKEN);
-      if (!token) return;
-      const userCourse = await apiActiveCode({ code: codeRef.current.value, token, courseId: course._id });
+      // const token = getCookie(TOKEN);
+      // if (!token) return;
+      const userCourse = await apiActiveCode({ code: codeRef.current.value, courseId: course._id });
       if (!!userCourse) {
         setActivedIds([...activedIds, userCourse.courseId]);
       }

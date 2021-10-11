@@ -66,7 +66,9 @@ const Slug = (props: SlugTypes) => {
       items.push({ name: course.name, slug: getCoursePageSlug({ category, course }) });
     } else if (type === PAGE_TOPIC_DETAIL) {
       const { category, course, topic } = props;
-      items.push({ name: category.name, slug: getCategorySlug({ category }) });
+      if (category) {
+        items.push({ name: category.name, slug: getCategorySlug({ category }) });
+      }
       items.push(
         { name: course.name, slug: getCoursePageSlug({ category, course }) },
         { name: topic.name, slug: getTopicPageSlug({ category, topic }) }
@@ -145,6 +147,16 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         return {
           props: {
             id, type, slug, course, webInfo, webSocial
+          }
+        }
+      } else if (type === PAGE_TOPIC_DETAIL) {
+        store.dispatch(setCurrrentTopicAction(null, true));
+        const topic = await apiGetTopicById(id);
+        const course = topic.course;
+        store.dispatch(setCurrrentTopicAction(topic));
+        return {
+          props: {
+            id, type, slug, course, topic, webInfo, webSocial
           }
         }
       }

@@ -29,10 +29,10 @@ const MemberListView = (props: { course: Course }) => {
   }, uiLogic] = useReducer(memListReducer, memListInitState);
 
   useEffect(() => {
-    const token = getCookie(TOKEN);
-    if (!token) return;
+    // const token = getCookie(TOKEN);
+    // if (!token) return;
     apiGetCourseMembers({
-      token,
+      // token,
       courseId: course._id,
       field: 'joinDate',
       asc: false,
@@ -50,11 +50,11 @@ const MemberListView = (props: { course: Course }) => {
   }, []);
 
   const onChangePage = (page: number) => {
-    const token = getCookie(TOKEN);
-    if (!token) return;
+    // const token = getCookie(TOKEN);
+    // if (!token) return;
     uiLogic(setLoading(true));
     apiGetCourseMembers({
-      token,
+      // token,
       courseId: course._id,
       field: 'joinDate',
       asc: false,
@@ -72,10 +72,10 @@ const MemberListView = (props: { course: Course }) => {
   }
 
   const onAction = (args: { userId: string; status: number }) => {
-    const token = getCookie(TOKEN);
-    if (!token) return;
+    // const token = getCookie(TOKEN);
+    // if (!token) return;
     uiLogic(setOnAction(true));
-    apiChangeCourseMemberStatus({ token, ...args, courseId: course._id })
+    apiChangeCourseMemberStatus({ ...args, courseId: course._id })
       .then((newUc) => {
         if (newUc) {
           uiLogic(setNewMemListStatus(newUc));

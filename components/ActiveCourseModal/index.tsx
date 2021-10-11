@@ -32,9 +32,9 @@ const ActiveCourseModal = (props: {
       return;
     }
     setActivating(true);
-    const token = getCookie(TOKEN);
-    if (!token) return;
-    apiActiveCode({ code, courseId, token })
+    // const token = getCookie(TOKEN);
+    // if (!token) return;
+    apiActiveCode({ code, courseId })
       .then((uc) => {
         dispatch(setUserCourseAction(uc));
         if (!!uc) message.success("Kích hoạt thành công");
