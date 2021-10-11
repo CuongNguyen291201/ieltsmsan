@@ -5,6 +5,8 @@ import { useScrollToTop } from '../../hooks/scrollToTop';
 import { Course } from '../../sub_modules/share/model/courses';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountCategoryCourses, apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
+import { getCategorySlug } from '../../utils/router';
+import Breadcrumb from '../Breadcrumb';
 import CourseItem from '../CourseItem';
 import GridTemplate2 from '../grid/GridTemplate2';
 import Pagination from '../Pagination';
@@ -26,6 +28,7 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
 
   return (
     <>
+      <Breadcrumb items={[{ name: category?.name, slug: getCategorySlug({ category }) }]} />
       <div className="container root-category-detail">
         <div className="nav-cat">
           <div className="head">

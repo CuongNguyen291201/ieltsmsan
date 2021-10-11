@@ -6,15 +6,15 @@ $xl:1199.98px;
 
 @mixin responsive($canvas) {
   @if $canvas == sm {
-    @media only screen and (max-width: $sm) { @content; }
+    @media (max-width: $sm) { @content; }
   }
   @if $canvas == md {
-    @media only screen and (max-width: $md) { @content; }
+    @media (max-width: $md) { @content; }
   }
   @if $canvas == lg {
-    @media only screen and (max-width: $lg) { @content; }
+    @media (max-width: $lg) { @content; }
   }
   @if $canvas == xl {
-    @media only screen and (max-width: $xl) { @content; }
+    @media (max-width: $xl) { @content; }
   }
 }

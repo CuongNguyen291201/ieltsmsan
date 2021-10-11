@@ -28,24 +28,23 @@ const TopicTree = (props: { category: _Category; course: Course; }) => {
         <Fragment key={e._id}>
           <div className="item-tree">
             <span className="stt-topic">{index + 1}</span>
-            <div className="icon-new-topic"><img src={newTopic} alt="" /></div>
+            {!!e.isNew && <div className="icon-new-topic"><img src={newTopic} alt="" /></div>}
             <TopicTreeNode category={category} topic={e} isMain={true} />
           </div>
         </Fragment>
       ))}
-      {loadMoreMainTopics && <div className="load-more-main flex-center">
-        <OvalRecButton
-          title="TẢI THÊM BÀI HỌC"
-          iconClassName="fas fa-arrow-down"
-          fontSize="12px"
-          padding="10px"
-          onClick={() => {
-            const [lastRecord] = mainTopics.slice(-1);
-            dispatch(fetchTopicsAction({
-              courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex', userId: currentUser._id, lastRecord
-            }))
-          }}
-        />
+      {loadMoreMainTopics && <div
+        className="load-more-main flex-center"
+        onClick={() => {
+          dispatch(fetchTopicsAction({
+            courseId: course._id, parentId: null, limit: LOAD_LIMIT, field: 'orderIndex', userId: currentUser._id, skip: mainTopics.length
+          }))
+        }}
+        style={{ height: "60px", marginTop: "20px", boxShadow: "0px 0px 15px rgba(95, 73, 118, 0.15)", cursor: "pointer" }}
+      >
+        <span>
+          Tải thêm bài học
+        </span>
       </div>}
     </>
   );

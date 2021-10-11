@@ -11,4 +11,4 @@ export enum CommentScopes {
   COURSE, TOPIC
 }
 
-export type _Topic = Topic & { topicProgress?: TopicProgress }
+export type _Topic = Topic & { topicProgress?: TopicProgress; isNew?: boolean; isOverStartTime?: boolean; score?: number }

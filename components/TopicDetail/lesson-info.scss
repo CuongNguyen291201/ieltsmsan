@@ -50,12 +50,12 @@
     .course-topic-tree{
       .main-topic{
         .item-tree{
-          .stt-topic{
-            display: none;
-          }
+          // .stt-topic{
+          //   // display: none;
+          // }
           .main-topic-node{
             .topic-header{
-              padding: 0;
+              padding: 0 10px;
               .topic-title{
                 margin: 10px 0;
                 justify-content: left;

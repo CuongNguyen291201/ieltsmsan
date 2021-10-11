@@ -13,8 +13,7 @@ export const ContentCourse = (props: { course: Course }) => {
         <div className="course-content">
             <h2>Nội dung khóa học</h2>
             <SanitizedDiv
-                className="content"
-                style={show ? { WebkitLineClamp: 'unset' } : { WebkitLineClamp: 4 }}
+                className={`content${show ? '' : ' hide'}`}
                 content={(course.courseContent as CourseContent)?.desc}
             />
             <div onClick={() => showMore()} className="show-more">

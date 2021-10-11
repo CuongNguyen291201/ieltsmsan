@@ -20,8 +20,9 @@ export const apiOffsetTopicsByParentId = (args: {
   parentId: string | null; courseId: string;
   asc?: boolean;
   field?: string;
-  lastRecord?: Topic;
+  skip?: number;
   limit?: number;
+  userId?: string;
 }) => POST_REQ('offset-topics-by-parent-id', args);
 
 export const apiCountTopicsByParentId = async (args: {

@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
-import React, { useMemo } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
+import React from 'react';
 import CourseDetail from '../../components/CourseDetail';
 import Layout from '../../components/Layout';
 import NewsView from '../../components/NewsView';
@@ -30,7 +29,7 @@ import { apiGetNewsById } from '../../utils/apis/newsApi';
 import { apiGetTopicById } from '../../utils/apis/topicApi';
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
-import { getCategorySlug, getCoursePageSlug, getTopicPageSlug, NEWS_ID_PREFIX, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
+import { NEWS_ID_PREFIX, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
 
 type SlugTypes = {
   slug: string;
@@ -55,28 +54,6 @@ const Slug = (props: SlugTypes) => {
     [PAGE_NEWS_DETAIL]: <NewsView news={props.news} />
   }
 
-  const breadcrumbItems = useMemo(() => {
-    const items: { name: string; slug?: string; }[] = [];
-    if (type === PAGE_CATEGORY_DETAIL) {
-      const { category } = props;
-      items.push({ name: category.name, slug: getCategorySlug({ category }) });
-    } else if (type === PAGE_COURSE_DETAIL) {
-      const { category, course } = props;
-      if (category) items.push({ name: category.name, slug: getCategorySlug({ category }) });
-      items.push({ name: course.name, slug: getCoursePageSlug({ category, course }) });
-    } else if (type === PAGE_TOPIC_DETAIL) {
-      const { category, course, topic } = props;
-      if (category) {
-        items.push({ name: category.name, slug: getCategorySlug({ category }) });
-      }
-      items.push(
-        { name: course.name, slug: getCoursePageSlug({ category, course }) },
-        { name: topic.name, slug: getTopicPageSlug({ category, topic }) }
-      );
-    }
-    return items;
-  }, [type]);
-
   return (
     <Layout
       addMathJax={type === PAGE_TOPIC_DETAIL}
@@ -86,7 +63,6 @@ const Slug = (props: SlugTypes) => {
       webInfo={props.webInfo}
       webSocial={props.webSocial}
     >
-      {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && type !== PAGE_NEWS_DETAIL && type !== PAGE_COURSE_DETAIL && type !== PAGE_TOPIC_DETAIL && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
     </Layout>
   );
@@ -183,6 +159,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         store.dispatch(setCurrrentTopicAction(null, true));
         topic = await apiGetTopicById(id);
         course = topic.course;
+        store.dispatch(setCurrentCourseAction(course));
         store.dispatch(setCurrrentTopicAction(topic));
       }
       return {
