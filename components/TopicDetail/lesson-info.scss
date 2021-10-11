@@ -1,6 +1,22 @@
 .lesson-detail {
+  position: relative;
+  top: -200px;
+
   .video-commponent {
     padding: 16px;
+    background: white;
+    box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+    margin-bottom: 20px;
+    .video-live{
+      .view-mode{
+        text-align: right;
+        margin-top: 10px;
+        span{
+          margin: 0 5px;
+          cursor: pointer;
+        }
+      }
+    }
     .streaming {
     }
     .video-scenario {
@@ -8,6 +24,7 @@
         .player-wrapper {
           height: 398px;
         }
+       
         .video-timeline {
           margin-top: 60px !important;
         }
@@ -21,6 +38,41 @@
       padding: 40px;
       width: 100%;
       margin: auto;
+    }
+  }
+  .video-component-fullscreen{
+    .player-wrapper {
+      height: 398px !important; 
+      height: 606px !important;
+    }     
+  }
+  .info-topic{
+    .course-topic-tree{
+      .main-topic{
+        .item-tree{
+          .stt-topic{
+            display: none;
+          }
+          .main-topic-node{
+            .topic-header{
+              padding: 0;
+              .topic-title{
+                margin: 10px 0;
+                justify-content: left;
+                .sortdes-course{
+                  span{
+                    font-weight: 500 !important;
+                    font-size: 15px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    #course-overview{
+      margin-top: 0 !important;
     }
   }
 }
@@ -66,4 +118,7 @@
   align-items: center;
   justify-content: flex-end;
   margin: 15px 10px;
+}
+.info-topic{
+  background-color: white;
 }

@@ -1,0 +1,147 @@
+@import "../../../styles/variables.scss";
+@import "../../../styles/responsive.scss";
+#course-overview {
+    margin: 12px;
+    padding: 10px;
+    margin-right: 0;
+    margin-left: 20px;
+    box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+    background-color: white;
+    .information-course{
+      background-color: white;
+      position: relative;
+      .discount-price{
+        width: 100px;
+        background-color: white;
+        border-bottom-right-radius: 20px;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        color: #FFA800;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        padding: 3px;
+        font-size: 13px;
+        b{
+          font-size: 14px;
+        }
+      }
+      .time-end-price{
+        border: 1px solid #FFC107;
+        padding: 5px;
+        margin-top: 10px;
+        position: relative;
+        ._iconNew{
+          position: absolute;
+          right: 5px;
+          top: -5px;
+        }
+      }
+      .inf-course_{
+        padding: 10px;
+        padding-top: 15px;
+        .price-and-discount-price{
+          display: flex;
+          .price-real{
+            font-weight: 500;
+            font-size: 13px;
+            margin-right: 10px;
+          }
+        }
+        .item__{
+          margin-top: 15px;
+          display: flex;
+          img{
+            margin-right: 20px;
+          }
+          .text{
+            font-size: 15px;
+            margin-right: 10px;
+            width: 120px;
+          }
+          .number__{
+            font-weight: 500;
+            font-size: 13px;
+          }
+        }
+      }
+
+    }
+    .title-block {
+      text-align: center;
+      border-bottom: 2px solid $root-color;
+    }
+    .short-desc {
+      text-align: justify;
+      text-justify: inter-word;
+      margin-top: 12px;
+    }
+    .overview-item {
+      display: flex;
+      align-items: center;
+      margin: 12px 0;
+      i {
+        width: 22px;
+      }
+      .item-main {
+        span[role="label"] {
+          font-weight: 800;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .price,
+    .origin-price {
+      color: #2D2D2D;
+      text-align: center;
+      font-size:14px;
+      text-transform: uppercase;
+      &.discount {
+        text-decoration: line-through;
+      }
+    }
+
+    .rating-star {
+      mix-blend-mode: multiply;
+      margin-right: 10px;
+      font-size: 13px;
+    }
+
+    .button-group {
+      width: 100%;
+      margin-top: 10px;
+      // display: flex;
+      justify-content: space-between;
+      div{
+        width: 100%;
+        margin: 10px 0;
+        button{
+          width: 100%;
+        }
+      }
+      
+      @include responsive(xl) {
+        flex-direction: column;
+        gap: 10px;
+      }
+      @include responsive(lg) {
+        flex-direction: row;
+      }
+      .btn {
+        min-width: 48%;
+        &:hover {
+          filter: brightness(1.5);
+        }
+      }
+      .bgr-green {
+        background-color: green;
+        border-color: green;
+        padding: 5px;
+      }
+      .bgr-root {
+        background-color: $root-color;
+        border-color: $root-color;
+        padding: 5px;
+      }
+    }
+  }

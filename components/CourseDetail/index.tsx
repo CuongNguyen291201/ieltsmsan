@@ -40,11 +40,12 @@ import iconClock from '../../public/default/icon-clock_.png';
 import bgPostion from '../../public/default/positionBg.png';
 import './style.scss';
 import { ContentCourse } from './content-course';
-import { InformationCourse } from './information-course';
+import { InformationCourse } from './InformationCourse/information-course';
 import WebInfo from '../../sub_modules/share/model/webInfo';
+import { InfoCourse } from './InfoCourse';
 
 const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
-  const { course } = props;
+  const { course, webInfo } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal, currentCourseLoading } = useSelector((state: AppState) => state.courseReducer);
@@ -102,30 +103,7 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
   return (
     <>
       <div className="wraper-container">
-        <div className="header-course">
-          <MainMenu hotLine={props.webInfo?.hotLine} webLogo={props.webInfo?.webLogo} />
-          <div className="background-header-course">
-            <div className="positionBackground">
-              <img src={bgPostion} alt="bgPostion" />
-            </div>
-            <Breadcrumb items={[{ name: course.name }]} />
-            <div className="container">
-              <div className="title"><h1>{course.name}</h1></div>
-              <div className="description">{course.shortDesc}</div>
-              <div className="overview-item">
-                <div className="item-main">
-                  <span className="ratting">
-                    <Rate className="rating-star" value={4.6} allowHalf disabled defaultValue={course.courseSystem?.vote ?? 4.6} />
-                  </span>
-                  <span className="total-user-rate">(38,820 ratings)<span>{course.courseSystem?.memberNum ?? 1000}k Students</span></span>
-                </div>
-              </div>
-            </div>
-            <div className="tag-course">
-              Video
-            </div>
-          </div>
-        </div>
+        <InfoCourse course={course} webInfo={webInfo} />
         <div style={{ backgroundColor: 'white' }}>
           <div className="container">
             <Row id="main-course-detail">

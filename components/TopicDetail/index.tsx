@@ -8,19 +8,22 @@ import { AppState } from '../../redux/reducers';
 import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { STATUS_OPEN, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { Course } from '../../sub_modules/share/model/courses';
 import Topic from '../../sub_modules/share/model/topic';
+import WebInfo from '../../sub_modules/share/model/webInfo';
 import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_NOT_FOUND } from '../../utils/router';
 import CommentPanel from '../CommentPanel';
 import PanelContainer from '../containers/PanelContainer';
+import { InfoCourse } from '../CourseDetail/InfoCourse';
 import LessonInfoView from './LessonInfoView';
 import StudyInfoView from './StudyInfoView';
 import './style.scss';
 import TopicRankingsView from './TopicRankingsView';
 
-const TopicDetail = (props: { topic: Topic; }) => {
-  const { topic } = props;
+const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo }) => {
+  const { topic, course, webInfo } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const router = useRouter();
@@ -48,29 +51,28 @@ const TopicDetail = (props: { topic: Topic; }) => {
 
   useScrollToTop();
   return !currentUser ? <></> : (
-    <div className="topic-detail">
-      <div className="container">
-        <div className="topic-title">
-          {topic.name}
-        </div>
+    <div>
+      <InfoCourse course={topic.course} webInfo={webInfo} topic={topic} />
+      <div className="topic-detail">
+        <div className="container">
+          <div className="short-description">
+            {topic.shortDescription}
+          </div>
 
-        <div className="short-description">
-          {topic.shortDescription}
-        </div>
+          {
+            topic.type === TOPIC_TYPE_LESSON
+              ? <LessonInfoView topic={topic} />
+              : <StudyInfoView topic={topic} />
+          }
+          {topic.type === TOPIC_TYPE_TEST && <PanelContainer title="Bảng xếp hạng">
+            <TopicRankingsView topic={topic} />
+          </PanelContainer>}
 
-        {
-          topic.type === TOPIC_TYPE_LESSON
-            ? <LessonInfoView topic={topic} />
-            : <StudyInfoView topic={topic} />
-        }
-        {topic.type === TOPIC_TYPE_TEST && <PanelContainer title="Bảng xếp hạng">
-          <TopicRankingsView topic={topic} />
-        </PanelContainer>}
-
-        {/* <PanelContainer title="Bình luận">
+          {/* <PanelContainer title="Bình luận">
           <CommentPanel commentScope={CommentScopes.TOPIC} />
         </PanelContainer> */}
 
+        </div>
       </div>
     </div>
   );

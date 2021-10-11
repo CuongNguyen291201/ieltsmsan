@@ -1,21 +1,22 @@
 import { Button, Skeleton } from "antd";
-import { Course } from "../../sub_modules/share/model/courses";
-import iconCircle from '../../public/default/icon-circle.png';
-import iconNewCourse from '../../public/default/new_.png';
-import iconPrice from '../../public/default/icon-price_.png';
-import iconTotalStudent from '../../public/default/total-student.png';
-import iconNumberStudy from '../../public/default/icon-number-study.png';
-import iconClock from '../../public/default/icon-clock_.png';
+import { Course } from "../../../sub_modules/share/model/courses";
+import iconCircle from '../../../public/default/icon-circle.png';
+import iconNewCourse from '../../../public/default/new_.png';
+import iconPrice from '../../../public/default/icon-price_.png';
+import iconTotalStudent from '../../../public/default/total-student.png';
+import iconNumberStudy from '../../../public/default/icon-number-study.png';
+import iconClock from '../../../public/default/icon-clock_.png';
 import bgPostion from '../../public/default/positionBg.png';
 import { useMemo } from "react";
-import { numberFormat } from '../../utils';
+import { numberFormat } from '../../../utils';
 import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../redux/reducers";
-import orderUtils from '../../utils/payment/orderUtils';
+import { AppState } from "../../../redux/reducers";
+import orderUtils from '../../../utils/payment/orderUtils';
 import { useRouter } from "next/router";
-import { getPaymentPageSlug } from '../../utils/router';
-import { createOneAction } from '../../redux/actions';
-import { Scopes } from '../../redux/types';
+import { getPaymentPageSlug } from '../../../utils/router';
+import { createOneAction } from '../../../redux/actions';
+import { Scopes } from '../../../redux/types';
+import './style.scss'
 export const InformationCourse = (props: { course: Course }) => {
     const { course } = props
     const router = useRouter();

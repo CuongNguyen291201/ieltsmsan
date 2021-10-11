@@ -98,4 +98,10 @@ export const getOneVideoScenarioAPI = async (object) => {
   }
   return data
 }
-
+export const apiGetTimeStamp = async (args: {}) => {
+  const res = await POST_API('check-time-stamp', args)
+  if (res.status === 200) {
+    return res.data
+  }
+  return 0
+};

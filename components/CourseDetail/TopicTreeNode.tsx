@@ -149,7 +149,7 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
           <div className="topic-title">
             {isTopicHasChild ? <i className={`fas fa-chevron-down ${topicOptions.isLoadChild ? ' open' : 'close'} toggle-main`} /> : <i className="toggle-main isStatusDone" />}
             <TopicIcon topicType={topic.type} isMain={true} topicVideoUrl={topic.videoUrl} isTopicOpen={topic.status === STATUS_OPEN} />
-            {isMain ? <span style={{ fontWeight: 600 }}>{topic.name}</span> : <div>{topic.name} <div className="relaseDate"><img src={releaseDate} alt="releaseDate" />{`${formatDateDMY(topic.startTime)}`}</div></div>}
+            {isMain ? <div className="sortdes-course"><span style={{ fontWeight: 600 }}>{topic.name}</span><div className="sort__">{topic.shortDescription ? topic.shortDescription : topic.topicExercise?.questionsNum}</div></div> : <div className="info-item-course">{topic.name} <div className="relaseDate"><span>{topic.shortDescription}</span><img src={releaseDate} alt="releaseDate" />{`${formatDateDMY(topic.startTime)}`}</div></div>}
           </div>
           {isMain ? <div className="icon-lock-course"><img src={iconLockLession} alt="iconLockLession" /></div> : ''}
         </div>

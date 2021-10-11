@@ -12,8 +12,8 @@ import VolumeOffIcon from '../../public/icon/volume_off.svg';
 import LiveStream from '../../public/icon/live-stream.svg';
 import ViewStream from '../../public/icon/view-stream.svg';
 
-const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo }) => {
-  const { dataTotalUser, dataScenario } = props;
+const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo, dataTimeCurrent: Number }) => {
+  const { dataTotalUser, dataScenario, dataTimeCurrent } = props;
   let screen = null;
   const [volume, setVolume] = useState(0.5);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -82,6 +82,9 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
           playsinline={false}
           onStart={() => { }}
           onError={e => { }}
+          onReady={(e) => {
+            if (dataScenario.startTime) e.seekTo(Math.round((Number(dataTimeCurrent) - dataScenario.startTime) / 1000));
+          }}
           onContextMenu={e => e.preventDefault()}
           config={{
             file: {

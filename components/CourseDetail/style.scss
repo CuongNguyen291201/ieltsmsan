@@ -222,6 +222,15 @@
                 transform: rotate(0deg);
                 transition: .1s ease;
               }
+              .info-item-course{
+                text-align: left;
+              }
+              .sortdes-course{
+                text-align: left;
+                .sort__{
+                  font-size: 12px;
+                }
+              }
             }
             .accomplished{
               div{
@@ -516,6 +525,7 @@
         width: 100%;
       }
       .icon-lock-course{
+        display: none;
         margin-left: 10px;
         text-align: left;
       }
@@ -544,6 +554,9 @@
           display: flex;
           align-items: center;
           font-size: 12px;
+          span{
+            margin-right: 15px;
+          }
           img{
             margin-right: 10px;
           }
@@ -581,7 +594,14 @@
     .background-header-course{
     }
   }
-  @media (max-width:1199px) {
+  @media (max-width:199px) {
+    .main-menu {
+      .layout-header{
+        .menu{
+          display: none;
+        }
+      }
+    } 
     .hideDesktop{
       display: flex;
       align-items: center;

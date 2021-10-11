@@ -7,3 +7,140 @@
     }
   }
 }
+.course-topic-tree{
+  box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+  .main-topic{
+    padding: 0;
+    .item-tree{
+      position: relative;
+    .stt-topic{
+      width: 25px;
+      height: 25px;
+      border-radius: 100%;
+      border: 1px solid #5624D0;
+      position: absolute;
+      left: -13px;
+      top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #5624D0;
+      background-color: white;
+    }
+    .icon-new-topic{
+      img{
+        width: 30px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+    .main-topic-node{
+      border-radius:0;
+      background-color: white;
+      border: 0;
+      border-bottom: 1px solid #ccc;
+      padding: 0px;
+      margin-bottom: 0;
+      .topic-header{
+        text-align: center;
+        grid-template-columns: 18fr 5fr 2fr 1fr;
+
+        .topic-title{
+        .isStatusDone{
+          width: 10px;
+          height: 10px;
+          border: 1px solid #5624D0;
+          border-radius: 100%;
+          margin-top: 3px;
+        }
+        .icon-clock{
+          margin: 0 10px;
+        }
+        .toggle-main{
+          color: #5624D0;
+          font-size: 14px;
+          margin: 0 10px;
+        }
+        .open{
+          transform: rotate(-180deg);
+          transition: .1s ease;
+        }
+        .close{
+          transform: rotate(0deg);
+          transition: .1s ease;
+        }
+        .info-item-course{
+          text-align: left;
+        }
+        .sortdes-course{
+          text-align: left;
+          .sort__{
+            font-size: 12px;
+          }
+        }
+      }
+      .accomplished{
+        div{
+          background-color: #7CE192;
+          width: 55px;
+          height: 23px;
+          border-radius: 50px;
+          box-shadow: inset 0px 4px 4px rgb(0 0 0 / 25%);
+          margin:auto;
+          margin-right: -20px;
+          font-size: 12px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding-top: 1px;
+          margin-top: 5px;
+        }
+      }
+      }
+      .main-topic-content{
+        width: calc( 100% - 100px );
+        margin: auto;
+        padding: 0;
+        .item-main-topic-content{
+            // padding: 10px 0;
+          .wraper-topic-child{
+            .main-topic-node{
+              border-bottom: 0 !important;
+              .topic-header{
+                padding: 20px 0;
+                padding-left: 20px;
+                .topic-title{
+                  ._x-topic-icon{
+                      .free-ico{
+                        top: -5px;
+                        right: 23px;
+                      }
+                  }
+                }
+              }
+            }
+          }
+        .leaf-topic-node{
+          padding: 0;
+          position: relative;
+          .isPrice{
+            position: absolute;
+            right: 0;
+            top: -5px;
+          }
+          .isDone{
+            position: absolute;
+            right: 8px;
+            top: 25px;
+          }
+          .leaf-topic-header{
+            padding: 15px 0;
+          }
+        }
+      }
+      }
+    }
+  }
+  }
+}

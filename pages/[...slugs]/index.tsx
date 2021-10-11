@@ -50,7 +50,7 @@ const Slug = (props: SlugTypes) => {
   const mapTypePage = {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
     [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} webInfo={props.webInfo} />,
-    [PAGE_TOPIC_DETAIL]: <TopicDetail topic={props.topic} />,
+    [PAGE_TOPIC_DETAIL]: <TopicDetail course={props.course} topic={props.topic} webInfo={props.webInfo} />,
     [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
     [PAGE_NEWS_DETAIL]: <NewsView news={props.news} />
   }
@@ -78,13 +78,13 @@ const Slug = (props: SlugTypes) => {
   return (
     <Layout
       addMathJax={type === PAGE_TOPIC_DETAIL}
-      hideHeader={type === PAGE_COURSE_DETAIL}
-      hideMenu={type === PAGE_REPLY_COMMENT || type === PAGE_COURSE_DETAIL}
+      hideHeader={type === PAGE_COURSE_DETAIL || type === PAGE_TOPIC_DETAIL}
+      hideMenu={type === PAGE_REPLY_COMMENT || type === PAGE_COURSE_DETAIL || type === PAGE_TOPIC_DETAIL}
       hideFooter={type === PAGE_REPLY_COMMENT}
       webInfo={props.webInfo}
       webSocial={props.webSocial}
     >
-      {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && type !== PAGE_NEWS_DETAIL && type !== PAGE_COURSE_DETAIL && <Breadcrumb items={breadcrumbItems} />}
+      {type !== PAGE_ERROR && type !== PAGE_ERROR && type !== PAGE_REPLY_COMMENT && type !== PAGE_NEWS_DETAIL && type !== PAGE_COURSE_DETAIL && type !== PAGE_TOPIC_DETAIL && <Breadcrumb items={breadcrumbItems} />}
       {mapTypePage[type ?? PAGE_ERROR]}
     </Layout>
   );
