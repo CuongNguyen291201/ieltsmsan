@@ -45,14 +45,14 @@ const LessonInfoView = (props: { topic: Topic }) => {
   }, [])
 
   useEffect(() => {
-    if (currentUser && topic._id) {
+    if (currentUser && topic._id && dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime) {
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).on("value", (snapshot) => {
         setDataTotalUser((snapshot?.val() && Object.values(snapshot?.val())?.length) ?? 0)
       })
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).set(`${currentUser.name}`)
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).onDisconnect().remove()
     }
-  }, [topic])
+  }, [topic, dataTimeCurrent, dataScenario])
   const timeStamp = async () => {
     const dataTime = await apiGetTimeStamp({})
     setDataTimeCurrent(dataTime.timeStamp ?? moment().valueOf())
@@ -103,7 +103,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
             <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
               {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
                 <div className="streaming">
-                  <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} dataTimeCurrent={dataTimeCurrent} />
+                  <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} />
                 </div>
               ) : (
                 <div className="video-scenario">

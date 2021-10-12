@@ -2,6 +2,8 @@ import React, { ChangeEvent, Fragment, useEffect, useState } from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactPlayer from 'react-player';
 import screenfull, { Screenfull } from 'screenfull';
+import moment from 'moment';
+import { apiGetTimeStamp } from '../../utils/apis/topicApi';
 import FullscreenIcon from '../../public/icon/fullscreen.svg';
 import ExitFullscreenIcon from '../../public/icon/fullscreen_exit.svg';
 import LiveStream from '../../public/icon/live-stream.svg';
@@ -9,14 +11,18 @@ import ViewStream from '../../public/icon/view-stream.svg';
 import VolumeOffIcon from '../../public/icon/volume_off.svg';
 import VolumeUpIcon from '../../public/icon/volume_up.svg';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
+import PlayIcon from '../../public/icon/play-button.svg';
 import './style.scss';
 
-const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo, dataTimeCurrent: Number }) => {
-  const { dataTotalUser, dataScenario, dataTimeCurrent } = props;
+const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo }) => {
+  const { dataTotalUser, dataScenario } = props;
   let screen = null;
   const [volume, setVolume] = useState(0.5);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMute, setIsMute] = useState(false);
+  const [dataTimeCurrent, setDataTimeCurrent] = useState(0);
+  const [isPlay, setIsPlay] = useState(false);
+  const [key, setKey] = useState(Math.random());
 
   const exitHandler = () => {
     if (
@@ -62,6 +68,13 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
     }
   }
 
+  const onPlayLive = async () => {
+    const dataTime = await apiGetTimeStamp({})
+    setDataTimeCurrent(dataTime.timeStamp ?? moment().valueOf())
+    setIsPlay(true)
+    setKey(Math.random())
+  }
+
   const ref = (player: HTMLElement) => {
     screen = player
   }
@@ -69,20 +82,29 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
   return (
     <div className="stream-component">
       <figure ref={ref}>
+        {!isPlay && <img
+          className="play-icon"
+          alt="play-icon"
+          onClick={() => {
+            onPlayLive()
+          }}
+          src={PlayIcon}
+        />}
         <ReactPlayer
           // ref={refVideo}
+          key={key}
           className='react-player-scenario'
           url={dataScenario?.url ?? ''}
           controls={false}
           volume={isMute ? 0 : volume}
           loop={false}
           pip={false}
-          playing={true}
+          playing={isPlay}
           playsinline={false}
           onStart={() => { }}
           onError={e => { }}
           onReady={(e) => {
-            if (dataScenario.startTime) e.seekTo(Math.round((Number(dataTimeCurrent) - dataScenario.startTime) / 1000));
+            if (isPlay && dataScenario.startTime) e.seekTo(Math.round((Number(dataTimeCurrent) - dataScenario.startTime) / 1000));
           }}
           onContextMenu={(e: any) => e.preventDefault()}
           config={{

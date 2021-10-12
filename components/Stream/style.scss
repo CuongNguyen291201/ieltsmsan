@@ -33,6 +33,14 @@
       transition: all 0.2s !important;
       // transition-delay: 1s !important;
     }
+    .play-icon {
+      position: absolute;
+      cursor: pointer;
+      width: 50px;
+      z-index: 1;
+      left: 46%;
+      top: 43%;
+    }
   }
   .top-player-component {
     padding: 2px 0 3px;
