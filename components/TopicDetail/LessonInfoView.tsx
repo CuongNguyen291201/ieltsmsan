@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Col, Row } from 'antd';
 import moment from 'moment';
@@ -29,21 +29,49 @@ import CourseTopicTreeView from '../CourseDetail/CourseTopicTreeView';
 import twoScreen from '../../public/default/twoScreen.svg'
 import iconWaiting from '../../public/default/waiting-live.svg'
 import viewHideComment from '../../public/default/viewHideComment.svg'
+import registerServiceWorker, { countDownTimer, clearCountDown, unregister } from '../ServiceWorker/registerServiceWorker';
+import SanitizedDiv from '../SanitizedDiv';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
+  const refCountDown = useRef<any>();
   const firebaseInstance = useRealtime();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const [dataScenario, setDataScenario] = useState<ScenarioInfo>();
   const [dataTotalUser, setDataTotalUser] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [dataTimeCurrent, setDataTimeCurrent] = useState(0);
+  const [isEndLive, setIsEndLive] = useState(false)
+  const [countDown, setCountDown] = useState(0);
 
   useEffect(() => {
-    timeStamp()
-  }, [])
+    return () => {
+      clearCountDown();
+      unregister();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    if (!topic.videoUrl) {
+      apiUpdateTopicProgress({
+        topicId: topic._id, userId: currentUser._id, progress: 100
+      });
+    }
+    if (topic?._id) {
+      registerServiceWorker();
+      fetchDataScenario()
+    }
+  }, []);
+
+  useEffect(() => {
+    if (countDown === 0) {
+      console.log('start live');
+      fetchDataScenario();
+    }
+  }, [countDown]);
 
   useEffect(() => {
     if (currentUser && topic._id && dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime) {
@@ -54,13 +82,11 @@ const LessonInfoView = (props: { topic: Topic }) => {
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).onDisconnect().remove()
     }
   }, [topic, dataTimeCurrent, dataScenario])
-  const timeStamp = async () => {
-    const dataTime = await apiGetTimeStamp({})
-    setDataTimeCurrent(dataTime.timeStamp ?? moment().valueOf())
-  }
+
   const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
     return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
   }
+
   const { pages, onChangePage } = usePaginationState<Document>({
     keys: [topic._id],
     keyName: 'parentId',
@@ -69,26 +95,21 @@ const LessonInfoView = (props: { topic: Topic }) => {
   });
 
   const { mapTotalPages } = useTotalPagesState({ keys: [topic._id], keyName: 'parentId', api: apiCountDocumentsByTopic });
-  useEffect(() => {
-    if (!currentUser) return;
-    if (!topic.videoUrl) {
-      apiUpdateTopicProgress({
-        topicId: topic._id, userId: currentUser._id, progress: 100
-      });
-    }
-    if (topic?._id) {
-      fetchDataScenario()
-    }
-  }, [currentUser]);
 
   const fetchDataScenario = async () => {
     const dataArrTemp = await getOneVideoScenarioAPI({ topicId: topic?._id })
-    setDataScenario(dataArrTemp?.scenarioInfos?.[0] ?? [])
+    const dataTime = await apiGetTimeStamp({})
+    const dataScenarioTemp = dataArrTemp?.scenarioInfos?.[0] ?? []
+    setDataTimeCurrent(dataTime.timeStamp ?? moment().valueOf())
+    if ((dataScenarioTemp.startTime > dataTime.timeStamp) && dataScenarioTemp?.endTime) {
+      countDownTimer(Math.round((dataScenarioTemp.startTime - dataTime.timeStamp) / 1000), (_time: number) => {
+        setCountDown(_time)
+      })
+    }
+    setDataScenario(dataScenarioTemp)
   }
-  console.log('dataScenario: ', dataScenario);
-  const fullScreen = () => {
-    setIsFullScreen(true)
-  }
+  // console.log('dataScenario: ', dataScenario, isEndLive);
+
   return (
     <div className="lesson-detail">
       {/* <PanelContainer title="Mô tả">
@@ -97,43 +118,95 @@ const LessonInfoView = (props: { topic: Topic }) => {
       </PanelContainer> */}
 
       {/* <PanelContainer title="Nội dung"> */}
-      <div className="waiting-live">
-        <div className="item_">
-          <img src={iconWaiting} alt="iconWaiting" />
-          <div>LiveStream sẽ diễn ra vào lúc {dataScenario?.startTime}</div>
-        </div>
-      </div>
-      {(topic._id === dataScenario?.topicId) && (dataTimeCurrent >= dataScenario?.startTime) &&
+      {(topic._id === dataScenario?.topicId) ? (
         <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
-          {/* {dataScenario?.endTime ? ( */}
           <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
-            <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
-              {!dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
-                <div className="streaming">
-                  <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} />
-                </div>
-              ) : (
-                <div className="video-scenario">
-                  <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
-                </div>
-              )}
+            {(dataTimeCurrent >= dataScenario?.startTime) && !isEndLive && (
+              <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
+                  <div className="streaming">
+                    <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} setIsEndLive={setIsEndLive} />
+                  </div>
+                ) : (
+                  <div className="video-scenario">
+                    <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+                  </div>
+                )}
 
-              <div className="view-mode">Chế độ xem : <span onClick={() => setIsFullScreen(true)}><img src={viewHideComment} alt="viewHideComment" /></span><span onClick={() => setIsFullScreen(false)}><img src={twoScreen} alt="twoScreen" /></span></div>
-            </Col>
+                <div className="view-mode">Chế độ xem:
+                  <i
+                    onClick={() => setIsFullScreen(false)}
+                    className="far fa-columns"
+                    style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#AAAFB2' : '#000000' }}
+                  />
+                  <i
+                    onClick={() => setIsFullScreen(true)}
+                    className="far fa-rectangle-landscape"
+                    style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
+                  />
+                </div>
+              </Col>
+            )}
+            {(dataTimeCurrent < dataScenario?.startTime) && dataScenario.endTime ? (
+              <Col xl={16} md={12} xs={24}>
+                <div className="waiting-live">
+                  <div className="item_">
+                    <img src={iconWaiting} alt="iconWaiting" />
+                    <div className="count-down">
+                      {moment.utc(countDown * 1000).format('HH:mm:ss')}
+                    </div>
+                    <div>LiveStream sẽ diễn ra vào lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
+                  </div>
+                </div>
+              </Col>
+            ) : null}
+            {isEndLive && (
+              <Col xl={16} md={12} xs={24}>
+                <div className="waiting-live">
+                  <div className="item_">
+                    <img src={iconWaiting} alt="iconWaiting" />
+                    <div>LiveStream đã kết thúc</div>
+                  </div>
+                </div>
+              </Col>
+            )}
+            {(dataTimeCurrent < dataScenario?.startTime) && !dataScenario.endTime && (
+              <Col xl={16} md={12} xs={24}>
+                <div className="waiting-live">
+                  <div className="item_">
+                    <img src={iconWaiting} alt="iconWaiting" />
+                    <div>Video sẽ có lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
+                  </div>
+                </div>
+              </Col>
+            )}
             {!isFullScreen && <Col xl={8} md={12} xs={24}>
               <div className="comment">
                 <CommentPanel commentScope={CommentScopes.TOPIC} />
               </div>
             </Col>}
-
+            {topic.description && (
+              <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                <SanitizedDiv className="description" content={topic.description} />
+              </Col>
+            )}
           </Row>
-          {/* ) : (
-              <div className="scenario-video">
-                <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
-              </div>
-            )} */}
         </div>
-      }
+      ) : (
+        <div className="video-component-fullscreen video-commponent">
+          <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
+            <Col xl={24} md={24} xs={24}>
+              <div className="waiting-live" style={{ height: '400px' }}>
+                <div className="item_">
+                  <img src={iconWaiting} alt="iconWaiting" />
+                  <div>Chưa có video nào</div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+          {topic.description && <SanitizedDiv className="description" content={topic.description} />}
+        </div>
+      )}
       {/* </PanelContainer> */}
       <Row className="info-topic">
         <Col span={24} lg={16}>

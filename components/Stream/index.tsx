@@ -14,8 +14,8 @@ import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
 import PlayIcon from '../../public/icon/play-button.svg';
 import './style.scss';
 
-const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioInfo }) => {
-  const { dataTotalUser, dataScenario } = props;
+const StreamComponent = (props: { dataTotalUser: number; dataScenario: ScenarioInfo; setIsEndLive: (isEndLive: boolean) => void }) => {
+  const { dataTotalUser, dataScenario, setIsEndLive } = props;
   let screen = null;
   const [volume, setVolume] = useState(0.5);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -101,6 +101,7 @@ const StreamComponent = (props: { dataTotalUser: Number; dataScenario: ScenarioI
           pip={false}
           playing={isPlay}
           playsinline={false}
+          onEnded={() => setIsEndLive(true)}
           onStart={() => { }}
           onError={e => { }}
           onReady={(e) => {

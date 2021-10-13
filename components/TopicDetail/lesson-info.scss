@@ -1,36 +1,46 @@
 .lesson-detail {
   position: relative;
   top: -200px;
-  .waiting-live{
-    background: linear-gradient(0deg, #1D2D32, #1D2D32);
-    height: 500px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    .item_{
-      text-align: center;
-      div{
-        font-size: 20px;
-        color: white;
-        margin-top: 20px;
-      }
-    }
-  }
   .video-commponent {
     padding: 16px;
     background: white;
     box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
     margin-bottom: 20px;
-    .video-live{
-      .view-mode{
+    .video-live {
+      .view-mode {
         text-align: right;
         margin-top: 10px;
-        span{
+        span {
           margin: 0 5px;
           cursor: pointer;
         }
+      }
+      .waiting-live {
+        background: linear-gradient(0deg, #1d2d32, #1d2d32);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .item_ {
+          text-align: center;
+          div {
+            font-size: 14px;
+            color: #737c89;
+            margin-top: 20px;
+          }
+          .count-down {
+            font-size: 14px;
+            color: white;
+            background: #48505b;
+            border-radius: 30px;
+            margin: 20px 100px;
+            padding: 2px;
+          }
+        }
+      }
+      .description {
+        margin-top: 10px;
       }
     }
     .streaming {
@@ -40,7 +50,7 @@
         .player-wrapper {
           height: 398px;
         }
-       
+
         .video-timeline {
           margin-top: 60px !important;
         }
@@ -56,27 +66,27 @@
       margin: auto;
     }
   }
-  .video-component-fullscreen{
+  .video-component-fullscreen {
     .player-wrapper {
-      height: 398px !important; 
+      height: 398px !important;
       height: 606px !important;
-    }     
+    }
   }
-  .info-topic{
-    .course-topic-tree{
-      .main-topic{
-        .item-tree{
+  .info-topic {
+    .course-topic-tree {
+      .main-topic {
+        .item-tree {
           // .stt-topic{
           //   // display: none;
           // }
-          .main-topic-node{
-            .topic-header{
+          .main-topic-node {
+            .topic-header {
               padding: 0 10px;
-              .topic-title{
+              .topic-title {
                 margin: 10px 0;
                 justify-content: left;
-                .sortdes-course{
-                  span{
+                .sortdes-course {
+                  span {
                     font-weight: 500 !important;
                     font-size: 15px;
                   }
@@ -87,7 +97,7 @@
         }
       }
     }
-    #course-overview{
+    #course-overview {
       margin-top: 0 !important;
     }
   }
@@ -135,6 +145,6 @@
   justify-content: flex-end;
   margin: 15px 10px;
 }
-.info-topic{
+.info-topic {
   background-color: white;
 }
