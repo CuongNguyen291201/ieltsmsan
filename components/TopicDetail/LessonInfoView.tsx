@@ -27,6 +27,7 @@ import { ContentCourse } from '../CourseDetail/content-course';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import CourseTopicTreeView from '../CourseDetail/CourseTopicTreeView';
 import twoScreen from '../../public/default/twoScreen.svg'
+import iconWaiting from '../../public/default/waiting-live.svg'
 import viewHideComment from '../../public/default/viewHideComment.svg'
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
@@ -96,12 +97,18 @@ const LessonInfoView = (props: { topic: Topic }) => {
       </PanelContainer> */}
 
       {/* <PanelContainer title="Nội dung"> */}
+      <div className="waiting-live">
+        <div className="item_">
+          <img src={iconWaiting} alt="iconWaiting" />
+          <div>LiveStream sẽ diễn ra vào lúc {dataScenario?.startTime}</div>
+        </div>
+      </div>
       {(topic._id === dataScenario?.topicId) && (dataTimeCurrent >= dataScenario?.startTime) &&
         <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
           {/* {dataScenario?.endTime ? ( */}
           <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
             <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
-              {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
+              {!dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
                 <div className="streaming">
                   <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} dataTimeCurrent={dataTimeCurrent} />
                 </div>

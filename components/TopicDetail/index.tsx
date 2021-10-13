@@ -51,7 +51,7 @@ const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo })
 
   useScrollToTop();
   return !currentUser ? <></> : (
-    <div>
+    <div className="wraper-page">
       <InfoCourse course={topic.course} webInfo={webInfo} topic={topic} />
       <div className="topic-detail">
         <div className="container">
