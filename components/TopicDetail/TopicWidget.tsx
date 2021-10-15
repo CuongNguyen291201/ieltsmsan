@@ -1,10 +1,11 @@
+import { Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
-import { useDispatch } from 'react-redux';
-import bookmarkAnswerIcon from '../../public/icon/bookmark-answer-icon.svg';
-import correctAnswerIcon from '../../public/icon/correct-answer-icon.svg';
-import incorrectAnswerIcon from '../../public/icon/incorrect-answer-icon.svg';
-import notAnswerIcon from '../../public/icon/not-answer-icon.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import bookmarkAnswerIcon from '../../public/default/danh-dau.png';
+import correctAnswerIcon from '../../public/default/da-thuoc.png';
+import incorrectAnswerIcon from '../../public/default/chua-hoc.png';
+import notAnswerIcon from '../../public/default/chua-thuoc.png';
 import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
@@ -13,9 +14,22 @@ import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { genUnitScore, getGameSlug } from '../../utils';
+import { AppState } from '../../redux/reducers';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
+import { ROUTER_GAME } from '../../utils/router';
+import { message } from 'antd';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import CommentPanel from '../CommentPanel';
+import { CommentScopes } from '../../custom-types';
+import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 // TOPIC INFO COMMON VIEW
-export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: StudyScore | null }) => {
-  const { currentTopic, studyScore } = props;
+export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: StudyScore | null, topic?: any }) => {
+  const { currentTopic, studyScore, topic } = props;
+  const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
+  const dispatch = useDispatch();
+  const router = useRouter();
   let questionsNum = 0;
   let pass = 0;
   let data: { title: string; number: any }[] = [];
@@ -52,20 +66,57 @@ export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: Stu
       ]
     }
   }
-
+  function playGame() {
+    if (currentUser && !userCourseLoading) {
+      if (canPlayTopic({ topic, isJoinedCourse })) {
+        // if (isPermissionPlayGame(currentUserUpdate, category)) {
+        router.push({
+          pathname: ROUTER_GAME,
+          query: { id: currentTopic._id }
+        })
+      } else {
+        message.warning("Chưa tham gia khoá học!");
+      }
+      // } else {
+      // showToastifyWarning('Bạn hết thời gian học thử, vui lòng mua khoá học để học tiếp')
+      // }
+    } else {
+      dispatch(showLoginModalAction(true))
+    }
+  }
   return (
-    <div className="section1">
-      <div className="title">{currentTopic?.name}</div>
-      <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
-        {data.map((e, index) => {
-          return (
-            <div className="list-item" key={index}>
-              <div className="number">{e.number}</div>
-              <div className="text">{e.title}</div>
+    <div className="view-section1">
+      <Grid container>
+        <Grid item md={8} className="section1">
+          <div className="title">Thông tin Chung</div>
+          <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
+            {data.map((e, index) => {
+              return (
+                <div className="list-item" key={index}>
+                  <div className="text">{e.title}</div>
+                  <div className="number">{e.number}</div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="start-game__">
+            <div className="pre-game-start" onClick={playGame}>
+              <div className="start-game-btn">
+                Làm bài
+              </div>
             </div>
-          )
-        })}
-      </div>
+          </div>
+        </Grid>
+        <Grid item className="comment__" md={4}>
+          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        </Grid>
+      </Grid>
+      <Grid container className="information-in-course">
+        <Grid item md={8}> </Grid>
+        <Grid item md={4}>
+          <InformationCourse course={currentCourse} />
+        </Grid>
+      </Grid>
     </div>
   )
 }
@@ -111,59 +162,63 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
   return (
     <>
       {
-        myCardData && <div className="section3">
-          <CardDataBoxView
-            text="Câu trả lời sai"
-            numCard={cardIncorrectArr.length}
-            url={incorrectAnswerIcon}
-            onClick={() => {
-              if (cardIncorrectArr.length) {
-                onClick(CARD_BOX_ANSWER_INCORRECT)
-              } else {
-                showToastifyWarning('Không có câu trả lời sai hiển thị')
-              }
-            }}
-          />
+        myCardData && <Grid md={12} className="section3">
+          <div className="tien-do-hoc">Tiến Độ Học</div>
+          <Grid md={8} className="cardDataBoxViewPanel">
+            <CardDataBoxView
+              text="Chưa học"
+              numCard={cardIncorrectArr.length}
+              url={incorrectAnswerIcon}
+              onClick={() => {
+                if (cardIncorrectArr.length) {
+                  onClick(CARD_BOX_ANSWER_INCORRECT)
+                } else {
+                  showToastifyWarning('Không có câu trả lời sai hiển thị')
+                }
+              }}
+            />
 
-          <CardDataBoxView
-            text="Câu chưa trả lời"
-            numCard={numCardNotAnswer}
-            url={notAnswerIcon}
-            onClick={() => {
-              if (numCardNotAnswer) {
-                onClick(CARD_BOX_NO_ANSWER)
-              } else {
-                showToastifyWarning('Không có câu chưa trả lời hiển thị')
-              }
-            }}
-          />
+            <CardDataBoxView
+              text="Chưa thuộc"
+              numCard={numCardNotAnswer}
+              url={notAnswerIcon}
+              onClick={() => {
+                if (numCardNotAnswer) {
+                  onClick(CARD_BOX_NO_ANSWER)
+                } else {
+                  showToastifyWarning('Không có câu chưa trả lời hiển thị')
+                }
+              }}
+            />
 
-          <CardDataBoxView
-            text="Câu trả lời đúng"
-            numCard={cardCorrectArr.length}
-            url={correctAnswerIcon}
-            onClick={() => {
-              if (cardCorrectArr.length) {
-                onClick(CARD_BOX_ANSWER_CORRECT)
-              } else {
-                showToastifyWarning('Không có câu trả lời đúng hiển thị')
-              }
-            }}
-          />
+            <CardDataBoxView
+              text="Đã thuộc"
+              numCard={cardCorrectArr.length}
+              url={correctAnswerIcon}
+              onClick={() => {
+                if (cardCorrectArr.length) {
+                  onClick(CARD_BOX_ANSWER_CORRECT)
+                } else {
+                  showToastifyWarning('Không có câu trả lời đúng hiển thị')
+                }
+              }}
+            />
 
-          <CardDataBoxView
-            text="Câu trả cân nhắc"
-            numCard={cardBookMark.length}
-            url={bookmarkAnswerIcon}
-            onClick={() => {
-              if (cardBookMark.length) {
-                onClick(CARD_BOX_ANSWER_BOOKMARK)
-              } else {
-                showToastifyWarning('Không có câu cân nhắc hiển thị')
-              }
-            }}
-          />
-        </div>
+            <CardDataBoxView
+              text="Đánh dấu"
+              numCard={cardBookMark.length}
+              url={bookmarkAnswerIcon}
+              onClick={() => {
+                if (cardBookMark.length) {
+                  onClick(CARD_BOX_ANSWER_BOOKMARK)
+                } else {
+                  showToastifyWarning('Không có câu cân nhắc hiển thị')
+                }
+              }}
+            />
+          </Grid>
+        </Grid>
+
       }
     </>
   )
@@ -173,7 +228,7 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
 
 const CardDataBoxSkeleton = () => (
   <>
-    <div className="section3-box">
+    <Grid md={5} className="section3-box">
       <div className="head"><Skeleton /></div>
       <div className="content">
         <div className="image skeleton">
@@ -184,36 +239,33 @@ const CardDataBoxSkeleton = () => (
           <div className="sentence-text skeleton"><Skeleton /></div>
         </div>
       </div>
-    </div>
+    </Grid>
   </>
 )
 
 const CardDataBoxView = (props: { text: string; numCard: number; url: string; onClick: () => any }) => (
   <>
-    <div className="section3-box"
+    <Grid md={5} className="section3-box"
       onClick={() => props.onClick()}
     >
-      <div className="head">{props.text}</div>
       <div className="content">
         <div className="image">
           <img src={props.url} alt="" />
         </div>
-        <div className="sentence-wrap">
-          <div className="sentence-number">{props.numCard}</div>
-          <div className="sentence-text">câu</div>
-        </div>
+        <div className="sentence-number">{props.numCard}</div>
       </div>
-    </div>
+      <div className="head_">{props.text}</div>
+    </Grid>
   </>
 );
 
 export const MyCardDataSkeleton = () => (
-  <div className="section3">
+  <Grid className="section3">
     <CardDataBoxSkeleton />
     <CardDataBoxSkeleton />
     <CardDataBoxSkeleton />
     <CardDataBoxSkeleton />
-  </div>
+  </Grid>
 );
 
 // STATIC SKILL

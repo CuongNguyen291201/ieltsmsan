@@ -46,24 +46,7 @@ const PreGameView = (props: { topic: any }) => {
     })
   }
 
-  function playGame() {
-    if (currentUser && !userCourseLoading) {
-      if (canPlayTopic({ topic, isJoinedCourse })) {
-        // if (isPermissionPlayGame(currentUserUpdate, category)) {
-        router.push({
-          pathname: ROUTER_GAME,
-          query: { id: currentTopic._id }
-        })
-      } else {
-        message.warning("Chưa tham gia khoá học!");
-      }
-      // } else {
-      // showToastifyWarning('Bạn hết thời gian học thử, vui lòng mua khoá học để học tiếp')
-      // }
-    } else {
-      dispatch(showLoginModalAction(true))
-    }
-  }
+
 
   // useEffect(() => {
   //   const getCardByTopicId = async () => {
@@ -82,11 +65,6 @@ const PreGameView = (props: { topic: any }) => {
   return (
     <div className="topic-test-view">
       <TopicInfoCommonView currentTopic={currentTopic} />
-      <div className="pre-game-start" onClick={playGame}>
-        <div className="start-game-btn">
-          Làm bài
-        </div>
-      </div>
     </div>
   )
 }

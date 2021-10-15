@@ -40,7 +40,7 @@ const StudyInfoView = (props: { topic: any }) => {
         !isLoadedDetailTopic
           ? <div>Loading...</div>
           : (
-            <PanelContainer title={`Thông tin bài ${topic.type === TOPIC_TYPE_TEST ? 'thi' : 'tập'}`}>
+            <PanelContainer title={''}>
               {studyScore
                 ? (
                   topic.type === TOPIC_TYPE_TEST

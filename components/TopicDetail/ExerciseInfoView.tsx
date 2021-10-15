@@ -124,7 +124,7 @@ const NoExerciseView = (props: { currentTopic: any, currentUser: any }) => {
 export const TestScoreView = (props: { studyScore: StudyScore, myCardData: any, currentTopic: any, currentUser: UserInfo }) => {
   let { studyScore, myCardData, currentTopic, currentUser } = props
   return <>
-    <TopicInfoCommonView currentTopic={currentTopic} studyScore={studyScore} />
+    <TopicInfoCommonView currentTopic={currentTopic} studyScore={studyScore} />1
     {studyScore ?
       <ExerciseView currentTopic={currentTopic} studyScore={studyScore} currentUser={currentUser} /> :
       <NoExerciseView currentTopic={currentTopic} currentUser={currentUser} />}

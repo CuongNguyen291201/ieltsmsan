@@ -129,6 +129,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         store.dispatch(setCurrrentTopicAction(null, true));
         const topic = await apiGetTopicById(id);
         const course = topic.course;
+        store.dispatch(setCurrentCourseAction(course));
         store.dispatch(setCurrrentTopicAction(topic));
         return {
           props: {
