@@ -4,9 +4,7 @@ import React, { FC, useEffect, useState } from 'react';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
-import { ROUTER_GAME } from '../../utils/router';
 import Footer from '../Footer';
-import MainHeader from '../MainHeader';
 import MainMenu from '../MainMenu';
 import './style.scss';
 
@@ -14,7 +12,7 @@ const Layout: FC<{
 	addMathJax?: boolean;
 	webInfo?: WebInfo;
 	webSeo?: WebSeo;
-	hideHeader?: boolean;
+	// hideHeader?: boolean;
 	hideMenu?: boolean;
 	hideFooter?: boolean;
 	webSocial?: WebSocial;
@@ -24,14 +22,14 @@ const Layout: FC<{
 		children,
 		webInfo,
 		webSeo,
-		hideHeader = false,
+		// hideHeader = false,
 		hideMenu = false,
 		hideFooter = false,
 		webSocial,
 	} = props;
 	const [isVisible, setVisible] = useState(false);
 	useEffect(() => {
-		window.onscroll = () => fixedTop();
+		// window.onscroll = () => fixedTop();
 		const toggleVisibility = () => {
 			if (window.pageYOffset > 1000) {
 				setVisible(true);
@@ -45,17 +43,17 @@ const Layout: FC<{
 		}
 	}, []);
 
-	const fixedTop = () => {
-		const headerPage = document.getElementById("header");
-		const offsetHeightPage = 112;
-		if (!hideHeader && !hideMenu) {
-			if (window.pageYOffset > offsetHeightPage) {
-				headerPage.classList.add('fixed-menu-top');
-			} else {
-				headerPage.classList.remove('fixed-menu-top')
-			}
-		}
-	}
+	// const fixedTop = () => {
+	// 	const headerPage = document.getElementById("main-menu");
+	// 	const offsetHeightPage = 112;
+	// 	if (!hideMenu) {
+	// 		if (window.pageYOffset > offsetHeightPage) {
+	// 			headerPage.classList.add('fixed-menu-top');
+	// 		} else {
+	// 			headerPage.classList.remove('fixed-menu-top')
+	// 		}
+	// 	}
+	// }
 
 	const scrollToTop = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
@@ -75,10 +73,7 @@ const Layout: FC<{
 					src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 				</script>)}
 			</Head>
-			<div id="header">
-				{/* {!hideHeader && <MainHeader webInfo={webInfo} />} */}
-				{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
-			</div>
+			{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
 			{children}
 			{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
 			{isVisible && (

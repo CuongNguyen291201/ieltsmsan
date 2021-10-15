@@ -24,13 +24,13 @@ export const MenuMobile = () => {
         setisActiveOnMobile(!isActiveOnMobile)
     }
     return (
-        <div className="menu-mobile-">
+        <div id="menu-mobile" className="menu-mobile-">
             <div className="show-menu" onClick={() => showMenu()}>
                 <div>
                     <i className="fas fa-bars"></i>
                 </div>
             </div>
-            <div className={isActiveOnMobile ? "showMenuActive" : "unActive"}>
+            <div className={`mobile-menu${isActiveOnMobile ? " active" : ""}`}>
                 <div className="wraper-show" onClick={() => showMenu()}>
                     {currentUser ? (<div className="user-profile">
                         <img src={currentUser?.avatar || defaultAvatar} alt="" />

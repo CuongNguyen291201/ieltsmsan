@@ -2,6 +2,7 @@ $sm:575.98px;
 $md:767.98px;
 $lg:992.98px;
 $xl:1199.98px;
+$xxl: 1399.98px;
 
 
 @mixin responsive($canvas) {
@@ -16,5 +17,8 @@ $xl:1199.98px;
   }
   @if $canvas == xl {
     @media (max-width: $xl) { @content; }
+  }
+  @if $canvas == xxl {
+    @media (max-width: $xxl) { @content; }
   }
 }

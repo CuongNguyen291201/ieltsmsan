@@ -22,7 +22,7 @@ import LoginModal from "../../sub_modules/common/components/loginModal";
 import RegisterModal from "../../sub_modules/common/components/registerModal";
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
-function MainMenu(props: { hotLine?: string, webLogo?: string }) {
+function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [showModalAct, setShowModalAct] = useState(false);
@@ -33,7 +33,32 @@ function MainMenu(props: { hotLine?: string, webLogo?: string }) {
   const toggleUserMenuRef = useRef<HTMLDivElement>();
 
   const codeRef = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    if (!props.disableFixedHeader) {
+      const fixedTop = () => {
+        const headerPage = document.getElementById("main-menu");
+        const offsetHeightPage = 112;
+        if (window.pageYOffset > offsetHeightPage) {
+          headerPage.classList.add('fixed-menu-top');
+        } else {
+          headerPage.classList.remove('fixed-menu-top')
+        }
+      }
+      window.addEventListener("scroll", fixedTop);
+      return () => {
+        window.removeEventListener("scroll", fixedTop);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (cartLoading) {
+      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
+    }
+  }, [cartLoading]);
 
   const showModalActiveCourse = () => {
     setShowModalAct(true);
@@ -48,11 +73,6 @@ function MainMenu(props: { hotLine?: string, webLogo?: string }) {
     setTextError('');
     setCourses([])
   }
-  useEffect(() => {
-    if (cartLoading) {
-      dispatch(loadListAction(Scopes.CART, orderUtils.getCartItemsStorage()))
-    }
-  }, [cartLoading]);
   const getCodeInfo = async () => {
     const codeInfo = await apiGetCodeInfo(codeRef.current.value);
     if (codeInfo.data) {
@@ -116,116 +136,118 @@ function MainMenu(props: { hotLine?: string, webLogo?: string }) {
   }
 
   return (
-    <div className="main-menu">
-      <div className="layout-header">
-        <Grid item md={4} className="left-header">
-          <div className="logo" onClick={() => router.push('/')}>
-            <img src={props.webLogo} alt="logo" />
-          </div>
-          <div className="search">
-            <div className="icon">
-              <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+    <div id="main-menu">
+      <div className="main-menu">
+        <div className="layout-header">
+          <Grid item md={4} className="left-header">
+            <div className="logo" onClick={() => router.push('/')}>
+              <img src={props.webLogo} alt="logo" />
             </div>
-            <input type="text" placeholder="Tìm kiếm khoá học..." />
-          </div>
-        </Grid>
-        <Grid item md={8} className="menu">
-          <div className="menu-item" onClick={() => router.push("/")}>
-            Khoá Học
-          </div>
-          <div
-            className="menu-item document"
-            onClick={() => router.push(ROUTER_DOCUMENT)}
-          >
-            Tài liệu
-          </div>
-          <div style={{ display: 'none' }} className="menu-item">
-            Liên hệ
-          </div>
-          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
-            Sự Kiện
-          </div>
-          <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
-            Tin tức
-          </div>
-          <div onClick={() => showModalActiveCourse()} className="active-course">
-            Kích hoạt khóa học
-          </div>
+            <div className="search">
+              <div className="icon">
+                <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+              </div>
+              <input type="text" placeholder="Tìm kiếm khoá học..." />
+            </div>
+          </Grid>
+          <Grid item md={8} className="menu">
+            <div className="menu-item" onClick={() => router.push("/")}>
+              Khoá Học
+            </div>
+            <div
+              className="menu-item document"
+              onClick={() => router.push(ROUTER_DOCUMENT)}
+            >
+              Tài liệu
+            </div>
+            <div style={{ display: 'none' }} className="menu-item">
+              Liên hệ
+            </div>
+            <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+              Sự Kiện
+            </div>
+            <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+              Tin tức
+            </div>
+            <div onClick={() => showModalActiveCourse()} className="active-course">
+              Kích hoạt khóa học
+            </div>
 
-          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
-            <i className="far fa-shopping-cart shopping-cart"></i>
-            {!cartLoading && cartItems.length > 0 &&
-              <span className="cart-number">{cartItems.length}</span>
-            }
-          </div>
-          <MenuDesktop />
-          <div>
-            <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
-          </div>
-        </Grid>
-        <div className="hideDesktop">
-          <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
-            <i className="far fa-shopping-cart shopping-cart"></i>
-            {!cartLoading && cartItems.length > 0 &&
-              <span className="cart-number">{cartItems.length}</span>
-            }
-          </div>
-          <MenuMobile />
-        </div>
-      </div >
-      <div className="modal-active-course">
-        <Modal
-          title="Kích hoạt khoá học "
-          visible={showModalAct}
-          onCancel={hideModal}
-          cancelText="Cancel"
-          footer=""
-        >
-          <div className="wrapper-active-course">
-            <div className="title-active-course">
-              <div>Nhập mã kích hoạt mã học vào ô bên dưới</div>
+            <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+              <i className="far fa-shopping-cart shopping-cart"></i>
+              {!cartLoading && cartItems.length > 0 &&
+                <span className="cart-number">{cartItems.length}</span>
+              }
             </div>
-            <div className="insert-code">
-              <input type="text" ref={codeRef} />
+            <MenuDesktop />
+            <div>
+              <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
             </div>
-            <div style={{ color: 'red' }}>{textError}</div>
-            {courses?.length > 0 &&
-              courses?.map((value, key) => (
-                <div key={key} className="course-item-modal">
-                  <div className="course-subitem">
-                    <img src={value?.avatar} className="course-avatar-modal" />
-                    <div style={{ textAlign: "left", marginLeft: 2 }}>
-                      <p className="title-course">{value?.name}</p>
-                      <p className="des-course">{value?.shortDesc}</p>
+          </Grid>
+          <div className="hideDesktop">
+            <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+              <i className="far fa-shopping-cart shopping-cart"></i>
+              {!cartLoading && cartItems.length > 0 &&
+                <span className="cart-number">{cartItems.length}</span>
+              }
+            </div>
+            <MenuMobile />
+          </div>
+        </div >
+        <div className="modal-active-course">
+          <Modal
+            title="Kích hoạt khoá học "
+            visible={showModalAct}
+            onCancel={hideModal}
+            cancelText="Cancel"
+            footer=""
+          >
+            <div className="wrapper-active-course">
+              <div className="title-active-course">
+                <div>Nhập mã kích hoạt mã học vào ô bên dưới</div>
+              </div>
+              <div className="insert-code">
+                <input type="text" ref={codeRef} />
+              </div>
+              <div style={{ color: 'red' }}>{textError}</div>
+              {courses?.length > 0 &&
+                courses?.map((value, key) => (
+                  <div key={key} className="course-item-modal">
+                    <div className="course-subitem">
+                      <img src={value?.avatar} className="course-avatar-modal" />
+                      <div style={{ textAlign: "left", marginLeft: 2 }}>
+                        <p className="title-course">{value?.name}</p>
+                        <p className="des-course">{value?.shortDesc}</p>
+                      </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h3>{value?.cost.toLocaleString('vi', { currency: 'VND' })} VNĐ</h3>
+                      <div>Mã Code</div>
+                      <div className="title-course">{codeRef.current.value}</div>
+                      {
+                        !checkCourseIsActive(value?._id) ?
+                          <Button size="small" type="primary" onClick={() => handleActiveCode(value)} style={{ backgroundColor: '#3fb307', borderColor: '#3fb307' }}>Kích hoạt</Button> :
+                          <Button size="small" type="primary" style={{ backgroundColor: '#d9534f', borderColor: '#d9534f' }}>Đã kích hoạt</Button>
+                      }
                     </div>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <h3>{value?.cost.toLocaleString('vi', { currency: 'VND' })} VNĐ</h3>
-                    <div>Mã Code</div>
-                    <div className="title-course">{codeRef.current.value}</div>
-                    {
-                      !checkCourseIsActive(value?._id) ?
-                        <Button size="small" type="primary" onClick={() => handleActiveCode(value)} style={{ backgroundColor: '#3fb307', borderColor: '#3fb307' }}>Kích hoạt</Button> :
-                        <Button size="small" type="primary" style={{ backgroundColor: '#d9534f', borderColor: '#d9534f' }}>Đã kích hoạt</Button>
-                    }
-                  </div>
-                </div>
-              ))}
-            <div className="search-code">
-              <button onClick={loadCourseByCode}>Tìm kiếm</button>
+                ))}
+              <div className="search-code">
+                <button onClick={loadCourseByCode}>Tìm kiếm</button>
+              </div>
             </div>
-          </div>
-          <div className="giai-dap-thac-mac">
-            <div>Giải đáp thắc mắc Hotline:</div>{" "}
-            <div>
-              <PhoneOutlined /> {props.hotLine ?? ""}
+            <div className="giai-dap-thac-mac">
+              <div>Giải đáp thắc mắc Hotline:</div>{" "}
+              <div>
+                <PhoneOutlined /> {props.hotLine ?? ""}
+              </div>
             </div>
-          </div>
-        </Modal>
-        <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
-        <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
-      </div>
-    </div >
+          </Modal>
+          <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+          <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+        </div>
+      </div >
+    </div>
   );
 }
 

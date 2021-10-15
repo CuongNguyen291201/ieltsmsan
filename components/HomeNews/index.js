@@ -1,67 +1,13 @@
 import React, { useEffect } from 'react'
-import SectionLabel from '../SectionLabel'
+import SectionLabel from '../SectionLabel';
+import SwiperCore, { Autoplay, Pagination, Navigation } from 'swiper/core';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import "swiper/swiper.min.css";
 import './style.scss'
 
+SwiperCore.use([Autoplay, Pagination, Navigation]);
+
 function HomeNews() {
-
-  const setSlideVewMarginLeft = () => {
-    let slideViewEl = document.querySelector('.home-news .slide-view')
-    let browserWidth = window.innerWidth
-    let gap = (browserWidth - 1270) / 2
-    let slideViewMarginLeft
-    if (gap >= 0) {
-      slideViewMarginLeft = (browserWidth - 1270) / 2
-    }
-    else {
-      slideViewMarginLeft = 0
-    }
-    slideViewEl.style.marginLeft = `${slideViewMarginLeft}px`
-  }
-  const setArrowLeft = () => {
-    let browserWidth = window.innerWidth
-    let gap = (browserWidth - 1270) / 2
-    let arrowLeft
-    let arrowLeftEl = document.querySelector('.home-news .slide-view-wrap .arrow')
-    if (browserWidth > 1355) {
-      arrowLeft = gap - 45
-    }
-    else {
-      arrowLeft = 0
-    }
-    arrowLeftEl.style.left = `${arrowLeft}px`
-  }
-  const init = () => {
-    setSlideVewMarginLeft()
-    setArrowLeft()
-  }
-  useEffect(() => {
-    init()
-    window.addEventListener('resize', init)
-    return () => {
-      window.removeEventListener('resize', init)
-    }
-  }, [])
-
-  let currnetSlideIndex = 0
-  const switchSlide = () => {
-    if (currnetSlideIndex == 4) {
-      currnetSlideIndex = 1
-    }
-    else {
-      currnetSlideIndex = currnetSlideIndex + 1
-    }
-    let slide = document.querySelector('.home-news .slide')
-    let gap = currnetSlideIndex * (600)
-    slide.style.transform = `translateX(-${gap}px)`
-  }
-
-  useEffect(() => {
-    let hihi = setInterval(switchSlide, 3000)
-    return () => {
-      clearInterval(hihi)
-    }
-  }, [])
-
   return (
     <div className="home-news">
       <div className="container news-header">
@@ -70,11 +16,11 @@ function HomeNews() {
       </div>
       <div className="slide-view-wrap">
         <div className="slide-view">
-          <div className="slide">
+          <Swiper className="slide" autoplay={{ delay: 3000, disableOnInteraction: false }} slidesPerView={3} spaceBetween={0} pagination={{}}>
             {
               [1, 2, 3, 4, 5, 6].map((_, index) => {
                 return (
-                  <div className="slide-item" key={index}>
+                  <SwiperSlide className="slide-item" key={index}>
                     <div className="title">
                       REVIEW ĐỀ THI TRẮC NGHIỆM
                       TOÁN CAO CẤP [KỲ 2/2020 - KTQD]
@@ -93,15 +39,15 @@ function HomeNews() {
                       }
 
                     </div>
-                  </div>
+                  </SwiperSlide>
                 )
               })
             }
 
-          </div>
+          </Swiper>
 
         </div>
-        <div className="arrow" onClick={switchSlide}>
+        <div className="arrow">
           <img src="/home/home-news-arrow.png" alt="" />
         </div>
       </div>

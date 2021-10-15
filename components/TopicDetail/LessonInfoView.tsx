@@ -31,6 +31,7 @@ import iconWaiting from '../../public/default/waiting-live.svg'
 import viewHideComment from '../../public/default/viewHideComment.svg'
 import registerServiceWorker, { countDownTimer, clearCountDown, unregister } from '../ServiceWorker/registerServiceWorker';
 import SanitizedDiv from '../SanitizedDiv';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
 
@@ -39,6 +40,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
   const refCountDown = useRef<any>();
   const firebaseInstance = useRealtime();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const { isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
   const [dataScenario, setDataScenario] = useState<ScenarioInfo>();
   const [dataTotalUser, setDataTotalUser] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false)
@@ -112,113 +114,116 @@ const LessonInfoView = (props: { topic: Topic }) => {
 
   return (
     <div className="lesson-detail">
-      {/* <PanelContainer title="Mô tả">
+      {
+        canPlayTopic({ topic, isJoinedCourse })
+          ? <>
+            {/* <PanelContainer title="Mô tả">
         <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
         {!!topic.videoUrl && <LessonVideoView topic={topic} />}
       </PanelContainer> */}
 
-      {/* <PanelContainer title="Nội dung"> */}
-      {(topic._id === dataScenario?.topicId) ? (
-        <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
-          <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
-            {(dataTimeCurrent >= dataScenario?.startTime) && !isEndLive && (
-              <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
-                {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
-                  <div className="streaming">
-                    <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} setIsEndLive={setIsEndLive} />
-                  </div>
-                ) : (
-                  <div className="video-scenario">
-                    <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
-                  </div>
-                )}
+            {/* <PanelContainer title="Nội dung"> */}
+            {(topic._id === dataScenario?.topicId) ? (
+              <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
+                <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
+                  {(dataTimeCurrent >= dataScenario?.startTime) && !isEndLive && (
+                    <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                      {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
+                        <div className="streaming">
+                          <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} setIsEndLive={setIsEndLive} />
+                        </div>
+                      ) : (
+                        <div className="video-scenario">
+                          <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+                        </div>
+                      )}
 
-                <div className="view-mode">Chế độ xem:
-                  <i
-                    onClick={() => setIsFullScreen(false)}
-                    className="far fa-columns"
-                    style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#AAAFB2' : '#000000' }}
-                  />
-                  <i
-                    onClick={() => setIsFullScreen(true)}
-                    className="far fa-rectangle-landscape"
-                    style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
-                  />
-                </div>
-              </Col>
-            )}
-            {(dataTimeCurrent < dataScenario?.startTime) && dataScenario.endTime ? (
-              <Col xl={16} md={12} xs={24}>
-                <div className="waiting-live">
-                  <div className="item_">
-                    <img src={iconWaiting} alt="iconWaiting" />
-                    <div className="count-down">
-                      {moment.utc(countDown * 1000).format('HH:mm:ss')}
+                      <div className="view-mode">Chế độ xem:
+                        <i
+                          onClick={() => setIsFullScreen(false)}
+                          className="far fa-columns"
+                          style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#AAAFB2' : '#000000' }}
+                        />
+                        <i
+                          onClick={() => setIsFullScreen(true)}
+                          className="far fa-rectangle-landscape"
+                          style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
+                        />
+                      </div>
+                    </Col>
+                  )}
+                  {(dataTimeCurrent < dataScenario?.startTime) && dataScenario.endTime ? (
+                    <Col xl={16} md={12} xs={24}>
+                      <div className="waiting-live">
+                        <div className="item_">
+                          <img src={iconWaiting} alt="iconWaiting" />
+                          <div className="count-down">
+                            {moment.utc(countDown * 1000).format('HH:mm:ss')}
+                          </div>
+                          <div>LiveStream sẽ diễn ra vào lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
+                        </div>
+                      </div>
+                    </Col>
+                  ) : null}
+                  {isEndLive && (
+                    <Col xl={16} md={12} xs={24}>
+                      <div className="waiting-live">
+                        <div className="item_">
+                          <img src={iconWaiting} alt="iconWaiting" />
+                          <div>LiveStream đã kết thúc</div>
+                        </div>
+                      </div>
+                    </Col>
+                  )}
+                  {(dataTimeCurrent < dataScenario?.startTime) && !dataScenario.endTime && (
+                    <Col xl={16} md={12} xs={24}>
+                      <div className="waiting-live">
+                        <div className="item_">
+                          <img src={iconWaiting} alt="iconWaiting" />
+                          <div>Video sẽ có lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
+                        </div>
+                      </div>
+                    </Col>
+                  )}
+                  {!isFullScreen && <Col xl={8} md={12} xs={24}>
+                    <div className="comment">
+                      <CommentPanel commentScope={CommentScopes.TOPIC} />
                     </div>
-                    <div>LiveStream sẽ diễn ra vào lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
-                  </div>
-                </div>
-              </Col>
-            ) : null}
-            {isEndLive && (
-              <Col xl={16} md={12} xs={24}>
-                <div className="waiting-live">
-                  <div className="item_">
-                    <img src={iconWaiting} alt="iconWaiting" />
-                    <div>LiveStream đã kết thúc</div>
-                  </div>
-                </div>
-              </Col>
-            )}
-            {(dataTimeCurrent < dataScenario?.startTime) && !dataScenario.endTime && (
-              <Col xl={16} md={12} xs={24}>
-                <div className="waiting-live">
-                  <div className="item_">
-                    <img src={iconWaiting} alt="iconWaiting" />
-                    <div>Video sẽ có lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
-                  </div>
-                </div>
-              </Col>
-            )}
-            {!isFullScreen && <Col xl={8} md={12} xs={24}>
-              <div className="comment">
-                <CommentPanel commentScope={CommentScopes.TOPIC} />
+                  </Col>}
+                  {topic.description && (
+                    <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                      <SanitizedDiv className="description" content={topic.description} />
+                    </Col>
+                  )}
+                </Row>
               </div>
-            </Col>}
-            {topic.description && (
-              <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
-                <SanitizedDiv className="description" content={topic.description} />
-              </Col>
-            )}
-          </Row>
-        </div>
-      ) : (
-        <div className="video-component-fullscreen video-commponent">
-          <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
-            <Col xl={24} md={24} xs={24}>
-              <div className="waiting-live" style={{ height: '400px' }}>
-                <div className="item_">
-                  <img src={iconWaiting} alt="iconWaiting" />
-                  <div>Chưa có video nào</div>
-                </div>
+            ) : (
+              <div className="video-component-fullscreen video-commponent">
+                <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
+                  <Col xl={24} md={24} xs={24}>
+                    <div className="waiting-live" style={{ height: '400px' }}>
+                      <div className="item_">
+                        <img src={iconWaiting} alt="iconWaiting" />
+                        <div>Chưa có video nào</div>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+                {topic.description && <SanitizedDiv className="description" content={topic.description} />}
               </div>
-            </Col>
-          </Row>
-          {topic.description && <SanitizedDiv className="description" content={topic.description} />}
-        </div>
-      )}
-      {/* </PanelContainer> */}
-      <Row className="info-topic">
-        <Col span={24} lg={16}>
-          <div className="course-topic-tree">
-            <CourseTopicTreeView course={topic.course} />
-          </div>
-        </Col>
-        <Col span={24} lg={8} className="info">
-          <InformationCourse course={topic.course} />
-        </Col>
-      </Row>
-      {/* <PanelContainer title="Tài liệu tham khảo">
+            )}
+            {/* </PanelContainer> */}
+            <Row className="info-topic">
+              <Col span={24} lg={16}>
+                <div className="course-topic-tree">
+                  <CourseTopicTreeView course={topic.course} />
+                </div>
+              </Col>
+              <Col span={24} lg={8} className="info">
+                <InformationCourse course={topic.course} />
+              </Col>
+            </Row>
+            {/* <PanelContainer title="Tài liệu tham khảo">
         {pages[topic._id]?.data[pages[topic._id].currentPage]?.map((e, i) => (
           <div key={i} className="doc-container">
             <div className="file-title">
@@ -239,6 +244,11 @@ const LessonInfoView = (props: { topic: Topic }) => {
           />
         </div>}
       </PanelContainer> */}
+          </>
+          : <>
+            {currentUser ? 'Chưa tham gia khoá học!' : 'Đăng nhập để tiếp tục'}
+          </>
+      }
     </div>
   );
 }

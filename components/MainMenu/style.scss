@@ -9,7 +9,7 @@
   font-weight: 500;
   width: 80px;
   justify-content: center;
-  &:hover{
+  &:hover {
     background-color: white;
     color: #00adee;
   }
@@ -18,150 +18,265 @@
   }
 }
 
-.main-menu{
-  background-color: $root-background-color;
-  padding: 15px 0;
-  .layout-header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 90%;
-    margin: 0 auto;
-  .left-header{
-    display: flex;
-    align-items: center;
-  }
-  .logo{
-    cursor: pointer;
-    img{
-      height: 55px;
-    }
-  }
-  .search{
-    background: $root-background-color;
-    border: 1px solid #4C41B1;
-    box-sizing: border-box;
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
-    height: 40px;
-    display: flex;
-    padding: 4px 12px;
-    align-items: center;
-    width: 80%;
-    margin-left: 20px;
-    margin-right: 20px;
-    .icon {
-      margin-right: 8px;
+#main-menu {
+  .main-menu {
+    background-color: $root-background-color;
+    padding: 15px 0;
+    .layout-header {
       display: flex;
       align-items: center;
-      color: #9B92F1;
-    }
-    input {
-      border: none;
-      outline: none;
-      font-size: 14px;
-      background: transparent;
-      width: 100%;
-      padding: 5px;
-      color: $root-title-color;
-      &::-webkit-input-placeholder { /* Edge */
-        color: #9B92F1;
+      justify-content: space-between;
+      width: 90%;
+      margin: 0 auto;
+      .left-header {
+        display: flex;
+        align-items: center;
       }
-      
-      &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-        color: #9B92F1;
-      }
-      
-      &::placeholder {
-        color: #9B92F1;
-      }
-    }
-  }
-  .menu {
-    display: flex;
-    justify-content: space-between;
-    // max-width: 65%;
-    align-items: center;
-    .menu-item{
-      color: $root-title-color;
-      text-align: center;
-      position: relative;
-      cursor: pointer;
-      font-size: 14px;
-      &:hover {
-        &::after {
-          content: "";
-          position: absolute;
-          background-color: $root-title-color;
-          bottom: -7px;
-          left: 50%;
-          transform: translateX(-50%);
-          height: 1px;
-          animation: menuItemAnimation 0.3s forwards;
-        }
-        @keyframes menuItemAnimation {
-          0% {
-            width: 40%;
-          }
-          100% {
-            width: 100%;
-          }
-        }
-      }
-    }
-    .active-course{
-    border:1px solid #5E52D0;
-    color: #ABA1FF;
-    font-weight: bold;
-    text-transform: uppercase;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2px 20px;
-    cursor: pointer;
-    &:hover{
-      background: #fdfdfd;
-    }
-    }
-    .cart {
-      .far{
-        font-size: 20px;
-        color: $root-title-color;
+      .logo {
         cursor: pointer;
-        margin-top: 5px;
+        img {
+          height: 55px;
+        }
+      }
+      .search {
+        background: $root-background-color;
+        border: 1px solid #4c41b1;
+        box-sizing: border-box;
+        box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 50px;
+        height: 40px;
+        display: flex;
+        padding: 4px 12px;
+        align-items: center;
+        width: 80%;
+        margin-left: 20px;
+        margin-right: 20px;
+        .icon {
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          color: #9b92f1;
+        }
+        input {
+          border: none;
+          outline: none;
+          font-size: 14px;
+          background: transparent;
+          width: 100%;
+          padding: 5px;
+          color: $root-title-color;
+          &::-webkit-input-placeholder {
+            /* Edge */
+            color: #9b92f1;
+          }
+
+          &:-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: #9b92f1;
+          }
+
+          &::placeholder {
+            color: #9b92f1;
+          }
+        }
+      }
+      .menu {
+        display: flex;
+        justify-content: space-between;
+        // max-width: 65%;
+        align-items: center;
+        .menu-item {
+          color: $root-title-color;
+          text-align: center;
+          position: relative;
+          cursor: pointer;
+          font-size: 14px;
+          &:hover {
+            &::after {
+              content: "";
+              position: absolute;
+              background-color: $root-title-color;
+              bottom: -7px;
+              left: 50%;
+              transform: translateX(-50%);
+              height: 1px;
+              animation: menuItemAnimation 0.3s forwards;
+            }
+            @keyframes menuItemAnimation {
+              0% {
+                width: 40%;
+              }
+              100% {
+                width: 100%;
+              }
+            }
+          }
+        }
+        .active-course {
+          border: 1px solid #5e52d0;
+          color: #aba1ff;
+          font-weight: bold;
+          text-transform: uppercase;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2px 20px;
+          cursor: pointer;
+          &:hover {
+            background: #fdfdfd;
+          }
+        }
+        .cart {
+          .far {
+            font-size: 20px;
+            color: $root-title-color;
+            cursor: pointer;
+            margin-top: 5px;
+          }
+        }
+        .login,
+        .logout,
+        .signup {
+          cursor: pointer;
+        }
+        .login,
+        .signup {
+          @include item-with-icon;
+        }
+        .login {
+          img,
+          i {
+            display: none;
+          }
+        }
+        .close-menu-icon {
+          display: none;
+        }
+      }
+      .overlay-on-mobile {
+        display: none;
+        transition: all 0.4s;
+      }
+      .menu-icon {
+        cursor: pointer;
+        display: none;
+        i {
+          color: $root-color;
+        }
       }
     }
-    .login,
-  .logout,
-  .signup {
-    cursor: pointer;
-  }
-  .login  , .signup{
-    @include item-with-icon;
-  }
-  .login{
-    img , i {
+    .hideDesktop {
       display: none;
     }
   }
-    .close-menu-icon {
-      display: none;
+
+  @media (max-width: 768px) {
+    .main-menu {
+      .layout-header {
+        .left-header {
+          .logo {
+            display: block;
+          }
+          .search {
+            width: calc(100% - 55px);
+            margin-right: 20px;
+          }
+        }
+        .menu {
+          display: unset;
+          width: 70%;
+          .menu-item {
+            color: black;
+            text-align: left;
+          }
+        }
+      }
     }
   }
-  .overlay-on-mobile {
-    display: none;
-    transition: all 0.4s;
+
+  @include responsive(lg) {
+    .main-menu {
+      position: relative;
+      .menu {
+        position: fixed;
+        background-color: #fff;
+        width: 240px;
+        display: block;
+        right: -100%;
+        top: 0;
+        z-index: 4;
+        box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.25);
+        height: 100vh;
+        transition: all 0.4s;
+        &.active-on-mobile {
+          right: 0;
+        }
+        .menu-item {
+          text-align: left;
+          padding: 12px;
+          font-size: 15px;
+          &:hover {
+            text-decoration: underline;
+            &::after {
+              display: none;
+            }
+          }
+        }
+      }
+      .search {
+        margin-left: 16px;
+      }
+
+      .hideDesktop {
+        display: flex;
+        .cart {
+          margin-right: 20px;
+          i {
+            font-size: 24px !important;
+            color: #9b92f1 !important;
+          }
+        }
+      }
+    }
   }
-  .menu-icon {
-    cursor: pointer;
-    display: none;
-    i {
-      color: $root-color;
+
+  @include responsive(xxl) {
+    .main-menu {
+      .layout-header {
+        width: 95%;
+        .menu {
+          max-width: 66.67% !important;
+        }
+      }
     }
   }
 }
+
+#main-menu.fixed-menu-top {
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  width: 100%;
 }
+
+#scroll-top-button > .scrollTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  background-color: white;
+  width: 50px;
+  box-shadow: 0 0 6px 2px $root-color;
+  height: 50px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: $root-color;
+}
+
 .wrapper-active-course {
   text-align: center;
   .title-active-course {
@@ -206,52 +321,6 @@
   }
 }
 
-@include responsive(lg) {
-  .main-menu {
-    position: relative;
-    .menu {
-      position: fixed;
-      background-color: #fff;
-      width: 240px;
-      display: block;
-      right: -100%;
-      top: 0;
-      z-index: 4;
-      box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.25);
-      height: 100vh;
-      transition: all 0.4s;
-      &.active-on-mobile {
-        right: 0;
-      }
-      .menu-item {
-        text-align: left;
-        padding: 12px;
-        font-size: 15px;
-        &:hover {
-          text-decoration: underline;
-          &::after {
-            display: none;
-          }
-        }
-      }
-    }
-    .search {
-      margin-left: 16px;
-    }
-  }
-}
-@include responsive(xxl) {
-  .main-menu {
-
-    .layout-header {
-      width: 95%;
-      .menu{
-        max-width: 66.67% !important;
-      }
-    }
-    
-  }
-}
 .course-item-modal {
   margin-bottom: 1rem;
   display: flex;
@@ -271,30 +340,7 @@
     }
   }
 }
-@media (max-width:768px) {
-  .main-menu{
-    .layout-header{
-      .left-header{
-        .logo{
-          display: block;
-        }
-        .search{
-          width: calc( 100% - 55px );
-          margin-right: 20px;
-        }
-        
-      }
-      .menu{
-        display: unset;
-        width: 70%;
-        .menu-item{
-          color: black;
-          text-align: left;
-        }
-      }
-    }
-  }
-}
+
 .des-course {
   display: -webkit-box;
   -webkit-line-clamp: 2;

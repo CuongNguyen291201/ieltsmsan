@@ -22,9 +22,10 @@ import { showLoginModalAction } from '../../sub_modules/common/redux/actions/use
 import CommentPanel from '../CommentPanel';
 import { CommentScopes } from '../../custom-types';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
+import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 // TOPIC INFO COMMON VIEW
-export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: StudyScore | null, topic?: any }) => {
-  const { currentTopic, studyScore, topic } = props;
+export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null }) => {
+  const { currentTopic, studyScore } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
@@ -68,7 +69,7 @@ export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: Stu
   }
   function playGame() {
     if (currentUser && !userCourseLoading) {
-      if (canPlayTopic({ topic, isJoinedCourse })) {
+      if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
         // if (isPermissionPlayGame(currentUserUpdate, category)) {
         router.push({
           pathname: ROUTER_GAME,
@@ -76,6 +77,9 @@ export const TopicInfoCommonView = (props: { currentTopic: any, studyScore?: Stu
         })
       } else {
         message.warning("Chưa tham gia khoá học!");
+        if (currentCourse.cost > 0) {
+          dispatch(setActiveCourseModalVisibleAction(true));
+        }
       }
       // } else {
       // showToastifyWarning('Bạn hết thời gian học thử, vui lòng mua khoá học để học tiếp')

@@ -27,11 +27,10 @@ export type TopicNodeProps = {
   onClickNode?: () => void;
   isLoadMoreChilds?: boolean;
   loadMoreChildFC?: () => void;
-  category?: _Category;
 }
 
-const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boolean, }) => {
-  const { category, topic, isMain = false, } = props;
+const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
+  const { topic, isMain = false, } = props;
   const { currentCourse, isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { mapLoadMoreState } = useSelector((state: AppState) => state.topicReducer);
@@ -108,31 +107,35 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
       if (!isLessonHasContent) {
         return;
       } else {
-        router.push(getTopicPageSlug({ category, topic }));
+        router.push(getTopicPageSlug({ topic }));
         return;
       }
     } else if (!isOverStartTime && topic.startTime > 0) {
       message.info("Bài học chưa được phát hành.")
       return;
     } else {
-      if (!currentUser) {
-        dispatch(showLoginModalAction(true));
-        return;
+      if (isJoinedCourse) {
+        updateTopicProgressFC();
+        updateTimeActivityFC();
       }
-      if (!isJoinedCourse && currentUser.userType !== USER_TYPE_HAS_ROLE) {
-        if (!isTopicOpen) {
-          if (!currentCourse.cost) {
-            message.warning("Chưa tham gia khoá học");
-            return;
-          } else {
-            dispatch(setActiveCourseModalVisibleAction(true));
-            return;
-          }
-        }
-      }
-      updateTopicProgressFC();
-      updateTimeActivityFC();
-      router.push(getTopicPageSlug({ category, topic }));
+      // if (!currentUser) {
+      //   dispatch(showLoginModalAction(true));
+      //   return;
+      // }
+      // if (!isJoinedCourse && currentUser.userType !== USER_TYPE_HAS_ROLE) {
+      //   if (!isTopicOpen) {
+      //     if (!currentCourse.cost) {
+      //       message.warning("Chưa tham gia khoá học");
+      //       return;
+      //     } else {
+      //       dispatch(setActiveCourseModalVisibleAction(true));
+      //       return;
+      //     }
+      //   }
+      // }
+      // updateTopicProgressFC();
+      // updateTimeActivityFC();
+      router.push(getTopicPageSlug({ topic }));
     }
   };
 
@@ -185,9 +188,9 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
         </div>
 
         {!!topic.topicProgress && isMain && <div className="accomplished">
-          {topic.type !== TOPIC_TYPE_TEST 
-          ? <div>{topic.topicProgress.progress}%</div>
-          : <div>{topic.score} điểm</div>}
+          {topic.type !== TOPIC_TYPE_TEST
+            ? <div>{topic.topicProgress.progress}%</div>
+            : <div>{topic.score} điểm</div>}
         </div>}
 
         {!isMain && <div className="sub-title"><div className="icon-isDone">
@@ -199,7 +202,7 @@ const TopicTreeNode = (props: { category: _Category; topic: _Topic; isMain?: boo
           <Fragment key={e._id}>
             <div className="item-main-topic-content">
               {isMain ? <div className="line-sep" /> : <></>}
-              {isTopicHasChild && <div className="wraper-topic-child"><TopicTreeNode category={category} topic={e} /></div>}
+              {isTopicHasChild && <div className="wraper-topic-child"><TopicTreeNode topic={e} /></div>}
 
               {i === topicOptions.childs.length - 1 && mapLoadMoreState[topic._id] && <div className="flex-center" style={{ margin: '12px 0' }}>
                 {/* <OvalRecButton

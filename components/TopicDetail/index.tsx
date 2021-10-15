@@ -25,15 +25,15 @@ import TopicRankingsView from './TopicRankingsView';
 const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo }) => {
   const { topic, course, webInfo } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
+  const { isJoinedCourse, userCourseLoading, currentCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
     if (!currentUser) {
       return;
     } else {
-      const token = getCookie(TOKEN);
-      apiGetUserCourse({ token, courseId: topic.courseId })
+      // const token = getCookie(TOKEN);
+      apiGetUserCourse({ courseId: topic.courseId })
         .then((uc) => {
           dispatch(setUserCourseAction(uc));
         })
@@ -44,13 +44,24 @@ const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo })
   }, [currentUser]);
 
   useEffect(() => {
-    if (topic.status !== STATUS_OPEN && !userCourseLoading && !canPlayTopic({ topic, isJoinedCourse })) {
-      router.push(ROUTER_NOT_FOUND);
+    if (!currentCourseLoading) {
+      if (!!currentUser) {
+        apiGetUserCourse({ courseId: course._id })
+          .then((uc) => {
+            dispatch(setUserCourseAction(uc));
+          })
+          .catch((e) => {
+            console.error(e);
+            showToastifyWarning('Có lỗi xảy ra!');
+          });
+      } else {
+        dispatch(setUserCourseAction(null));
+      }
     }
-  }, [userCourseLoading]);
+  }, [currentUser, currentCourseLoading]);
 
   useScrollToTop();
-  return !currentUser ? <></> : (
+  return (
     <div className="wraper-page">
       <InfoCourse course={topic.course} webInfo={webInfo} topic={topic} />
       <div className="topic-detail">

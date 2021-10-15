@@ -616,28 +616,7 @@
     }
   }
 }
-@media (max-width: 1500px) {
-  .background-header-course {
-  }
-}
-@media (max-width: 199px) {
-  .main-menu {
-    .layout-header {
-      .menu {
-        display: none;
-      }
-    }
-  }
-  .hideDesktop {
-    display: flex;
-    align-items: center;
-    .cart {
-      margin-right: 20px;
-      font-size: 24px;
-      color: #9b92f1;
-    }
-  }
-}
+
 @media (max-width: 768px) {
   .header-course {
     .main-menu {

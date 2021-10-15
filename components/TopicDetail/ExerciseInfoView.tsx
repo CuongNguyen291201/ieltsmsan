@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router';
+import { message } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { prepareGoToGameAction, prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
 import { setUserCardDataAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { getCookie, MODE_SHOW_RESULT_EXERCISE } from '../../sub_modules/common/utils/cookie';
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import * as Config from '../../sub_modules/share/constraint';
@@ -14,14 +16,26 @@ import { formatDateDMY, formatTimeClock, getGameSlug } from '../../utils';
 import { ROUTER_GAME } from '../../utils/router';
 import './topic-content.scss';
 import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
+import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 
 const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | null; currentUser: any }) => {
   const { currentTopic, studyScore, currentUser } = props;
+  const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const dispatch = useDispatch();
   const router = useRouter();
   function playGame() {
     if (currentUser) {
-      router.push(getGameSlug(currentTopic._id));
+      if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+        router.push(getGameSlug(currentTopic._id));
+      } else {
+        message.warning('Chưa tham gia khoá học!');
+        if (currentCourse.cost) {
+          dispatch(setActiveCourseModalVisibleAction(true));
+        }
+      }
+    } else {
+      dispatch(showLoginModalAction(true));
     }
   }
 
@@ -93,13 +107,21 @@ const ExerciseSkeleton = () => (
 
 const NoExerciseView = (props: { currentTopic: any, currentUser: any }) => {
   const { currentTopic, currentUser } = props;
-  const router = useRouter()
+  const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
+  const dispatch = useDispatch();
+  const router = useRouter();
   function playGame() {
     if (currentUser) {
-      router.push({
-        pathname: ROUTER_GAME,
-        query: { id: currentTopic._id }
-      })
+      if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+        router.push(getGameSlug(currentTopic._id));
+      } else {
+        message.warning('Chưa tham gia khoá học!');
+        if (currentCourse.cost) {
+          dispatch(setActiveCourseModalVisibleAction(true));
+        }
+      }
+    } else {
+      dispatch(showLoginModalAction(true));
     }
   }
 

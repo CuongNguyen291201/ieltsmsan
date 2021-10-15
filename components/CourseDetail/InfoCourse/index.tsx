@@ -20,7 +20,7 @@ export const InfoCourse = (props: { course: Course, webInfo?: WebInfo, topic?: _
     }, [topic, course])
     return (
         <div className="header-course">
-            <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />
+            <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} disableFixedHeader/>
             <div className="background-header-course">
                 <div className="positionBackground">
                     <img src={bgPostion} alt="bgPostion" />

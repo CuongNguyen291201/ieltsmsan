@@ -29,7 +29,7 @@ const TopicTree = (props: { category: _Category; course: Course; }) => {
           <div className="item-tree">
             <span className="stt-topic">{index + 1}</span>
             {!!e.isNew && <div className="icon-new-topic"><img src={newTopic} alt="" /></div>}
-            <TopicTreeNode category={category} topic={e} isMain={true} />
+            <TopicTreeNode topic={e} isMain={true} />
           </div>
         </Fragment>
       ))}

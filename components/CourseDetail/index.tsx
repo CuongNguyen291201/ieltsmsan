@@ -62,13 +62,14 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
     // uiLogic(setActiveTab(!currentUser || (currentUser && router.query?.activeTab) ? CourseTab.COURSE_CONTENT : CourseTab.COURSE_TOPIC_TREE));
     if (!currentCourseLoading) {
       if (!!currentUser) {
-        const token = getCookie(TOKEN);
-        apiGetUserCourse({ token, courseId: course._id })
+        // const token = getCookie(TOKEN);
+        apiGetUserCourse({ courseId: course._id })
           .then((uc) => {
             dispatch(setUserCourseAction(uc));
             uiLogic(setActiveLoading(false));
           })
           .catch((e) => {
+            console.error(e);
             showToastifyWarning('Có lỗi xảy ra!');
           });
       } else {
@@ -82,13 +83,13 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
       dispatch(showLoginModalAction(true));
       return;
     }
-    const token = getCookie(TOKEN);
-    if (!token || activeLoading || userCourseLoading) return;
+    // const token = getCookie(TOKEN);
+    if (activeLoading || userCourseLoading) return;
     if (course.cost && (!userCourse || userCourse?.isExpired)) {
       dispatch(setActiveCourseModalVisibleAction(true));
     } else if (!course.cost && !userCourse) {
       uiLogic(setActiveLoading(true));
-      apiJoinCourse({ token, courseId: course._id })
+      apiJoinCourse({ courseId: course._id })
         .then((newUserCourse) => {
           dispatch(setUserCourseAction(newUserCourse))
           uiLogic(setActiveLoading(false));

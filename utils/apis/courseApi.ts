@@ -64,13 +64,13 @@ export const apiActiveCode = async (body: { code: string, courseId: string }): P
 }
 export const apiGetCoursesActivedByUser = (body: { userId: string }): any => POST_API('get-courses_actived_by_user', body)
 
-export const apiGetUserCourse = async (args: { token: string; courseId: string }): Promise<UserCourse | null> => {
+export const apiGetUserCourse = async (args: { courseId: string }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('get-user-course', args);
   if (status !== response_status_codes.success) return null;
   return data;
 }
 
-export const apiJoinCourse = async (args: { token: string; courseId: string }): Promise<UserCourse | null> => {
+export const apiJoinCourse = async (args: { courseId: string }): Promise<UserCourse | null> => {
   const { data, status } = await POST_API('join-course', args);
   if (status !== response_status_codes.success) return null;
   return data;

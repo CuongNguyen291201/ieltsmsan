@@ -1,32 +1,23 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
-import CourseDetail from '../../components/CourseDetail';
 import Layout from '../../components/Layout';
 import NewsView from '../../components/NewsView';
 import ReplyComment from '../../components/ReplyComment';
 import RootCategoryDetail from '../../components/RootCategoryDetail';
-import TopicDetail from '../../components/TopicDetail';
-import { _Category, _Topic } from '../../custom-types';
+import { _Category } from '../../custom-types';
 import {
-  PAGE_CATEGORY_DETAIL,
-  PAGE_COURSE_DETAIL, PAGE_ERROR, PAGE_NEWS_DETAIL, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT, PAGE_TOPIC_DETAIL
+  PAGE_CATEGORY_DETAIL, PAGE_ERROR, PAGE_NEWS_DETAIL, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT
 } from '../../custom-types/PageType';
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
-import { setCurrentCourseAction } from '../../redux/actions/course.actions';
-import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { Course } from '../../sub_modules/share/model/courses';
 import News from '../../sub_modules/share/model/news';
-import Topic from '../../sub_modules/share/model/topic';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
-import { apiGetCategoriesByParent, apiGetCategoryById, apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
-import { apiGetCourseById } from '../../utils/apis/courseApi';
+import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetNewsById } from '../../utils/apis/newsApi';
-import { apiGetTopicById } from '../../utils/apis/topicApi';
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
 import { NEWS_ID_PREFIX, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
@@ -37,8 +28,6 @@ type SlugTypes = {
   id: string;
   category?: _Category;
   childCategories?: _Category[];
-  course?: Course;
-  topic?: Topic;
   webInfo?: WebInfo;
   webSocial?: WebSocial;
   news?: News;
@@ -48,17 +37,13 @@ const Slug = (props: SlugTypes) => {
   const { id, slug, type = PAGE_NOT_FOUND } = props;
   const mapTypePage = {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
-    [PAGE_COURSE_DETAIL]: <CourseDetail course={props.course} webInfo={props.webInfo} />,
-    [PAGE_TOPIC_DETAIL]: <TopicDetail course={props.course} topic={props.topic} webInfo={props.webInfo} />,
     [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
     [PAGE_NEWS_DETAIL]: <NewsView news={props.news} />
   }
 
   return (
     <Layout
-      addMathJax={type === PAGE_TOPIC_DETAIL}
-      hideHeader={type === PAGE_COURSE_DETAIL || type === PAGE_TOPIC_DETAIL}
-      hideMenu={type === PAGE_REPLY_COMMENT || type === PAGE_COURSE_DETAIL || type === PAGE_TOPIC_DETAIL}
+      hideMenu={type === PAGE_REPLY_COMMENT}
       hideFooter={type === PAGE_REPLY_COMMENT}
       webInfo={props.webInfo}
       webSocial={props.webSocial}
@@ -116,62 +101,14 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         return {
           props: { id, slug, type, webInfo, webSocial }
         }
-      } else if (type === PAGE_COURSE_DETAIL) {
-        store.dispatch(setCurrentCourseAction(null, true));
-        const course = await apiGetCourseById(id);
-        store.dispatch(setCurrentCourseAction(course));
-        return {
-          props: {
-            id, type, slug, course, webInfo, webSocial
-          }
-        }
-      } else if (type === PAGE_TOPIC_DETAIL) {
-        store.dispatch(setCurrrentTopicAction(null, true));
-        const topic = await apiGetTopicById(id);
-        const course = topic.course;
-        store.dispatch(setCurrentCourseAction(course));
-        store.dispatch(setCurrrentTopicAction(topic));
-        return {
-          props: {
-            id, type, slug, course, topic, webInfo, webSocial
-          }
-        }
       }
-      return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-    } else {
-      const [categorySlug, items] = slugs as string[];
-      const [id] = items.split('-').slice(-1);
-      const type = Number(...items.split('-').slice(-2, -1));
-      const slug = items.split('-').slice(0, -2).join('-');
-      const category = await apiGetCategoryBySlug(categorySlug);
-      store.dispatch(setCurrentCategoryAction(category));
-
-      if (!id || !slug) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-
-
-      let course: Course | null = null;
-      let topic: _Topic | null = null;
-
-      if (type === PAGE_COURSE_DETAIL) {
-        store.dispatch(setCurrentCourseAction(null, true));
-        course = await apiGetCourseById(id);
-        store.dispatch(setCurrentCourseAction(course));
-      } else if (type === PAGE_TOPIC_DETAIL) {
-        store.dispatch(setCurrrentTopicAction(null, true));
-        topic = await apiGetTopicById(id);
-        course = topic.course;
-        store.dispatch(setCurrentCourseAction(course));
-        store.dispatch(setCurrrentTopicAction(topic));
-      }
-      return {
-        props: {
-          id, slug, type, category, course, topic, webInfo, webSocial
-        }
-      }
+      res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+      return;
     }
   } catch (e) {
     console.log('Internal Server Error', e);
-    return res.writeHead(302, { Location: ROUTER_ERROR }).end();
+    res.writeHead(302, { Location: ROUTER_ERROR }).end();
+    return;
   }
 });
 

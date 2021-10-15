@@ -1,30 +1,67 @@
-import { Fragment, useMemo } from 'react';
+import { Grid } from '@material-ui/core';
+import { Fragment, useEffect, useMemo, useReducer } from 'react';
 import { _Category } from '../../custom-types';
-import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import { useScrollToTop } from '../../hooks/scrollToTop';
+import { response_status } from '../../sub_modules/share/api_services/http_status';
 import { Course } from '../../sub_modules/share/model/courses';
-import { fetchPaginationAPI } from '../../utils/apis/common';
-import { apiCountCategoryCourses, apiOffsetCoursesByCategory, apiSeekCoursesByCategory } from '../../utils/apis/courseApi';
+import { apiCountCategoryCourses, apiOffsetCoursesByCategory } from '../../utils/apis/courseApi';
 import { getCategorySlug } from '../../utils/router';
 import Breadcrumb from '../Breadcrumb';
 import CourseItem from '../CourseItem';
-import GridTemplate2 from '../grid/GridTemplate2';
 import Pagination from '../Pagination';
 import SearchBox from '../SearchBox';
+import {
+  categoryDetailInitState,
+  categoryDetailReducer,
+
+  initMapCourses,
+  initMapPageData,
+  setMapCoursesKey,
+  setMapPageDataKeyCurrentPage
+} from './rootCategoryDetail.reducer';
 import './style.scss';
+
+const COURSE_LOAD_LIMIT = 20;
 
 const RootCategoryDetail = (props: { category: _Category; childCategories: _Category[]; }) => {
   const { category, childCategories = [] } = props;
   const childCategoryIds = useMemo(() => [category, ...childCategories].map(({ _id }) => String(_id)), [childCategories]);
 
-  const fetchCourses = async (args: { categoryId: string, lastRecord?: Course, skip?: number; }) => {
-    return fetchPaginationAPI<Course>({ ...args, seekAPI: apiSeekCoursesByCategory, offsetAPI: apiOffsetCoursesByCategory });
-  };
+  const [{
+    mapCategoryCourses,
+    mapCategoryPageData
+  }, uiLogic] = useReducer(categoryDetailReducer, categoryDetailInitState);
 
-
-  const { pages, onChangePage } = usePaginationState<Course>({ keys: childCategoryIds, fetchFunction: fetchCourses, keyName: 'categoryId', filters: { field: 'name' } });
-  const { mapTotalPages } = useTotalPagesState({ keys: childCategoryIds, keyName: 'categoryId', api: apiCountCategoryCourses, filters: { isRoot: false } });
   useScrollToTop();
+
+  useEffect(() => {
+    Promise.all(childCategoryIds.map(async (categoryId) => {
+      const { data, status } = await apiOffsetCoursesByCategory({ categoryId, field: '_id', skip: 0, limit: COURSE_LOAD_LIMIT });
+      const { total } = await apiCountCategoryCourses({ categoryId, isRoot: false });
+
+      return {
+        categoryId, data: (status === response_status.success ? data : []) as Course[], total
+      }
+    }))
+      .then((arr) => {
+        const mapCategoryCourses = arr.reduce((map, { categoryId, data }) => (map[categoryId] = data, map), {});
+        const mapCategoryPageData = arr.reduce((map, { categoryId, total }) => (map[categoryId] = { currentPage: 1, totalPages: Math.ceil((total || 1) / COURSE_LOAD_LIMIT) }, map), {});
+
+        uiLogic(initMapCourses(mapCategoryCourses));
+        uiLogic(initMapPageData(mapCategoryPageData));
+      })
+  }, []);
+
+  const onChangePage = async (args: { categoryId: string; page: number }) => {
+    const { categoryId, page } = args;
+    apiOffsetCoursesByCategory({ categoryId, field: '_id', skip: (page - 1) * COURSE_LOAD_LIMIT, limit: COURSE_LOAD_LIMIT })
+      .then(({ data, status }) => {
+        if (status === response_status.success) {
+          uiLogic(setMapPageDataKeyCurrentPage(categoryId, page));
+          uiLogic(setMapCoursesKey(categoryId, data as Course[]));
+        }
+      })
+  }
 
   return (
     <>
@@ -53,23 +90,22 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
                 </>
               }
               <div className="child-cat-crs">
-                <GridTemplate2>
-                  {
-                    pages[e._id]?.data[pages[e._id].currentPage]?.map((e) => (
-                      <Fragment key={e._id}>
-                        <CourseItem category={category} course={e} />
-                      </Fragment>
-                    ))
-                  }
-                </GridTemplate2>
+
+                <Grid container spacing={3}>
+                  {mapCategoryCourses[e._id]?.map((e) => (
+                    <Grid key={e._id} item xs={6} md={4} lg={3}>
+                      <CourseItem course={e} />
+                    </Grid>
+                  ))}
+                </Grid>
 
                 <div className="pagination">
-                  {(mapTotalPages[e._id] || 0) > 1 &&
+                  {(mapCategoryPageData[e._id]?.totalPages || 0) > 1 &&
                     <Pagination
-                      total={mapTotalPages[e._id]}
-                      active={pages[e._id]?.currentPage}
+                      total={mapCategoryPageData[e._id].totalPages}
+                      active={mapCategoryPageData[e._id]?.currentPage}
                       start={1}
-                      onClick={(page) => onChangePage({ key: e._id, page })}
+                      onClick={(page) => onChangePage({ categoryId: e._id, page })}
                     />
                   }
                 </div>
