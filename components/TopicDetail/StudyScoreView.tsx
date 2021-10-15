@@ -27,18 +27,24 @@ const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | 
   return (
     <>
       <div className="section2">
-        <div className="section2-left">
-          <div className="date-time">
+        <div className="text-result">
+          Kết quả
+        </div>
+        <div className="">
+          {/* <div className="date-time">
             <div className="date">
               <span>Ngày: </span><span>{formatDateDMY(studyScore.lastUpdate)}</span>
             </div>
             <div className="time">
               <span>Thời gian làm bài : </span><span>{formatTimeClock(studyScore.studyScoreData?.totalTime)}</span>
             </div>
+          </div> */}
+          <div className="img-and-text">
+            <img src={`${studyScore ? (isPass ? '/default/good-job.png' : '/topics/failure_exam.png') : '/topics/welcome_exam.png'}`} alt="" />
+            <div className="text">{`${studyScore ? (isPass ? 'Bạn đã vượt qua bài thi này' : 'Bạn chưa vượt qua bài thi này') : ''}`}</div>
           </div>
           <div className="score-wrap">
-            <div className="score-number" style={{ color: colorScore }}>{studyScore.score}</div>
-            <div className="score-text">Điểm</div>
+            <div className="score-number">{studyScore.score} / 10 Điểm</div>
           </div>
           <div className="buttons">
             <div className="xem-lai" onClick={() => {
@@ -56,10 +62,6 @@ const StudyScoreView = (props: { currentTopic: Topic, studyScore?: StudyScore | 
               }}> Làm bài</div>
             )}
           </div>
-        </div>
-        <div className="section2-right">
-          <img src={`${studyScore ? (isPass ? '/topics/pass_exam.png' : '/topics/failure_exam.png') : '/topics/welcome_exam.png'}`} alt="" />
-          <div className="text">{`${studyScore ? (isPass ? 'Bạn đã vượt qua bài thi này' : 'Bạn chưa vượt qua bài thi này') : ''}`}</div>
         </div>
       </div>
     </>

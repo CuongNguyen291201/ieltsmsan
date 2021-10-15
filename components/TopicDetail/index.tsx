@@ -64,9 +64,9 @@ const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo })
               ? <LessonInfoView topic={topic} />
               : <StudyInfoView topic={topic} />
           }
-          {topic.type === TOPIC_TYPE_TEST && <PanelContainer title="Bảng xếp hạng">
+          {/* {topic.type === TOPIC_TYPE_TEST && <PanelContainer title="Bảng xếp hạng">
             <TopicRankingsView topic={topic} />
-          </PanelContainer>}
+          </PanelContainer>} */}
 
           {/* <PanelContainer title="Bình luận">
           <CommentPanel commentScope={CommentScopes.TOPIC} />
