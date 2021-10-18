@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
@@ -144,21 +144,31 @@ const TestInfoView = (props: { topic: any }) => {
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const isFinishedExam = useMemo(() => studyScore?.status === EXAM_SCORE_FINISH, [studyScore]);
   return (
     <div className="topic-test-view">
       <div className="thong-ke-">
-        <Grid md={8}>
-          <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
-        </Grid>
-        <Grid className="commentPanel_" md={4}>
-          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        <Grid md={isFinishedExam ? 8 : 12}>
+          {
+            isFinishedExam
+              ?
+              <>
+                <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
+                <Grid className="commentPanel_" md={4}>
+                  <CommentPanel commentScope={CommentScopes.TOPIC} />
+                </Grid>
+              </>
+              : <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hideCourseInfo />
+          }
         </Grid>
       </div>
       <div className="view-panel-score">
         <Grid md={8} className="view-left">
-          <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />
           <>
             {
+              isFinishedExam && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hideCourseInfo />
+            }
+            {/* {
               studyScore?.status === EXAM_SCORE_FINISH
                 ? <div className="viewStudycore">
                   <Grid>
@@ -170,7 +180,7 @@ const TestInfoView = (props: { topic: any }) => {
 
             {
               studyScore?.status === EXAM_SCORE_FINISH && topic.type === TOPIC_TYPE_TEST && <StatisticSkillView currentTopic={topic} studyScore={studyScore} currentUser={currentUser} />
-            }
+            } */}
           </>
         </Grid>
         <Grid md={4} className="view-right">

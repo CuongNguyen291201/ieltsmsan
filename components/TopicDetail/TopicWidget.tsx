@@ -24,8 +24,8 @@ import { CommentScopes } from '../../custom-types';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 // TOPIC INFO COMMON VIEW
-export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null }) => {
-  const { currentTopic, studyScore } = props;
+export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hideCourseInfo?: boolean }) => {
+  const { currentTopic, studyScore, hideCourseInfo } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
@@ -115,12 +115,12 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
           <CommentPanel commentScope={CommentScopes.TOPIC} />
         </Grid>
       </Grid>
-      <Grid container className="information-in-course">
+      {!hideCourseInfo && <Grid container className="information-in-course">
         <Grid item md={8}> </Grid>
         <Grid item md={4}>
           <InformationCourse course={currentCourse} />
         </Grid>
-      </Grid>
+      </Grid>}
     </div>
   )
 }
