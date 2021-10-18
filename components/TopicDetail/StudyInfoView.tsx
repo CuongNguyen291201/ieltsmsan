@@ -41,13 +41,9 @@ const StudyInfoView = (props: { topic: any }) => {
           ? <div>Loading...</div>
           : (
             <PanelContainer title={''}>
-              {studyScore
-                ? (
-                  topic.type === TOPIC_TYPE_TEST
-                    ? <TestInfoView topic={topic} />
-                    : <ExerciseInfoView topic={topic} />
-                )
-                : <PreGameView topic={topic} />}
+              {topic.type === TOPIC_TYPE_TEST
+                ? <TestInfoView topic={topic} />
+                : <ExerciseInfoView topic={topic} />}
             </PanelContainer>
           )
       }

@@ -6,17 +6,13 @@ import { CommentScopes } from '../../custom-types';
 import { AppState } from '../../redux/reducers';
 import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
 import { getExamScoreDetails, getSkills } from '../../sub_modules/game/api/ExamApi';
-import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
-import { Course } from '../../sub_modules/share/model/courses';
-import Skill from '../../sub_modules/share/model/skill';
+import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import CommentPanel from '../CommentPanel';
-import { InfoCourse } from '../CourseDetail/InfoCourse';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
-import NoTestView from './NoTestView';
-import StudyScoreView from './StudyScoreView';
+import TestOverView from './TestOverview';
 import { MyCardDataView, StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
 
 export const StatisticSkillView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, currentUser: UserInfo }) => {
@@ -144,49 +140,29 @@ const TestInfoView = (props: { topic: any }) => {
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const isFinishedExam = useMemo(() => studyScore?.status === EXAM_SCORE_FINISH, [studyScore]);
+  const isPlayTest = useMemo(() => !!studyScore, [studyScore]);
   return (
     <div className="topic-test-view">
-      <div className="thong-ke-">
-        <Grid md={isFinishedExam ? 8 : 12}>
-          {
-            isFinishedExam
-              ?
-              <>
-                <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
-                <Grid className="commentPanel_" md={4}>
-                  <CommentPanel commentScope={CommentScopes.TOPIC} />
-                </Grid>
-              </>
-              : <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hideCourseInfo />
+      <Grid md={12} className="thong-ke-">
+        <Grid item md={8}>
+          {isPlayTest
+            ? <TestOverView currentTopic={topic} currentUser={currentUser} studyScore={studyScore} />
+            : <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />
           }
         </Grid>
-      </div>
-      <div className="view-panel-score">
-        <Grid md={8} className="view-left">
-          <>
-            {
-              isFinishedExam && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hideCourseInfo />
-            }
-            {/* {
-              studyScore?.status === EXAM_SCORE_FINISH
-                ? <div className="viewStudycore">
-                  <Grid>
-                    <StudyScoreView currentTopic={topic} studyScore={studyScore} currentUser={currentUser} />
-                  </Grid>
-                </div>
-                : <NoTestView currentTopic={topic} currentUser={currentUser} studyScore={studyScore} />
-            }
 
-            {
-              studyScore?.status === EXAM_SCORE_FINISH && topic.type === TOPIC_TYPE_TEST && <StatisticSkillView currentTopic={topic} studyScore={studyScore} currentUser={currentUser} />
-            } */}
-          </>
+        <Grid item md={4} className="commentPanel_">
+          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        </Grid>
+      </Grid>
+      <Grid container className="view-panel-score">
+        <Grid md={8} className="view-left">
+          {isPlayTest && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />}
         </Grid>
         <Grid md={4} className="view-right">
           <InformationCourse course={course} />
         </Grid>
-      </div>
+      </Grid>
     </div>
   )
 }

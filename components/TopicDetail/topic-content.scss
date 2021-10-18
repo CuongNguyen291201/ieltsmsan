@@ -131,7 +131,6 @@ $main-color-study: #6f6f6f;
     }
   }
   .view-panel-score{
-    display: flex;
     .view-left{
       padding-right: 20px;
       .view-section1{
@@ -141,9 +140,8 @@ $main-color-study: #6f6f6f;
         .section1{
           width: 100%;
           max-width: 100%;
-          .start-game__{
-            display: none;
-          }
+          box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+          background: #fff;
         }
         .MuiGrid-container{
           display: unset;
@@ -180,7 +178,7 @@ $main-color-study: #6f6f6f;
   }
   .section1 {
     background-color: white;
-    box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+    // box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
     .title {
       font-size: 14px;
       font-weight: 500;
@@ -198,14 +196,22 @@ $main-color-study: #6f6f6f;
       margin: auto
     }
     .start-game__{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0;
       .pre-game-start{
         .start-game-btn{
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           color: white;
           background-color: #DF92DD;
           border-radius: 2px;
-          margin-bottom: 20px;
-          width: 150px;
-          text-align: center;
+          width: 250px;
+          height: 40px;
+          text-transform: uppercase;
         }
       }
       

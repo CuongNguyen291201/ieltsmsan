@@ -1,31 +1,28 @@
 import { Grid } from '@material-ui/core';
+import { message } from 'antd';
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import bookmarkAnswerIcon from '../../public/default/danh-dau.png';
-import correctAnswerIcon from '../../public/default/da-thuoc.png';
 import incorrectAnswerIcon from '../../public/default/chua-hoc.png';
 import notAnswerIcon from '../../public/default/chua-thuoc.png';
+import correctAnswerIcon from '../../public/default/da-thuoc.png';
+import bookmarkAnswerIcon from '../../public/default/danh-dau.png';
+import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
+import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, EXAM_SCORE_FINISH, EXAM_SCORE_PLAY, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { genUnitScore, getGameSlug } from '../../utils';
-import { AppState } from '../../redux/reducers';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
-import { message } from 'antd';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import CommentPanel from '../CommentPanel';
-import { CommentScopes } from '../../custom-types';
-import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
-import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 // TOPIC INFO COMMON VIEW
-export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hideCourseInfo?: boolean }) => {
-  const { currentTopic, studyScore, hideCourseInfo } = props;
+export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; hideCourseInfo?: boolean }) => {
+  const { currentTopic, studyScore, hidePlayGameButton } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
@@ -90,37 +87,35 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
   }
   return (
     <div className="view-section1">
-      <Grid container>
-        <Grid item md={8} className="section1">
-          <div className="title">Thông tin Chung</div>
-          <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
-            {data.map((e, index) => {
-              return (
-                <div className="list-item" key={index}>
-                  <div className="text">{e.title}</div>
-                  <div className="number">{e.number}</div>
-                </div>
-              )
-            })}
-          </div>
-          <div className="start-game__">
-            <div className="pre-game-start" onClick={playGame}>
-              <div className="start-game-btn">
-                Làm bài
+      <div className="section1">
+        <div className="title">Thông tin Chung</div>
+        <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
+          {data.map((e, index) => {
+            return (
+              <div className="list-item" key={index}>
+                <div className="text">{e.title}</div>
+                <div className="number">{e.number}</div>
               </div>
+            )
+          })}
+        </div>
+        {!hidePlayGameButton && <div className="start-game__">
+          <div className="pre-game-start" onClick={playGame}>
+            <div className="start-game-btn">
+              Làm bài
             </div>
           </div>
-        </Grid>
-        <Grid item className="comment__" md={4}>
+        </div>}
+      </div>
+      {/* <Grid item className="comment__" md={4}>
           <CommentPanel commentScope={CommentScopes.TOPIC} />
-        </Grid>
-      </Grid>
-      {!hideCourseInfo && <Grid container className="information-in-course">
+        </Grid> */}
+      {/* {!hideCourseInfo && <Grid container className="information-in-course">
         <Grid item md={8}> </Grid>
         <Grid item md={4}>
           <InformationCourse course={currentCourse} />
         </Grid>
-      </Grid>}
+      </Grid>} */}
     </div>
   )
 }
@@ -152,7 +147,7 @@ function getNumCardBox(myCardData: MyCardData, currentTopic: Topic) {
   return { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark }
 }
 
-export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData }) => {
+export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData }) => {     
   const { currentTopic, studyScore, myCardData } = props;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -164,67 +159,68 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
   }
 
   return (
-    <>
-      {
-        myCardData && <Grid md={12} className="section3">
-          <div className="tien-do-hoc">Tiến Độ Học</div>
-          <Grid md={8} className="cardDataBoxViewPanel">
-            <CardDataBoxView
-              text="Chưa học"
-              numCard={cardIncorrectArr.length}
-              url={incorrectAnswerIcon}
-              onClick={() => {
-                if (cardIncorrectArr.length) {
-                  onClick(CARD_BOX_ANSWER_INCORRECT)
-                } else {
-                  showToastifyWarning('Không có câu trả lời sai hiển thị')
-                }
-              }}
-            />
+    <div className="section3">
+      <div className="tien-do-hoc">Tiến Độ Học</div>
+      <div>{studyScore?.progress || 0} %</div>
+      <div className="cardDataBoxViewPanel">
+        <CardDataBoxView
+          text="Chưa học"
+          numCard={cardIncorrectArr.length}
+          url={incorrectAnswerIcon}
+          onClick={() => {
+            if (cardIncorrectArr.length) {
+              onClick(CARD_BOX_ANSWER_INCORRECT)
+            } else {
+              showToastifyWarning('Không có câu trả lời sai hiển thị')
+            }
+          }}
+        />
 
-            <CardDataBoxView
-              text="Chưa thuộc"
-              numCard={numCardNotAnswer}
-              url={notAnswerIcon}
-              onClick={() => {
-                if (numCardNotAnswer) {
-                  onClick(CARD_BOX_NO_ANSWER)
-                } else {
-                  showToastifyWarning('Không có câu chưa trả lời hiển thị')
-                }
-              }}
-            />
+        <CardDataBoxView
+          text="Chưa thuộc"
+          numCard={numCardNotAnswer}
+          url={notAnswerIcon}
+          onClick={() => {
+            if (numCardNotAnswer) {
+              onClick(CARD_BOX_NO_ANSWER)
+            } else {
+              showToastifyWarning('Không có câu chưa trả lời hiển thị')
+            }
+          }}
+        />
 
-            <CardDataBoxView
-              text="Đã thuộc"
-              numCard={cardCorrectArr.length}
-              url={correctAnswerIcon}
-              onClick={() => {
-                if (cardCorrectArr.length) {
-                  onClick(CARD_BOX_ANSWER_CORRECT)
-                } else {
-                  showToastifyWarning('Không có câu trả lời đúng hiển thị')
-                }
-              }}
-            />
+        <CardDataBoxView
+          text="Đã thuộc"
+          numCard={cardCorrectArr.length}
+          url={correctAnswerIcon}
+          onClick={() => {
+            if (cardCorrectArr.length) {
+              onClick(CARD_BOX_ANSWER_CORRECT)
+            } else {
+              showToastifyWarning('Không có câu trả lời đúng hiển thị')
+            }
+          }}
+        />
 
-            <CardDataBoxView
-              text="Đánh dấu"
-              numCard={cardBookMark.length}
-              url={bookmarkAnswerIcon}
-              onClick={() => {
-                if (cardBookMark.length) {
-                  onClick(CARD_BOX_ANSWER_BOOKMARK)
-                } else {
-                  showToastifyWarning('Không có câu cân nhắc hiển thị')
-                }
-              }}
-            />
-          </Grid>
-        </Grid>
+        <CardDataBoxView
+          text="Đánh dấu"
+          numCard={cardBookMark.length}
+          url={bookmarkAnswerIcon}
+          onClick={() => {
+            if (cardBookMark.length) {
+              onClick(CARD_BOX_ANSWER_BOOKMARK)
+            } else {
+              showToastifyWarning('Không có câu cân nhắc hiển thị')
+            }
+          }}
+        />
 
-      }
-    </>
+      </div>
+        <div className="">
+          <div>{studyScore?.status === EXAM_SCORE_PLAY || studyScore?.status === EXAM_SCORE_FINISH ? "Làm tiếp" : "Làm bài"}</div>
+          {studyScore?.status === EXAM_SCORE_FINISH && <div>Xem lại</div>}
+        </div>
+    </div>
   )
 }
 

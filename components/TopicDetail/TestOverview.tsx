@@ -14,7 +14,7 @@ import { formatDateDMY, getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
 
-const NoTestView = (props: { currentTopic: Topic, studyScore?: StudyScore | null, currentUser: UserInfo }) => {
+const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | null, currentUser: UserInfo }) => {
 	const { currentTopic, studyScore, currentUser } = props;
 	const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
 	const dispatch = useDispatch()
@@ -48,4 +48,4 @@ const NoTestView = (props: { currentTopic: Topic, studyScore?: StudyScore | null
 	)
 }
 
-export default NoTestView;
+export default TestOverView;

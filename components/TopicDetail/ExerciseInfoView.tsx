@@ -18,6 +18,11 @@ import './topic-content.scss';
 import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
+import { Grid } from '@material-ui/core';
+import CommentPanel from '../CommentPanel';
+import { CommentScopes } from '../../custom-types';
+import { useMemo } from 'react';
+import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 
 const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | null; currentUser: any }) => {
   const { currentTopic, studyScore, currentUser } = props;
@@ -155,17 +160,30 @@ export const TestScoreView = (props: { studyScore: StudyScore, myCardData: any, 
 
 const ExerciseInfoView = (props: { topic: any }) => {
   const { topic } = props;
-  const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
-
+  const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
   return (
     <div className="topic-test-view">
-      <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />
-      <>
-        <ExerciseView currentTopic={topic} studyScore={studyScore} currentUser={currentUser} />
-        <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
-      </>
-    </div>
+      <Grid md={12} className="thong-ke-">
+        <Grid item md={8}>
+          <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
+        </Grid>
+
+        <Grid item md={4} className="commentPanel_">
+          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        </Grid>
+      </Grid>
+
+      <Grid container className="view-panel-score">
+        <Grid md={8} className="view-left">
+          <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />
+        </Grid>
+
+        <Grid md={4} className="view-right">
+          <InformationCourse course={course} />
+        </Grid>
+      </Grid>
+    </div >
   );
 };
 
