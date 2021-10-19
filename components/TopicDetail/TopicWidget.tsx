@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { createStyles, Grid, Theme, withStyles } from '@material-ui/core';
 import { message } from 'antd';
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
@@ -20,6 +20,9 @@ import Topic from '../../sub_modules/share/model/topic';
 import { genUnitScore, getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import React from 'react';
+
 // TOPIC INFO COMMON VIEW
 export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; hideCourseInfo?: boolean }) => {
   const { currentTopic, studyScore, hidePlayGameButton } = props;
@@ -157,11 +160,29 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
     dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore, boxGame: box }));
     router.push(getGameSlug(currentTopic._id));
   }
-
+  const BorderLinearProgress = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      height: 30,
+      borderRadius: 0,
+    },
+    colorPrimary: {    
+      backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+    },
+    bar: {
+      borderRadius: 0,
+      backgroundColor: '#26C048',
+    },
+  }),
+)(LinearProgress);
   return (
     <div className="section3">
       <div className="tien-do-hoc">Tiến Độ Học</div>
-      <div>{studyScore?.progress || 0} %</div>
+      <div className="progress-animation">
+      <BorderLinearProgress variant="determinate" value={studyScore?.progress || 0} />
+      <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0)-3}%` }} >{ studyScore?.progress || 0}%</div>
+      <div style={{ left: `${(studyScore?.progress || 0)-1}%` }} id="triangle-down"></div>
+      </div>
       <div className="cardDataBoxViewPanel">
         <CardDataBoxView
           text="Chưa học"
@@ -169,7 +190,7 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
           url={incorrectAnswerIcon}
           onClick={() => {
             if (cardIncorrectArr.length) {
-              onClick(CARD_BOX_ANSWER_INCORRECT)
+              onClick(CARD_BOX_ANSWER_INCORRECT)   
             } else {
               showToastifyWarning('Không có câu trả lời sai hiển thị')
             }

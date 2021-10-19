@@ -41,9 +41,13 @@ const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | nu
 				<span>Ngày: </span><span>{formatDateDMY(Date.now())}</span>
 			</div>
 			<img src={`/topics/welcome_exam.png`} alt="" />
-			<div className="lam-lai" onClick={() => {
+			<div className="resume--" onClick={() => {
 				playGame()
-			}}>{(studyScore && (studyScore.status == EXAM_SCORE_PLAY || studyScore.status == EXAM_SCORE_PAUSE)) ? "Làm tiếp" : "Làm bài"}</div>
+				
+			}}>
+				<div className="lam-tiep play__">Làm tiếp</div>
+				<div className="xem-lai_ play__">Xem lại</div>
+			</div>
 		</div>
 	)
 }

@@ -381,7 +381,6 @@ $main-color-study: #6f6f6f;
     justify-content: space-between;
     align-items: center;
     padding: 16px 24px;
-    border: 1px solid $border-color-1;
     border-radius: 10px;
     height: 342px;
     img {
@@ -458,6 +457,25 @@ $main-color-study: #6f6f6f;
         background-color: $main-color-study;
       }
     }
+    .resume--{
+      display: flex;
+      .lam-tiep{
+        background-color: #DF92DD;
+        color: white;
+      }
+      .xem-lai_{
+        border: 1px solid black;
+        color: black;
+      }
+      .play__{
+        padding: 7px;
+        margin: 10px 20px;
+        width: 150px;
+        text-align: center;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+    }
   }
 
   .section3 {
@@ -468,7 +486,31 @@ $main-color-study: #6f6f6f;
       font-weight: 500;
       text-align: center;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
+    }
+    .progress-animation{
+      position: relative;
+      margin: auto;
+      .item-progress-ani{
+        // background-image: url('/default/union-bg.png');
+        position: absolute;
+        top: -35px;
+        background-color: #26C048;
+        border-radius: 12px;
+        width: 40px;
+        color: white;
+        text-align: center;
+      }
+      #triangle-down{
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 10px solid #26C048;
+        position: absolute;
+        top: -17px;
+        padding: 1px;
+      }
     }
     .cardDataBoxViewPanel{
       display: flex;
