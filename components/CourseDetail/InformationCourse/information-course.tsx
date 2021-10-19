@@ -1,31 +1,92 @@
-import { Button, Skeleton } from "antd";
-import { Course } from "../../../sub_modules/share/model/courses";
-import iconCircle from '../../../public/default/icon-circle.png';
-import iconNewCourse from '../../../public/default/new_.png';
-import iconPrice from '../../../public/default/icon-price_.png';
-import iconTotalStudent from '../../../public/default/total-student.png';
-import iconNumberStudy from '../../../public/default/icon-number-study.png';
-import iconClock from '../../../public/default/icon-clock_.png';
-import bgPostion from '../../public/default/positionBg.png';
-import { useMemo } from "react";
-import { numberFormat } from '../../../utils';
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../../redux/reducers";
-import orderUtils from '../../../utils/payment/orderUtils';
+import { Button, Modal, Skeleton } from "antd";
 import { useRouter } from "next/router";
-import { getPaymentPageSlug } from '../../../utils/router';
+import { useCallback, useMemo, useReducer } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { MapUserCourseStatus } from '../../../custom-types/MapContraint';
+import iconCircle from '../../../public/default/icon-circle.png';
+import iconClock from '../../../public/default/icon-clock_.png';
+import iconNumberStudy from '../../../public/default/icon-number-study.png';
+import iconPrice from '../../../public/default/icon-price_.png';
+import iconNewCourse from '../../../public/default/new_.png';
+import iconTotalStudent from '../../../public/default/total-student.png';
 import { createOneAction } from '../../../redux/actions';
+import { setActiveCourseModalVisibleAction, setUserCourseAction } from '../../../redux/actions/course.actions';
+import { AppState } from "../../../redux/reducers";
 import { Scopes } from '../../../redux/types';
-import './style.scss'
+import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
+import { showToastifyWarning } from '../../../sub_modules/common/utils/toastify';
+import { USER_COURSE_APPROVE, USER_TYPE_HAS_ROLE } from '../../../sub_modules/share/constraint';
+import { Course } from "../../../sub_modules/share/model/courses";
+import { numberFormat } from '../../../utils';
+import { apiJoinCourse } from '../../../utils/apis/courseApi';
+import orderUtils from '../../../utils/payment/orderUtils';
+import { getPaymentPageSlug } from '../../../utils/router';
+import MemberListView from '../MemberListView';
+import {
+    infoCourseInitState, infoCourseReducer,
+    setActiveLoading, setShowCourseMembers
+} from './infomationCourse.reducer';
+import './style.scss';
+
 export const InformationCourse = (props: { course: Course }) => {
     const { course } = props
     const router = useRouter();
     const dispatch = useDispatch();
     const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal, currentCourseLoading } = useSelector((state: AppState) => state.courseReducer);
+    const { currentUser } = useSelector((state: AppState) => state.userReducer);
     const isCourseDiscount = useMemo(() => !!course.cost && !!course.discountPrice, [course]);
+    const [{
+        activeLoading,
+        showCourseMembers
+    }, uiLogic] = useReducer(infoCourseReducer, infoCourseInitState);
+
+    const isTeacher = useMemo(() => userCourse?.isTeacher, [userCourse]);
+
+    const joinCourse = () => {
+        if (!currentUser) {
+            dispatch(showLoginModalAction(true));
+            return;
+        }
+        if (activeLoading || userCourseLoading) return;
+        if (course.cost && (!userCourse || userCourse?.isExpired) && currentUser !== USER_TYPE_HAS_ROLE) {
+            dispatch(setActiveCourseModalVisibleAction(true));
+        } else if (!course.cost && !userCourse) {
+            uiLogic(setActiveLoading(true));
+            apiJoinCourse({ courseId: course._id })
+                .then((uc) => {
+                    dispatch(setUserCourseAction(uc));
+                    uiLogic(setActiveLoading(false));
+                })
+                .catch((e) => {
+                    showToastifyWarning("Có lỗi xảy ra!");
+                })
+        }
+        return;
+    }
+
+    const showCourseMemberList = useCallback(() => {
+        uiLogic(setShowCourseMembers(!showCourseMembers));
+    }, [showCourseMembers]);
+
+    const renderCourseMembersModal = () => (
+        <Modal
+            visible={showCourseMembers}
+            footer={null}
+            onCancel={() => {
+                uiLogic(setShowCourseMembers(false));
+            }}
+            centered
+            width="100%"
+            title="Danh sách học viên"
+            bodyStyle={{ maxHeight: "80vh" }}
+        >
+            <MemberListView course={course} />
+        </Modal>
+    )
 
     return (
         <div id="course-overview">
+            {renderCourseMembersModal()}
             <Skeleton loading={userCourseLoading}>
                 <div className="information-course">
                     <div>
@@ -40,22 +101,23 @@ export const InformationCourse = (props: { course: Course }) => {
                     </div>
                     <div className="inf-course_">
                         <div className="price-and-discount-price item__">
-                            <img src={iconPrice} alt="iconPrice" />  <div className="price-real text">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
+                            <span className="icon"><img src={iconPrice} alt="iconPrice" /></span>  <div className="price-real text">{course.cost ? `${numberFormat.format(course.cost - course.discountPrice)} VNĐ` : 'Miễn phí'}</div>
                             {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
                         </div>
-                        <div className="total-student item__">
-                            <img src={iconTotalStudent} /> <div className="text">Tổng học viên</div> <span className="number__">9999</span>
+                        <div className={`total-student item__${isTeacher ? ' teacher' : ''}`}>
+                            <span className="icon"><img src={iconTotalStudent} /></span> <div className="text" onClick={showCourseMemberList}>Tổng học viên</div> <span className="number__">9999</span>
                         </div>
                         <div className="number-study item__">
-                            <img src={iconNumberStudy} alt="iconNumberStudy" /> <div className="text">Số bài học</div> <span className="number__">123</span>
+                            <span className="icon"><img src={iconNumberStudy} alt="iconNumberStudy" /></span> <div className="text">Số bài học</div> <span className="number__">123</span>
                         </div>
                         <div className="time-study item__">
-                            <img src={iconClock} alt="iconClock" /><div className="text">Thời gian học</div><span className="number__">{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
+                            <span className="icon"><img src={iconClock} alt="iconClock" /></span> <div className="text">Thời gian học</div><span className="number__">{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>
                         </div>
                     </div>
                 </div>
-                {!!course.cost && (!isJoinedCourse || userCourse.isExpired)
-                    && <div className="button-group">
+                {(!isJoinedCourse || userCourse?.isExpired)
+                    && !!course.cost
+                    ? <div className="button-group">
                         <div>
                             <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
                                 orderUtils.setReturnUrl(router.asPath);
@@ -69,8 +131,19 @@ export const InformationCourse = (props: { course: Course }) => {
                                 })
                             }}>Thêm vào giỏ</Button>
                         </div>
-
+                    </div>
+                    :
+                    <>{userCourse?.status !== USER_COURSE_APPROVE && <div className="button-group">
+                        <div>
+                            <Button type="primary" size="large" className="btn btn-root" onClick={() => {
+                                joinCourse()
+                            }}>
+                                {userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học'}
+                            </Button>
+                        </div>
                     </div>}
+                    </>
+                }
 
                 {/* <div className="button-group">
                       <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>

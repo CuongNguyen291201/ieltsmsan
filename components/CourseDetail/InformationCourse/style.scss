@@ -47,10 +47,21 @@
             margin-right: 10px;
           }
         }
+        .total-student.teacher {
+          cursor: pointer;
+          color: blue;
+          .text {
+            text-decoration: underline;
+          }
+        }
         .item__{
           margin-top: 15px;
           display: flex;
-          img{
+          .image {
+            height: 20px;
+            img{
+              height: 100%;
+            }
             margin-right: 20px;
           }
           .text{

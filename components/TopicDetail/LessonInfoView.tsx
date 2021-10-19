@@ -191,7 +191,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
               </div>
             ) : (
               <div className="video-component-fullscreen video-commponent">
-                <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
+                {!!topic.videoUrl && <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
                   <Col xl={24} md={24} xs={24}>
                     <div className="waiting-live" style={{ height: '400px' }}>
                       <div className="item_">
@@ -200,7 +200,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
                       </div>
                     </div>
                   </Col>
-                </Row>
+                </Row>}
                 {topic.description && <SanitizedDiv className="description" content={topic.description} />}
               </div>
             )}
