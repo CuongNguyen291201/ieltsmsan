@@ -65,8 +65,11 @@ export const InformationCourse = (props: { course: Course }) => {
     }
 
     const showCourseMemberList = useCallback(() => {
-        uiLogic(setShowCourseMembers(!showCourseMembers));
-    }, [showCourseMembers]);
+        if (userCourse?.isTeacher) {
+            uiLogic(setShowCourseMembers(!showCourseMembers));
+        }
+        return;
+    }, [showCourseMembers, userCourse]);
 
     const renderCourseMembersModal = () => (
         <Modal
