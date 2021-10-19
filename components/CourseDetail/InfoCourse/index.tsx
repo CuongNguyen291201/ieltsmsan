@@ -10,18 +10,16 @@ import { getCoursePageSlug } from '../../../utils/router';
 
 export const InfoCourse = (props: { course: Course, webInfo?: WebInfo, topic?: _Topic }) => {
     const { course, webInfo, topic } = props;
-    const breadcrumbItems = useMemo(() => {
+    const { breadcrumbItems, title_, shortDesc } = useMemo(() => {
         const items: any[] = [{ name: course?.name, slug: getCoursePageSlug({ course }) }];
         if (topic) items.push({ name: topic?.name });
-        return items;
-    }, [course, topic])
-    const title_ = useMemo(() => {
-        return topic?.name || course?.name
-    }, [topic, course]);
-    const shortDesc = useMemo(() => {
-        if (!!topic) return topic.shortDescription || '';
-        return course.shortDesc || '';
+        return {
+            breadcrumbItems: items,
+            title_: `${course?.name || ''}${topic ? `: ${topic.name}` : ''}`,
+            shortDesc: !!topic ? (topic.shortDescription || '') : (course.shortDesc || '')
+        };
     }, [course, topic]);
+
     return (
         <div className="header-course">
             <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} disableFixedHeader/>

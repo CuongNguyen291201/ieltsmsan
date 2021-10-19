@@ -1,37 +1,30 @@
-import dynamic from 'next/dynamic';
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Col, Row } from 'antd';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CommentScopes } from '../../custom-types';
 import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
-import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";
+import iconWaiting from '../../public/default/waiting-live.svg';
 import { AppState } from '../../redux/reducers';
+import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
+import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";
 import Document from '../../sub_modules/share/model/document';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
 import Topic from '../../sub_modules/share/model/topic';
-import { downloadFromURL } from '../../utils';
 import { fetchPaginationAPI } from '../../utils/apis/common';
 import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
-import { apiUpdateTopicProgress, getOneVideoScenarioAPI, apiGetTimeStamp } from '../../utils/apis/topicApi';
-import PanelContainer from '../containers/PanelContainer';
-import Pagination from '../Pagination';
+import { apiGetTimeStamp, apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
+import { getCoursePageSlug } from '../../utils/router';
+import CommentPanel from '../CommentPanelNew';
+import CourseTopicTreeView from '../CourseDetail/CourseTopicTreeView';
+import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
+import SanitizedDiv from '../SanitizedDiv';
+import registerServiceWorker, { clearCountDown, countDownTimer, unregister } from '../ServiceWorker/registerServiceWorker';
 import StreamComponent from '../Stream';
 import './lesson-info.scss';
-import LessonVideoView from './LessonVideoView';
-import scenario from './scenario.json';
-import CommentPanel from '../CommentPanelNew';
-import { CommentScopes } from '../../custom-types';
-import { Course } from '../../sub_modules/share/model/courses';
-import CourseContentView from '../CourseDetail/CourseContentView';
-import { ContentCourse } from '../CourseDetail/content-course';
-import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
-import CourseTopicTreeView from '../CourseDetail/CourseTopicTreeView';
-import twoScreen from '../../public/default/twoScreen.svg'
-import iconWaiting from '../../public/default/waiting-live.svg'
-import viewHideComment from '../../public/default/viewHideComment.svg'
-import registerServiceWorker, { countDownTimer, clearCountDown, unregister } from '../ServiceWorker/registerServiceWorker';
-import SanitizedDiv from '../SanitizedDiv';
-import { canPlayTopic } from '../../utils/permission/topic.permission';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
 
@@ -47,13 +40,8 @@ const LessonInfoView = (props: { topic: Topic }) => {
   const [dataTimeCurrent, setDataTimeCurrent] = useState(0);
   const [isEndLive, setIsEndLive] = useState(false)
   const [countDown, setCountDown] = useState(0);
-
-  useEffect(() => {
-    return () => {
-      clearCountDown();
-      unregister();
-    }
-  }, []);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     if (!currentUser) return;
@@ -65,6 +53,10 @@ const LessonInfoView = (props: { topic: Topic }) => {
     if (topic?._id) {
       registerServiceWorker();
       fetchDataScenario()
+    }
+    return () => {
+      clearCountDown();
+      unregister();
     }
   }, []);
 
@@ -245,9 +237,25 @@ const LessonInfoView = (props: { topic: Topic }) => {
         </div>}
       </PanelContainer> */}
           </>
-          : <>
-            {currentUser ? 'Chưa tham gia khoá học!' : 'Đăng nhập để tiếp tục'}
-          </>
+          : <div id="topic-private-view">
+            {currentUser
+              ? <div className="private-lesson private-lession-not-joined">
+                <i className="far fa-exclamation" />
+                <div className="tooltip">
+                  Chưa tham gia khoá học!&nbsp;
+                  <span className="action" onClick={() => {
+                    router.push(getCoursePageSlug({ course: topic.course }));
+                  }}>Quay lại</span>
+                </div>
+              </div>
+              : <div className="private-lesson private-lession-unauthorized">
+                <i className="far fa-exclamation" />
+                <div className="tooltip">Vui lòng <span className="action" onClick={() => {
+                  dispatch(showLoginModalAction(true));
+                }}>đăng nhập</span> để tiếp tục</div>
+              </div>
+            }
+          </div>
       }
     </div>
   );

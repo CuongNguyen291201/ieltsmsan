@@ -148,3 +148,26 @@
 .info-topic {
   background-color: white;
 }
+
+#topic-private-view {
+  background: #fff;
+  height: 250px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & .private-lesson {
+    text-align: center;
+    & .tooltip {
+      font-size: 20px;
+      font-weight: 500;
+      color: red;
+      & .action {
+        color: #0000ff;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+}

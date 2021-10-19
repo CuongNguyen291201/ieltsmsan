@@ -6,7 +6,6 @@ import { TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
 import TestInfoView from './TestInfoView';
 import ExerciseInfoView from './ExerciseInfoView';
-import PreGameView from './PreGameView';
 import PanelContainer from '../containers/PanelContainer';
 
 const StudyInfoView = (props: { topic: any }) => {

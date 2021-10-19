@@ -118,23 +118,6 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
         updateTopicProgressFC();
         updateTimeActivityFC();
       }
-      // if (!currentUser) {
-      //   dispatch(showLoginModalAction(true));
-      //   return;
-      // }
-      // if (!isJoinedCourse && currentUser.userType !== USER_TYPE_HAS_ROLE) {
-      //   if (!isTopicOpen) {
-      //     if (!currentCourse.cost) {
-      //       message.warning("Chưa tham gia khoá học");
-      //       return;
-      //     } else {
-      //       dispatch(setActiveCourseModalVisibleAction(true));
-      //       return;
-      //     }
-      //   }
-      // }
-      // updateTopicProgressFC();
-      // updateTimeActivityFC();
       router.push(getTopicPageSlug({ topic }));
     }
   };
@@ -190,7 +173,7 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
         {!!topic.topicProgress && isMain && <div className="accomplished">
           {topic.type !== TOPIC_TYPE_TEST
             ? <div>{topic.topicProgress.progress}%</div>
-            : <div>{topic.score} điểm</div>}
+            : <div>{typeof topic.score !== 'undefined' ? `${topic.score} điểm` : ''}</div>}
         </div>}
 
         {!isMain && <div className="sub-title"><div className="icon-isDone">

@@ -24,7 +24,7 @@ const BreadcrumbItem = memo(_BreadcrumbItem);
 const Breadcrumb = (props: { items: Array<{ name: string; slug?: string; }> }) => {
   const { items } = props;
   return (
-    <div className="breadcrumb">
+    <div id="breadcrumb" className="breadcrumb">
       <div className="container">
         <div className="main-content">
           <BreadcrumbItem name="Trang chủ" />
