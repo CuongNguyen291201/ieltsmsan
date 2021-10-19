@@ -12,7 +12,7 @@ const PreGameView = (props: { topic: any }) => {
 
   return (
     <div className="topic-test-view">
-      <Grid md={12} className="thong-ke-">
+      <Grid container className="thong-ke-">
         <Grid item md={8}>
           <TopicInfoCommonView currentTopic={currentTopic} />
         </Grid>

@@ -10,7 +10,7 @@ import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import CommentPanel from '../CommentPanel';
+import CommentPanelNew from '../CommentPanelNew';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import TestOverView from './TestOverview';
 import { MyCardDataView, StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
@@ -143,23 +143,24 @@ const TestInfoView = (props: { topic: any }) => {
   const isPlayTest = useMemo(() => !!studyScore, [studyScore]);
   return (
     <div className="topic-test-view">
-      <Grid md={12} className="thong-ke-">
-        <Grid item md={8}>
+      <Grid container className="thong-ke-">
+        <Grid item xs={12} md={8}>
           {isPlayTest
             ? <TestOverView currentTopic={topic} currentUser={currentUser} studyScore={studyScore} />
             : <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />
           }
         </Grid>
 
-        <Grid item md={4} className="commentPanel_">
-          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        <Grid item xs={12} md={4} className="commentPanel_">
+          <div><h3 className="title">Thảo luận</h3></div>
+          <CommentPanelNew commentScope={CommentScopes.TOPIC} />
         </Grid>
       </Grid>
       <Grid container className="view-panel-score">
-        <Grid md={8} className="view-left">
+        <Grid xs={12} md={8} className="view-left">
           {isPlayTest && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />}
         </Grid>
-        <Grid md={4} className="view-right">
+        <Grid xs={12} md={4} className="view-right course-info-topic">
           <InformationCourse course={course} />
         </Grid>
       </Grid>

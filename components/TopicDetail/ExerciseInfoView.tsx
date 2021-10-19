@@ -1,8 +1,11 @@
-import { useRouter } from 'next/router';
+import { Grid } from '@material-ui/core';
 import { message } from 'antd';
+import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { prepareGoToGameAction, prepareReviewGameAction } from '../../redux/actions/prepareGame.actions';
+import { CommentScopes } from '../../custom-types';
+import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
+import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { setUserCardDataAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -13,16 +16,11 @@ import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { formatDateDMY, formatTimeClock, getGameSlug } from '../../utils';
-import { ROUTER_GAME } from '../../utils/router';
+import { canPlayTopic } from '../../utils/permission/topic.permission';
+import CommentPanelNew from '../CommentPanelNew';
+import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import './topic-content.scss';
 import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
-import { canPlayTopic } from '../../utils/permission/topic.permission';
-import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
-import { Grid } from '@material-ui/core';
-import CommentPanel from '../CommentPanel';
-import { CommentScopes } from '../../custom-types';
-import { useMemo } from 'react';
-import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 
 const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | null; currentUser: any }) => {
   const { currentTopic, studyScore, currentUser } = props;
@@ -161,25 +159,29 @@ export const TestScoreView = (props: { studyScore: StudyScore, myCardData: any, 
 const ExerciseInfoView = (props: { topic: any }) => {
   const { topic } = props;
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
-  const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
+  const { currentCourse: course, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { currentUser: user } = useSelector((state: AppState) => state.userReducer);
   return (
     <div className="topic-test-view">
-      <Grid md={12} className="thong-ke-">
-        <Grid item md={8}>
-          <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} />
+      <Grid container className="thong-ke-">
+        <Grid item xs={12} md={8}>
+          <MyCardDataView currentTopic={topic} studyScore={studyScore} myCardData={myCardData} user={user} isJoinedCourse={isJoinedCourse} />
         </Grid>
 
-        <Grid item md={4} className="commentPanel_">
-          <CommentPanel commentScope={CommentScopes.TOPIC} />
+        <Grid item xs={12} md={4} className="commentPanel_">
+          <div>
+            <div><h3 className="title">Thảo luận</h3></div>
+            <CommentPanelNew commentScope={CommentScopes.TOPIC} />
+          </div>
         </Grid>
       </Grid>
 
-      <Grid container className="view-panel-score">
-        <Grid md={8} className="view-left">
+      <Grid container className="view-panel-score" spacing={2}>
+        <Grid xs={12} md={8} className="view-left">
           <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />
         </Grid>
 
-        <Grid md={4} className="view-right">
+        <Grid xs={12} md={4} className="view-right course-info-topic">
           <InformationCourse course={course} />
         </Grid>
       </Grid>

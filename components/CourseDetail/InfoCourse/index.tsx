@@ -17,7 +17,11 @@ export const InfoCourse = (props: { course: Course, webInfo?: WebInfo, topic?: _
     }, [course, topic])
     const title_ = useMemo(() => {
         return topic?.name || course?.name
-    }, [topic, course])
+    }, [topic, course]);
+    const shortDesc = useMemo(() => {
+        if (!!topic) return topic.shortDescription || '';
+        return course.shortDesc || '';
+    }, [course, topic]);
     return (
         <div className="header-course">
             <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} disableFixedHeader/>
@@ -28,19 +32,19 @@ export const InfoCourse = (props: { course: Course, webInfo?: WebInfo, topic?: _
                 <Breadcrumb items={breadcrumbItems} />
                 <div className="container">
                     <div className="title"><h1>{title_}</h1></div>
-                    <div className="description">{course?.shortDesc}</div>
-                    <div className="overview-item">
+                    <div className="description">{shortDesc}</div>
+                    {!topic && <div className="overview-item">
                         <div className="item-main">
                             <span className="ratting">
                                 <Rate className="rating-star" value={4.6} allowHalf disabled />
                             </span>
                             <span className="total-user-rate">(38,820 ratings)<span>{1000}k Students</span></span>
                         </div>
-                    </div>
+                    </div>}
                 </div>
-                <div className="tag-course">
+                {!topic && <div className="tag-course">
                     Video
-                </div>
+                </div>}
             </div>
         </div>
     )

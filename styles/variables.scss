@@ -82,3 +82,23 @@ $root-title-color: #444;
     -webkit-line-clamp: 10;
   }
 }
+
+@mixin thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: $root-color $root-background-color;
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 7px;
+    background: $root-background-color;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $root-background-color;
+    border-radius: 7px;
+    border-top: 1px solid #ccc;
+    &:hover {
+      background: $root-color;
+    }
+  }
+}

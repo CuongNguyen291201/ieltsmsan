@@ -1,6 +1,8 @@
 import { createStyles, Grid, Theme, withStyles } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { message } from 'antd';
 import { useRouter } from 'next/router';
+import React, { Fragment, useCallback } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import incorrectAnswerIcon from '../../public/default/chua-hoc.png';
@@ -13,15 +15,14 @@ import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, EXAM_SCORE_FINISH, EXAM_SCORE_PLAY, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
+import { UserInfo } from '../../sub_modules/share/model/user';
 import { genUnitScore, getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import React from 'react';
 
 // TOPIC INFO COMMON VIEW
 export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; hideCourseInfo?: boolean }) => {
@@ -150,97 +151,106 @@ function getNumCardBox(myCardData: MyCardData, currentTopic: Topic) {
   return { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark }
 }
 
-export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData }) => {     
-  const { currentTopic, studyScore, myCardData } = props;
+export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData; user?: UserInfo; isJoinedCourse?: boolean }) => {
+  const { currentTopic, studyScore, myCardData, user, isJoinedCourse } = props;
   const dispatch = useDispatch();
   const router = useRouter();
   const { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark } = getNumCardBox(myCardData, currentTopic);
 
-  const onClick = (box: number) => {
+  const onClickBox = (box: number, numCard: number) => {
+    if (!user) {
+      dispatch(showLoginModalAction(true));
+      return;
+    }
+    if (numCard === 0) {
+      showToastifyWarning("Không có câu hỏi!");
+      return;
+    }
     dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore, boxGame: box }));
     router.push(getGameSlug(currentTopic._id));
   }
+
+  const playGame = useCallback(() => {
+    if (!user) {
+      dispatch(showLoginModalAction(true));
+      return;
+    }
+    if (!canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+      showToastifyWarning("Chưa tham gia khoá học");
+      return;
+    }
+    router.push(getGameSlug(currentTopic._id));
+  }, [user, isJoinedCourse]);
+
+  const review = useCallback(() => {
+    if (!!user) {
+      dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore }));
+      router.push(getGameSlug(currentTopic._id));
+    }
+  }, [user])
+
+  const mapBoxLabel = {
+    [CARD_BOX_ANSWER_INCORRECT]: {
+      label: "Chưa thuộc",
+      icon: incorrectAnswerIcon,
+      numCard: cardIncorrectArr.length
+    },
+    [CARD_BOX_ANSWER_CORRECT]: {
+      label: "Đã thuộc",
+      icon: correctAnswerIcon,
+      numCard: cardCorrectArr.length
+    },
+    [CARD_BOX_ANSWER_BOOKMARK]: {
+      label: "Đánh dấu",
+      icon: bookmarkAnswerIcon,
+      numCard: cardBookMark.length
+    },
+    [CARD_BOX_NO_ANSWER]: {
+      label: "Chưa học",
+      icon: notAnswerIcon,
+      numCard: numCardNotAnswer
+    }
+  }
+
   const BorderLinearProgress = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      height: 30,
-      borderRadius: 0,
-    },
-    colorPrimary: {    
-      backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 0,
-      backgroundColor: '#26C048',
-    },
-  }),
-)(LinearProgress);
+    createStyles({
+      root: {
+        height: 30,
+        borderRadius: 0,
+      },
+      colorPrimary: {
+        backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+      },
+      bar: {
+        borderRadius: 0,
+        backgroundColor: '#26C048',
+      },
+    }),
+  )(LinearProgress);
   return (
     <div className="section3">
       <div className="tien-do-hoc">Tiến Độ Học</div>
       <div className="progress-animation">
-      <BorderLinearProgress variant="determinate" value={studyScore?.progress || 0} />
-      <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0)-3}%` }} >{ studyScore?.progress || 0}%</div>
-      <div style={{ left: `${(studyScore?.progress || 0)-1}%` }} id="triangle-down"></div>
+        <BorderLinearProgress variant="determinate" value={studyScore?.progress || 0} />
+        <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0) - 3}%` }} >{studyScore?.progress || 0}%</div>
+        <div style={{ left: `${(studyScore?.progress || 0) - 1}%` }} id="triangle-down"></div>
       </div>
-      <div className="cardDataBoxViewPanel">
-        <CardDataBoxView
-          text="Chưa học"
-          numCard={cardIncorrectArr.length}
-          url={incorrectAnswerIcon}
-          onClick={() => {
-            if (cardIncorrectArr.length) {
-              onClick(CARD_BOX_ANSWER_INCORRECT)   
-            } else {
-              showToastifyWarning('Không có câu trả lời sai hiển thị')
-            }
-          }}
-        />
-
-        <CardDataBoxView
-          text="Chưa thuộc"
-          numCard={numCardNotAnswer}
-          url={notAnswerIcon}
-          onClick={() => {
-            if (numCardNotAnswer) {
-              onClick(CARD_BOX_NO_ANSWER)
-            } else {
-              showToastifyWarning('Không có câu chưa trả lời hiển thị')
-            }
-          }}
-        />
-
-        <CardDataBoxView
-          text="Đã thuộc"
-          numCard={cardCorrectArr.length}
-          url={correctAnswerIcon}
-          onClick={() => {
-            if (cardCorrectArr.length) {
-              onClick(CARD_BOX_ANSWER_CORRECT)
-            } else {
-              showToastifyWarning('Không có câu trả lời đúng hiển thị')
-            }
-          }}
-        />
-
-        <CardDataBoxView
-          text="Đánh dấu"
-          numCard={cardBookMark.length}
-          url={bookmarkAnswerIcon}
-          onClick={() => {
-            if (cardBookMark.length) {
-              onClick(CARD_BOX_ANSWER_BOOKMARK)
-            } else {
-              showToastifyWarning('Không có câu cân nhắc hiển thị')
-            }
-          }}
-        />
-
+      <Grid container className="cardDataBoxViewPanel">
+        {[CARD_BOX_NO_ANSWER, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_BOOKMARK].map((box, key) => (
+          <Grid key={key} item xs={12} sm={6}>
+            <CardDataBoxView
+              text={mapBoxLabel[box].label}
+              numCard={mapBoxLabel[box].numCard}
+              url={mapBoxLabel[box].icon}
+              onClick={() => { onClickBox(box, mapBoxLabel[box].numCard) }}
+            />
+          </Grid>
+        ))}
+      </Grid>
+      <div className="topic-button-group">
+        <div className="topic-button topic-button-play" onClick={playGame}>Làm bài</div>
+        {!!studyScore && <div className="topic-button topic-button-review" onClick={review}>Xem lại</div>}
       </div>
-        <div className="">
-          <div>{studyScore?.status === EXAM_SCORE_PLAY || studyScore?.status === EXAM_SCORE_FINISH ? "Làm tiếp" : "Làm bài"}</div>
-          {studyScore?.status === EXAM_SCORE_FINISH && <div>Xem lại</div>}
-        </div>
     </div>
   )
 }
@@ -248,36 +258,32 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
 // MY CARD BOX
 
 const CardDataBoxSkeleton = () => (
-  <>
-    <Grid md={5} className="section3-box">
-      <div className="head"><Skeleton /></div>
-      <div className="content">
-        <div className="image skeleton">
-          <Skeleton />
-        </div>
-        <div className="sentence-wrap">
-          <div className="sentence-number skeleton"><Skeleton /></div>
-          <div className="sentence-text skeleton"><Skeleton /></div>
-        </div>
+  <div className="section3-box">
+    <div className="head"><Skeleton /></div>
+    <div className="content">
+      <div className="image skeleton">
+        <Skeleton />
       </div>
-    </Grid>
-  </>
+      <div className="sentence-wrap">
+        <div className="sentence-number skeleton"><Skeleton /></div>
+        <div className="sentence-text skeleton"><Skeleton /></div>
+      </div>
+    </div>
+  </div>
 )
 
 const CardDataBoxView = (props: { text: string; numCard: number; url: string; onClick: () => any }) => (
-  <>
-    <Grid md={5} className="section3-box"
-      onClick={() => props.onClick()}
-    >
-      <div className="content">
-        <div className="image">
-          <img src={props.url} alt="" />
-        </div>
-        <div className="sentence-number">{props.numCard}</div>
+  <div className="section3-box"
+    onClick={() => props.onClick()}
+  >
+    <div className="content">
+      <div className="image">
+        <img src={props.url} alt="" />
       </div>
-      <div className="head_">{props.text}</div>
-    </Grid>
-  </>
+      <div className="sentence-number">{props.numCard}</div>
+    </div>
+    <div className="head_">{props.text}</div>
+  </div>
 );
 
 export const MyCardDataSkeleton = () => (

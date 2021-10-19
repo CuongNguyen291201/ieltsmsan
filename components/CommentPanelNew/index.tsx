@@ -257,7 +257,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
                 </Fragment>
               ))}
               {mapShowLoadMoreReplies[discussion._id] && <div className="load-more reply">
-                <span className="btn-title" onClick={() => loadMoreReplies()}>Xem thêm trả lời</span>
+                <span className="btn-title" onClick={() => loadMoreReplies()}>Xem thêm <i className="fas fa-chevron-down" /></span>
               </div>}
             </>
           ) : <></>
