@@ -1,6 +1,4 @@
-import { useRouter } from 'next/router';
-import { PropsWithoutRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { PropsWithoutRef } from 'react';
 import Layout from '../../components/Layout';
 import TopicDetail from '../../components/TopicDetail';
 import { _Topic } from '../../custom-types';
@@ -24,14 +22,6 @@ type TopicPageProps = {
 
 const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
   const { topic, webInfo, webSocial } = props;
-  const dispatch = useDispatch();
-  const router = useRouter();
-  useEffect(() => {
-    getUserFromToken(undefined)
-      .then((user) => {
-        dispatch(loginSuccessAction(user));
-      })
-  }, [router.asPath]);
 
   return (
     <Layout
@@ -45,14 +35,16 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
   )
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ query, res, store }) => {
+export const getServerSideProps = wrapper.getServerSideProps(async ({ query,req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   store.dispatch(setCurrrentTopicAction(null, true));
-  const [{ webInfo }, webSocial] = await Promise.all([
+  const [user, { webInfo }, webSocial] = await Promise.all([
+    getUserFromToken(req),
     apiWebInfo(),
     apiWebSocial()
   ]);
 
+  if (user) store.dispatch(loginSuccessAction(user));
   const topicSlugItems = (query.topicSlug as string).split('-');
   const topicSlug = topicSlugItems.slice(0, -1).join('-');
   const [topicId] = topicSlugItems.slice(-1);

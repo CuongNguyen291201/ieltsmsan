@@ -1,5 +1,4 @@
-import { PropsWithoutRef, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { PropsWithoutRef } from 'react'
 import CourseDetail from '../../components/CourseDetail'
 import Layout from '../../components/Layout'
 import { setCurrentCourseAction } from '../../redux/actions/course.actions'
@@ -22,13 +21,7 @@ type CoursePageProps = {
 
 const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
   const { course, webInfo, webSocial } = props;
-  const dispatch = useDispatch();
-  useEffect(() => {
-    getUserFromToken(undefined)
-      .then((user) => {
-        dispatch(loginSuccessAction(user));
-      })
-  }, []);
+
   return (
     <Layout
       hideMenu
@@ -41,13 +34,15 @@ const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
 }
 
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ query, res, store }) => {
+export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [{ webInfo }, webSocial] = await Promise.all([
+  const [user, { webInfo }, webSocial] = await Promise.all([
+    getUserFromToken(req),
     apiWebInfo(),
     apiWebSocial()
   ]);
 
+  if (user) store.dispatch(loginSuccessAction(user));
   const courseSlugItems = (query.courseSlug as string).split('-');
   const courseSlug = courseSlugItems.slice(0, -1).join('-');
   const [courseId] = courseSlugItems.slice(-1);
