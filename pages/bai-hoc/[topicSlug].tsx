@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { PropsWithoutRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Layout from '../../components/Layout';
@@ -24,12 +25,13 @@ type TopicPageProps = {
 const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
   const { topic, webInfo, webSocial } = props;
   const dispatch = useDispatch();
+  const router = useRouter();
   useEffect(() => {
     getUserFromToken(undefined)
       .then((user) => {
         dispatch(loginSuccessAction(user));
       })
-  }, []);
+  }, [router.asPath]);
 
   return (
     <Layout
