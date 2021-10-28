@@ -33,12 +33,14 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
   }, [typeof window]);
   return (
     <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
+      <div style={{boxShadow:'0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor:'white'}}>
       <HomeBanner />
       <HomeCategorySection categories={props.homeCategories} />
       <StudentFeeling></StudentFeeling>
       <HomeWhy></HomeWhy>
       <HomeUtility></HomeUtility>
       <HomeNews></HomeNews>
+      </div>
     </Layout>
   )
 }

@@ -20,7 +20,7 @@ import { Course } from "../../../sub_modules/share/model/courses";
 import { numberFormat } from '../../../utils';
 import { apiJoinCourse } from '../../../utils/apis/courseApi';
 import orderUtils from '../../../utils/payment/orderUtils';
-import { getPaymentPageSlug } from '../../../utils/router';
+import { getCourseMembersPageSlug, getPaymentPageSlug } from '../../../utils/router';
 import MemberListView from '../MemberListView';
 import {
     infoCourseInitState, infoCourseReducer,
@@ -86,7 +86,9 @@ export const InformationCourse = (props: { course: Course }) => {
             <MemberListView course={course} />
         </Modal>
     )
-
+    const goToListMember = () =>{
+        router.push(getCourseMembersPageSlug({course}))
+    }
     return (
         <div id="course-overview">
             {renderCourseMembersModal()}
@@ -108,7 +110,7 @@ export const InformationCourse = (props: { course: Course }) => {
                             {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
                         </div>
                         <div className={`total-student item__${isTeacher ? ' teacher' : ''}`}>
-                            <span className="icon"><img src={iconTotalStudent} /></span> <div className="text" onClick={showCourseMemberList}>Tổng học viên</div> <span className="number__">9999</span>
+                            <span className="icon"><img src={iconTotalStudent} /></span> <div className="text" onClick={goToListMember}>Tổng học viên</div> <span className="number__">9999</span>
                         </div>
                         <div className="number-study item__">
                             <span className="icon"><img src={iconNumberStudy} alt="iconNumberStudy" /></span> <div className="text">Số bài học</div> <span className="number__">123</span>

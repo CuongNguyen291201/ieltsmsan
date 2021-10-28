@@ -42,14 +42,16 @@ const Slug = (props: SlugTypes) => {
   }
 
   return (
-    <Layout
-      hideMenu={type === PAGE_REPLY_COMMENT}
-      hideFooter={type === PAGE_REPLY_COMMENT}
-      webInfo={props.webInfo}
-      webSocial={props.webSocial}
-    >
-      {mapTypePage[type ?? PAGE_ERROR]}
-    </Layout>
+    <div>
+        <Layout
+          hideMenu={type === PAGE_REPLY_COMMENT}
+          hideFooter={type === PAGE_REPLY_COMMENT}
+          webInfo={props.webInfo}
+          webSocial={props.webSocial}
+        >
+          {mapTypePage[type ?? PAGE_ERROR]}
+        </Layout>
+    </div>
   );
 }
 

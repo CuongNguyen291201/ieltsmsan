@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { Grid } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { setUserCourseAction } from '../../redux/actions/course.actions';
@@ -10,6 +11,7 @@ import Topic from '../../sub_modules/share/model/topic';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import { InfoCourse } from '../CourseDetail/InfoCourse';
+import { MemberListViewV2 } from '../CourseDetail/MemberList_V2';
 import LessonInfoView from './LessonInfoView';
 import StudyInfoView from './StudyInfoView';
 import './style.scss';

@@ -9,6 +9,7 @@ export const ROUTER_PAYMENT = '/thanh-toan';
 export const ROUTER_COURSE_DETAIL = '/khoa-hoc';
 export const ROUTER_TOPIC_DETAIL = '/bai-hoc';
 export const ROUTER_MY_COURSES = '/khoa-hoc-cua-toi';
+export const ROUTER_COURSE_MEMBERS = '/thanh-vien';
 export const ROUTER_TRANSACTION_HISTORY = '/lich-su-giao-dich';
 export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
@@ -28,4 +29,7 @@ export const getTopicPageSlug = (args: { topic: _Topic }) =>
 
 export const getPaymentPageSlug = (...courseIds: string[]) =>
   `${ROUTER_PAYMENT}?courseIds=${courseIds.join(',')}`;
+
+export const getCourseMembersPageSlug = (args: { course: Course }) =>
+  `${ROUTER_COURSE_MEMBERS}/${encodeURIComponent(args.course.slug)}-${args.course._id}`;
   

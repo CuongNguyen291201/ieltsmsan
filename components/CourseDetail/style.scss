@@ -3,7 +3,7 @@
 .wraper-container {
   width: 100%;
   margin: 0 auto;
-  padding: 0 50px;
+  // padding: 0 50px;
   background: #e5e5e5;
 }
 .header-course {
@@ -180,7 +180,7 @@
               border: 1px solid #5624d0;
               position: absolute;
               left: -13px;
-              top: 15px;
+              top: 10px;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -237,6 +237,7 @@
                     text-align: left;
                     .sort__ {
                       font-size: 12px;
+                      height: 20px;
                     }
                   }
                 }
@@ -541,10 +542,6 @@
     align-items: center;
     .topic-title {
       display: flex;
-      // flex-direction: column;
-      // align-items: baseline;
-      // align-items: center;
-      // font-weight: 500;
       height: 100%;
       width: 100%;
     }

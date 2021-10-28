@@ -1,5 +1,8 @@
 @import "../../styles/variables.scss";
-
+.padding-wrap-page{
+  padding: 0 70px;
+  background-image: url("/default/backgrond__.png");
+}
 #scroll-top-button > .scrollTop {
   position: fixed;
   bottom: 30px;

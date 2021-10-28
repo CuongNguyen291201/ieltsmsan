@@ -55,16 +55,16 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
         }
       }
       data = [
-        { title: 'Tổng số câu hỏi', number: questionsNum },
-        { title: 'Điều kiện qua ', number: `${pass}${genUnitScore(currentTopic.topicExercise?.baremScore)}` },
-        { title: 'Thời gian làm bài', number: `${duration}p` },
+        { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
+        { title: 'Điều kiện qua ( % đúng )', number: `${pass}${genUnitScore(currentTopic.topicExercise?.baremScore)}` },
+        { title: 'Thời gian làm bài', number: `${duration} phút` },
         { title: 'Số lần làm lại', number: replay },
         { title: 'Số lần tạm dừng', number: pauseTimes },
       ]
     } else {
       data = [
-        { title: 'Tổng số câu hỏi', number: questionsNum },
-        { title: 'Số câu ở mỗi lần luyện tập', number: currentTopic.topicExercise?.questionsPlayNum ?? 0 }
+        { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
+        { title: 'Số câu ở mỗi lần luyện tập', number: `${currentTopic.topicExercise?.questionsPlayNum} câu` ?? 0 }
       ]
     }
   }
@@ -232,8 +232,8 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
       <div className="tien-do-hoc">Tiến Độ Học</div>
       <div className="progress-animation">
         <BorderLinearProgress variant="determinate" value={studyScore?.progress || 0} />
-        <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0) - 3}%` }} >{studyScore?.progress || 0}%</div>
-        <div style={{ left: `${(studyScore?.progress || 0) - 1}%` }} id="triangle-down"></div>
+        <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0) - 4}%` }} >{studyScore?.progress || 0}%</div>
+        <div style={{ left: `${(studyScore?.progress || 0) - 1.5}%` }} id="triangle-down"></div>
       </div>
       <Grid container className="cardDataBoxViewPanel">
         {[CARD_BOX_NO_ANSWER, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_BOOKMARK].map((box, key) => (

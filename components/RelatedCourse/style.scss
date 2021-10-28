@@ -1,0 +1,61 @@
+.related-course{
+    background-color: white;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    .title-related{
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        padding-left: 30px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        i{
+            font-size: 20px;
+            margin-right: 20px;
+        }
+        h2{
+            margin: 0;
+        }
+    }
+    .beau-left{
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 100%;
+        background-color: black;
+    }
+    .related-courses-item{
+        padding: 20px;
+        // padding-left: 30px;
+        .item-related{
+            display: flex;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-top: 10px;
+            &:last-child{
+                border: 0;
+            }
+            cursor: pointer;
+            img{
+                width: 100px;
+                height: 60px;
+                margin-right: 10px;
+            }
+            .inf-course_{
+                padding-top: 5px;
+                .name__{
+                    overflow:hidden!important;
+                    text-overflow:ellipsis;
+                    display:-webkit-box;
+                    -webkit-box-orient:vertical;
+                    -webkit-line-clamp:1
+                }
+                .price-course_{
+                    color: #7A8DD2;
+                }
+            }
+        }
+    }
+}

@@ -49,14 +49,17 @@
         }
         .total-student.teacher {
           cursor: pointer;
-          color: blue;
+          color: black;
           .text {
-            text-decoration: underline;
+            &:hover{
+              text-decoration: underline;
+            }
           }
         }
         .item__{
           margin-top: 15px;
           display: flex;
+          color: black;
           .image {
             height: 20px;
             img{
@@ -72,6 +75,9 @@
           .number__{
             font-weight: 500;
             font-size: 13px;
+          }
+          .icon{
+            margin-right: 20px;
           }
         }
       }

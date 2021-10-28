@@ -45,7 +45,9 @@
     "screenfull": "5.1.0",
     "socket.io-client": "^4.1.2",
     "swiper": "6.7.5",
-    "wow.js": "^1.2.2"
+    "wow.js": "^1.2.2",
+    "highcharts": "9.1.2",
+    "highcharts-react-official": "3.0.0"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.2",

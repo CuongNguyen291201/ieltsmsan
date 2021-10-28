@@ -73,16 +73,19 @@ const Layout: FC<{
 					src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 				</script>)}
 			</Head>
-			{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
-			{children}
-			{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
-			{isVisible && (
-				<div id="scroll-top-button" onClick={scrollToTop}>
-					<div className="scrollTop">
-						<i className="fas fa-arrow-up" />
-					</div>
+			
+				{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
+				<div className="padding-wrap-page">
+					{children}
+					{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
+					{isVisible && (
+						<div id="scroll-top-button" onClick={scrollToTop}>
+							<div className="scrollTop">
+								<i className="fas fa-arrow-up" />
+							</div>
+						</div>
+					)}
 				</div>
-			)}
 		</>
 	)
 }

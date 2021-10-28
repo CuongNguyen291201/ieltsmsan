@@ -1,4 +1,5 @@
 import { USER_COURSE_APPROVE, USER_COURSE_REJECT } from '../../../sub_modules/share/constraint';
+import { UserInfo } from '../../../sub_modules/share/model/user';
 import UserCourse from '../../../sub_modules/share/model/userCourse';
 
 // Action Types
@@ -7,7 +8,8 @@ enum ActionTypes {
   SET_LOADING = 'SET_LOADING',
   INIT_MEM_LIST = 'INIT_MEM_LIST',
   SET_ON_ACTION = 'SET_ON_ACTION',
-  SET_NEW_MEM_STATUS = 'SET_NEW_MEM_STATUS'
+  SET_NEW_MEM_STATUS = 'SET_NEW_MEM_STATUS',
+  SET_USER_STAT = 'SET_USER_STAT'
 }
 
 interface MemListAction {
@@ -18,6 +20,7 @@ interface MemListAction {
   isLoading?: boolean;
   isOnAction?: boolean;
   userCourse?: UserCourse;
+  userStat?: UserInfo;
 }
 
 // States
@@ -28,6 +31,7 @@ type MemListState = {
   totalMems: number;
   isLoading: boolean;
   isOnAction: boolean;
+  userStat: UserInfo | null;
 }
 
 export const memListInitState: MemListState = {
@@ -35,7 +39,8 @@ export const memListInitState: MemListState = {
   currentPage: 1,
   totalMems: 0,
   isLoading: true,
-  isOnAction: false
+  isOnAction: false,
+  userStat: null
 }
 
 // Reducers
@@ -64,6 +69,11 @@ export function memListReducer(state: MemListState = memListInitState, action: M
         memLists: [...newLists]
       }
 
+    case ActionTypes.SET_USER_STAT:
+      return {
+        ...state, userStat: action.userStat || null
+      }
+
     default:
       return state;
   }
@@ -89,4 +99,8 @@ export const setOnAction = (isOnAction: boolean): MemListAction => ({
 
 export const setNewMemListStatus = (userCourse: UserCourse): MemListAction => ({
   type: ActionTypes.SET_NEW_MEM_STATUS, userCourse
-})
+});
+
+export const setUserStat = (userStat: UserInfo): MemListAction => ({
+  type: ActionTypes.SET_USER_STAT, userStat
+});

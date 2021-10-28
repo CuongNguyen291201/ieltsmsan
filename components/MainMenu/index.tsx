@@ -150,7 +150,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               <input type="text" placeholder="Tìm kiếm khoá học..." />
             </div>
           </Grid>
-          <Grid item md={8} className="menu">
+          <Grid item md={6} className="menu">
             <div className="menu-item" onClick={() => router.push("/")}>
               Khoá Học
             </div>

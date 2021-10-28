@@ -53,6 +53,7 @@
               display: flex;
               font-size: 12px;
               align-items: center;
+              height: 20px;
               @include responsive(sm) {
                 flex-direction: column;
               }
@@ -94,6 +95,7 @@
               text-align: left;
               .sort__ {
                 font-size: 12px;
+                height: 20px;
               }
             }
           }
