@@ -24,11 +24,11 @@
     background-color: $root-background-color;
     padding: 15px 0;
     .layout-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 90%;
-      margin: 0 auto;
+      max-width: 1320px;
+      margin: auto;
+      @include responsive(xxl) {
+        padding: 0 10px;
+      }
       .left-header {
         display: flex;
         align-items: center;
@@ -83,7 +83,8 @@
       }
       .menu {
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
+        // justify-content: space-between;
         // max-width: 65%;
         align-items: center;
         .menu-item {
@@ -92,6 +93,8 @@
           position: relative;
           cursor: pointer;
           font-size: 14px;
+          margin-left: 10px;
+          min-width: 55px;
           &:hover {
             &::after {
               content: "";
@@ -114,6 +117,7 @@
           }
         }
         .active-course {
+          margin-left: 10px;
           border: 1px solid #5e52d0;
           color: #aba1ff;
           font-weight: bold;
@@ -124,11 +128,15 @@
           justify-content: center;
           padding: 2px 20px;
           cursor: pointer;
+          @include responsive(xl) {
+            font-size: 13px;
+          }
           &:hover {
             background: #fdfdfd;
           }
         }
         .cart {
+          margin: 0 10px;
           .far {
             font-size: 20px;
             color: $root-title-color;
@@ -237,17 +245,6 @@
             font-size: 24px !important;
             color: #9b92f1 !important;
           }
-        }
-      }
-    }
-  }
-
-  @include responsive(xxl) {
-    .main-menu {
-      .layout-header {
-        width: 95%;
-        .menu {
-          max-width: 66.67% !important;
         }
       }
     }

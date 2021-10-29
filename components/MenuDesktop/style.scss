@@ -4,6 +4,10 @@
     display: flex;
     .current-user-wrap{
         position: relative;
+        margin-right: 10px;
+        height: 35px;
+        display: flex;
+        align-items: center;
         .user-menu-icon{
             cursor: pointer;
             .user-acc{

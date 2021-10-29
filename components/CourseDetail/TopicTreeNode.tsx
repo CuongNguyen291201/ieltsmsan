@@ -170,11 +170,12 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
 
         </div>
 
-        {!!topic.topicProgress && isMain && <div className="accomplished">
-          {topic.type !== TOPIC_TYPE_TEST
-            ? <div>{topic.topicProgress.progress}%</div>
-            : <div>{typeof topic.score !== 'undefined' ? `${topic.score} điểm` : ''}</div>}
-        </div>}
+        {!!topic.topicProgress && isMain
+          && <div className="accomplished" style={{ display: topic.type === TOPIC_TYPE_TEST && typeof topic.score === 'undefined' ? 'none' : 'inherit' }}>
+            {topic.type !== TOPIC_TYPE_TEST
+              ? <div>{topic.topicProgress.progress}%</div>
+              : <div>{typeof topic.score !== 'undefined' ? `${topic.score} điểm` : ''}</div>}
+          </div>}
 
         {!isMain && <div className="sub-title"><div className="icon-isDone">
           {topic.topicProgress?.progress >= 100 && <img src={iconIsDone} alt="iconIsDone" />}</div></div>}

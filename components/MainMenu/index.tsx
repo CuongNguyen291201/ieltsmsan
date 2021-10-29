@@ -139,60 +139,65 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
     <div id="main-menu">
       <div className="main-menu">
         <div className="layout-header">
-          <Grid item md={4} className="left-header">
-            <div className="logo" onClick={() => router.push('/')}>
-              <img src={props.webLogo} alt="logo" />
-            </div>
-            <div className="search">
-              <div className="icon">
-                <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+          <Grid container justify="space-between">
+            <Grid item md={4} className="left-header">
+              <div className="logo" onClick={() => router.push('/')}>
+                <img src={props.webLogo} alt="logo" />
               </div>
-              <input type="text" placeholder="Tìm kiếm khoá học..." />
-            </div>
-          </Grid>
-          <Grid item md={6} className="menu">
-            <div className="menu-item" onClick={() => router.push("/")}>
-              Khoá Học
-            </div>
-            <div
-              className="menu-item document"
-              onClick={() => router.push(ROUTER_DOCUMENT)}
-            >
-              Tài liệu
-            </div>
-            <div style={{ display: 'none' }} className="menu-item">
-              Liên hệ
-            </div>
-            <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
-              Sự Kiện
-            </div>
-            <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
-              Tin tức
-            </div>
-            <div onClick={() => showModalActiveCourse()} className="active-course">
-              Kích hoạt khóa học
-            </div>
+              <div className="search">
+                <div className="icon">
+                  <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+                </div>
+                <input type="text" placeholder="Tìm kiếm khoá học..." />
+              </div>
+            </Grid>
+            <Grid item md={8} style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>
+              <div className="menu">
+                <div className="menu-item" onClick={() => router.push("/")}>
+                  Khoá Học
+                </div>
+                <div
+                  className="menu-item document"
+                  onClick={() => router.push(ROUTER_DOCUMENT)}
+                >
+                  Tài liệu
+                </div>
+                <div style={{ display: 'none' }} className="menu-item">
+                  Liên hệ
+                </div>
+                <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+                  Sự Kiện
+                </div>
+                <div className="menu-item" onClick={() => router.push(ROUTER_NEWS)}>
+                  Tin tức
+                </div>
+                <div onClick={() => showModalActiveCourse()} className="active-course">
+                  Kích hoạt khóa học
+                </div>
 
-            <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
-              <i className="far fa-shopping-cart shopping-cart"></i>
-              {!cartLoading && cartItems.length > 0 &&
-                <span className="cart-number">{cartItems.length}</span>
-              }
-            </div>
-            <MenuDesktop />
-            <div>
-              <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
-            </div>
+                <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+                  <i className="far fa-shopping-cart shopping-cart"></i>
+                  {!cartLoading && cartItems.length > 0 &&
+                    <span className="cart-number">{cartItems.length}</span>
+                  }
+                </div>
+                <MenuDesktop />
+                <div>
+                  <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
+                </div>
+              </div>
+
+              <div className="hideDesktop">
+                <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
+                  <i className="far fa-shopping-cart shopping-cart"></i>
+                  {!cartLoading && cartItems.length > 0 &&
+                    <span className="cart-number">{cartItems.length}</span>
+                  }
+                </div>
+                <MenuMobile />
+              </div>
+            </Grid>
           </Grid>
-          <div className="hideDesktop">
-            <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
-              <i className="far fa-shopping-cart shopping-cart"></i>
-              {!cartLoading && cartItems.length > 0 &&
-                <span className="cart-number">{cartItems.length}</span>
-              }
-            </div>
-            <MenuMobile />
-          </div>
         </div >
         <div className="modal-active-course">
           <Modal

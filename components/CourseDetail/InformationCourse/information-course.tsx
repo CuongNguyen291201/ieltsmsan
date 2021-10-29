@@ -16,6 +16,7 @@ import { Scopes } from '../../../redux/types';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../../sub_modules/common/utils/toastify';
 import { USER_COURSE_APPROVE, USER_TYPE_HAS_ROLE } from '../../../sub_modules/share/constraint';
+import CourseContent from "../../../sub_modules/share/model/courseContent";
 import { Course } from "../../../sub_modules/share/model/courses";
 import { numberFormat } from '../../../utils';
 import { apiJoinCourse } from '../../../utils/apis/courseApi';
@@ -92,10 +93,12 @@ export const InformationCourse = (props: { course: Course }) => {
     return (
         <div id="course-overview">
             {renderCourseMembersModal()}
-            <Skeleton loading={userCourseLoading}>
+            <Skeleton loading={currentCourseLoading}>
                 <div className="information-course">
                     <div>
-                        <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                        {/* {(course?.courseContent as CourseContent)?.videoIntro} */}
+                        <img src="https://storage.googleapis.com/ielts-fighters.appspot.com/elearning-react/2021/10/30/54040744ielts_writing_image" alt="course-info" width="100%" height="200px" />
+                        {/* <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe> */}
                     </div>
                     <div className="discount-price">
                         GIẢM GIÁ <b>40%</b>

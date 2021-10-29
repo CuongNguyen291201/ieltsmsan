@@ -215,49 +215,35 @@ const LessonInfoView = (props: { topic: Topic }) => {
                 <InformationCourse course={topic.course} />
               </Col>
             </Row>
-            {/* <PanelContainer title="Tài liệu tham khảo">
-        {pages[topic._id]?.data[pages[topic._id].currentPage]?.map((e, i) => (
-          <div key={i} className="doc-container">
-            <div className="file-title">
-              <i className="far fa-file-pdf file-type-icon" />
-              <div className="doc-title" onClick={() => downloadFromURL(e.itemsDetail[0].url, e.itemsDetail[0].type, e.title)}> {e.title} </div>
-            </div>
-
-            <i className="far fa-download download-icon" onClick={() => downloadFromURL(e.itemsDetail[0].url, e.itemsDetail[0].type, e.title)} />
-          </div>
-        ))}
-
-        {(mapTotalPages[topic._id] || 0) > 1 && <div className="item-pagination">
-          <Pagination
-            total={mapTotalPages[topic._id]}
-            active={pages[topic._id]?.currentPage}
-            start={1}
-            onClick={(page) => onChangePage({ page, key: topic._id })}
-          />
-        </div>}
-      </PanelContainer> */}
           </>
-          : <div id="topic-private-view">
-            {currentUser
-              ? <div className="private-lesson private-lession-not-joined">
-                <i className="far fa-exclamation" />
-                <div className="tooltip">
-                  Chưa tham gia khoá học!&nbsp;
-                  <span className="action" onClick={() => {
-                    router.push(getCoursePageSlug({ course: topic.course }));
-                  }}>Quay lại</span>
-                </div>
+          : <Row>
+            <Col span={24} lg={16}>
+              <div id="topic-private-view">
+                {currentUser
+                  ? <div className="private-lesson private-lession-not-joined">
+                    <i className="far fa-exclamation" />
+                    <div className="tooltip">
+                      Chưa tham gia khoá học!&nbsp;
+                      <span className="action" onClick={() => {
+                        router.push(getCoursePageSlug({ course: topic.course }));
+                      }}>Quay lại</span>
+                    </div>
+                  </div>
+                  : <div className="private-lesson private-lession-unauthorized">
+                    <i className="far fa-exclamation" />
+                    <div className="tooltip">Vui lòng <span className="action" onClick={() => {
+                      dispatch(showLoginModalAction(true));
+                    }}>đăng nhập</span> để tiếp tục</div>
+                  </div>
+                }
               </div>
-              : <div className="private-lesson private-lession-unauthorized">
-                <i className="far fa-exclamation" />
-                <div className="tooltip">Vui lòng <span className="action" onClick={() => {
-                  dispatch(showLoginModalAction(true));
-                }}>đăng nhập</span> để tiếp tục</div>
-              </div>
-            }
-          </div>
+            </Col>
+            <Col span={24} lg={8}>
+              <InformationCourse course={topic.course} />
+            </Col>
+          </Row>
       }
-    </div>
+    </div >
   );
 }
 

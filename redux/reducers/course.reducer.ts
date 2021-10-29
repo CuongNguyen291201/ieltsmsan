@@ -58,6 +58,12 @@ export function courseReducer(state = initialState, action: CourseAction): Cours
           ...state,
           isVisibleActiveCourseModal: action.payload.isVisible
         }
+
+      case ActionTypes.CRS_SET_USER_COURSE_LOADING:
+        return {
+          ...state,
+          userCourseLoading: !!action.payload.userCourseLoading
+        }
       default:
         return state;
     }

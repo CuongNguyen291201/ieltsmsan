@@ -2,7 +2,7 @@ import { Grid } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
-import { setUserCourseAction } from '../../redux/actions/course.actions';
+import { setUserCourseAction, setUserCourseLoadingAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { TOPIC_TYPE_LESSON } from '../../sub_modules/share/constraint';
@@ -11,7 +11,6 @@ import Topic from '../../sub_modules/share/model/topic';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import { InfoCourse } from '../CourseDetail/InfoCourse';
-import { MemberListViewV2 } from '../CourseDetail/MemberList_V2';
 import LessonInfoView from './LessonInfoView';
 import StudyInfoView from './StudyInfoView';
 import './style.scss';
@@ -21,6 +20,7 @@ const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo })
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(setUserCourseLoadingAction(true));
     if (!currentUser) {
       dispatch(setUserCourseAction(null));
     } else {

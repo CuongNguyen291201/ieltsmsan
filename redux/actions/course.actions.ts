@@ -25,3 +25,7 @@ export const setUserCourseAction = (userCourse: UserCourse | null): CourseAction
 export const setActiveCourseModalVisibleAction = (isVisible: boolean): CourseAction => ({
   scope: Scopes.COURSE, type: ActionTypes.CRS_SET_ACTIVE_MODAL_VISIBLE, payload: { isVisible }
 });
+
+export const setUserCourseLoadingAction = (userCourseLoading: boolean): CourseAction => ({
+  scope: Scopes.COURSE, type: ActionTypes.CRS_SET_USER_COURSE_LOADING, payload: { userCourseLoading }
+})
