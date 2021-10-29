@@ -54,7 +54,7 @@ const GameView = (props: {
       userId: userIdReview ?? currentUser._id,
       userName: userNameReview ?? currentUser.name,
       bookmark: isTest,
-      pass: isTest ? currentTopic.topicExercise.pass : 100,
+      pass: currentTopic.topicExercise.pass,
       contentType,
       contentInfo: currentTopic.topicExercise.contentInfo,
       modeShowResultImmediately,
