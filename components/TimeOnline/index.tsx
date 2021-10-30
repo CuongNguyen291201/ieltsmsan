@@ -10,8 +10,11 @@ import IconFeedbackUser from '../../public/icon/icon-feedback-user.svg'
 import IconRecentTest from '../../public/icon/iconRecentTest.svg'
 import IconActivityRecent from '../../public/icon/IconActivityrecent.svg'
 import { RelatedCourse } from '../RelatedCourse';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { apiGetMyCourses } from '../../utils/apis/courseApi';
+import UserActivityItem from '../CourseDetail/UserActivityItem';
+import { UserActivity } from '../../sub_modules/share/model/userActivity';
+import { apiGetUserActivitiesByCourse } from '../../utils/apis/userActivityApi';
 export const TimeOnline = (props: { course: Course, user: UserInfo }) => {
     const { course, user } = props
     const [courses, setCourses] = useState<Course[]>([]);
@@ -22,7 +25,11 @@ export const TimeOnline = (props: { course: Course, user: UserInfo }) => {
                 setCourses(userCourses.map((uc) => uc.course));
             })
     }, [])
-
+    useEffect(() => {
+        apiGetUserActivitiesByCourse({ courseId: course._id })
+          .then((data) => setUserActivities(data));
+      }, []);
+    const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
     return (
         <Grid container>
             <Grid item md={8}>
@@ -664,8 +671,15 @@ export const TimeOnline = (props: { course: Course, user: UserInfo }) => {
                 <div className="activity-recent">
                     <div className="header-left-activity">
                      <img src={IconActivityRecent} alt="IconActivityRecent"/>
-                        <span>Thời lượng online</span>
+                        <span>Hoạt động gần đây</span>
                         <div className="col-left_"></div>
+                    </div>
+                    <div>
+                    {!!userActivities.length && userActivities.map((e) => (
+                    <Fragment key={e._id}>
+                        <UserActivityItem activity={e} />
+                    </Fragment>
+                    ))}
                     </div>
                 </div>
             </Grid>

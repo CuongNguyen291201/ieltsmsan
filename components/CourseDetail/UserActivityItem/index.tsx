@@ -18,6 +18,8 @@ import { UserActivity } from '../../../sub_modules/share/model/userActivity';
 import { formatFullDateTime } from '../../../utils';
 import { getBrowserSlug } from '../../../utils/router';
 import SanitizedDiv from '../../SanitizedDiv';
+import IconExercise from '../../../public/default/icon-exercise.png'
+import IconLession from '../../../public/default/video-lession.png'
 import './style.scss';
 
 const UserActivityItem = (props: {
@@ -32,18 +34,18 @@ const UserActivityItem = (props: {
     let time = lastUpdate || createDate;
     if (type === USER_ACTIVITY_PLAY_GAME_PARACTICE || type === USER_ACTIVITY_PLAY_GAME_TEST) {
       const _item = item as StudyScoreData;
-      content = `Làm bài ${type === USER_ACTIVITY_PLAY_GAME_PARACTICE ? 'tập' : 'thi'}: <b>${_item.topic?.name}</b> - Đúng: ${_item.correctNum}/${_item.totalCardNum}`;
+      content = ` làm bài ${type === USER_ACTIVITY_PLAY_GAME_PARACTICE ? 'tập' : 'thi'}: <b>${_item.topic?.name}</b> - Đúng: ${_item.correctNum}/${_item.totalCardNum}`;
       time = _item.lastUpdate;
     } else if (type === USER_ACTIVITY_LESSON) {
       const _item = item as Topic;
-      content = `Xem bài giảng: <b>${_item.name}</b>`;
+      content = ` xem bài giảng: <b>${_item.name}</b>`;
     } else if (type === USER_ACTIVITY_WATCH_VIDEO) {
       const _item = item as Topic;
-      content = `Xem bài giảng video: <b>${_item.name}</b>`;
+      content = ` xem bài giảng video: <b>${_item.name}</b>`;
     } else if (type === USER_ACTIVITY_PLAY_GAME_SCENARIO) {
       const _item = item as Topic;
-      content = `Làm bài tập trong video: <b>${_item.name}</b>`
-    }
+      content = ` làm bài tập trong video: <b>${_item.name}</b>`
+    } 
     return {
       content,
       time
@@ -71,12 +73,12 @@ const UserActivityItem = (props: {
 
   return (
     <div className="activity-item">
-      <img src={user.avatar || defaultAvatar} alt="user-avatar" className="user-avatar" />
+      <img src={type === USER_ACTIVITY_PLAY_GAME_PARACTICE ? IconExercise : IconLession } alt="user-avatar" className="user-avatar" />
+      
       <div className="activity-info" onClick={onClickItem}>
         <div className="user-name">
-          {user.name}
+          Bạn đã  <SanitizedDiv className="activity-content" content={ content} />
         </div>
-        <SanitizedDiv className="activity-content" content={content} />
         <div className="activity-date">{formatFullDateTime(time)}</div>
       </div>
     </div>

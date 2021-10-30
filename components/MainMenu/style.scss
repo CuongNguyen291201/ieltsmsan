@@ -24,11 +24,13 @@
     background-color: $root-background-color;
     padding: 15px 0;
     .layout-header {
-      max-width: 1320px;
       margin: auto;
+      max-width: 1750px;
+      padding: 0 20px;
       @include responsive(xxl) {
-        padding: 0 10px;
+        max-width: 1320px;
       }
+      
       .left-header {
         display: flex;
         align-items: center;
@@ -92,8 +94,8 @@
           text-align: center;
           position: relative;
           cursor: pointer;
-          font-size: 14px;
-          margin-left: 10px;
+          font-size: 16px;
+          margin:0px 10px;
           min-width: 55px;
           &:hover {
             &::after {
@@ -117,7 +119,7 @@
           }
         }
         .active-course {
-          margin-left: 10px;
+          margin:0px 10px;
           border: 1px solid #5e52d0;
           color: #aba1ff;
           font-weight: bold;

@@ -183,7 +183,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                 </div>
                 <MenuDesktop />
                 <div>
-                  <img style={{ width: '33px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
+                  <img style={{ width: '33px', margin:'0px 10px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
                 </div>
               </div>
 

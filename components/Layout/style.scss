@@ -19,3 +19,8 @@
   cursor: pointer;
   color: $root-color;
 }
+@media (max-width:786px) {
+  .padding-wrap-page{
+    padding: 0;
+  }
+}

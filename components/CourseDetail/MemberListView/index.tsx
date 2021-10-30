@@ -188,8 +188,10 @@ const MemberListView = (props: { course: Course  }) => {
   ]
 
   return (
+    <div style={{backgroundColor:'white'}}>
     <div id="members-view">
       <div className="container">
+        <div className="wraper-content">
         {!userStatistical ? 
         <div className="wrap-member-list">
           <div className="header-table-member">
@@ -233,7 +235,9 @@ const MemberListView = (props: { course: Course  }) => {
         <div>
 
         </div>
+        </div>
       </div>
+    </div>
     </div>
   );
 }

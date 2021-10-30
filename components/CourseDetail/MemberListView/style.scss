@@ -4,6 +4,10 @@
   // box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.1);
   // background-color: white;
   // overflow: auto;
+  .wraper-content{
+    background-color: white;
+    box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.1);
+  }
   .wrap-member-list{
   background-color: white;
   box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.1);
@@ -134,5 +138,28 @@
   padding-right: 10px !important;
   li{
     border: 0;
+  }
+}
+@media (max-width:786px) {
+  #members-view{
+    .wraper-content{
+      .wrap-member-list{
+        min-height: unset;
+        .header-table-member{
+          display: unset;
+          .search-member{
+            padding: 10px;
+            .icon-search{
+              right: 20px;
+              top: 18px;
+            }
+            input{
+              width: 100%;
+              margin-right: unset;
+            }
+          }
+        }
+      }
+    }
   }
 }
