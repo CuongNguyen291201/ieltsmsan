@@ -23,7 +23,8 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 	) => { },
 	env: {
 		REACT_APP_ENDPOINT: process.env.NEXT_PUBLIC_ENDPOINT,
-		REACT_APP_PREFIX: process.env.NEXT_PUBLIC_PREFIX
+		REACT_APP_PREFIX: process.env.NEXT_PUBLIC_PREFIX,
+		REACT_APP_FIREBASE_CONFIG: process.env.NEXT_PUBLIC_FIREBASE_CONFIG
 	},
 	typescript: {
 		// !! WARN !!

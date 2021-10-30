@@ -139,7 +139,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
     <div id="main-menu">
       <div className="main-menu">
         <div className="layout-header">
-          <Grid container justify="space-between">
+          <Grid container wrap="nowrap" justify="space-between">
             <Grid item md={4} className="left-header">
               <div className="logo" onClick={() => router.push('/')}>
                 <img src={props.webLogo} alt="logo" />
