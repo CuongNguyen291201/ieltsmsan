@@ -123,23 +123,25 @@ export function unregister() {
     }
 }
 
-let timmer;
+var liveStreamTimer: any;
 
 export function countDownTimer(seconds: number, callback: (time: number) => void) {
     let count = seconds;
-    timmer = setInterval(() => {
-        count--;
-        callback(count);
-        if (count <= 0) {
-            clearInterval(timmer);
-        }
-    }, 1000)
+    if (!liveStreamTimer) {
+        liveStreamTimer = setInterval(() => {
+            count--;
+            callback(count);
+            if (count <= 0) {
+                clearInterval(liveStreamTimer);
+            }
+        }, 1000)
+    }
 }
 
 export function clearCountDown() {
-    if (timmer) {
+    if (liveStreamTimer) {
         console.log('clear');
 
-        clearInterval(timmer);
+        clearInterval(liveStreamTimer);
     }
 }

@@ -1,0 +1,110 @@
+.com-video-player-main {
+  position: relative;
+  &-overlay {
+    .com-video-player-main-screen {
+      width: 100%;
+      height: calc(100% - 42px);
+      position: absolute;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    &.play {
+      display: none;
+    }
+
+    .player-seek {
+      position: absolute;
+      bottom: 43px;
+      width: 100%;
+      &-slider {
+        z-index: 4;
+        position: absolute;
+        height: 3px;
+        padding: 0 !important;
+        color: #f00;
+        & *:not(.MuiSlider-thumb) {
+          height: 3px;
+        }
+      }
+    }
+
+    .player-toolbars {
+      position: absolute;
+      bottom: 0;
+      background-color: rgba($color: #000000, $alpha: 0.55);
+      height: 40px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      z-index: 3;
+      &-left,
+      &-right {
+        display: flex;
+        align-items: center;
+      }
+      margin-top: 3px;
+      &-button {
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &-play-pause,
+      &-volume,
+      &-backward,
+      &-forward,
+      &-fullscreen {
+        width: 40px;
+      }
+
+      &-backward,
+      &-forward {
+        @media (max-width: 576px) {
+          display: none;
+        }
+      }
+
+      &-volume-slider {
+        width: 100px;
+        color: #fff;
+        margin-left: 10px;
+        @media (max-width: 576px) {
+          width: 50px;
+        }
+      }
+    }
+  }
+  &:hover {
+    .com-video-player-main-overlay {
+      display: flex;
+    }
+  }
+
+  &-play-pause-button {
+    width: 50px !important;
+    height: 50px !important;
+    color: #f00;
+  }
+
+  &-wrap {
+    position: relative;
+    padding-top: 56.25%;
+
+    & .react-player {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}

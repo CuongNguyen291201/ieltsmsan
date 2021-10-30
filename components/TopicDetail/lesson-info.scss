@@ -6,15 +6,15 @@
     background: white;
     box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
     margin-bottom: 20px;
-    .video-live {
-      .view-mode {
-        text-align: right;
-        margin-top: 10px;
-        span {
-          margin: 0 5px;
-          cursor: pointer;
-        }
+    .view-mode {
+      text-align: right;
+      margin-top: 10px;
+      span {
+        margin: 0 5px;
+        cursor: pointer;
       }
+    }
+    .video-live {
       .waiting-live {
         background: linear-gradient(0deg, #1d2d32, #1d2d32);
         height: 100%;

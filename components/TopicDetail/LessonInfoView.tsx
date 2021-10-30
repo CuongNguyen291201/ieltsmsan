@@ -24,6 +24,7 @@ import { InformationCourse } from '../CourseDetail/InformationCourse/information
 import SanitizedDiv from '../SanitizedDiv';
 import registerServiceWorker, { clearCountDown, countDownTimer, unregister } from '../ServiceWorker/registerServiceWorker';
 import StreamComponent from '../Stream';
+import VideoPlayer from "../VideoPlayer";
 import './lesson-info.scss';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
@@ -75,7 +76,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).set(`${currentUser.name}`)
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).onDisconnect().remove()
     }
-  }, [topic, dataTimeCurrent, dataScenario])
+  }, [topic, dataTimeCurrent, dataScenario, currentUser])
 
   const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
     return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
@@ -97,6 +98,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
     setDataTimeCurrent(dataTime.timeStamp ?? moment().valueOf())
     if ((dataScenarioTemp.startTime > dataTime.timeStamp) && dataScenarioTemp?.endTime) {
       countDownTimer(Math.round((dataScenarioTemp.startTime - dataTime.timeStamp) / 1000), (_time: number) => {
+        console.log(_time);
         setCountDown(_time)
       })
     }
@@ -109,12 +111,6 @@ const LessonInfoView = (props: { topic: Topic }) => {
       {
         canPlayTopic({ topic, isJoinedCourse })
           ? <>
-            {/* <PanelContainer title="Mô tả">
-        <div className="description" dangerouslySetInnerHTML={{ __html: topic.description }} />
-        {!!topic.videoUrl && <LessonVideoView topic={topic} />}
-      </PanelContainer> */}
-
-            {/* <PanelContainer title="Nội dung"> */}
             {(topic._id === dataScenario?.topicId) ? (
               <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
                 <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
@@ -191,17 +187,31 @@ const LessonInfoView = (props: { topic: Topic }) => {
               </div>
             ) : (
               <div className="video-component-fullscreen video-commponent">
-                {!!topic.videoUrl && <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
-                  <Col xl={24} md={24} xs={24}>
-                    <div className="waiting-live" style={{ height: '400px' }}>
-                      <div className="item_">
-                        <img src={iconWaiting} alt="iconWaiting" />
-                        <div>Chưa có video nào</div>
+                <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
+                  <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                    {topic.videoUrl && <>
+                      <VideoPlayer playOnRender={false} videoUrl={topic.videoUrl} />
+                      <div className="view-mode">Chế độ xem:
+                        <i
+                          onClick={() => setIsFullScreen(false)}
+                          className="far fa-columns"
+                          style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#AAAFB2' : '#000000' }}
+                        />
+                        <i
+                          onClick={() => setIsFullScreen(true)}
+                          className="far fa-rectangle-landscape"
+                          style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
+                        />
                       </div>
-                    </div>
+                    </>}
+                    {topic.description && <SanitizedDiv className="description" content={topic.description} />}
                   </Col>
-                </Row>}
-                {topic.description && <SanitizedDiv className="description" content={topic.description} />}
+                  {!isFullScreen && <Col xl={8} md={12} xs={24}>
+                    <div className="comment">
+                      <CommentPanel commentScope={CommentScopes.TOPIC} />
+                    </div>
+                  </Col>}
+                </Row>
               </div>
             )}
             {/* </PanelContainer> */}
