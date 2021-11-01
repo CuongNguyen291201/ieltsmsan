@@ -83,6 +83,12 @@
           width: 50px;
         }
       }
+      &-time {
+        color: #fff;
+        @media (max-width: 576px) {
+          font-size: small;
+        }
+      }
     }
   }
   &:hover {

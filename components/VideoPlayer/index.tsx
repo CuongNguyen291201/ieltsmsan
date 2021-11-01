@@ -18,6 +18,7 @@ import { ChangeEvent, forwardRef, memo, PropsWithoutRef, useCallback, useEffect,
 import { findDOMNode } from "react-dom";
 import ReactPlayer from "react-player";
 import screenfull from "screenfull";
+import { formatDuration } from "../../sub_modules/common/utils/timeFormat";
 import './style.scss';
 
 const VideoPlayer = forwardRef((props: PropsWithoutRef<{
@@ -133,7 +134,7 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
             aria-label="Seek"
             min={0}
             max={duration}
-            step={0.05}
+            step={1}
             value={playedSecs}
             onChange={(_, value) => {
               setSeeking(true);
@@ -199,6 +200,9 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
           </div>
 
           <div className="player-toolbars-right">
+            <div className="player-toolbars-time">
+              {`${formatDuration(playedSecs, 'seconds', 'mm:ss')} / ${formatDuration(duration, 'seconds', 'mm:ss')}`}
+            </div>
             <Tooltip title="Toàn màn hình" placement="top">
               <div className="player-toolbars-button player-toolbars-fullscreen" onClick={handleScreenFull}>
                 {isFullScreen ? <FullscreenExit /> : <Fullscreen />}
