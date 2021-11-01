@@ -5,16 +5,12 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
-import { usePaginationState, useTotalPagesState } from '../../hooks/pagination';
 import iconWaiting from '../../public/default/waiting-live.svg';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";
-import Document from '../../sub_modules/share/model/document';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
 import Topic from '../../sub_modules/share/model/topic';
-import { fetchPaginationAPI } from '../../utils/apis/common';
-import { apiCountDocumentsByTopic, apiOffsetDocumentByTopic, apiSeekDocumentByTopic } from '../../utils/apis/documentApi';
 import { apiGetTimeStamp, apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { getCoursePageSlug } from '../../utils/router';
@@ -25,6 +21,7 @@ import SanitizedDiv from '../SanitizedDiv';
 import registerServiceWorker, { clearCountDown, countDownTimer, unregister } from '../ServiceWorker/registerServiceWorker';
 import StreamComponent from '../Stream';
 import VideoPlayer from "../VideoPlayer";
+import DocumentsList from "./DocumentList";
 import './lesson-info.scss';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 
@@ -76,20 +73,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).set(`${currentUser.name}`)
       firebaseInstance.realtimeDb.ref().child(`count-users-live-stream-${topic._id}`).child(`${currentUser._id}`).onDisconnect().remove()
     }
-  }, [topic, dataTimeCurrent, dataScenario, currentUser])
-
-  const fetchDocuments = async (args: { parentId: string; lastRecord?: Document; skip?: number }) => {
-    return fetchPaginationAPI<Document>({ ...args, seekAPI: apiSeekDocumentByTopic, offsetAPI: apiOffsetDocumentByTopic });
-  }
-
-  const { pages, onChangePage } = usePaginationState<Document>({
-    keys: [topic._id],
-    keyName: 'parentId',
-    fetchFunction: fetchDocuments,
-    filters: { field: 'createDate', asc: false }
-  });
-
-  const { mapTotalPages } = useTotalPagesState({ keys: [topic._id], keyName: 'parentId', api: apiCountDocumentsByTopic });
+  }, [topic, dataTimeCurrent, dataScenario, currentUser]);
 
   const fetchDataScenario = async () => {
     const dataArrTemp = await getOneVideoScenarioAPI({ topicId: topic?._id })
@@ -138,6 +122,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
                           style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
                         />
                       </div>
+                      <DocumentsList topicId={topic._id} />
                     </Col>
                   )}
                   {(dataTimeCurrent < dataScenario?.startTime) && dataScenario.endTime ? (
@@ -203,6 +188,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
                           style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isFullScreen ? '#000000' : '#AAAFB2' }}
                         />
                       </div>
+                      <DocumentsList topicId={topic._id} />
                     </>}
                     {topic.description && <SanitizedDiv className="description" content={topic.description} />}
                   </Col>

@@ -97,7 +97,7 @@ export const InformationCourse = (props: { course: Course }) => {
                 <div className="information-course">
                     <div>
                         {/* {(course?.courseContent as CourseContent)?.videoIntro} */}
-                        <img src="https://storage.googleapis.com/ielts-fighters.appspot.com/elearning-react/2021/10/30/54040744ielts_writing_image" alt="course-info" width="100%" height="200px" />
+                        <img src={course?.avatar || "https://storage.googleapis.com/ielts-fighters.appspot.com/elearning-react/2021/10/30/54040744ielts_writing_image"} alt="course-info" width="100%" height="200px" />
                         {/* <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe> */}
                     </div>
                     <div className="discount-price">

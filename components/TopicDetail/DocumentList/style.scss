@@ -1,0 +1,81 @@
+@import "../../../styles/variables.scss";
+
+#topic-documents-view {
+  @mixin document-item {
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    color: $text-color-1;
+    align-items: center;
+    cursor: pointer;
+
+    &-name {
+      &:hover {
+        text-decoration: underline;
+      }
+      display: flex;
+      align-items: center;
+    }
+
+    &-addons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  &.document-list {
+    .title {
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 27px;
+    }
+    .document-wrap {
+      // border-bottom: 1px dashed #000;
+      .document {
+        @include document-item();
+        font-size: 16px;
+
+        &-item-parent {
+          display: flex;
+          align-items: center;
+        }
+
+        &-icon {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        &-addons {
+          color: #6031d3;
+          & .doc-parent {
+            transition: all 0.2s ease-in-out 0s;
+            &.doc-open {
+              transform: rotateZ(-180deg);
+            }
+          }
+        }
+      }
+
+      .document-items {
+        margin: 0 20px;
+        .document-items-detail {
+          @include document-item();
+          &-addons {
+            color: #6031d3;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+  }
+}

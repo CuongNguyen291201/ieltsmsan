@@ -1,5 +1,7 @@
 import { POST_API } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import { STATUS_PUBLIC } from "../../sub_modules/share/constraint";
+import Document, { IDocument } from "../../sub_modules/share/model/document";
 
 export const apiSeekDocumentByTopic = (args: {
   parentId: string;
@@ -9,17 +11,24 @@ export const apiSeekDocumentByTopic = (args: {
   lastRecord?: any
 }) => POST_API('seek-document-by-topic', args);
 
-export const apiOffsetDocumentByTopic = (args: {
-  parentId: string;
-  field?: any;
-  asc?: boolean;
+export const apiOffsetDocumentsByTopic = async (args: {
+  skip?: number;
+  field: keyof IDocument;
   limit?: number;
-  skip?: number
-}) => POST_API('offset-document-by-topic', args);
+  asc?: boolean;
+  parentId: string;
+}): Promise<Document[]> => {
+  const { data, status } = await POST_API('offset-document-by-topic', args, 'api');
+  if (status !== response_status_codes.success) return [];
+  return data;
+}
 
-export const apiCountDocumentsByTopic = async (parentId: string): Promise<{ total: number; }> => {
-  const { data, status } = await POST_API('count-documents-by-topic', { parentId });
-  if (status === response_status_codes.success) return data;
-  return { total: 0 }
+export const apiCountDocumentsByTopic = async (topicId: string): Promise<{ total: number }> => {
+  const { data, status } = await POST_API('count-documents-by-topic', {
+    parentId: topicId,
+    status: STATUS_PUBLIC
+  }, 'api');
+  if (status !== response_status_codes.success) return { total: 0 };
+  return data;
 }
 
