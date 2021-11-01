@@ -201,7 +201,7 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
 
           <div className="player-toolbars-right">
             <div className="player-toolbars-time">
-              {`${formatDuration(playedSecs, 'seconds', 'mm:ss')} / ${formatDuration(duration, 'seconds', 'mm:ss')}`}
+              {`${formatDuration(playedSecs, 'seconds', duration >= 3600 ? 'HH:mm:ss' : 'mm:ss')} / ${formatDuration(duration, 'seconds', duration >= 3600 ? 'HH:mm:ss' : 'mm:ss')}`}
             </div>
             <Tooltip title="Toàn màn hình" placement="top">
               <div className="player-toolbars-button player-toolbars-fullscreen" onClick={handleScreenFull}>
