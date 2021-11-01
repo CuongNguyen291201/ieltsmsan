@@ -52,8 +52,6 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     const userInfo = await getUserFromToken(req);
     if (userInfo) {
         store.dispatch(loginSuccessAction(userInfo));
-    } else {
-        removeCookie(TOKEN);
     }
     const { webInfo, webSeo } = await apiWebInfo();
     const webSocial = await apiWebSocial();

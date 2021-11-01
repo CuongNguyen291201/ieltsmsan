@@ -81,7 +81,6 @@ export const MenuMobile = () => {
               </div> */}
                                             <div className="menu-item" onClick={() => {
                                                 apiLogout().then(() => {
-                                                    removeCookie(TOKEN);
                                                     router.reload()
                                                 });
                                             }}>

@@ -316,9 +316,7 @@ function MainHeader(props: { webInfo?: WebInfo }) {
                       Trả lời bình luận
                     </div>
                     <div className="menu-item" onClick={() => {
-                      // const token = getCookie(TOKEN);
                       apiLogout().then(() => {
-                        // removeCookie(TOKEN);
                         router.reload()
                       });
                     }}>
