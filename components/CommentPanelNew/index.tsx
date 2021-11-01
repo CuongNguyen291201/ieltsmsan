@@ -16,6 +16,7 @@ import { Scopes } from '../../redux/types';
 import { apiDiscussionsById } from '../../utils/apis/notificationApi';
 import { TextAreaRef } from 'antd/lib/input/TextArea';
 import liveDown from '../../public/icon/live-down.svg';
+import { canPlayTopic } from "../../utils/permission/topic.permission";
 
 const LOAD_LIMIT = 10;
 
@@ -23,7 +24,7 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
   const { commentScope, discussions } = props;
   const router = useRouter();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { currentCourse, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
   const { commentsList, isShowLoadMoreComments, mapReplies } = useSelector((state: AppState) => state.commentReducer);
   const [dataComment, setDataComment] = useState([]);
@@ -106,18 +107,20 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
     if (!currentUser) {
       return dispatch(showLoginModalAction(true));
     }
-    dispatch(createCommentAction({
-      comment: new Discussion({
-        content: DOMPurify.sanitize(content?.replaceAll('<div><br></div>', '')),
-        courseId,
-        topicId,
-        userId: currentUser._id,
-        userName: currentUser.name,
-        conversationId: null
-      }),
-      user: currentUser
-    }));
-    // commentRef.current.resizableTextArea.textArea.innerHTML = '';
+    if (commentScope === CommentScopes.TOPIC && canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+      dispatch(createCommentAction({
+        comment: new Discussion({
+          content: DOMPurify.sanitize(content?.replaceAll('<div><br></div>', '')),
+          courseId,
+          topicId,
+          userId: currentUser._id,
+          userName: currentUser.name,
+          conversationId: null
+        }),
+        user: currentUser
+      }));
+      commentRef.current.resizableTextArea.textArea.innerHTML = '';
+    }
   }, [currentUser]);
 
   const loadMoreComments = () => {
@@ -152,14 +155,14 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
   )
 };
 
-const CommentSectionItem = (props: { discussion: Discussion, discussionId: string, commentId?: string }) => {
+const CommentSectionItem = (props: { discussion: Discussion, discussionId: string, commentId?: string; }) => {
   const { discussion, discussionId, commentId } = props;
 
   const [isShowCreateReply, setShowCreateReply] = useState(false);
   const [isShowReplies, setShowReplies] = useState(false);
   const [isRepliesLoading, setRepliesLoading] = useState(true);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
-  const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
+  const { currentCourse, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
   const { mapReplies, mapShowLoadMoreReplies } = useSelector((state: AppState) => state.commentReducer);
 
@@ -177,23 +180,25 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
     if (!currentUser) {
       dispatch(showLoginModalAction(true));
     }
-    dispatch(createCommentAction({
-      comment: new Discussion({
-        content: DOMPurify.sanitize(content),
-        conversationId: null,
-        courseId,
-        topicId,
-        parentId,
-        userId: currentUser._id,
-        userName: currentUser.name,
-        userParentId: discussion.userId,
-        href: window.location.href,
-        courseName: currentCourse?.name || null,
-        topicName: currentTopic?.name || null,
-      }),
-      user: currentUser
-    }));
-    // replyRef.current.resizableTextArea.textArea.innerHTML = '';
+    if (!!currentTopic && canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+      dispatch(createCommentAction({
+        comment: new Discussion({
+          content: DOMPurify.sanitize(content),
+          conversationId: null,
+          courseId,
+          topicId,
+          parentId,
+          userId: currentUser._id,
+          userName: currentUser.name,
+          userParentId: discussion.userId,
+          href: window.location.href,
+          courseName: currentCourse?.name || null,
+          topicName: currentTopic?.name || null,
+        }),
+        user: currentUser
+      }));
+      replyRef.current.resizableTextArea.textArea.innerHTML = '';
+    }
   }
 
   const showReplies = () => {
