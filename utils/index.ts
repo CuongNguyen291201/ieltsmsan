@@ -1,4 +1,5 @@
 import { saveAs } from 'file-saver';
+import { ServerResponse } from "http";
 import { extension } from 'mime-types';
 import moment from 'moment';
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
@@ -62,3 +63,6 @@ export const formatFullDateTime = (time: number) => moment(time).format('HH:mm:s
 
 export const formatTimeHMS = (time: number) => moment(time).format('HH:mm:ss');
 
+export const removeServerSideCookie = (res: ServerResponse) => {
+  res.setHeader('Set-Cookie', 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
+}

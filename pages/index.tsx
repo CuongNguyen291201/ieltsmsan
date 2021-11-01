@@ -23,6 +23,7 @@ import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
 import { apiWebSocial } from '../utils/apis/webSocial';
+import { removeServerSideCookie } from "../utils";
 
 const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
   useEffect(() => {
@@ -51,6 +52,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) {
     store.dispatch(loginSuccessAction(userInfo));
+  } else {
+    removeServerSideCookie(res);
   }
 
   const { data, status } = await apiGetCategories();
