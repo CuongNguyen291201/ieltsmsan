@@ -75,7 +75,7 @@ const CommentItem = (props: {
         <div className="comment-content" style={{ maxWidth: commentId ? '510px' : 'unset' }}>
           <div>
             {/* <span className="usr-name">{user?.name || ''}</span> */}
-            <SanitizedDiv className="comment-text" content={`<span class="usr-name">ABC</span>${content}`} />
+            <SanitizedDiv className="comment-text" content={`<span class="usr-name">${user?.name || ''}</span>${content}`} />
           </div>
           {(!isReply && !!totalReplies) && (
             <div className="show-more">
