@@ -14,7 +14,6 @@ import Topic from '../../sub_modules/share/model/topic';
 import { apiGetTimeStamp, apiUpdateTopicProgress, getOneVideoScenarioAPI } from '../../utils/apis/topicApi';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { getCoursePageSlug } from '../../utils/router';
-import CommentPanel from '../CommentPanelNew';
 import CourseTopicTreeView from '../CourseDetail/CourseTopicTreeView';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import SanitizedDiv from '../SanitizedDiv';
@@ -24,7 +23,7 @@ import VideoPlayer from "../VideoPlayer";
 import DocumentsList from "./DocumentList";
 import './lesson-info.scss';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
-
+const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;

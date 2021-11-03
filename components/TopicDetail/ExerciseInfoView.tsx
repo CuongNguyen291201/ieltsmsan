@@ -1,5 +1,6 @@
 import { Grid } from '@material-ui/core';
 import { message } from 'antd';
+import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,10 +18,11 @@ import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { formatDateDMY, formatTimeClock, getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
-import CommentPanelNew from '../CommentPanelNew';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import './topic-content.scss';
 import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
+
+const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
 const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | null; currentUser: any }) => {
   const { currentTopic, studyScore, currentUser } = props;

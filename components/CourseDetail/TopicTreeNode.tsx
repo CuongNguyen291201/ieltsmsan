@@ -101,8 +101,6 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
   }
 
   const onClickNode = () => {
-    if (userCourseLoading) return;
-    if (!currentCourse) return;
     if (isTopicHasChild) {
       if (!isLessonHasContent) {
         return;

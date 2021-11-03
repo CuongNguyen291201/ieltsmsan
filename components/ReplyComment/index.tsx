@@ -1,4 +1,5 @@
 import { Button, Col, Form, message, Modal, Row, Select, Table } from 'antd';
+import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -10,10 +11,10 @@ import { formatFullDateTime } from '../../utils';
 import { apiGetAllCourse } from '../../utils/apis/courseApi';
 import { apiDiscussionsById, apiListDiscussionsByFilter, apiUpdateReply } from '../../utils/apis/notificationApi';
 import { getBrowserSlug } from '../../utils/router';
-import CommentPanel from '../CommentPanel';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss';
 
+const CommentPanel = dynamic(() => import('../CommentPanel'), { ssr: false });
 const { Option } = Select;
 
 const ReplyComment = (props: { category: _Category; childCategories: _Category[]; }) => {

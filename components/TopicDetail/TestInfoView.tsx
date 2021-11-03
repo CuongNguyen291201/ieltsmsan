@@ -1,4 +1,5 @@
 import { Grid } from '@material-ui/core';
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useSelector } from 'react-redux';
@@ -10,10 +11,11 @@ import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import CommentPanelNew from '../CommentPanelNew';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import TestOverView from './TestOverview';
 import { MyCardDataView, StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
+
+const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
 export const StatisticSkillView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, currentUser: UserInfo }) => {
   const { currentTopic, currentUser, studyScore } = props;
