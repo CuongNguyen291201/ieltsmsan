@@ -141,12 +141,16 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
         <div className="layout-header">
           <Grid container wrap="nowrap" justify="space-between">
             <Grid item md={4} className="left-header">
-              <div className="logo" onClick={() => router.push('/')}>
-                <img src={props.webLogo} alt="logo" />
-              </div>
+              <Link href='/'>
+                <a>
+                  <div className="logo">
+                    <img src={props.webLogo} alt="logo" />
+                  </div>
+                </a>
+              </Link>
               <div className="search">
                 <div className="icon">
-                  <i style={{ fontSize: '17px', color: '#9B92F1' }} className="far fa-search"></i>
+                  <i style={{ fontSize: '17px', color: '#ec1f24' }} className="far fa-search"></i>
                 </div>
                 <input type="text" placeholder="Tìm kiếm khoá học..." />
               </div>
@@ -182,8 +186,9 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                   }
                 </div>
                 <MenuDesktop />
-                <div>
-                  <img style={{ width: '33px', margin:'0px 10px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" />
+                <div className="lang item" >
+                  <i className="far fa-globe" />
+                  {/* <img style={{ width: '33px', margin:'0px 10px', mixBlendMode: "difference" }} src={chooseLanguage} alt="chooseLanguage" /> */}
                 </div>
               </div>
 

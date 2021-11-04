@@ -50,7 +50,7 @@
         }
 
         &-addons {
-          color: #6031d3;
+          color: $root-color;
           & .doc-parent {
             transition: all 0.2s ease-in-out 0s;
             &.doc-open {
@@ -65,7 +65,7 @@
         .document-items-detail {
           @include document-item();
           &-addons {
-            color: #6031d3;
+            color: $root-color;
           }
         }
       }

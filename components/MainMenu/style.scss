@@ -3,16 +3,16 @@
 @mixin item-with-icon {
   display: flex;
   align-items: center;
-  border: 1px solid $root-title-color;
+  border: 1px solid $root-color;
   padding: 5px 15px;
-  color: $root-title-color;
+  color: $root-color;
   font-weight: 500;
   width: 80px;
   justify-content: center;
   margin: 0 5px;
   &:hover {
     background-color: white;
-    color: #00adee;
+    color: $root-color;
   }
   img {
     margin-right: 8px;
@@ -43,7 +43,7 @@
       }
       .search {
         background: $root-background-color;
-        border: 1px solid #4c41b1;
+        border: 1px solid $root-color;
         box-sizing: border-box;
         box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
         border-radius: 50px;
@@ -58,7 +58,7 @@
           margin-right: 8px;
           display: flex;
           align-items: center;
-          color: #9b92f1;
+          color: $root-color;
         }
         input {
           border: none;
@@ -70,16 +70,16 @@
           color: $root-title-color;
           &::-webkit-input-placeholder {
             /* Edge */
-            color: #9b92f1;
+            color: #ccc;
           }
 
           &:-ms-input-placeholder {
             /* Internet Explorer 10-11 */
-            color: #9b92f1;
+            color: #ccc;
           }
 
           &::placeholder {
-            color: #9b92f1;
+            color: #ccc;
           }
         }
       }
@@ -90,7 +90,7 @@
         // max-width: 65%;
         align-items: center;
         .menu-item {
-          color: $root-title-color;
+          color: $root-color;
           text-align: center;
           position: relative;
           cursor: pointer;
@@ -101,7 +101,7 @@
             &::after {
               content: "";
               position: absolute;
-              background-color: $root-title-color;
+              background-color: $root-color;
               bottom: -7px;
               left: 50%;
               transform: translateX(-50%);
@@ -120,8 +120,8 @@
         }
         .active-course {
           margin:0px 10px;
-          border: 1px solid #5e52d0;
-          color: #aba1ff;
+          border: 1px solid $root-color;
+          color: $root-color;
           font-weight: bold;
           text-transform: uppercase;
           height: 35px;
@@ -139,9 +139,9 @@
         }
         .cart {
           margin: 0 10px;
-          .far {
+          .shopping-cart {
             font-size: 20px;
-            color: $root-title-color;
+            color: $root-color;
             cursor: pointer;
             margin-top: 5px;
           }
@@ -159,6 +159,15 @@
           img,
           i {
             display: none;
+          }
+        }
+        .lang {
+          border: 1px solid $root-color;
+          padding: 5px;
+          width: 35px;
+          text-align: center;
+          i {
+            color: $root-color;
           }
         }
         .close-menu-icon {
@@ -256,7 +265,7 @@
 #main-menu.fixed-menu-top {
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
 }
 

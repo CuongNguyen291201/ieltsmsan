@@ -65,34 +65,29 @@ export const InformationCourse = (props: { course: Course }) => {
         return;
     }
 
-    const showCourseMemberList = useCallback(() => {
-        if (userCourse?.isTeacher) {
-            uiLogic(setShowCourseMembers(!showCourseMembers));
-        }
-        return;
-    }, [showCourseMembers, userCourse]);
-
-    const renderCourseMembersModal = () => (
-        <Modal
-            visible={showCourseMembers}
-            footer={null}
-            onCancel={() => {
-                uiLogic(setShowCourseMembers(false));
-            }}
-            centered
-            width="100%"
-            title="Danh sách học viên"
-            bodyStyle={{ maxHeight: "80vh" }}
-        >
-            <MemberListView course={course} />
-        </Modal>
-    )
+    // const renderCourseMembersModal = () => (
+    //     <Modal
+    //         visible={showCourseMembers}
+    //         footer={null}
+    //         onCancel={() => {
+    //             uiLogic(setShowCourseMembers(false));
+    //         }}
+    //         centered
+    //         width="100%"
+    //         title="Danh sách học viên"
+    //         bodyStyle={{ maxHeight: "80vh" }}
+    //     >
+    //         <MemberListView course={course} />
+    //     </Modal>
+    // )
     const goToListMember = () =>{
-        router.push(getCourseMembersPageSlug({course}))
+        if (isTeacher) {
+            router.push(getCourseMembersPageSlug({course}))
+        }
     }
     return (
         <div id="course-overview">
-            {renderCourseMembersModal()}
+            {/* {renderCourseMembersModal()} */}
             <Skeleton loading={currentCourseLoading}>
                 <div className="information-course">
                     <div>
