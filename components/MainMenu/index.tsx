@@ -155,7 +155,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                 <input type="text" placeholder="Tìm kiếm khoá học..." />
               </div>
             </Grid>
-            <Grid item md={8} style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>
+            <Grid item md={8} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
               <div className="menu">
                 <div className="menu-item" onClick={() => router.push("/")}>
                   Khoá Học
