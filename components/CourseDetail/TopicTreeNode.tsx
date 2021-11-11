@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { _Category, _Topic } from '../../custom-types';
+import { MapExamType } from "../../custom-types/MapContraint";
 import releaseDate from '../../public/default/icon-release-date.png';
 import iconIsDone from '../../public/default/isDone.png';
 import iconLockLession from '../../public/default/lock-course.png';
@@ -12,7 +13,7 @@ import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { STATUS_OPEN, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO, USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
+import { EXAM_TYPE_IELTS, STATUS_OPEN, TOPIC_CONTENT_TYPE_CARD, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO, USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
 import { apiOffsetTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
 import { getTopicPageSlug } from '../../utils/router';
@@ -156,7 +157,8 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
                   ? topic.shortDescription
                   : <>
                     {topic.topicExercise?.questionsNum || 0} câu hỏi
-                    {topic.type === TOPIC_TYPE_TEST && <> / {topic.topicExercise?.duration || 0} phút</>}
+                    {topic.type === TOPIC_TYPE_TEST && topic.topicExercise?.contentType === TOPIC_CONTENT_TYPE_CARD && <> / {topic.topicExercise?.duration || 0} phút</>}
+                    {topic.topicExercise?.contentType !== TOPIC_CONTENT_TYPE_CARD && <> / {MapExamType[topic.topicExercise?.contentType]}</>}
                   </>
                 }
                 <div className="relaseDate">

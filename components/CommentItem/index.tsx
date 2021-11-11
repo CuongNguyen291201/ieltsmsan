@@ -61,7 +61,7 @@ const CommentItem = (props: {
         replyElement.style.setProperty('--top-reply', `-${lastSiblingReplyElement.clientHeight}px`);
       }
     }
-  }, [typeof window, mapReplies[parentId]]);
+  }, [mapReplies[parentId]]);
 
   return (
     <div className={`${isReply ? 'reply ' : ''}comment-item`} id={_id}>

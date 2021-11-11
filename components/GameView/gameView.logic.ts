@@ -18,6 +18,7 @@ interface GamePageAction {
   gameData?: GameData;
   cards?: Card[];
   isShuffleQuestion?: boolean;
+  skills?: Skill[]
 }
 
 // States
@@ -25,12 +26,14 @@ interface GamePageAction {
 export type GamePageState = {
   gameData: GameData | null;
   cards: Card[] | null;
+  skills: Skill[] | null;
   isShuffleQuestion: boolean;
 }
 
 export const gamePageInitState: GamePageState = {
   gameData: null,
   cards: null,
+  skills: null,
   isShuffleQuestion: false
 }
 
@@ -43,6 +46,7 @@ export function gamePageReducer(state: GamePageState = gamePageInitState, action
         ...state,
         gameData: action.gameData,
         cards: action.cards,
+        skills: action.skills,
         isShuffleQuestion: action.isShuffleQuestion
       }
 
@@ -222,12 +226,13 @@ export const initGamePageStateAction = (args: {
   gameData: GameData;
   cards: Card[];
   boxGame: number;
+  skills: Skill[];
   myCardData: MyCardData;
   currentTopic: Topic;
   statusGame: number;
   studyScoreData?: StudyScoreData;
 }): GamePageAction => {
-  const { gameData, cards, boxGame = CARD_BOX_NONE, myCardData, currentTopic, statusGame, studyScoreData } = args;
+  const { gameData, cards, skills, boxGame = CARD_BOX_NONE, myCardData, currentTopic, statusGame, studyScoreData } = args;
   const shuffleQuestionOrder = studyScoreData?.shuffleQuestionOrder ?? [];
   const isPrepareToPlay = statusGame === GAME_STATUS_NONE;
   const isPrepareToContinue = statusGame === GAME_STATUS_PREPARE_CONTINUE;
@@ -246,6 +251,7 @@ export const initGamePageStateAction = (args: {
     type: GamePageActionTypes.INIT_GAME_STATE,
     gameData,
     cards: boxGame !== CARD_BOX_NONE ? getCardBoxs(myCardData, currentTopic, _cards, boxGame) : _cards,
-    isShuffleQuestion
+    isShuffleQuestion,
+    skills
   }
 }

@@ -159,10 +159,10 @@ const TestInfoView = (props: { topic: any }) => {
         </Grid>
       </Grid>
       <Grid container className="view-panel-score">
-        <Grid xs={12} md={8} className="view-left">
+        <Grid item xs={12} md={8} className="view-left">
           {isPlayTest && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />}
         </Grid>
-        <Grid xs={12} md={4} className="view-right course-info-topic">
+        <Grid item xs={12} md={4} className="view-right course-info-topic">
           <InformationCourse course={course} />
         </Grid>
       </Grid>

@@ -65,7 +65,7 @@ const CommentItem = (props: {
         replyElement.style.setProperty('--top-reply', `-${lastSiblingReplyElement.clientHeight}px`);
       }
     }
-  }, [typeof window, mapReplies[parentId]]);
+  }, [mapReplies[parentId]]);
 
   return (
     <div className={`${isReply ? 'reply ' : 'show-more-comment '}comment-item-new`} id={_id}>

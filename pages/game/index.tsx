@@ -16,7 +16,7 @@ const GameView = dynamic(
 
 const GamePage = () => {
   const { currentTopic, myCardData: userCardData, userToReview, reviewCardData } = useSelector((state: AppState) => state.topicReducer);
-  const { boxGame, studyScore } = useSelector((state: AppState) => state.prepareGameReducer);
+  const { boxGame, studyScore, skillSettingInfo, userIdReview, userNameReview } = useSelector((state: AppState) => state.prepareGameReducer);
   const { statusGame } = useSelector((state: AppState) => state.prepareGameReducer);
   const { currentUser: user } = useSelector((state: AppState) => state.userReducer)
   const { modeShowResultImmediately } = useSelector((state: AppState) => state.gameReducer);
@@ -68,7 +68,10 @@ const GamePage = () => {
         statusGame={statusGame}
         boxGame={boxGame}
         myCardData={myCardData}
+        skillSettingInfo={skillSettingInfo}
         studyScore={studyScore}
+        userIdReview={userIdReview}
+        userNameReview={userNameReview}
       />
     </div>
   </Layout>

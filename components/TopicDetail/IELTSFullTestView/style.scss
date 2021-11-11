@@ -1,0 +1,96 @@
+@mixin skill-color {
+  &-aqua {
+    color: #32b4c8;
+  }
+  &-green {
+    color: #327846;
+  }
+  &-orange {
+    color: #faaa5a;
+  }
+  &-pink {
+    color: #c86478;
+  }
+}
+
+@mixin skill-background-color {
+  &-aqua {
+    background-color: #32b4c8;
+  }
+  &-green {
+    background-color: #327846;
+  }
+  &-orange {
+    background-color: #faaa5a;
+  }
+  &-pink {
+    background-color: #c86478;
+  }
+}
+
+#topic-ielts-parts {
+  padding: 10px;
+  justify-content: center;
+  .item-skill-part {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f3f3;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      color: #327646;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      @include skill-color();
+    }
+
+    .progress {
+      position: relative;
+      .icon-results {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        .skill-icon {
+          width: 37px;
+          height: 37px;
+          @include skill-color();
+        }
+        .result {
+          position: absolute;
+          display: flex;
+          left: 50%;
+          transform: translateX(-50%);
+          justify-content: center;
+          font-weight: bold;
+          font-size: 18px;
+        }
+      }
+    }
+
+    .game-button-groups {
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      .game-button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        @include skill-background-color();
+        color: #fff;
+        text-transform: none;
+      }
+      .main-game-button {
+        display: flex;
+        .game-button-tool {
+          border-left: none;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          @include skill-color();
+        }
+      }
+    }
+  }
+}

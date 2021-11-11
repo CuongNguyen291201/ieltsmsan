@@ -1,14 +1,16 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { _Topic } from "../../custom-types";
 import { updateTopicExerciseAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
-import { TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { EXAM_TYPE_IELTS, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
-import TestInfoView from './TestInfoView';
-import ExerciseInfoView from './ExerciseInfoView';
 import PanelContainer from '../containers/PanelContainer';
+import ExerciseInfoView from './ExerciseInfoView';
+import IELTSFullTestView from "./IELTSFullTestView";
+import TestInfoView from './TestInfoView';
 
-const StudyInfoView = (props: { topic: any }) => {
+const StudyInfoView = (props: { topic: _Topic }) => {
   const { topic } = props;
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
@@ -30,6 +32,17 @@ const StudyInfoView = (props: { topic: any }) => {
 
   }, [currentUser, isLoadedDetailTopic]);
 
+  const renderStudyView = () => {
+    switch (topic.topicExercise?.contentType) {
+      case EXAM_TYPE_IELTS:
+        return <IELTSFullTestView topic={topic} />
+      default:
+        return topic.type === TOPIC_TYPE_TEST
+          ? <TestInfoView topic={topic} />
+          : <ExerciseInfoView topic={topic} />
+    }
+  }
+
   return (
     <>
       {
@@ -37,9 +50,7 @@ const StudyInfoView = (props: { topic: any }) => {
           ? <div>Loading...</div>
           : (
             <PanelContainer title={''}>
-              {topic.type === TOPIC_TYPE_TEST
-                ? <TestInfoView topic={topic} />
-                : <ExerciseInfoView topic={topic} />}
+              {renderStudyView()}
             </PanelContainer>
           )
       }

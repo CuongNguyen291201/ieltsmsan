@@ -24,14 +24,16 @@ import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
 import { apiWebSocial } from '../utils/apis/webSocial';
 import { removeServerSideCookie } from "../utils";
+import { useRouter } from "next/router";
 
 const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
+  const router = useRouter();
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (router.isReady) {
       const WOW = require('wow.js');
       new WOW().init();
     }
-  }, [typeof window]);
+  }, [router.isReady]);
   return (
     <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
       <div style={{boxShadow:'0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor:'white'}}>

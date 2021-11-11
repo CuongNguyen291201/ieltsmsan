@@ -2,10 +2,13 @@ import { _Topic } from '../../custom-types';
 import { POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import MyCardData from '../../sub_modules/share/model/myCardData';
+import Skill from "../../sub_modules/share/model/skill";
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
+import { StudyScoreData } from "../../sub_modules/share/model/studyScoreData";
 import Topic from '../../sub_modules/share/model/topic';
 import { TopicExercise } from '../../sub_modules/share/model/topicExercise';
 import { ITopicProgress } from '../../sub_modules/share/model/topicProgress';
+import { TopicSetting } from "../../sub_modules/share/model/topicSetting";
 
 export const apiSeekTopicsByParentId = (args: {
   parentId: string | null; courseId: string;
@@ -106,3 +109,24 @@ export const apiGetTimeStamp = async (args: {}) => {
   }
   return 0
 };
+
+export const apiGetIELTSTopicData = async (args: { topicId: string; userId?: string }): Promise<{
+  topicSetting: TopicSetting | null;
+  skills: Skill[];
+  studyScore: StudyScore | null;
+  mapCardNumSkillType: {
+    [value: number]: number
+  }
+}> => {
+  const { data, status } = await POST_API('/get-data-detail-ielts', args);
+  if (status !== 200) return {
+    topicSetting: null, skills: [], studyScore: null, mapCardNumSkillType: {}
+  };
+  return data;
+}
+
+export const apiGetLatestTopicStudyScoreData = async (args: { topicId: string; skillId?: string; status?: number | number[] }): Promise<StudyScoreData[]> => {
+  const { data, status } = await POST_API('/get-latest-topic-study-score-data', args);
+  if (status !== 200) return [];
+  return data;
+}

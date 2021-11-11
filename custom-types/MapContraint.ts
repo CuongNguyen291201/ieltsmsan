@@ -5,6 +5,13 @@ import {
   CODE_NOT_MATCH,
   CODE_NOT_YET_TIME,
 
+  TOPIC_CONTENT_TYPE_CARD,
+  TOPIC_CONTENT_TYPE_FILE_PDF,
+  EXAM_TYPE_IELTS,
+  EXAM_TYPE_SAT,
+  EXAM_TYPE_TOEFL,
+  EXAM_TYPE_TOEIC,
+
   PAYMENT_BANK,
   PAYMENT_COD,
   PAYMENT_GIF,
@@ -40,4 +47,13 @@ export const MapPaymentType = {
   [PAYMENT_PAYPAL]: 'Thanh toán qua Paypal',
   [PAYMENT_VISA]: 'Thanh toán qua Visa',
   [PAYMENT_VNPAY]: 'Thanh toán qua ví VNPAY'
+}
+
+export const MapExamType = {
+  [TOPIC_CONTENT_TYPE_CARD]: 'Mặc định',
+  [TOPIC_CONTENT_TYPE_FILE_PDF]: 'File PDF',
+  [EXAM_TYPE_IELTS]: 'Bài thi IELTS',
+  [EXAM_TYPE_SAT]: 'Bài thi SAT',
+  [EXAM_TYPE_TOEIC]: 'Bài thi TOEIC',
+  [EXAM_TYPE_TOEFL]: 'Bài thi TOEFL'
 }
