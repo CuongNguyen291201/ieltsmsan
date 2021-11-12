@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useRouter } from "next/router";
 import { useEffect } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'wow.js/css/libs/animate.css';
@@ -8,23 +9,18 @@ import HomeNews from '../components/HomeNews';
 import HomeUtility from '../components/HomeUtility';
 import HomeWhy from '../components/HomeWhy';
 import Layout from '../components/Layout';
-import MainHeader from '../components/MainHeader';
-import MainMenu from '../components/MainMenu';
 import StudentFeeling from '../components/StudentFeeling';
 import { _Category } from '../custom-types';
 import { wrapper } from '../redux/store';
-import { apiGetCategories } from '../utils/apis/categoryApi';
-import Footer from '../components/Footer';
 import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
-import { removeCookie, TOKEN } from '../sub_modules/common/utils/cookie';
-import { apiWebInfo } from '../utils/apis/webInfoApi';
 import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
-import { apiWebSocial } from '../utils/apis/webSocial';
 import { removeServerSideCookie } from "../utils";
-import { useRouter } from "next/router";
+import { apiGetCategories } from '../utils/apis/categoryApi';
+import { apiWebInfo } from '../utils/apis/webInfoApi';
+import { apiWebSocial } from '../utils/apis/webSocial';
 
 const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
   const router = useRouter();

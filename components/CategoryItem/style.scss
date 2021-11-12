@@ -4,7 +4,6 @@
   min-height: 200px;
   max-width: 100%;
   height: auto;
-  border-radius: 0 0 20px 0;
   @media (max-width: 768px) {
     border-radius: unset;
   }
@@ -16,7 +15,6 @@
     @include item-avatar-style;
   }
   .avatar-overlay {
-    border-radius: 0 0 20px 0;
     position: absolute;
     @media (max-width: 768px) {
      display: none;
@@ -76,7 +74,7 @@
       }
     }
   }
-  margin: 16px;
+  padding: 16px;
 }
 
 @media (max-width: $h-mobile-max-width) {

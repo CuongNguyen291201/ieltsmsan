@@ -5,7 +5,6 @@ import { fetchTopicsAction, resetTopicsListAction } from '../../redux/actions/to
 import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import OvalRecButton from '../buttons/OvalRecButton';
 import TopicTreeNode from './TopicTreeNode';
 import newTopic from '../../public/default/newLession.png';
 

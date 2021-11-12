@@ -1,4 +1,4 @@
-import { Tooltip } from '@material-ui/core';
+import { Paper, Tooltip } from '@material-ui/core';
 import { Rate } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -8,7 +8,6 @@ import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import orderUtils from '../../utils/payment/orderUtils';
 import { getCoursePageSlug, ROUTER_PAYMENT } from '../../utils/router';
-import Container1 from '../containers/Container1';
 import PopupShowQuickView from '../popup-quick-view/index';
 import './style.scss';
 
@@ -29,7 +28,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
   return (
     <Link href={courseSlug} passHref>
       <a onClick={(e) => { e.preventDefault() }}>
-        <Container1>
+        <Paper elevation={5}>
           <div className="crs-avatar">
             {/* <img src={course.avatar || itemAvatar} alt={course.name} /> */}
             <div className="hover-cat-item">
@@ -82,7 +81,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
               Video
             </div> */}
           </div>
-        </Container1>
+          </Paper>
       </a>
     </Link>
   )

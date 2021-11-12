@@ -5,7 +5,6 @@ import { updateTopicExerciseAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
 import { EXAM_TYPE_IELTS, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
-import PanelContainer from '../containers/PanelContainer';
 import ExerciseInfoView from './ExerciseInfoView';
 import IELTSFullTestView from "./IELTSFullTestView";
 import TestInfoView from './TestInfoView';
@@ -49,9 +48,9 @@ const StudyInfoView = (props: { topic: _Topic }) => {
         !isLoadedDetailTopic
           ? <div>Loading...</div>
           : (
-            <PanelContainer title={''}>
+            <>
               {renderStudyView()}
-            </PanelContainer>
+            </>
           )
       }
     </>

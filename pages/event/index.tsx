@@ -1,9 +1,7 @@
 import React from 'react';
-
-import Layout from '../../components/Layout';
-import MainHeader from '../../components/MainHeader';
-import MainMenu from '../../components/MainMenu';
 import Event from '../../components/Event/EventDetail';
+import Layout from '../../components/Layout';
+
 
 const EventPage = () => {
     return (

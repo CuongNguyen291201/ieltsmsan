@@ -14,7 +14,7 @@ import { getBrowserSlug } from '../../utils/router';
 import SanitizedDiv from '../SanitizedDiv';
 import './style.scss';
 
-const CommentPanel = dynamic(() => import('../CommentPanel'), { ssr: false });
+const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 const { Option } = Select;
 
 const ReplyComment = (props: { category: _Category; childCategories: _Category[]; }) => {

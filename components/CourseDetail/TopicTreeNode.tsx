@@ -189,11 +189,6 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
               {isTopicHasChild && <div className="wraper-topic-child"><TopicTreeNode topic={e} /></div>}
 
               {i === topicOptions.childs.length - 1 && mapLoadMoreState[topic._id] && <div className="flex-center" style={{ margin: '12px 0' }}>
-                {/* <OvalRecButton
-                  title="TẢI THÊM"
-                  onClick={loadMoreChilds}
-                  fontSize="11px"
-                /> */}
                 <div className="load-more-button" onClick={loadMoreChilds}>
                   <span>
                     Tải thêm bài học

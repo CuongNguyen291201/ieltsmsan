@@ -1,7 +1,6 @@
 import React from 'react';
 import { GetServerSideProps } from 'next';
 import Layout from '../../../components/Layout';
-import MainHeader from '../../../components/MainHeader';
 import MainMenu from '../../../components/MainMenu';
 import { wrapper } from '../../../redux/store';
 import { getUserFromToken } from '../../../sub_modules/common/api/userApis';
@@ -13,7 +12,6 @@ import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
 const ExamPage = () => {
     return (
         <Layout>
-            <MainHeader />
             <MainMenu />
             <EventExam />
         </Layout>

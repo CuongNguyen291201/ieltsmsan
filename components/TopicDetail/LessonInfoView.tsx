@@ -87,7 +87,6 @@ const LessonInfoView = (props: { topic: Topic }) => {
     }
     setDataScenario(dataScenarioTemp)
   }
-  // console.log('dataScenario: ', dataScenario, isEndLive);
 
   return (
     <div className="lesson-detail">
@@ -199,7 +198,6 @@ const LessonInfoView = (props: { topic: Topic }) => {
                 </Row>
               </div>
             )}
-            {/* </PanelContainer> */}
             <Row className="info-topic">
               <Col span={24} lg={16}>
                 <div className="course-topic-tree">

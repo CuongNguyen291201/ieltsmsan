@@ -1,5 +1,5 @@
+import { Grid } from "@material-ui/core"
 import { Fragment } from 'react'
-import GridTemplateCol55 from '../grid/GridTemplateCol55'
 import SectionLabel from '../SectionLabel'
 import FooterNavItem, { FooterNavItemProps } from './FooterNavItem'
 
@@ -25,8 +25,8 @@ const FooterNav = () => {
       <div className="footer-label">
         <SectionLabel />
       </div>
-      <GridTemplateCol55>
-        <div id="utils">
+      <Grid container>
+        <Grid item id="utils" xs={6}>
           <div className="nav-title">
             TIỆN ÍCH
           </div>
@@ -35,9 +35,9 @@ const FooterNav = () => {
               <FooterNavItem title={e.title} slug={e.slug} />
             </Fragment>
           ))}
-        </div>
+        </Grid>
 
-        <div id="policies">
+        <Grid item id="policies" xs={6}>
           <div className="nav-title">
             CÁC CHÍNH SÁCH
           </div>
@@ -46,8 +46,8 @@ const FooterNav = () => {
               <FooterNavItem title={e.title} slug={e.slug} />
             </Fragment>
           ))}
-        </div>
-      </GridTemplateCol55>
+        </Grid>
+      </Grid>
     </div>
   )
 }

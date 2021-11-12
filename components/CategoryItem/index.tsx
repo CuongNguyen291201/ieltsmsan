@@ -1,3 +1,4 @@
+import { Paper } from "@material-ui/core";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { memo, useMemo } from 'react';
@@ -5,7 +6,6 @@ import { _Category } from '../../custom-types';
 import { PAGE_CATEGORY_DETAIL } from '../../custom-types/PageType';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { getBrowserSlug, getCategorySlug } from '../../utils/router';
-import Container1 from '../containers/Container1';
 import './style.scss';
 
 const CategoryItem = (props: {
@@ -18,7 +18,7 @@ const CategoryItem = (props: {
   return (
     <Link href={categorySlug} passHref>
       <a onClick={(e) => { e.preventDefault(); }}>
-        <Container1>
+        <Paper elevation={5}>
           <div className="cat-avatar" onClick={() => router.push(getBrowserSlug(category.slug, PAGE_CATEGORY_DETAIL, category._id))} >
             <img src={category.avatar || itemAvatar} alt={category.name} />
             <div className="avatar-overlay">
@@ -39,7 +39,7 @@ const CategoryItem = (props: {
               Khoá học: {category.totalCourses} khoá
             </div>
           </div>
-        </Container1>
+        </Paper>
       </a>
     </Link>
   )

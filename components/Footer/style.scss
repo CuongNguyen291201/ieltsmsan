@@ -63,7 +63,6 @@
   }
 
   .footer-nav {
-    margin-left: 10%;
     .footer-label {
       display: flex;
       align-items: flex-start;
@@ -89,20 +88,6 @@
       margin-bottom: 24px;
       &:hover{
         text-decoration: underline;
-      }
-    }
-  }
-}
-@media(max-width: 900px){
-  .footer{
-    .footer-nav{
-      margin: 0;
-      padding: 16px;
-      .nav-title{
-        font-size: 21px;
-      }
-      .footer-nav-item{
-        font-size: 15px;
       }
     }
   }

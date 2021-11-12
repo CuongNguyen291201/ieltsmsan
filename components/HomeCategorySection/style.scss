@@ -4,40 +4,8 @@
   .section-main {
     position: relative;
     overflow: hidden;
-    .grid-template-1{
-      margin-bottom: 16px;
-    }
-    .section-bgr {
-      z-index: -1;
-      top: 50%;
-      left: 50%;
-      width: 130%;
-      height: 400px;
-      position: absolute;
-      background: linear-gradient(
-        155.25deg,
-        rgba(196, 196, 196, 0) -46.97%,
-        rgba(196, 196, 196, 0.716402) 108.76%,
-        rgba(196, 196, 196, 0.8) 243.32%
-      );
-      border-radius: 0px 435.5px;
-    }
-    @media(max-width: $container-max-width) {
-      .section-bgr {
-        display: none;
-      }
-    }
-  }
-}
-@media(max-width: 600px){
-  .main-category-section{
-    .grid-template-1{
-      padding: 0 16px;
-    }
-    .container-1{
-      &:last-child{
-        margin-bottom: 16px;
-      }
+    .category-list {
+      padding-bottom: 16px;
     }
   }
 }
