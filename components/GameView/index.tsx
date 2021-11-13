@@ -76,6 +76,7 @@ const GameView = (props: {
       teacherId: currentUser?._id,
       saveNotAnsweredCardsInTestMode: true,
       saveInPracticeMode: true,
+      enablePinAudioPlayer: true,
       ieltsGameSetting: {
         disableWritingDraft: true,
         disableSpeakingDraft: true,
