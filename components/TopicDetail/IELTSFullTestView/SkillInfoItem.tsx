@@ -10,6 +10,7 @@ import { setActiveCourseModalVisibleAction } from "../../../redux/actions/course
 import { prepareGoToGameAction } from "../../../redux/actions/prepareGame.actions";
 import { AppState } from "../../../redux/reducers";
 import { showLoginModalAction } from "../../../sub_modules/common/redux/actions/userActions";
+import { showToastifyWarning } from "../../../sub_modules/common/utils/toastify";
 import { GAME_STATUS_PREPARE_CONTINUE, GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from "../../../sub_modules/game/src/gameConfig";
 import { getScoreByBarem } from "../../../sub_modules/game/src/services/score.services";
 import {
@@ -115,6 +116,15 @@ const SkillInfoItem = (props: PropsWithoutRef<{
           ? GAME_STATUS_PREPARE_CONTINUE
           : (studyScoreData?.status === EXAM_SCORE_FINISH ? GAME_STATUS_PREPARE_REVIEW : GAME_STATUS_PREPARE_PLAY)
       );
+
+    if ((prepareStatusGame === GAME_STATUS_PREPARE_PLAY || prepareStatusGame === GAME_STATUS_PREPARE_CONTINUE) && skillInfo.skill.type === SKILL_TYPE_SPEAKING) {
+      navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .catch((err) => {
+          message.warning("Your microphone is not available!");
+          console.error('Microphone error: ', err);
+          return;
+        })
+    }
 
     const _studyScore = new StudyScore(studyScore);
     _studyScore.studyScoreData = studyScoreData;
