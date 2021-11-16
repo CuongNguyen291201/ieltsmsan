@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { _Category } from "../../custom-types";
 import { MapPaymentType } from '../../custom-types/MapContraint';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { removeOneAction } from '../../redux/actions';
@@ -21,6 +22,7 @@ import { Course } from '../../sub_modules/share/model/courses';
 import Order from '../../sub_modules/share/model/order';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { numberFormat } from '../../utils';
+import { apiGetCategoryById } from "../../utils/apis/categoryApi";
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
@@ -37,14 +39,18 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [dataOrder, setDataOrder] = useState<Course[]>([])
-  const [dataTotal, setDataTotal] = useState(0)
+  const [dataTotal, setDataTotal] = useState(0);
+  const [discountTotal, setDiscountTotal] = useState(0);
+  const [finalPrice, setFinalPrice] = useState(0);
   const [paymentType, setPaymentType] = useState<number>(NOT_PAYMENT)
   const [serial, setSerial] = useState('')
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isOrderCreated, setOrderCreated] = useState(false);
+  const [comboCategory, setComboCategory] = useState<_Category>();
   const courseIdsQuery: string = router.query?.courseIds as string
   const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : [];
+  const categoryId = router.query.categoryId as string;
 
   const PaymentInfo: { [paymentType: number]: JSX.Element } = {
     [PAYMENT_BANK]: <Bank
@@ -74,15 +80,25 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
 
 
   useEffect(() => {
+    const loadCoursesFC = async () => {
+      let category: _Category;
+      const courses = await apiGetCourseByIds(courseIds);
+      if (categoryId) {
+        category = await apiGetCategoryById(categoryId);
+        setComboCategory(category);
+      }
+      setDataOrder(courses);
+      const priceTotal = courses.reduce((total, item) => (total += item.cost, total), 0);
+      const discountTotal = category ? priceTotal - category.price : courses.reduce((total, item) => (total += item.discountPrice, total), 0);
+      const finalPrice = category ? category.price : priceTotal - discountTotal;
+      setDataTotal(priceTotal);
+      setDiscountTotal(discountTotal);
+      setFinalPrice(finalPrice);
+      setSerial(randomstring.generate({ length: 8, charset: 'alphanumeric', capitalization: 'uppercase' }));
+      setLoading(false)
+    }
     if (courseIds?.length > 0) {
-      apiGetCourseByIds(courseIds)
-        .then((courses) => {
-          setDataOrder(courses)
-          const priceTotal = courses.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
-          setDataTotal(priceTotal);
-          setSerial(randomstring.generate({ length: 8, charset: 'alphanumeric', capitalization: 'uppercase' }));
-          setLoading(false)
-        })
+      loadCoursesFC();
     } else {
       setLoading(false)
     }
@@ -148,13 +164,17 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
 
   const onRemove = (value: string) => {
     const data = dataOrder?.filter(item => item._id !== value)
-    const priceTotal = data.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
+    const priceTotal = data.reduce((total, item) => (total += item.cost, total), 0);
+    const totalDiscount = data.reduce((total, item) => (total += item.discountPrice, total), 0);
     // const courseIds = localStorage.getItem('courseIds') ? localStorage.getItem('courseIds').split(',')?.filter(item => item !== value) : []
     orderUtils.removeCourseFromCart(value);
     dispatch(removeOneAction(Scopes.CART, value))
     setDataTotal(priceTotal);
-    setDataOrder(data)
-    const dataCourse = data?.map(item => item._id)
+    setDataOrder(data);
+    setDiscountTotal(totalDiscount);
+    setFinalPrice(priceTotal - totalDiscount);
+    if (comboCategory) setComboCategory(null);
+    const dataCourse = data?.map(item => item._id);
     // localStorage.setItem('courseIds', courseIds.join())
     router.push(`?courseIds=${dataCourse.join()}`, undefined, { shallow: true })
   }
