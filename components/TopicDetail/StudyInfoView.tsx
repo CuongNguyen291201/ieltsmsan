@@ -6,7 +6,7 @@ import { AppState } from '../../redux/reducers';
 import { EXAM_TYPE_IELTS, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
 import ExerciseInfoView from './ExerciseInfoView';
-import IELTSFullTestView from "./IELTSFullTestView";
+import ExamIELTSView from "./ExamIELTSView";
 import TestInfoView from './TestInfoView';
 
 const StudyInfoView = (props: { topic: _Topic }) => {
@@ -34,7 +34,7 @@ const StudyInfoView = (props: { topic: _Topic }) => {
   const renderStudyView = () => {
     switch (topic.topicExercise?.contentType) {
       case EXAM_TYPE_IELTS:
-        return <IELTSFullTestView topic={topic} />
+        return topic.type === TOPIC_TYPE_TEST ? <ExamIELTSView topic={topic} /> : <ExerciseInfoView topic={topic} />
       default:
         return topic.type === TOPIC_TYPE_TEST
           ? <TestInfoView topic={topic} />

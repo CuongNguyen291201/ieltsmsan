@@ -17,7 +17,7 @@ import './style.scss';
 
 const CommentPanel = dynamic(() => import("../../CommentPanelNew"), { ssr: false });
 
-const IELTSFullTestView = (props: PropsWithoutRef<{
+const ExamIELTSView = (props: PropsWithoutRef<{
   topic: _Topic;
 }>) => {
   const { topic } = props;
@@ -72,4 +72,4 @@ const IELTSFullTestView = (props: PropsWithoutRef<{
   );
 }
 
-export default IELTSFullTestView;
+export default ExamIELTSView;

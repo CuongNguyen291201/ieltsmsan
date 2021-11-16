@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer } from 'react'
 import { getSkills } from "../../sub_modules/game/api/ExamApi"
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig'
+import LoadingGame from "../../sub_modules/game/src/game_components/loadingGame"
 import { GameData } from '../../sub_modules/game/src/game_core/gameData'
 import MainGameView from '../../sub_modules/game/src/main-game/MainGameViewTS'
 import { CARD_BOX_NONE, EXAM_TYPE_IELTS, GAME_TYPE_PRACTICE, GAME_TYPE_TEACHER_REVIEW, GAME_TYPE_TEST, GAME_TYPE_USER_REVIEW, SKILL_TYPE_LISTENING, SKILL_TYPE_READING, SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint'
@@ -52,7 +53,7 @@ const GameView = (props: {
     const contentType = currentTopic.topicExercise.contentType;
     const isIELTSGame = contentType === EXAM_TYPE_IELTS;
     const title = isIELTSGame ? '' : currentTopic.name;
-    const duration = isIELTSGame && isTest ? skillSettingInfo?.skill?.timeStudy : 60 * (currentTopic.topicExercise.duration ?? 0);
+    const duration = isIELTSGame && isTest ? 60 * skillSettingInfo?.time : 60 * (currentTopic.topicExercise.duration ?? 0);
 
     const gameData = new GameData({
       examId: currentTopic._id,
@@ -120,7 +121,7 @@ const GameView = (props: {
         />
       </>
     )
-    : <></>
+    : <LoadingGame />
 }
 
 export default GameView;
