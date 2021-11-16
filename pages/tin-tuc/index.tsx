@@ -60,7 +60,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     }
   } catch (e) {
     console.error(e);
-    return res.writeHead(302, { Location: ROUTER_ERROR }).end();
+    res.writeHead(302, { Location: ROUTER_ERROR }).end();
+    return;
   }
 });
 

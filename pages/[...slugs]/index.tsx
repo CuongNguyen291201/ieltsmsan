@@ -70,7 +70,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       const type = Number(...items.slice(-2, -1));
       const slug = items.slice(0, -2).join('-');
 
-      if (!id || !slug) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+      if (!id || !slug) {
+        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+        return;
+      }
 
       if (id.startsWith(NEWS_ID_PREFIX)) {
         const newsId = id.slice(NEWS_ID_PREFIX.length);

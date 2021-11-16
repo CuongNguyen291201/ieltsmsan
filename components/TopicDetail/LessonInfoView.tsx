@@ -20,10 +20,10 @@ import SanitizedDiv from '../SanitizedDiv';
 import registerServiceWorker, { clearCountDown, countDownTimer, unregister } from '../ServiceWorker/registerServiceWorker';
 import StreamComponent from '../Stream';
 import VideoPlayer from "../VideoPlayer";
-import DocumentsList from "./DocumentList";
 import './lesson-info.scss';
 const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
+const DocumentsList = dynamic(() => import("./DocumentList"), { ssr: false });
 
 const LessonInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
