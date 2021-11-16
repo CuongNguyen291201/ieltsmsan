@@ -43,14 +43,14 @@ const Slug = (props: SlugTypes) => {
 
   return (
     <div>
-        <Layout
-          hideMenu={type === PAGE_REPLY_COMMENT}
-          hideFooter={type === PAGE_REPLY_COMMENT}
-          webInfo={props.webInfo}
-          webSocial={props.webSocial}
-        >
-          {mapTypePage[type ?? PAGE_ERROR]}
-        </Layout>
+      <Layout
+        hideMenu={type === PAGE_REPLY_COMMENT}
+        hideFooter={type === PAGE_REPLY_COMMENT}
+        webInfo={props.webInfo}
+        webSocial={props.webSocial}
+      >
+        {mapTypePage[type ?? PAGE_ERROR]}
+      </Layout>
     </div>
   );
 }
@@ -75,10 +75,14 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         return;
       }
 
+
       if (id.startsWith(NEWS_ID_PREFIX)) {
         const newsId = id.slice(NEWS_ID_PREFIX.length);
         const news = await apiGetNewsById(newsId);
-        if (!news) return res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+        if (!news) {
+          res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+          return;
+        }
         return {
           props: {
             type: PAGE_NEWS_DETAIL,
@@ -89,13 +93,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       }
 
       if (type === PAGE_CATEGORY_DETAIL) {
-        let category: _Category = null;
-        let childCategories: _Category[] = [];
-        const [categoryRes, childCategoriesRes] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
-        if (categoryRes.status === response_status.success && childCategoriesRes.status === response_status.success) {
-          category = categoryRes.data;
-          childCategories = childCategoriesRes.data;
-        }
+        const [category, childCategories] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
+
         store.dispatch(setCurrentCategoryAction(category));
         return {
           props: {

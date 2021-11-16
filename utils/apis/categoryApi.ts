@@ -7,8 +7,11 @@ export const apiGetCategories = () => POST_REQ('get-root-categories', {});
 
 export const apiGetTotalCourses = (categoryId: string) => POST_API('get-category-total-courses', { categoryId });
 
-export const apiGetCategoriesByParent = (parentId: string | null) => POST_REQ('get-categories-by-parent', { parentId });
-
+export const apiGetCategoriesByParent = async (parentId: string | null): Promise<_Category[]> => {
+  const { data, status } = await POST_REQ('get-categories-by-parent', { parentId });
+  if (status !== response_status.success) return null;
+  return data;
+}
 export const apiGetCategoryById = async (categoryId: string): Promise<_Category | null> => {
   const { data, status } = await POST_REQ('get-category-by-id', { categoryId });
   if (status !== response_status.success) return null;
