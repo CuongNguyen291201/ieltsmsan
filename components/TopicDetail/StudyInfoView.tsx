@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { _Topic } from "../../custom-types";
 import { updateTopicExerciseAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
-import { EXAM_TYPE_IELTS, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { EXAM_TYPE_IELTS, EXAM_TYPE_TOEIC, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
 import ExerciseInfoView from './ExerciseInfoView';
 import ExamIELTSView from "./ExamIELTSView";
 import TestInfoView from './TestInfoView';
+import ExamTOEICView from "./ExamTOEICView";
 
 const StudyInfoView = (props: { topic: _Topic }) => {
   const { topic } = props;
@@ -35,6 +36,8 @@ const StudyInfoView = (props: { topic: _Topic }) => {
     switch (topic.topicExercise?.contentType) {
       case EXAM_TYPE_IELTS:
         return topic.type === TOPIC_TYPE_TEST ? <ExamIELTSView topic={topic} /> : <ExerciseInfoView topic={topic} />
+      case EXAM_TYPE_TOEIC:
+        return <ExamTOEICView topic={topic} />
       default:
         return topic.type === TOPIC_TYPE_TEST
           ? <TestInfoView topic={topic} />

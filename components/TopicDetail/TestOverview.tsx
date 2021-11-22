@@ -6,7 +6,7 @@ import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.ac
 import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { GAME_STATUS_PREPARE_CONTINUE, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
+import { GAME_STATUS_PREPARE_CONTINUE, GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { EXAM_SCORE_FINISH, EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
@@ -25,7 +25,7 @@ const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | nu
 	const {
 		isFinishedExam,
 		isPassedExam,
-		canPlayAgain
+		canPlayAgain,
 	} = useMemo(() => {
 		return {
 			isFinishedExam: studyScore?.status === EXAM_SCORE_FINISH,
@@ -56,7 +56,7 @@ const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | nu
 	function playGame() {
 		if (currentUser) {
 			if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
-				dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_CONTINUE, studyScore }))
+				dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_PLAY, studyScore }))
 				router.push(getGameSlug(currentTopic._id));
 			} else {
 				message.warning("Chưa tham gia khoá học");
@@ -97,12 +97,12 @@ const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | nu
 
 			<div className="topic-button-group">
 				{canPlayAgain && <div className="topic-button topic-button-play" onClick={playGame}>
-					Làm lại
+					{isFinishedExam ? 'Làm lại' : 'Làm tiếp'}
 				</div>}
 
-				<div className="topic-button topic-button-review" onClick={review}>
+				{isFinishedExam && <div className="topic-button topic-button-review" onClick={review}>
 					Xem giải chi tiết
-				</div>
+				</div>}
 			</div>
 		</div >
 	)

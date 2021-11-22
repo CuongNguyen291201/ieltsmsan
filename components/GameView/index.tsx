@@ -2,7 +2,7 @@ import { useEffect, useMemo, useReducer } from 'react'
 import { getSkills } from "../../sub_modules/game/api/ExamApi"
 import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig'
 import LoadingGame from "../../sub_modules/game/src/game_components/loadingGame"
-import { GameData } from '../../sub_modules/game/src/game_core/gameData'
+import { GameData, MapSkillTypeValues } from '../../sub_modules/game/src/game_core/gameData'
 import MainGameView from '../../sub_modules/game/src/main-game/MainGameViewTS'
 import { CARD_BOX_NONE, EXAM_TYPE_IELTS, GAME_TYPE_PRACTICE, GAME_TYPE_TEACHER_REVIEW, GAME_TYPE_TEST, GAME_TYPE_USER_REVIEW, SKILL_TYPE_LISTENING, SKILL_TYPE_READING, SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint'
 import MyCardData from '../../sub_modules/share/model/myCardData'
@@ -24,6 +24,7 @@ const GameView = (props: {
   userNameReview?: string;
   studyScore?: StudyScore;
   skillSettingInfo?: SkillSettingInfo;
+  mapSkillTypeValues?: MapSkillTypeValues;
 }) => {
   const {
     myCardData,
@@ -35,7 +36,8 @@ const GameView = (props: {
     userIdReview,
     userNameReview,
     studyScore,
-    skillSettingInfo
+    skillSettingInfo,
+    mapSkillTypeValues
   } = props;
 
   const [gameState, uiLogic] = useReducer(gamePageReducer, gamePageInitState);
@@ -76,8 +78,9 @@ const GameView = (props: {
       showAnwserSheet: ![SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING].includes(skillSettingInfo?.skill?.type),
       teacherId: currentUser?._id,
       saveNotAnsweredCardsInTestMode: true,
-      saveInPracticeMode: true,
+      baremScore: currentTopic.topicExercise.baremScore,
       enablePinAudioPlayer: true,
+      mapSkillTypeValues,
       ieltsGameSetting: {
         disableWritingDraft: true,
         disableSpeakingDraft: true,

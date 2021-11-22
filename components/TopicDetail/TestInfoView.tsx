@@ -7,13 +7,13 @@ import { CommentScopes } from '../../custom-types';
 import { AppState } from '../../redux/reducers';
 import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
 import { getExamScoreDetails, getSkills } from '../../sub_modules/game/api/ExamApi';
-import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
+import { STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import TestOverView from './TestOverview';
-import { MyCardDataView, StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
+import { StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
 
 const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
@@ -137,7 +137,7 @@ const SkeletonScoreView = () => {
   )
 }
 
-const TestInfoView = (props: { topic: any }) => {
+const TestInfoView = (props: { topic: Topic }) => {
   const { topic } = props;
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);

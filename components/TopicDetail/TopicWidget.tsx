@@ -14,7 +14,7 @@ import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
+import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
@@ -179,6 +179,7 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
       showToastifyWarning("Chưa tham gia khoá học");
       return;
     }
+    dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_PLAY }));
     router.push(getGameSlug(currentTopic._id));
   }, [user, isJoinedCourse]);
 
