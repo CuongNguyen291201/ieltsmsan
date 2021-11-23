@@ -1,6 +1,6 @@
-import { Button, Modal, Skeleton } from "antd";
+import { Button } from "@material-ui/core";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useReducer } from "react";
+import { useMemo, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MapUserCourseStatus } from '../../../custom-types/MapContraint';
 import iconCircle from '../../../public/default/icon-circle.png';
@@ -16,16 +16,15 @@ import { Scopes } from '../../../redux/types';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../../sub_modules/common/utils/toastify';
 import { USER_COURSE_APPROVE, USER_TYPE_HAS_ROLE } from '../../../sub_modules/share/constraint';
-import CourseContent from "../../../sub_modules/share/model/courseContent";
 import { Course } from "../../../sub_modules/share/model/courses";
 import { numberFormat } from '../../../utils';
 import { apiJoinCourse } from '../../../utils/apis/courseApi';
 import orderUtils from '../../../utils/payment/orderUtils';
 import { getCourseMembersPageSlug, getPaymentPageSlug } from '../../../utils/router';
-import MemberListView from '../MemberListView';
+import SkeletonContainer from "../../SkeletonContainer";
 import {
     infoCourseInitState, infoCourseReducer,
-    setActiveLoading, setShowCourseMembers
+    setActiveLoading
 } from './infomationCourse.reducer';
 import './style.scss';
 
@@ -88,7 +87,7 @@ export const InformationCourse = (props: { course: Course }) => {
     return (
         <div id="course-overview">
             {/* {renderCourseMembersModal()} */}
-            <Skeleton loading={currentCourseLoading}>
+            <SkeletonContainer loading={currentCourseLoading} noTransform>
                 <div className="information-course">
                     <div>
                         {/* {(course?.courseContent as CourseContent)?.videoIntro} */}
@@ -122,13 +121,13 @@ export const InformationCourse = (props: { course: Course }) => {
                     && !!course.cost
                     ? <div className="button-group">
                         <div>
-                            <Button type="primary" size="large" className="btn bgr-green" onClick={() => {
+                            <Button variant="contained" size="large" className="btn bgr-green" onClick={() => {
                                 orderUtils.setReturnUrl(router.asPath);
                                 router.push(getPaymentPageSlug(course._id));
                             }}>Mua ngay</Button>
                         </div>
                         <div>
-                            <Button type="primary" size="large" className="btn bgr-root" onClick={() => {
+                            <Button variant="contained" size="large" className="btn bgr-root" onClick={() => {
                                 orderUtils.addCourseToCart(course._id, () => {
                                     dispatch(createOneAction(Scopes.CART, course._id));
                                 })
@@ -138,7 +137,7 @@ export const InformationCourse = (props: { course: Course }) => {
                     :
                     <>{userCourse?.status !== USER_COURSE_APPROVE && <div className="button-group">
                         <div>
-                            <Button type="primary" size="large" className="btn btn-root" onClick={() => {
+                            <Button variant="outlined" size="large" className="btn btn-root" onClick={() => {
                                 joinCourse()
                             }}>
                                 {userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học'}
@@ -158,7 +157,7 @@ export const InformationCourse = (props: { course: Course }) => {
                         }
                       </Button>
                     </div> */}
-            </Skeleton>
+            </SkeletonContainer>
         </div>
     )
 }

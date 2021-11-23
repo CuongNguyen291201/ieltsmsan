@@ -1,27 +1,22 @@
 import { PhoneOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../redux/reducers";
-import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
-import { getCookie, TOKEN, removeCookie } from '../../sub_modules/common/utils/cookie';
-import { Course } from "../../sub_modules/share/model/courses";
-import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
-import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
-import { apiLogout } from '../../utils/apis/auth';
-import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
-import chooseLanguage from '../../public/default/language.png'
 import { loadListAction } from '../../redux/actions';
+import { AppState } from "../../redux/reducers";
 import { Scopes } from '../../redux/types';
-import orderUtils from '../../utils/payment/orderUtils';
-import "./style.scss";
-import { Grid } from "@material-ui/core";
 import LoginModal from "../../sub_modules/common/components/loginModal";
 import RegisterModal from "../../sub_modules/common/components/registerModal";
+import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { Course } from "../../sub_modules/share/model/courses";
+import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
+import orderUtils from '../../utils/payment/orderUtils';
+import { ROUTER_CART, ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
+import "./style.scss";
 function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -205,54 +200,57 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
           </Grid>
         </div >
         <div className="modal-active-course">
-          <Modal
+          <Dialog
             title="Kích hoạt khoá học "
-            visible={showModalAct}
-            onCancel={hideModal}
-            cancelText="Cancel"
-            footer=""
+            open={showModalAct}
+            onClose={hideModal}
+            fullWidth
+            maxWidth="sm"
           >
-            <div className="wrapper-active-course">
-              <div className="title-active-course">
-                <div>Nhập mã kích hoạt mã học vào ô bên dưới</div>
-              </div>
-              <div className="insert-code">
-                <input type="text" ref={codeRef} />
-              </div>
-              <div style={{ color: 'red' }}>{textError}</div>
-              {courses?.length > 0 &&
-                courses?.map((value, key) => (
-                  <div key={key} className="course-item-modal">
-                    <div className="course-subitem">
-                      <img src={value?.avatar} className="course-avatar-modal" />
-                      <div style={{ textAlign: "left", marginLeft: 2 }}>
-                        <p className="title-course">{value?.name}</p>
-                        <p className="des-course">{value?.shortDesc}</p>
+            <DialogTitle style={{ textAlign: "center" }}>Kích hoạt khoá học</DialogTitle>
+            <DialogContent>
+              <div className="wrapper-active-course">
+                <div className="title-active-course">
+                  <div>Nhập mã kích hoạt mã học vào ô bên dưới</div>
+                </div>
+                <div className="insert-code">
+                  <input type="text" ref={codeRef} />
+                </div>
+                <div style={{ color: 'red' }}>{textError}</div>
+                {courses?.length > 0 &&
+                  courses?.map((value, key) => (
+                    <div key={key} className="course-item-modal">
+                      <div className="course-subitem">
+                        <img src={value?.avatar} className="course-avatar-modal" />
+                        <div style={{ textAlign: "left", marginLeft: 2 }}>
+                          <p className="title-course">{value?.name}</p>
+                          <p className="des-course">{value?.shortDesc}</p>
+                        </div>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <h3>{value?.cost.toLocaleString('vi', { currency: 'VND' })} VNĐ</h3>
+                        <div>Mã Code</div>
+                        <div className="title-course">{codeRef.current.value}</div>
+                        {
+                          !checkCourseIsActive(value?._id) ?
+                            <Button size="small" variant="contained" onClick={() => handleActiveCode(value)} style={{ backgroundColor: '#3fb307', borderColor: '#3fb307' }}>Kích hoạt</Button> :
+                            <Button size="small" variant="contained" style={{ backgroundColor: '#d9534f', borderColor: '#d9534f' }}>Đã kích hoạt</Button>
+                        }
                       </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <h3>{value?.cost.toLocaleString('vi', { currency: 'VND' })} VNĐ</h3>
-                      <div>Mã Code</div>
-                      <div className="title-course">{codeRef.current.value}</div>
-                      {
-                        !checkCourseIsActive(value?._id) ?
-                          <Button size="small" type="primary" onClick={() => handleActiveCode(value)} style={{ backgroundColor: '#3fb307', borderColor: '#3fb307' }}>Kích hoạt</Button> :
-                          <Button size="small" type="primary" style={{ backgroundColor: '#d9534f', borderColor: '#d9534f' }}>Đã kích hoạt</Button>
-                      }
-                    </div>
-                  </div>
-                ))}
-              <div className="search-code">
-                <button onClick={loadCourseByCode}>Tìm kiếm</button>
+                  ))}
+                <div className="search-code">
+                  <button onClick={loadCourseByCode}>Tìm kiếm</button>
+                </div>
               </div>
-            </div>
-            <div className="giai-dap-thac-mac">
-              <div>Giải đáp thắc mắc Hotline:</div>{" "}
-              <div>
-                <PhoneOutlined /> {props.hotLine ?? ""}
+              <div className="giai-dap-thac-mac">
+                <div>Giải đáp thắc mắc Hotline:</div>{" "}
+                <div>
+                  <PhoneOutlined /> {props.hotLine ?? ""}
+                </div>
               </div>
-            </div>
-          </Modal>
+            </DialogContent>
+          </Dialog>
           <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
           <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
         </div>

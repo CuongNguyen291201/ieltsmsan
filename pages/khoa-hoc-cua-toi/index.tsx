@@ -1,7 +1,7 @@
-import { Badge } from "antd";
+import { Badge as MuiBadge, createStyles, Grid, withStyles } from "@material-ui/core";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CourseItem from '../../components/CourseItem';
 import Layout from '../../components/Layout';
@@ -10,7 +10,6 @@ import { AppState } from "../../redux/reducers";
 import { wrapper } from "../../redux/store";
 import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
-import { removeCookie, TOKEN } from "../../sub_modules/common/utils/cookie";
 import UserCourse from '../../sub_modules/share/model/userCourse';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
@@ -18,7 +17,6 @@ import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetMyCourses } from "../../utils/apis/courseApi";
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
-import { Grid } from '@material-ui/core';
 import './style.scss';
 const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial }) => {
     const router = useRouter();
@@ -34,6 +32,17 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: W
                 })
         }
     }, [currentUser]);
+
+    const Badge = withStyles((_) => createStyles({
+        root: {
+            width: "100%"
+        },
+        badge: {
+            right: "40px",
+            top: "10px",
+            borderRadius: 0
+        }
+    }))(MuiBadge);
 
     return (
         <Layout {...props}>
@@ -51,9 +60,9 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: W
                                 const e = userCourse.course
                                 return (
                                     <Grid key={e._id} item xs={12} sm={6} md={3}>
-                                        <Badge.Ribbon text="Quá hạn học" color="red" style={!userCourse.isExpired && { display: 'none' }}>
+                                        <Badge badgeContent="Quá hạn học" invisible={!!userCourse.isExpired} color="secondary">
                                             <CourseItem course={e} ownCourse />
-                                        </Badge.Ribbon>
+                                        </Badge>
                                     </Grid>
                                 )
                             })}

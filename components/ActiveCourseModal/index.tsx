@@ -1,16 +1,12 @@
-import CircularProgress from '@material-ui/core/CircularProgress';
-import message from 'antd/lib/message';
-import Button from 'antd/lib/button';
-import Divider from 'antd/lib/divider';
-import Input from 'antd/lib/input';
-import Modal from 'antd/lib/modal/Modal';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, TextField } from "@material-ui/core";
+import { useSnackbar } from "notistack";
 import React, { memo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserCourseAction } from '../../redux/actions/course.actions';
-import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { apiActiveCode } from '../../utils/apis/courseApi';
 import orderUtils from '../../utils/payment/orderUtils';
 import { getPaymentPageSlug } from '../../utils/router';
+import DividerText from "../DividerText";
 import './style.scss';
 
 const ActiveCourseModal = (props: {
@@ -20,15 +16,16 @@ const ActiveCourseModal = (props: {
   className?: string;
 }) => {
   const { courseId, isVisible, setVisible, className } = props;
-  const inputRef = useRef<Input>();
+  const inputRef = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
   const [isActivating, setActivating] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleActiveCourse = () => {
     if (isActivating) return;
-    const code = inputRef.current?.input.value;
+    const code = inputRef.current?.value;
     if (!code) {
-      message.warning("Vui lòng nhập code");
+      enqueueSnackbar("Vui lòng nhập code", { variant: "warning" });
       return;
     }
     setActivating(true);
@@ -37,13 +34,13 @@ const ActiveCourseModal = (props: {
     apiActiveCode({ code, courseId })
       .then((uc) => {
         dispatch(setUserCourseAction(uc));
-        if (!!uc) message.success("Kích hoạt thành công");
-        else message.info("Kích hoạt không thành công")
+        if (!!uc) enqueueSnackbar("Kích hoạt thành công", { variant: "success" });
+        else enqueueSnackbar("Kích hoạt không thành công", { variant: "info" });
         setActivating(false);
         setVisible(false);
       })
       .catch((e: Error) => {
-        message.warning(e?.message || 'Có lỗi xảy ra!');
+        enqueueSnackbar(e?.message || 'Có lỗi xảy ra!', { variant: "error" });
         setActivating(false);
       })
   }
@@ -54,44 +51,48 @@ const ActiveCourseModal = (props: {
   }
 
   return (
-    <Modal
-      visible={isVisible}
+    <Dialog
+      open={isVisible}
       className={`active-course-modal${className ? ` ${className}` : ''}`}
-      footer={null}
-      destroyOnClose
-      onCancel={(e) => {
-        e.preventDefault();
+      onClose={() => {
         setActivating(false);
         setVisible(false)
       }}
+      fullWidth
+      maxWidth="sm"
     >
-      <div className="m-title-block"><h3>MUA KHOÁ HỌC</h3></div>
-      <div id="active-code-block">
-        <label htmlFor="active-code-input">Nhập code</label>
-        <Input id="active-code-input" ref={inputRef} />
-        <Button
-          type="primary"
-          onClick={handleActiveCourse}
-          className="active-course-button"
-        >
-          {
-            isActivating
-              ? <CircularProgress size={20} style={{ color: "white" }} />
-              : 'KÍCH HOẠT'
-          }
-        </Button>
-      </div>
-      <Divider plain>Hoặc</Divider>
-      <div id="buy-block">
-        <Button
-          type="primary"
-          onClick={handleBuyCourse}
-          className="active-course-button"
-        >
-          MUA NGAY
-        </Button>
-      </div>
-    </Modal>
+      <DialogTitle>
+        <div className="m-title-block"><h3>MUA KHOÁ HỌC</h3></div>
+      </DialogTitle>
+      <DialogContent>
+        <div id="active-code-block">
+          <label htmlFor="active-code-input">Nhập code</label>
+          {/* <Input id="active-code-input" ref={inputRef} /> */}
+          <TextField id="active-code-input" variant="outlined" size="small" type="text" inputRef={inputRef} />
+          <Button
+            variant="contained"
+            onClick={handleActiveCourse}
+            className="active-course-button"
+          >
+            {
+              isActivating
+                ? <CircularProgress size={20} style={{ color: "white" }} />
+                : 'KÍCH HOẠT'
+            }
+          </Button>
+        </div>
+        <DividerText label="Hoặc" />
+        <div id="buy-block">
+          <Button
+            variant="contained"
+            onClick={handleBuyCourse}
+            className="active-course-button"
+          >
+            MUA NGAY
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

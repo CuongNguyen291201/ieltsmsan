@@ -1,7 +1,8 @@
-import { Col, Pagination, Row } from 'antd';
+import { Grid } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { Fragment, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import CategoryNews from '../../sub_modules/share/model/categoryNews';
 import News from '../../sub_modules/share/model/news';
 import { ROUTER_NEWS } from '../../utils/router';
@@ -37,21 +38,21 @@ const NewsCategoryView = (props: {
     <div className="content-news">
       <div className="container">
         <div className="wraper-item-news">
-          <Row>
-            <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+          <Grid container>
+            <Grid item xs={12} lg={8}>
               <h1 className="title-News-1">Tin Tức</h1>
               {newsList.map((item, key) => {
                 const newsSlug = `/${item.slug}-post${item._id}`;
                 return (
-                  <Fragment key={key}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Grid container key={key}>
+                    <Grid item xs={12}>
                       <Link href={newsSlug} as={newsSlug}>
                         <a className="item-full-news">
-                          <div className="item-news">
-                            <Col lg={10} xl={10} >
+                          <Grid container className="item-news">
+                            <Grid item xs={12} lg={5}>
                               <div className="image"><img src={item?.avatarUrl} alt={item?.avatarUrl} /></div>
-                            </Col>
-                            <Col lg={14} xl={14}>
+                            </Grid>
+                            <Grid xs={12} lg={7}>
                               <div className="inf-news">
                                 <h3 className="title-item-news dot-2">{item?.title}</h3>
                                 <p className="dot-3 des-full-news"> {item.description}</p>
@@ -59,19 +60,19 @@ const NewsCategoryView = (props: {
                                   <div className="xem-them">Xem thêm</div>
                                 </div>
                               </div>
-                            </Col>
-                          </div>
+                            </Grid>
+                          </Grid>
                         </a>
                       </Link>
-                    </Col>
-                  </Fragment>
+                    </Grid>
+                  </Grid>
                 )
               })}
               <div className="wraper-pagination">
-                <Pagination current={page} onChange={onPageChange} total={totalNews} pageSize={newsLimit} hideOnSinglePage />
+                <Pagination page={page} count={Math.ceil((totalNews || 1) / newsLimit)} onChange={(e, page) => { onPageChange(page) }} shape="rounded" />
               </div>
-            </Col>
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} className="right-category">
+            </Grid>
+            <Grid item xs={12} lg={4} className="right-category">
               <div>
                 <h2 className="title-News-1">Danh mục</h2>
                 <div className="wraper-item-category-news">
@@ -89,8 +90,8 @@ const NewsCategoryView = (props: {
                   })}
                 </div>
               </div>
-            </Col>
-          </Row>
+            </Grid>
+          </Grid>
         </div>
       </div>
     </div>

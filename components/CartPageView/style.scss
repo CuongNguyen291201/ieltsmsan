@@ -1,5 +1,4 @@
 .course-order {
-  margin-top: -1px;
   min-height: 500px;
   background: #eef1f2;
   position: relative;
@@ -34,6 +33,7 @@
       }
       .infor-order {
         padding: 10px;
+        position: relative;
         .infor-order-close {
           position: absolute;
           z-index: 2;
@@ -62,10 +62,9 @@
   }
   .total-price-left-panel {
     padding: 20px 15px  15px 15px;
-    > div {
+    &-main {
       padding: 20px;
       background: white;
-      border-radius: 15px;
     }
     .infor-label {
       font-size: 16px;

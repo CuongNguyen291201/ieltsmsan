@@ -1,5 +1,5 @@
 import { Paper, Tooltip } from '@material-ui/core';
-import { Rate } from 'antd';
+import { Rating } from "@material-ui/lab";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
@@ -27,7 +27,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
   const nameCourse = course.name
   return (
     <Link href={courseSlug} passHref>
-      <a onClick={(e) => { e.preventDefault() }}>
+      <a onClick={(e) => { e.preventDefault() }} style={{ width: "100%" }}>
         <Paper elevation={5}>
           <div className="crs-avatar">
             {/* <img src={course.avatar || itemAvatar} alt={course.name} /> */}
@@ -68,7 +68,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
             <div className="crs-rating">
               <div className="crs-point">{String(4.6).replace('.', ',')}</div>
               <div className="vote-star">
-                <Rate className="vote-rate" disabled allowHalf defaultValue={4.5} />
+                <Rating className="vote-rate" readOnly value={4.5} precision={0.5} />
               </div>
               <div className="crs-mem">({500})</div>
             </div>
@@ -81,7 +81,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
               Video
             </div> */}
           </div>
-          </Paper>
+        </Paper>
       </a>
     </Link>
   )

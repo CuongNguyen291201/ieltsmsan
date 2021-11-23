@@ -1,23 +1,22 @@
-import { message } from 'antd';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { _Category, _Topic } from '../../custom-types';
+import { _Topic } from '../../custom-types';
 import { MapExamType } from "../../custom-types/MapContraint";
 import releaseDate from '../../public/default/icon-release-date.png';
 import iconIsDone from '../../public/default/isDone.png';
 import iconLockLession from '../../public/default/lock-course.png';
-import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { EXAM_TYPE_IELTS, STATUS_OPEN, TOPIC_CONTENT_TYPE_CARD, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO, USER_TYPE_HAS_ROLE } from '../../sub_modules/share/constraint';
+import { STATUS_OPEN, TOPIC_CONTENT_TYPE_CARD, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
 import { apiOffsetTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
 import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
 import { getTopicPageSlug } from '../../utils/router';
 import TopicIcon from './TopicIcon';
+
 const LOAD_LIMIT = 40;
 export type TopicNodeProps = {
   topic: _Topic;
@@ -41,6 +40,7 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
   });
   const router = useRouter();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     isTopicHasChild,
@@ -110,7 +110,7 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
         return;
       }
     } else if (!isOverStartTime && topic.startTime > 0) {
-      message.info("Bài học chưa được phát hành.")
+      enqueueSnackbar("Bài học chưa được phát hành.", { variant: "info" });
       return;
     } else {
       if (isJoinedCourse) {

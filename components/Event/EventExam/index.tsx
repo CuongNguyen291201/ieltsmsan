@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Row, Col, Statistic } from 'antd';
 import { useRouter } from 'next/router';
 import moment from "moment";
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +10,8 @@ import { updateTopicExerciseAction } from '../../../redux/actions/topic.action';
 import { EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../../sub_modules/share/constraint';
 import defaultAvatar from '../../../public/event/default-avatar-rank.png';
 import './style.scss';
+import { Grid } from "@material-ui/core";
 
-const { Countdown } = Statistic;
 
 const EventExam = () => {
     const dispatch = useDispatch();
@@ -66,8 +65,8 @@ const EventExam = () => {
             <div className="event-exam">
                 <div className="main-event-exam">
                     <div className="container">
-                        <Row>
-                            <Col xs={24} sm={24} md={24} lg={8}>
+                        <Grid container>
+                            <Grid item xs={12} lg={4}>
                                 <div>
                                     <div className="event-btn" onClick={() => router.back()}>
                                         Quay lại
@@ -76,7 +75,7 @@ const EventExam = () => {
                                         (startTimeTest >= currentTime) &&
                                         <div className="event-btn countdown">
                                             <div className="statistic-countdown">
-                                                <Countdown value={startTimeTest} />
+                                                {/* <Countdown value={startTimeTest} /> */}
                                             </div>
                                         </div>
                                     }
@@ -99,9 +98,9 @@ const EventExam = () => {
                                         // </div>
                                     }
                                 </div>
-                            </Col>
+                            </Grid>
 
-                            <Col xs={24} sm={24} md={24} lg={16}>
+                            <Grid item xs={12} lg={8}>
                                 <div className="table-statistical">
                                     <label>Bảng xếp hạng</label>
 
@@ -164,8 +163,8 @@ const EventExam = () => {
                                         </>
                                     }
                                 </div>
-                            </Col>
-                        </Row>
+                            </Grid>
+                        </Grid>
                     </div>
                 </div>
             </div>

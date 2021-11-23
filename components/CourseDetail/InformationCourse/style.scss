@@ -146,9 +146,8 @@
       }
       .btn {
         min-width: 48%;
-        &:hover {
-          filter: brightness(1.5);
-        }
+        text-transform: none;
+        color: #fff;
       }
       .bgr-green {
         background-color: green;

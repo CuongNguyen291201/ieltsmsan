@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem } from '@material-ui/core';
 import { CreateTwoTone, HeadsetTwoTone, Launch, MenuBookTwoTone, RateReview, SettingsVoiceTwoTone } from "@material-ui/icons";
-import { message } from "antd";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { MouseEvent, PropsWithoutRef, useCallback, useMemo, useState } from "react";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,6 +44,7 @@ const SkillInfoItem = (props: PropsWithoutRef<{
   const [openMarkList, setOpenMarkList] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { percent, gameButtonLabel } = useMemo(() => {
     let percent = 0;
@@ -103,7 +104,7 @@ const SkillInfoItem = (props: PropsWithoutRef<{
       return;
     }
     if (!canPlayTopic({ topic, isJoinedCourse })) {
-      message.warning('Chưa tham gia khoá học');
+      enqueueSnackbar('Chưa tham gia khoá học', { variant: "warning" });
       if (currentCourse.cost) {
         dispatch(setActiveCourseModalVisibleAction(true));
       }
@@ -120,7 +121,7 @@ const SkillInfoItem = (props: PropsWithoutRef<{
     if ((prepareStatusGame === GAME_STATUS_PREPARE_PLAY || prepareStatusGame === GAME_STATUS_PREPARE_CONTINUE) && skillInfo.skill.type === SKILL_TYPE_SPEAKING) {
       navigator.mediaDevices.getUserMedia({ audio: true, video: false })
         .catch((err) => {
-          message.warning("Your microphone is not available!");
+          enqueueSnackbar("Your microphone is not available!", { variant: "warning" });
           console.error('Microphone error: ', err);
           return;
         })

@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core';
-import { message } from 'antd';
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
@@ -29,12 +29,13 @@ const ExerciseView = (props: { currentTopic: Topic; studyScore?: StudyScore | nu
   const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const dispatch = useDispatch();
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   function playGame() {
     if (currentUser) {
       if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
         router.push(getGameSlug(currentTopic._id));
       } else {
-        message.warning('Chưa tham gia khoá học!');
+        enqueueSnackbar('Chưa tham gia khoá học!', { variant: "warning" });
         if (currentCourse.cost) {
           dispatch(setActiveCourseModalVisibleAction(true));
         }
@@ -115,12 +116,13 @@ const NoExerciseView = (props: { currentTopic: any, currentUser: any }) => {
   const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const dispatch = useDispatch();
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   function playGame() {
     if (currentUser) {
       if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
         router.push(getGameSlug(currentTopic._id));
       } else {
-        message.warning('Chưa tham gia khoá học!');
+        enqueueSnackbar('Chưa tham gia khoá học!', { variant: "warning" });
         if (currentCourse.cost) {
           dispatch(setActiveCourseModalVisibleAction(true));
         }

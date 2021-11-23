@@ -1,10 +1,10 @@
 @import "../../styles/variables.scss";
 .active-course-modal {
-  width: 600px !important;
   .active-course-button {
     background-color: $root-color !important;
     border-color: $root-color !important;
     min-width: 104.24px;
+    color: #fff;
     &:hover {
       filter: brightness(1.5);
     }
@@ -17,12 +17,19 @@
   #active-code-block {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
+    gap: 10px;
     label {
       font-weight: 600;
     }
     #active-code-input {
-      width: 60%;
+      width: 300px;
+    }
+    @media (max-width: 576px) {
+      flex-direction: column;
+      #active-code-input {
+        width: 100%;
+      }
     }
   }
   #buy-block {

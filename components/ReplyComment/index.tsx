@@ -1,12 +1,30 @@
-import { Button, Col, Form, message, Modal, Row, Select, Table } from 'antd';
+import {
+  Box, Button,
+  Card,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogActions,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select, Table, TableBody, TableCell, TableContainer,
+  TableHead,
+  TextField
+} from "@material-ui/core";
+import { Autocomplete, Pagination } from "@material-ui/lab";
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useSnackbar } from "notistack";
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Column, useTable } from "react-table";
 import { CommentScopes, _Category } from '../../custom-types';
 import { PAGE_COURSE_DETAIL, PAGE_TOPIC_DETAIL } from '../../custom-types/PageType';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
+import { DialogContent, TableRow } from "../../sub_modules/live-game/node_modules/@material-ui/core";
 import { formatFullDateTime } from '../../utils';
 import { apiGetAllCourse } from '../../utils/apis/courseApi';
 import { apiDiscussionsById, apiListDiscussionsByFilter, apiUpdateReply } from '../../utils/apis/notificationApi';
@@ -15,7 +33,6 @@ import SanitizedDiv from '../SanitizedDiv';
 import './style.scss';
 
 const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
-const { Option } = Select;
 
 const ReplyComment = (props: { category: _Category; childCategories: _Category[]; }) => {
   useScrollToTop();
@@ -29,9 +46,67 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
   const [keyTable, setKeyTable] = useState(Math.random());
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [dataSelect, setDataSelect] = useState(null);
+  const [dataSelect, setDataSelect] = useState<any[]>([]);
   const [current, setCurrent] = useState(1)
-  const [dataFilter, setDataFilter] = useState<any>({})
+  const [dataFilter, setDataFilter] = useState<any>({});
+  const [courseFilter, setCourseFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(-1);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const _columns: Array<Column<{
+    index: JSX.Element;
+    content: JSX.Element;
+    createDate: string;
+    replyStatus: JSX.Element;
+    viewDetail: JSX.Element;
+  }>> = useMemo(() => [
+    { Header: 'STT', accessor: 'index' },
+    { Header: 'Nội dung', accessor: 'content' },
+    { Header: 'Ngày tạo', accessor: 'createDate' },
+    { Header: 'Trạng thái', accessor: 'replyStatus' },
+    { Header: 'Xem chi tiết', accessor: 'viewDetail' }
+  ], []);
+
+  const data = useMemo(() => {
+    return dataNoti.map((row, index) => ({
+      index: <span style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{(current - 1) * 20 + index + 1}</span>,
+      content: <>
+        <div>
+          <strong style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{row.user?.name}</strong> đã bình luận trong {row.topicId ? `bài học ${row.topicName || row?.topic?.name}` : `khóa học ${row.courseName || row?.course?.name}`}
+        </div>
+        <div>
+          <SanitizedDiv className="text-html" content={row.content} />
+        </div>
+        <div>
+          <Button style={{ textTransform: "none" }} size="small" variant="outlined" onClick={() => handleReply(row)}>Trả lời</Button>
+        </div>
+      </>,
+      createDate: `${formatFullDateTime(row.createDate)}`,
+      replyStatus: <>
+        <Select
+          defaultValue={row.replyStatus}
+          onChange={(e: ChangeEvent<{ value: number }>) => handleUpdateReply(row._id, e.target.value, index)}
+          style={{
+            width: 120,
+            color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset')
+          }}
+        >
+          <MenuItem value={0}>Chưa trả lời</MenuItem>
+          <MenuItem value={1}>Đã trả lời</MenuItem>
+          <MenuItem value={2}>Note</MenuItem>
+        </Select>
+      </>,
+      viewDetail: <Button style={{ textTransform: "none" }} size="small" variant="outlined" onClick={() => handleRouter(row)}>Xem chi tiết</Button>
+    }))
+  }, [dataNoti, current]);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    rows,
+    prepareRow,
+    headers,
+  } = useTable({ columns: _columns, data });
 
   useEffect(() => {
     if (currentUser?._id) {
@@ -57,23 +132,7 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
     }
   }, [currentUser]);
 
-  // function onChange(value) {
-  //   console.log(`selected ${value}`);
-  // }
-
-  // function onBlur() {
-  //   console.log('blur');
-  // }
-
-  // function onFocus() {
-  //   console.log('focus');
-  // }
-
-  // function onSearch(val) {
-  //   console.log('search:', val);
-  // }
-
-  const handleRouter = (row) => {
+  const handleRouter = (row: any) => {
     router.push({
       pathname: getBrowserSlug(row.topic?.slug || row.course?.slug, row.topic?.type ? PAGE_TOPIC_DETAIL : PAGE_COURSE_DETAIL, row.topic?._id || row.course?._id),
       query: {
@@ -83,132 +142,25 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
     });
   }
 
-  const columns = [
-    {
-      title: 'STT',
-      dataIndex: null,
-      width: '5%',
-      // fixed: true,
-      render: (text, row, index) => <span style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{index + 1}</span>,
-    },
-    {
-      title: 'Nội dung',
-      name: 'content',
-      dataIndex: 'content',
-      width: '46%',
-      render: (text, row, index) => (
-        <React.Fragment>
-          <div>
-            <strong style={{ color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset') }}>{row.user?.name}</strong> đã bình luận trong {row.topicId ? `bài học ${row.topicName || row?.topic?.name}` : `khóa học ${row.courseName || row?.course?.name}`}
-          </div>
-          <div>
-            <SanitizedDiv className="text-html" content={row.content} />
-          </div>
-          <div>
-            <Button style={{ borderRadius: '4px' }} onClick={() => handleReply(row)}>Trả lời</Button>
-          </div>
-        </React.Fragment>
-      ),
-    },
-    {
-      title: 'Ngày tạo',
-      name: 'createDate',
-      dataIndex: 'createDate',
-      width: '15%',
-      render: text => (
-        <span>{formatFullDateTime(text)}</span>
-      )
-    },
-    {
-      title: 'Trạng thái',
-      name: 'replyStatus',
-      width: '19%',
-      dataIndex: 'replyStatus',
-      render: (text, row, index) => (
-        <React.Fragment>
-          <Select
-            style={{
-              width: 120,
-              color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset')
-            }}
-            defaultValue={text}
-            onChange={(value) => handleUpdateReply(row._id, value, index)}
-          // onFocus={onFocus}
-          // onBlur={onBlur}
-          // onSearch={onSearch}
-          >
-            <Option value={0}>Chưa trả lời</Option>
-            <Option value={1}>Đã trả lời</Option>
-            <Option value={2}>Note</Option>
-          </Select>
-        </React.Fragment>
-      )
-    },
-    {
-      title: 'Xem chi tiết',
-      dataIndex: null,
-      width: '15%',
-      render: (text, row) => (
-        <Button style={{ borderRadius: '4px' }} onClick={() => handleRouter(row)}>Xem chi tiết</Button>
-      )
-      // render: (text, record) => (
-      //   <Space size="middle">
-      //     <a>Invite {record.name}</a>
-      //     <a>Delete</a>
-      //   </Space>
-      // ),
-    },
-  ];
-
-  const layout = {
-    labelCol: {
-      sm: { span: 7 },
-      xs: { span: 7 },
-      md: { span: 7 },
-      xl: { span: 7 },
-    },
-    wrapperCol: {
-      xs: { span: 17 },
-      sm: { span: 17 },
-      md: { span: 17 },
-      xl: { span: 17 },
-    },
-  };
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
-
-  const onFinish = (values: any) => {
-    setLoading(true)
-    const queryName = {
-      target: currentUser?._id,
-      offset: 0,
-      limit: 20,
-      courseId: values.courseId,
-      replyStatus: values.replyStatus
+  const handleFilter = () => {
+    setLoading(true);
+    const queryFilter = {
+      offset: 0, limit: 20,
+      courseId: courseFilter?._id,
+      replyStatus: statusFilter === -1 ? undefined : statusFilter
     }
-    if (values.courseId === '0') {
-      delete queryName.courseId;
-    }
-    if (values.replyStatus === -1) {
-      delete queryName.replyStatus;
-    }
-    apiListDiscussionsByFilter(queryName)
+    apiListDiscussionsByFilter(queryFilter)
       .then((data) => {
         if (data?.data?.result) {
           setDataNoti([...data.data.result])
           setTotal(data.data.total)
           setLoading(false)
           setCurrent(1)
-          setKeyTable(Math.random())
-          setDataFilter(queryName)
+          setKeyTable(Math.random());
+          setDataFilter(queryFilter);
         }
-      });
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
+      })
+  }
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -241,7 +193,7 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
           setTotal(data.data.total)
           setLoading(false)
           setCurrent(newPage)
-          setKeyTable(Math.random())
+          setKeyTable(Math.random());
         }
       });
     // onPagination(newPage, newPageSize || 10);
@@ -258,119 +210,123 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
           }
           // console.log('dataTemp: ', dataTemp);
 
-          setDataNoti([...dataTemp])
-          message.success('Cập nhật trạng thái thành công');
+          setDataNoti([...dataTemp]);
+          enqueueSnackbar('Cập nhật trạng thái thành công', { variant: "success" });
         } else {
-          message.error('Cập nhật trạng thái thất bại');
+          enqueueSnackbar('Cập nhật trạng thái thất bại', { variant: "error" })
         }
       })
   }
 
-  // console.log('dataSelect: ', dataSelect);
-
   return (
     <React.Fragment>
       <div className="container reply-comment">
-        <Form
-          initialValues={{
-            courseId: '0',
-            replyStatus: 0
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          style={{ marginTop: '20px' }}
-        >
-          <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
-            <Col xl={10} md={12} xs={24}>
-              <Form.Item
-                {...layout}
-                labelAlign='left'
-                label="Chọn khóa học"
-                name="courseId"
-              >
-                <Select
-                  showSearch
-                  optionFilterProp="children"
-                // onChange={onChange}
-                // onFocus={onFocus}
-                // onBlur={onBlur}
-                // onSearch={onSearch}
-                >
-                  <Option value="0">Tất cả</Option>
-                  {dataSelect?.map((item) => (
-                    <Option key={item._id} value={item._id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xl={10} md={12} xs={24}>
-              <Form.Item
-                {...layout}
-                labelAlign='left'
-                label="Chọn trạng thái"
-                name="replyStatus"
-              >
-                <Select
-                // onChange={onChange}
-                // onFocus={onFocus}
-                // onBlur={onBlur}
-                // onSearch={onSearch}
-                >
-                  <Option value={-1}>Tất cả</Option>
-                  <Option value={0}>Chưa trả lời</Option>
-                  <Option value={1}>Đã trả lời</Option>
-                  <Option value={2}>Note</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xl={4} md={12} xs={24}>
-              <Form.Item>
-                <Button
-                  htmlType="submit"
-                  style={{ borderRadius: '4px' }}
-                >
-                  Tìm kiếm
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-        <Table
-          columns={columns}
-          key={keyTable}
-          dataSource={dataNoti}
-          pagination={{
-            onChange: onPageChange,
-            pageSize: 20,
-            current,
-            total,
-            position: ['bottomRight'],
-          }}
-          loading={loading}
-          scroll={{ x: '100vh', y: '65vh' }}
-        />
+        <Card style={{ margin: "20px 0" }} elevation={2}>
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  id="filter-course"
+                  options={dataSelect}
+                  getOptionLabel={(option) => option.name}
+                  fullWidth
+                  renderInput={(params) => <TextField {...params} label="Chọn khoá học" variant="outlined" fullWidth />}
+                  size="small"
+                  value={courseFilter}
+                  onChange={(e, value) => {
+                    setCourseFilter(value)
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <FormControl size="small" fullWidth variant="outlined">
+                  <InputLabel id="filter-status">Chọn trạng thái</InputLabel>
+                  <Select
+                    labelId="filter-status"
+                    value={statusFilter}
+                    label="Chọn trạng thái"
+                    autoWidth
+                    onChange={(e: ChangeEvent<{ value: number }>) => {
+                      setStatusFilter(e.target.value);
+                    }}
+                  >
+                    <MenuItem value={-1}>Tất cả</MenuItem>
+                    <MenuItem value={0}>Chưa trả lời</MenuItem>
+                    <MenuItem value={1}>Đã trả lời</MenuItem>
+                    <MenuItem value={2}>Note</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </CardContent>
+          <CardActions>
+            <div style={{ marginLeft: "auto" }}>
+              <Button variant="outlined" onClick={handleFilter}>
+                Tìm kiếm
+              </Button>
+            </div>
+          </CardActions>
+        </Card>
+
+
+        <TableContainer style={{ maxHeight: 700, margin: "20px 0" }}>
+          <Table key={keyTable} {...getTableProps()} style={{ minWidth: "992px" }} stickyHeader>
+            <TableHead>
+              <TableRow>
+                {headers.map((header, i) => (
+                  <TableCell {...header.getHeaderProps()}>{header.Header}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+
+            <TableBody {...getTableBodyProps()}>
+              {rows.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <TableRow {...row.getRowProps()}>
+                    {row.cells.map((cell, i) => (
+                      <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Box style={{ display: "flex", justifyContent: "flex-end", margin: "20px 0", paddingBottom: "20px" }}>
+          <Pagination
+            shape="rounded"
+            count={Math.ceil((total || 1) / 20)}
+            page={current}
+            onChange={(e, page) => {
+              onPageChange(page);
+            }}
+          />
+        </Box>
       </div>
-      <Modal
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+      <Dialog
+        open={isModalVisible}
+        onClose={handleCancel}
         key={key}
-        width={700}
-        bodyStyle={{ overflow: "auto", maxHeight: '500px' }}
-        footer={[
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogContent>
+          <CommentPanel discussions={discussions} commentScope={CommentScopes.COURSE} />
+
+        </DialogContent>
+        <DialogActions>
           <Button
             key="back"
             onClick={handleCancel}
-            style={{ borderRadius: '4px' }}
+            style={{ textTransform: "none" }}
+            size="small" variant="outlined"
           >
             Tắt
-          </Button>,
-        ]}
-      >
-        <CommentPanel discussions={discussions} commentScope={CommentScopes.COURSE} />
-      </Modal>
+          </Button>
+        </DialogActions>
+      </Dialog>
     </React.Fragment>
   );
 };

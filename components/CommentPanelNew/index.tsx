@@ -1,22 +1,21 @@
+import DOMPurify from 'isomorphic-dompurify';
+import { useRouter } from 'next/router';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux';
 import { Comment, CommentScopes } from '../../custom-types';
+import { useSocket } from '../../hooks/socket';
+import liveDown from '../../public/icon/live-down.svg';
+import { createOneAction } from '../../redux/actions';
 import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction, resetCommentStateAction } from '../../redux/actions/comment.action';
 import { AppState } from '../../redux/reducers';
+import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import Discussion from '../../sub_modules/share/model/discussion';
+import { apiDiscussionsById } from '../../utils/apis/notificationApi';
+import { canPlayTopic } from "../../utils/permission/topic.permission";
 import CommentItem from '../CommentItemNew';
 import CreateNewComment from '../CreateNewCommentNew';
 import './style.scss';
-import DOMPurify from 'isomorphic-dompurify';
-import { useSocket } from '../../hooks/socket';
-import { createOneAction } from '../../redux/actions';
-import { Scopes } from '../../redux/types';
-import { apiDiscussionsById } from '../../utils/apis/notificationApi';
-import { TextAreaRef } from 'antd/lib/input/TextArea';
-import liveDown from '../../public/icon/live-down.svg';
-import { canPlayTopic } from "../../utils/permission/topic.permission";
 
 const LOAD_LIMIT = 10;
 
@@ -29,7 +28,7 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
   const { commentsList, isShowLoadMoreComments, mapReplies } = useSelector((state: AppState) => state.commentReducer);
   const [dataComment, setDataComment] = useState([]);
   const [dataCommentFirst, setDataCommentFirst] = useState<Discussion>();
-  const commentRef = useRef<TextAreaRef>();
+  const commentRef = useRef<HTMLTextAreaElement>();
 
   const { courseId, topicId } = useMemo(() => ({
     courseId: (currentCourse?._id ?? currentTopic?.courseId) || null,
@@ -102,7 +101,7 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
 
   const dispatch = useDispatch();
   const pushComment = useCallback(() => {
-    const content = commentRef.current?.resizableTextArea?.textArea?.innerHTML;
+    const content = commentRef.current?.value;
     if (!content) return;
     if (!currentUser) {
       return dispatch(showLoginModalAction(true));
@@ -119,7 +118,7 @@ const CommentPanel = (props: { commentScope: CommentScopes, discussions?: Discus
         }),
         user: currentUser
       }));
-      commentRef.current.resizableTextArea.textArea.innerHTML = '';
+      commentRef.current.value = '';
     }
   }, [currentUser]);
 
@@ -166,7 +165,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
   const { currentTopic } = useSelector((state: AppState) => state.topicReducer);
   const { mapReplies, mapShowLoadMoreReplies } = useSelector((state: AppState) => state.commentReducer);
 
-  const replyRef = useRef<TextAreaRef>();
+  const replyRef = useRef<HTMLTextAreaElement>();
   const dispatch = useDispatch();
 
   const { courseId, topicId } = useMemo(() => ({
@@ -175,7 +174,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
   }), [currentCourse, currentTopic]);
 
   const pushReply = (parentId: string) => {
-    const content = replyRef.current?.resizableTextArea?.textArea?.innerHTML;
+    const content = replyRef.current?.value;
     if (!content) return;
     if (!currentUser) {
       dispatch(showLoginModalAction(true));
@@ -197,7 +196,7 @@ const CommentSectionItem = (props: { discussion: Discussion, discussionId: strin
         }),
         user: currentUser
       }));
-      replyRef.current.resizableTextArea.textArea.innerHTML = '';
+      replyRef.current.value = '';
     }
   }
 

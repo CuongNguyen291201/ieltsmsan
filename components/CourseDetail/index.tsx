@@ -1,16 +1,16 @@
-import { Col, Row, Skeleton } from 'antd';
+import { Grid } from "@material-ui/core";
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { setActiveCourseModalVisibleAction, setUserCourseAction, setUserCourseLoadingAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { Course } from '../../sub_modules/share/model/courses';
 import WebInfo from '../../sub_modules/share/model/webInfo';
-import { apiGetUserCourse, apiJoinCourse } from '../../utils/apis/courseApi';
+import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import ActiveCourseModal from '../ActiveCourseModal';
+import SkeletonContainer from "../SkeletonContainer";
 import { ContentCourse } from './content-course';
 import {
   courseDetailInitState,
@@ -37,19 +37,19 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
 
   useEffect(() => {
     dispatch(setUserCourseLoadingAction(true));
-      if (!!currentUser) {
-        apiGetUserCourse({ courseId: course._id })
-          .then((uc) => {
-            dispatch(setUserCourseAction(uc));
-            uiLogic(setActiveLoading(false));
-          })
-          .catch((e) => {
-            console.error(e);
-            showToastifyWarning('Có lỗi xảy ra!');
-          });
-      } else {
-        dispatch(setUserCourseAction(null));
-      }
+    if (!!currentUser) {
+      apiGetUserCourse({ courseId: course._id })
+        .then((uc) => {
+          dispatch(setUserCourseAction(uc));
+          uiLogic(setActiveLoading(false));
+        })
+        .catch((e) => {
+          console.error(e);
+          showToastifyWarning('Có lỗi xảy ra!');
+        });
+    } else {
+      dispatch(setUserCourseAction(null));
+    }
   }, [currentUser]);
 
   return (
@@ -58,9 +58,9 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
         <InfoCourse course={course} webInfo={webInfo} />
         <div style={{ backgroundColor: 'white' }}>
           <div className="container">
-            <Row id="main-course-detail">
-              <Col span={24} lg={16} className="course-detail">
-                <Skeleton loading={currentCourseLoading}>
+            <Grid container id="main-course-detail">
+              <Grid item xs={12} md={8} className="course-detail">
+                <SkeletonContainer noTransform loading={currentCourseLoading}>
                   <ContentCourse course={course} />
                   <div className="list-topic-tree-item">
                     <h2>Danh Sách Bài Học</h2>
@@ -68,12 +68,12 @@ const CourseDetail = (props: { course: Course, webInfo?: WebInfo }) => {
                       <CourseTopicTreeView course={course} />
                     </div>
                   </div>
-                </Skeleton>
-              </Col>
-              <Col span={24} lg={8}>
+                </SkeletonContainer>
+              </Grid>
+              <Grid item xs={12} md={4}>
                 <InformationCourse course={course} />
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
           </div>
         </div>
         <ActiveCourseModal

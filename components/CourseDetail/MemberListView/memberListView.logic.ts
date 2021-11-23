@@ -36,7 +36,7 @@ type MemListState = {
 
 export const memListInitState: MemListState = {
   memLists: [],
-  currentPage: 1,
+  currentPage: 0,
   totalMems: 0,
   isLoading: true,
   isOnAction: false,
@@ -51,7 +51,7 @@ export function memListReducer(state: MemListState = memListInitState, action: M
       return { ...state, currentPage: action.currentPage, memLists: action.memLists, totalMems: action.totalMems }
 
     case ActionTypes.INIT_MEM_LIST:
-      return { ...state, memLists: action.memLists, totalMems: action.totalMems, currentPage: 1 }
+      return { ...state, memLists: action.memLists, totalMems: action.totalMems, currentPage: 0 }
 
     case ActionTypes.SET_LOADING:
       return { ...state, isLoading: action.isLoading }

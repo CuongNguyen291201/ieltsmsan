@@ -69,6 +69,7 @@
         border: 1px solid $root-color;
         padding: 7px 15px;
         border-radius: 7px;
+        display: inline-flex;
       }
       .total-user-rate {
         margin-left: 20px;
@@ -671,6 +672,7 @@
     .overview-item {
       .item-main {
         .ratting {
+          display: inline-flex;
           ul {
             li {
               div {

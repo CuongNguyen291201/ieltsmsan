@@ -1,14 +1,15 @@
-import { Button, message, Skeleton, Table } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import {
+  Button, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, withStyles
+} from "@material-ui/core";
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useEffect, useReducer, useState } from 'react';
+import { useSnackbar } from "notistack";
+import { useEffect, useMemo, useReducer, useState } from 'react';
+import { Column, useTable } from "react-table";
 import { MapUserCourseStatus } from '../../../custom-types/MapContraint';
-import { getCookie, TOKEN } from '../../../sub_modules/common/utils/cookie';
 import { USER_COURSE_APPROVE, USER_COURSE_REJECT, USER_COURSE_WAITING } from '../../../sub_modules/share/constraint';
 import { Course } from '../../../sub_modules/share/model/courses';
 import { UserInfo } from '../../../sub_modules/share/model/user';
-import UserCourse from '../../../sub_modules/share/model/userCourse';
 import { apiChangeCourseMemberStatus, apiGetCourseMembers } from '../../../utils/apis/courseApi';
 import { getCourseMembersPageSlug } from '../../../utils/router';
 import { TimeOnline } from '../../TimeOnline';
@@ -17,22 +18,14 @@ import './style.scss';
 
 const LOAD_LIMIT = 10;
 
-const MemListCell = (props: PropsWithChildren<{ centerAlign?: boolean, width?: string }>) => (
-  <div className="item-table" style={{
-    textAlign: props.centerAlign ? "center" : "left", width: props.width,
-    wordWrap: "break-word"
-  }}>
-    {props.children}
-  </div>
-)
-
-const MemberListView = (props: { course: Course  }) => {
+const MemberListView = (props: { course: Course }) => {
   const { course } = props;
   const [{
     memLists, currentPage, totalMems, isLoading, isOnAction, userStat
   }, uiLogic] = useReducer(memListReducer, memListInitState);
   const router = useRouter();
   const userStatId = router.query.userId as string;
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     // const token = getCookie(TOKEN);
@@ -49,7 +42,7 @@ const MemberListView = (props: { course: Course  }) => {
         uiLogic(initMemList({ memLists: dataList, totalMems: total }));
       })
       .catch((e) => {
-        message.error("Có lỗi xảy ra!");
+        enqueueSnackbar("Có lỗi xảy ra!", { variant: "error" })
         console.error(e);
       })
       .finally(() => uiLogic(setLoading(false)));
@@ -64,14 +57,14 @@ const MemberListView = (props: { course: Course  }) => {
       courseId: course._id,
       field: 'joinDate',
       asc: false,
-      skip: (page - 1) * LOAD_LIMIT,
+      skip: page * LOAD_LIMIT,
       limit: LOAD_LIMIT,
     })
       .then(({ dataList, total }) => {
         uiLogic(changePage({ currentPage: page, memLists: dataList, totalMems: total }))
       })
       .catch((e) => {
-        message.error("Có lỗi xảy ra!");
+        enqueueSnackbar("Có lỗi xảy ra!", { variant: "error" })
         console.error(e);
       })
       .finally(() => uiLogic(setLoading(false)))
@@ -85,17 +78,17 @@ const MemberListView = (props: { course: Course  }) => {
       .then((newUc) => {
         if (newUc) {
           uiLogic(setNewMemListStatus(newUc));
-          message.success("Thành công!");
+          enqueueSnackbar("Thành công!", { variant: "success" })
         }
       })
       .catch((e) => {
-        message.error("Có lỗi xảy ra!");
+        enqueueSnackbar("Có lỗi xảy ra!", { variant: "error" });
         console.error(e);
       })
       .finally(() => uiLogic(setOnAction(false)));
   }
   const [userStatistical, setUserStatistical] = useState(false)
-  const changView = (user: UserInfo) =>{
+  const changView = (user: UserInfo) => {
     setUserStatistical(true);
     uiLogic(setUserStat(user));
     router.push(`${getCourseMembersPageSlug({ course })}?userId=${user._id}`, undefined, { shallow: true });
@@ -114,96 +107,139 @@ const MemberListView = (props: { course: Course  }) => {
     }
   }, [isLoading, router.isReady, userStatId]);
 
-  const columns: ColumnsType<UserCourse> = [
+  const columns: Array<Column<{
+    index: number;
+    userName: JSX.Element;
+    userPhoneNumber: string;
+    joinDate: string;
+    expireDate: string;
+    lastUpdate: string;
+    status: JSX.Element;
+    action: JSX.Element;
 
-    {
-      key: 'index',
-      title: 'STT',
-      dataIndex: null,
-      className: "col_1",
-      render: (_, _row, i) => <MemListCell centerAlign>{(currentPage - 1) * LOAD_LIMIT + i + 1}</MemListCell>
-    },
-    {
-      key: 'name',
-      title: 'Tên học sinh',
-      dataIndex: 'userName',
-      render: (_, { user }) => <MemListCell><div style={{cursor:'pointer]'}} onClick={() => changView(user)}><div className="name-student">{user?.name}</div><div className="email-student">{user?.email}</div></div></MemListCell>,
-      width: "20%"
-    },
-    {
-      key: 'phone',
-      title: 'Số điện thoại',
-      dataIndex: 'Số điện thoại',
-      render: (_, { user }) => <MemListCell>{user?.phoneNumber}</MemListCell>,
-      width: "15%"
-    },
-    {
-      key: 'joinDate',
-      title: 'Ngày tham gia',
-      dataIndex: 'joinDate',
-      width: "15%",
-      render: (_, { joinDate }) => <MemListCell>{joinDate ? moment(joinDate).format("DD-MM-YYYY") : ''}</MemListCell>
-    },
-    {
-      key: 'joinDate',
-      title: 'Ngày hết hạn',
-      dataIndex: 'endDate',
-      width: "15%",
-      render: (_, { expireDate }) => <MemListCell>{expireDate ? moment(expireDate).format("DD-MM-YYYY") : ''}</MemListCell>
-    },
-    {
-      key: 'lastUpdate',
-      title: 'Truy cập gần nhất',
-      dataIndex: 'lastUpdate',
-      width: "20%",
-      render: (_, { lastUpdate }) => <MemListCell>{lastUpdate ? moment(lastUpdate).format("DD-MM-YYYY") : ''}</MemListCell>
-    },
-    {
-      key: 'status',
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      width: "15%",
-      className: 'isStatus',
-      render: (_, { status }) => <MemListCell><span style={status == USER_COURSE_APPROVE ? { color: "#219653" } : { color: "red" }}>{MapUserCourseStatus[status]}</span></MemListCell>
-    },
-    {
-      key: 'action',
-      title: 'Hành động',
-      dataIndex: 'action',
-      render: (_, { status, userId }) => (<MemListCell>
+  }>> = useMemo(() => [
+    { Header: 'STT', accessor: 'index', },
+    { Header: 'Tên học sinh', accessor: 'userName' },
+    { Header: 'Số điện thoại', accessor: 'userPhoneNumber' },
+    { Header: 'Ngày tham gia', accessor: 'joinDate' },
+    { Header: 'Ngày hết hạn', accessor: 'expireDate' },
+    { Header: 'Truy cập gần nhất', accessor: 'lastUpdate' },
+    { Header: 'Trạng thái', accessor: 'status' },
+    { Header: 'Hành động', accessor: 'action' }
+  ], []);
+
+  const data = useMemo(() => {
+    return memLists.map((uc, i) => ({
+      index: currentPage * LOAD_LIMIT + i + 1,
+      userName:
+        <div>
+          <div className="name-student" onClick={() => changView(uc.user)}>{uc.user?.name ?? ''}</div>
+          <div className="email-student">{uc.user?.email ?? ''}</div>
+        </div>,
+      userPhoneNumber: uc.user?.phoneNumber ?? '',
+      joinDate: uc.joinDate ? moment(uc.joinDate).format('DD-MM-YYYY') : '',
+      expireDate: uc.expireDate ? moment(uc.expireDate).format("DD-MM-YYYY") : '',
+      lastUpdate: uc.lastUpdate ? moment(uc.lastUpdate).format("DD-MM-YYYY") : '',
+      status: <span style={uc.status == USER_COURSE_APPROVE ? { color: "#219653" } : { color: "red" }}>{MapUserCourseStatus[uc.status]}</span>,
+      action: <>
         {
-          status === USER_COURSE_REJECT
-          && <Button className="action-button" type="default" danger onClick={() => onAction({ userId, status: USER_COURSE_APPROVE })}>Khôi phục</Button>
+          uc.status === USER_COURSE_REJECT
+          && <Button className="action-button" variant="contained" color="secondary" onClick={() => onAction({ userId: uc.userId, status: USER_COURSE_APPROVE })}>Khôi phục</Button>
         }
         {
-          status === USER_COURSE_WAITING
-          && <Button className="action-button" type="primary" onClick={() => onAction({ userId, status: USER_COURSE_APPROVE })}>Duyệt</Button>
+          uc.status === USER_COURSE_WAITING
+          && <Button className="action-button" variant="outlined" onClick={() => onAction({ userId: uc.userId, status: USER_COURSE_APPROVE })}>Duyệt</Button>
         }
         {
-          status === USER_COURSE_APPROVE
-          && <Button className="action-button" type="primary" danger onClick={() => onAction({ userId, status: USER_COURSE_REJECT })}>Xoá</Button>
+          uc.status === USER_COURSE_APPROVE
+          && <Button className="action-button" variant="outlined" color="secondary" onClick={() => onAction({ userId: uc.userId, status: USER_COURSE_REJECT })}>Xoá</Button>
         }
-      </MemListCell>)
+      </>
+    }))
+  }, [memLists, currentPage])
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    rows,
+    prepareRow,
+    headers,
+  } = useTable({
+    columns,
+    data
+  });
+
+  const TableCell = withStyles({
+    root: {
+      overflowWrap: "break-word"
     }
-  ]
+  })(MuiTableCell);
 
   return (
-    <div style={{backgroundColor:'white'}}>
-    <div id="members-view">
-      <div className="container">
-        <div className="wraper-content">
-        {!userStatistical ? 
-        <div className="wrap-member-list">
-          <div className="header-table-member">
-            <div className="member_">
-              Thành viên
-            </div>
-            <div className="search-member">
-              <input type="text" placeholder="Tìm kiếm thành viên" />
-              <i className="far fa-search icon-search"> </i>
-            </div>
-          </div>
-          <Table
+    <div style={{ backgroundColor: 'white' }}>
+      <div id="members-view">
+        <div className="container">
+          <div className="wraper-content">
+            {!userStatistical ?
+              <div className="wrap-member-list">
+                <div className="header-table-member">
+                  <div className="member_">
+                    Thành viên
+                  </div>
+                  <div className="search-member">
+                    <input type="text" placeholder="Tìm kiếm thành viên" />
+                    <i className="far fa-search icon-search"> </i>
+                  </div>
+                </div>
+
+                <TableContainer>
+                  <Table className="table-list-member-panel" {...getTableProps()}>
+                    <TableHead className="table-list-member-panel-header">
+                      <TableRow>
+                        {headers.map((header, i) => (
+                          <TableCell {...header.getHeaderProps()} className={`col_${i + 1} table-list-member-panel-header-cell`}>{header.Header}</TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+
+                    <TableBody {...getTableBodyProps()} className="table-list-member-body">
+                      {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                          <TableRow {...row.getRowProps()}>
+                            {row.cells.map((cell, i) => (
+                              <TableCell {...cell.getCellProps()} className={`col_${i + 1} table-list-member-body-cell`}>
+                                <div className="item-table">
+                                  {cell.render('Cell')}
+                                </div>
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+
+                    <TableFooter>
+                      <TableRow>
+                        <TablePagination
+                          count={totalMems}
+                          rowsPerPage={LOAD_LIMIT}
+                          rowsPerPageOptions={[]}
+                          page={currentPage}
+                          onChangePage={(e, page) => {
+                            onChangePage(page)
+                          }}
+                          labelDisplayedRows={({ count }) => {
+                            const pageNum = Math.ceil((count || 1) / LOAD_LIMIT);
+                            return `Total: ${pageNum} page${pageNum > 1 ? 's' : ''}`;
+                          }}
+                        />
+                      </TableRow>
+                    </TableFooter>
+                  </Table>
+                </TableContainer>
+
+                {/* <Table
             className="table-list-member-panel"
             columns={columns}
             dataSource={memLists}
@@ -229,15 +265,15 @@ const MemberListView = (props: { course: Course  }) => {
                 </div>
               )
             }}
-          />
-        </div>
-         :<TimeOnline course={props.course} user={userStat} />}
-        <div>
+          /> */}
+              </div>
+              : <TimeOnline course={props.course} user={userStat} />}
+            <div>
 
-        </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

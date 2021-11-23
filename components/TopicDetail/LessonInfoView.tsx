@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd';
+import { Grid } from "@material-ui/core";
 import moment from 'moment';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -95,9 +95,9 @@ const LessonInfoView = (props: { topic: Topic }) => {
           ? <>
             {(topic._id === dataScenario?.topicId) ? (
               <div className={isFullScreen ? 'video-component-fullscreen video-commponent' : 'video-commponent'}>
-                <Row className="video-live" gutter={{ md: 0, lg: 8, xl: 32 }}>
+                <Grid container className="video-live" spacing={5}>
                   {(dataTimeCurrent >= dataScenario?.startTime) && !isEndLive && (
-                    <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                    <Grid item xs={12} xl={isFullScreen ? 12 : 8} md={isFullScreen ? 12 : 8}>
                       {dataScenario?.endTime && dataTimeCurrent < dataScenario?.endTime ? (
                         <div className="streaming">
                           <StreamComponent dataTotalUser={dataTotalUser} dataScenario={new ScenarioInfo(dataScenario)} setIsEndLive={setIsEndLive} />
@@ -121,10 +121,10 @@ const LessonInfoView = (props: { topic: Topic }) => {
                         />
                       </div>
                       <DocumentsList topicId={topic._id} />
-                    </Col>
+                    </Grid>
                   )}
                   {(dataTimeCurrent < dataScenario?.startTime) && dataScenario.endTime ? (
-                    <Col xl={16} md={12} xs={24}>
+                    <Grid item xl={8} md={8} xs={12}>
                       <div className="waiting-live">
                         <div className="item_">
                           <img src={iconWaiting} alt="iconWaiting" />
@@ -134,44 +134,44 @@ const LessonInfoView = (props: { topic: Topic }) => {
                           <div>LiveStream sẽ diễn ra vào lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
                         </div>
                       </div>
-                    </Col>
+                    </Grid>
                   ) : null}
                   {isEndLive && (
-                    <Col xl={16} md={12} xs={24}>
+                    <Grid item xl={8} md={8} xs={12}>
                       <div className="waiting-live">
                         <div className="item_">
                           <img src={iconWaiting} alt="iconWaiting" />
                           <div>LiveStream đã kết thúc</div>
                         </div>
                       </div>
-                    </Col>
+                    </Grid>
                   )}
                   {(dataTimeCurrent < dataScenario?.startTime) && !dataScenario.endTime && (
-                    <Col xl={16} md={12} xs={24}>
+                    <Grid item xl={8} md={8} xs={12}>
                       <div className="waiting-live">
                         <div className="item_">
                           <img src={iconWaiting} alt="iconWaiting" />
                           <div>Video sẽ có lúc {moment(dataScenario?.startTime).format('HH:mm DD/MM/YYYY')}</div>
                         </div>
                       </div>
-                    </Col>
+                    </Grid>
                   )}
-                  {!isFullScreen && <Col xl={8} md={12} xs={24}>
+                  {!isFullScreen && <Grid item xl={4} md={4} xs={12}>
                     <div className="comment">
                       <CommentPanel commentScope={CommentScopes.TOPIC} />
                     </div>
-                  </Col>}
+                  </Grid>}
                   {topic.description && (
-                    <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                    <Grid item xl={isFullScreen ? 12 : 8} md={isFullScreen ? 12 : 8} xs={12}>
                       <SanitizedDiv className="description" content={topic.description} />
-                    </Col>
+                    </Grid>
                   )}
-                </Row>
+                </Grid>
               </div>
             ) : (
               <div className="video-component-fullscreen video-commponent">
-                <Row gutter={{ md: 0, lg: 8, xl: 32 }}>
-                  <Col xl={isFullScreen ? 24 : 16} md={isFullScreen ? 24 : 12} xs={24}>
+                <Grid container spacing={5}>
+                  <Grid item xl={isFullScreen ? 12 : 8} md={isFullScreen ? 12 : 8} xs={12}>
                     {topic.videoUrl && <>
                       <VideoPlayer playOnRender={false} videoUrl={topic.videoUrl} />
                       <div className="view-mode">Chế độ xem:
@@ -189,28 +189,28 @@ const LessonInfoView = (props: { topic: Topic }) => {
                       <DocumentsList topicId={topic._id} />
                     </>}
                     {topic.description && <SanitizedDiv className="description" content={topic.description} />}
-                  </Col>
-                  {!isFullScreen && <Col xl={8} md={12} xs={24}>
+                  </Grid>
+                  {!isFullScreen && <Grid item xl={4} md={4} xs={12}>
                     <div className="comment">
                       <CommentPanel commentScope={CommentScopes.TOPIC} />
                     </div>
-                  </Col>}
-                </Row>
+                  </Grid>}
+                </Grid>
               </div>
             )}
-            <Row className="info-topic">
-              <Col span={24} lg={16}>
+            <Grid container className="info-topic">
+              <Grid item xs={12} md={8}>
                 <div className="course-topic-tree">
                   <CourseTopicTreeView course={topic.course} />
                 </div>
-              </Col>
-              <Col span={24} lg={8} className="info">
+              </Grid>
+              <Grid item xs={12} md={4} className="info">
                 <InformationCourse course={topic.course} />
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
           </>
-          : <Row>
-            <Col span={24} lg={16}>
+          : <Grid container spacing={5}>
+            <Grid item xs={12} md={8}>
               <div id="topic-private-view">
                 {currentUser
                   ? <div className="private-lesson private-lession-not-joined">
@@ -230,11 +230,11 @@ const LessonInfoView = (props: { topic: Topic }) => {
                   </div>
                 }
               </div>
-            </Col>
-            <Col span={24} lg={8}>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <InformationCourse course={topic.course} />
-            </Col>
-          </Row>
+            </Grid>
+          </Grid>
       }
     </div >
   );

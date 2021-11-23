@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'antd';
-import Link from 'next/link'
+import { Grid } from "@material-ui/core";
 import moment from 'moment';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getEventByTime, getCurrentDateTests } from '../../../utils/apis/eventApi';
 import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
+import { getCurrentDateTests, getEventByTime } from '../../../utils/apis/eventApi';
 import './style.scss';
 
 const EventDetail = () => {
@@ -47,8 +47,8 @@ const EventDetail = () => {
       <div className="event-page">
         <div className="main-event" style={{ backgroundImage: 'url(' + bigEvent.image + ')' }}>
           <div className="container">
-            <Row>
-              <Col sm={20} md={18} lg={14} xl={12}>
+            <Grid container>
+              <Grid xs={12} md={9} lg={4} xl={6}>
                 <div className="event-title">
                   <div className="event-notify">
                     <div>Sự kiện:</div>
@@ -86,8 +86,8 @@ const EventDetail = () => {
                     </div>
                   }
                 </div>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
           </div>
         </div>
       </div>

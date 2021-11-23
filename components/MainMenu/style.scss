@@ -139,11 +139,27 @@
         }
         .cart {
           margin: 0 10px;
+          position: relative;
           .shopping-cart {
             font-size: 20px;
             color: $root-color;
             cursor: pointer;
             margin-top: 5px;
+          }
+          .cart-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            color: #fff;
+            font-size: 12px;
+            background-color: red;
+            border-radius: 100%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
           }
         }
         .login,
@@ -251,10 +267,26 @@
       .hideDesktop {
         display: flex;
         .cart {
+          position: relative;
           margin-right: 20px;
           i {
             font-size: 24px !important;
             color: #9b92f1 !important;
+          }
+          .cart-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            color: #fff;
+            font-size: 12px;
+            background-color: red;
+            border-radius: 100%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
           }
         }
       }

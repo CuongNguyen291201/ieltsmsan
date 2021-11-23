@@ -1,11 +1,11 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Col, message, Empty, Pagination, Row, Spin } from 'antd';
+import { Grid } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
+import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MapPaymentType } from '../../custom-types/MapContraint';
 import itemAvatar from '../../public/default/item-avatar.png';
 import { AppState } from '../../redux/reducers';
-import { getCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { PAYMENT_BANK } from '../../sub_modules/share/constraint';
 import Order from '../../sub_modules/share/model/order';
 import OrderCombo from '../../sub_modules/share/model/orderCombo';
@@ -15,6 +15,8 @@ import { apiGetUserOrders } from '../../utils/apis/orderApi';
 import { getCoursePageSlug, ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
 import Breadcrumb from '../Breadcrumb';
 import Bank from '../CoursePay/payment-content/Bank';
+import EmptyUI from "../EmptyUI";
+import LoadingUI from "../LoadingUI";
 import './style.scss';
 
 const LOAD_LIMIT = 10;
@@ -26,6 +28,7 @@ const TransactionHistoryView = () => {
     activeOrder: null, orders: [], total: 0, isLoading: true, currentPage: 1
   });
   const user: UserInfo = useSelector((state: AppState) => state.userReducer.currentUser);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     // const token = getCookie(TOKEN);
@@ -39,7 +42,7 @@ const TransactionHistoryView = () => {
       })
       .catch((e) => {
         console.error(e);
-        message.error("Có lỗi xảy ra");
+        enqueueSnackbar("Có lỗi xảy ra", { variant: "error" });
         setState({ ...state, isLoading: false });
       })
   }, [user]);
@@ -58,7 +61,7 @@ const TransactionHistoryView = () => {
       })
       .catch((e) => {
         console.error(e);
-        message.error("Có lỗi xảy ra");
+        enqueueSnackbar("Có lỗi xảy ra", { variant: "error" });
         setState({ ...state, isLoading: false });
       })
   }
@@ -67,13 +70,13 @@ const TransactionHistoryView = () => {
     <Breadcrumb items={[{ name: 'Lịch sử giao dịch', slug: ROUTER_TRANSACTION_HISTORY }]} />
 
     <div id="transaction-history" className="container">
-      <Row gutter={[16, 16]} className="main-transaction-view">
-        <Col span={24} md={6}>
+      <Grid container spacing={2} className="main-transaction-view">
+        <Grid item xs={12} md={3}>
           <div className="panel order-list">
             <label className="title">
               <h3>Danh sách đơn hàng</h3>
             </label>
-            <Spin spinning={state.isLoading} indicator={<LoadingOutlined />}>
+            <LoadingUI loading={state.isLoading}>
               <div className="list">
                 {state.orders.map((order) => (
                   <div
@@ -100,20 +103,20 @@ const TransactionHistoryView = () => {
                   </div>
                 ))}
               </div>
-            </Spin>
+            </LoadingUI>
           </div>
-          <Spin spinning={state.isLoading} indicator={<LoadingOutlined />}>
+          <LoadingUI loading={state.isLoading}>
             <div className="orders-pagination">
-              <Pagination current={state.currentPage} onChange={onChangePage} total={state.total} pageSize={LOAD_LIMIT} showSizeChanger={false} hideOnSinglePage />
+              <Pagination count={Math.ceil((state.total || 1) / LOAD_LIMIT)} page={state.currentPage} onChange={(e, page) => onChangePage(page)} shape="rounded" variant="outlined" color="primary" />
             </div>
-          </Spin>
-        </Col>
+          </LoadingUI>
+        </Grid>
 
-        <Col span={24} md={18}>
+        <Grid item xs={12} md={9}>
           <div className="panel order-detail">
-            <Spin spinning={state.isLoading} indicator={<LoadingOutlined />}>
+            <LoadingUI loading={state.isLoading}>
               {state.total <= 0
-                ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Không có đơn hàng"/>
+                ? <EmptyUI description="Không có đơn hàng" />
                 : <>
                   <div className="info">
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -162,24 +165,24 @@ const TransactionHistoryView = () => {
                         <div className="course-list">
                           {combo.courses.map((course) => (
                             <a key={course._id} href={getCoursePageSlug({ course })}>
-                              <Row className="course-item" gutter={[8, 8]}>
-                                <Col span={24} md={6}>
+                              <Grid container className="course-item" spacing={1}>
+                                <Grid item xs={12} md={3}>
                                   <img style={{ width: "100%" }} src={course.avatar || itemAvatar} alt={course.name} />
-                                </Col>
-                                <Col span={24} md={12}>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
                                   <div className="name">{course.name}</div>
-                                </Col>
-                                <Col span={24} md={6}>
-                                  <Row className="right-md">
+                                </Grid>
+                                <Grid xs={12} md={3}>
+                                  <div className="right-md">
                                     {!!course.discountPrice && <div className="origin-price">{numberFormat.format(course.cost)} VNĐ</div>}
                                     <div className="price">{numberFormat.format(course.cost - course.discountPrice)} VNĐ</div>
                                     <div>
                                       <span role="label">Mã code: </span>
                                       <span className="active-code">{state.activeOrder?.codeId?.serial || 'Đang chờ'}</span>
                                     </div>
-                                  </Row>
-                                </Col>
-                              </Row>
+                                  </div>
+                                </Grid>
+                              </Grid>
                             </a>
                           ))}
                         </div>
@@ -188,10 +191,10 @@ const TransactionHistoryView = () => {
                   </div>
                 </>
               }
-            </Spin>
+            </LoadingUI>
           </div>
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
     </div>
   </>);
 }

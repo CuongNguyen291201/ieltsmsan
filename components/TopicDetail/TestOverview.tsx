@@ -1,27 +1,28 @@
-import { message } from 'antd';
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import continueExamImg from '../../public/topics/continue_exam.png';
+import failureExamImg from '../../public/topics/failure_exam.png';
+import passExamImg from '../../public/topics/pass_exam.png';
 import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
 import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { GAME_STATUS_PREPARE_CONTINUE, GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
+import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
 import { EXAM_SCORE_FINISH, EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../sub_modules/share/constraint';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
-import passExamImg from '../../public/topics/pass_exam.png';
-import failureExamImg from '../../public/topics/failure_exam.png';
-import continueExamImg from '../../public/topics/continue_exam.png';
 
 const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | null, currentUser: UserInfo }) => {
 	const { currentTopic, studyScore, currentUser } = props;
 	const { isJoinedCourse, currentCourse } = useSelector((state: AppState) => state.courseReducer);
 	const dispatch = useDispatch()
 	const router = useRouter();
+	const { enqueueSnackbar } = useSnackbar();
 	const {
 		isFinishedExam,
 		isPassedExam,
@@ -59,7 +60,7 @@ const TestOverView = (props: { currentTopic: Topic, studyScore?: StudyScore | nu
 				dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_PLAY, studyScore }))
 				router.push(getGameSlug(currentTopic._id));
 			} else {
-				message.warning("Chưa tham gia khoá học");
+				enqueueSnackbar("Chưa tham gia khoá học", { variant: "warning" });
 				if (currentCourse.cost > 0) {
 					dispatch(setActiveCourseModalVisibleAction(true));
 				}

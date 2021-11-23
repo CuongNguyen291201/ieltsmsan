@@ -1,21 +1,18 @@
-import { ForwardedRef, forwardRef, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { TextareaAutosize } from "@material-ui/core";
+import { ChangeEvent, ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Input } from 'antd';
 // import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
 import liveAvatar from '../../public/icon/live-avatar.svg';
 import liveSent from '../../public/icon/live-sent.svg';
 import { AppState } from '../../redux/reducers';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import './style.scss';
-import { TextAreaRef } from 'antd/lib/input/TextArea';
 
-const { TextArea } = Input;
-
-const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply?: boolean; parentId?: string | null }, ref: ForwardedRef<TextAreaRef>) => {
+const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply?: boolean; parentId?: string | null }, ref: ForwardedRef<HTMLTextAreaElement>) => {
   const { onPushComment, isReply = false, parentId } = props;
   const currentUser: UserInfo = useSelector((state: AppState) => state.userReducer.currentUser);
   const { mapReplies, mapShowLoadMoreReplies } = useSelector((state: AppState) => state.commentReducer);
-  const [dataTextArea, setDataTextArea] = useState();
+  const [dataTextArea, setDataTextArea] = useState('');
 
   const handlePushComment = () => {
     if (onPushComment) {
@@ -38,8 +35,8 @@ const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply
     }
   }, [mapReplies[parentId], mapShowLoadMoreReplies[parentId]]);
 
-  const onChange = ({ target: { value } }) => {
-    setDataTextArea(value)
+  const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setDataTextArea(e.target.value);
   };
 
   return (
@@ -47,18 +44,21 @@ const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply
       <div className="image-avatar">
         <img src={currentUser?.avatar || liveAvatar} alt="" />
       </div>
-      <TextArea
+      <TextareaAutosize
         className={`main-comment-box${isReply ? ' reply' : ''}`}
-        ref={ref}
         value={dataTextArea}
         onChange={onChange}
-        onPressEnter={(e) => {
-          e.preventDefault();
-          handlePushComment()
-          setDataTextArea(null)
+        placeholder={isReply ? 'Trả lời' : 'Bình luận'}
+        rowsMin={1}
+        rowsMax={4}
+        ref={ref}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handlePushComment();
+            setDataTextArea('');
+          }
         }}
-        placeholder="Bình luận"
-        autoSize={{ minRows: 1, maxRows: 4 }}
       />
       <div className="cmt-options">
         <button type="button" className="btn btn-send" onClick={() => handlePushComment()}>

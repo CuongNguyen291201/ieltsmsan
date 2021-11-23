@@ -1,7 +1,7 @@
 import { createStyles, Grid, Theme, withStyles } from '@material-ui/core';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { message } from 'antd';
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import React, { Fragment, useCallback } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,6 +30,7 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const router = useRouter();
   let questionsNum = 0;
@@ -56,7 +57,7 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
       }
       data = [
         { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
-        { title: 'Điều kiện qua ( % đúng )', number: `${pass}${genUnitScore(currentTopic.topicExercise?.baremScore)}` },
+        { title: `Điều kiện qua (điểm)`, number: `${pass} điểm` },
         { title: 'Thời gian làm bài', number: `${duration} phút` },
         { title: 'Số lần làm lại', number: replay },
         { title: 'Số lần tạm dừng', number: pauseTimes },
@@ -64,7 +65,8 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
     } else {
       data = [
         { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
-        { title: 'Số câu ở mỗi lần luyện tập', number: `${currentTopic.topicExercise?.questionsPlayNum} câu` ?? 0 }
+        { title: 'Số câu ở mỗi lần luyện tập', number: `${currentTopic.topicExercise?.questionsPlayNum} câu` ?? 0 },
+        { title: 'Điều kiện qua (%)', number: `${currentTopic.topicExercise?.pass} %` }
       ]
     }
   }
@@ -77,7 +79,7 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
           query: { id: currentTopic._id }
         })
       } else {
-        message.warning("Chưa tham gia khoá học!");
+        enqueueSnackbar("Chưa tham gia khoá học!", { variant: "warning" });
         if (currentCourse.cost > 0) {
           dispatch(setActiveCourseModalVisibleAction(true));
         }

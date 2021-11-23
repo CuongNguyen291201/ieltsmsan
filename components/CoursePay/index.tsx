@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Spin } from 'antd';
+import { Button, Dialog, DialogActions, DialogTitle, Grid } from "@material-ui/core";
 import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
@@ -11,7 +11,8 @@ import { AppState } from '../../redux/reducers';
 import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { encodeSHA256Code } from '../../sub_modules/common/utils';
-import { showToastifySuccess, showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
+import { DialogContent } from "../../sub_modules/live-game/node_modules/@material-ui/core";
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import {
   NOT_PAYMENT,
@@ -28,6 +29,7 @@ import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
 import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
+import SkeletonContainer from "../SkeletonContainer";
 import Bank from './payment-content/Bank';
 import Momo from './payment-content/Momo';
 import './style.scss';
@@ -137,28 +139,41 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
 
   const renderModalConfirm = () => {
     return (
-      <Modal title="Mua khóa học" visible={isModalVisible} onOk={() => {
-        if (isOrderCreated) {
-          router.push(ROUTER_TRANSACTION_HISTORY);
-        } else {
-          createOrder();
-        }
-      }}
-        onCancel={handleCancel}
-        centered
-        okText={isOrderCreated ? 'Lịch sử giao dịch' : 'OK'}
+      <Dialog
+        title="Mua khóa học"
+        open={isModalVisible}
+        onClose={handleCancel}
+        fullWidth
+        maxWidth="sm"
       >
-        <h2 style={{ textAlign: "center" }}>{isOrderCreated ? 'Đơn hàng đã được tạo thành công!' : 'Xác nhận mua khóa học ?'}</h2>
-        {isOrderCreated && paymentType === PAYMENT_BANK &&
-          <Bank
-            contactInfo={props.webInfo?.contactInfo}
-            email={props.webInfo?.email}
-            phone={props.webInfo?.hotLine}
-            orderSerial={serial}
-            hideHeader
-            hideNotifMessage
-          />}
-      </Modal>
+        <DialogTitle>
+          <span style={{ textAlign: "center" }}>{isOrderCreated ? 'Đơn hàng đã được tạo thành công!' : 'Xác nhận mua khóa học ?'}</span>
+        </DialogTitle>
+        <DialogContent>
+          {isOrderCreated && paymentType === PAYMENT_BANK &&
+            <Bank
+              contactInfo={props.webInfo?.contactInfo}
+              email={props.webInfo?.email}
+              phone={props.webInfo?.hotLine}
+              orderSerial={serial}
+              hideHeader
+              hideNotifMessage
+            />}
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="secondary" onClick={handleCancel}>Huỷ</Button>
+
+          <Button variant="contained" color="primary" onClick={() => {
+            if (isOrderCreated) {
+              router.push(ROUTER_TRANSACTION_HISTORY);
+            } else {
+              createOrder();
+            }
+          }}>
+            {isOrderCreated ? 'Lịch sử giao dịch' : 'OK'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     )
   }
 
@@ -188,12 +203,12 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
     <React.Fragment>
       {renderModalConfirm()}
       <div className="course-pay">
-        <Spin spinning={loading}>
-          <div className="container ">
-            <Row className="casc">
-              <Col sm={24} md={16} className="payment-main-panel new-position">
-                <Row>
-                  <Col xs={24} className="custom-reset-row-col right-panel">
+        <div className="container ">
+          <SkeletonContainer loading={loading} noTransform>
+            <Grid container className="casc">
+              <Grid item xs={12} md={8} className="payment-main-panel new-position">
+                <Grid container>
+                  <Grid item xs={12} className="custom-reset-row-col right-panel">
                     <label><strong>1. Thông tin thanh toán</strong></label>
                     <div className="transactionCode">
                       <span>Mã đơn hàng: </span> <span style={{ color: "#ff0000" }}>{serial}</span>
@@ -238,10 +253,10 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                         </div>
                       </div>
                     </div>
-                  </Col>
-                  <Col xs={24} className="custom-reset-row-col left-panel">
+                  </Grid>
+                  <Grid item xs={12} className="custom-reset-row-col left-panel">
                     <div className="content-block-panel">
-                      <div className="main-block-content-panel">
+                      <Grid container className="main-block-content-panel">
                         <div className="panel-group payment-method" id="payment-methods">
                           {currentUser && <>
                             <label><strong>1. Thông tin khách hàng (*)</strong></label>
@@ -275,7 +290,7 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                             </div>}
                           </div>
                         </div>
-                        <Col xs={24} className="no-padding-mobile">
+                        <Grid item xs={12} className="no-padding-mobile">
                           <div>
                             - Kiểm tra lại thông tin đơn hàng trước khi nhấn <strong>tiếp tục</strong>.
                           </div>
@@ -284,8 +299,8 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                             Bạn vào trang <strong><a href="/lich-su-giao-dich" className="history">lịch sử giao dịch </a></strong>
                             để nhận mã code hoặc kiểm tra email <span id="email-show-info"><a href={`mailto:${currentUser?.email}`}>{currentUser?.email}</a></span>.
                           </div>
-                        </Col>
-                      </div>
+                        </Grid>
+                      </Grid>
                       <div className="payment-button">
                         <button className="button-on-right-panel" onClick={() => {
                           router.back();
@@ -293,12 +308,12 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                         {!isOrderCreated && <button className="button-on-right-panel background-color-main" onClick={showModal}>Tiếp tục</button>}
                       </div>
                     </div>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </div>
-        </Spin>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </SkeletonContainer>
+        </div>
       </div>
     </React.Fragment>
   );

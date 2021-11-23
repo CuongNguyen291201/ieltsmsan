@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/common/utils/toastify";
 
 export const ORDER_RETURN_KEY = 'orderReturnUrl';
 export const CART_ITEMS_KEY = 'courseIds';
@@ -10,9 +10,9 @@ export default {
       if (callback) callback();
       cartItems.push(courseId);
       localStorage.setItem(CART_ITEMS_KEY, cartItems.join());
-      message.success('Đã thêm vào giỏ hàng');
+      showToastifySuccess('Đã thêm vào giỏ hàng');
     } else {
-      message.warning('Khoá học đã có trong giỏ hàng');
+      showToastifyWarning('Khoá học đã có trong giỏ hàng');
     }
   },
 

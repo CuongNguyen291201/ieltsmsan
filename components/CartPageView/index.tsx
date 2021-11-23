@@ -1,5 +1,7 @@
-import { Col, message, Rate, Row, Spin } from 'antd';
+import { Grid, Paper } from "@material-ui/core";
+import { Rating } from "@material-ui/lab";
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
@@ -13,6 +15,7 @@ import { numberFormat } from '../../utils';
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_PAYMENT } from '../../utils/router';
+import LoadingContainer from "../LoadingContainer";
 import './style.scss';
 
 const CartPageView = () => {
@@ -21,9 +24,10 @@ const CartPageView = () => {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
   const { items: courseIds, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
-  const [dataOrder, setDataOrder] = useState<Course[]>([])
-  const [dataTotal, setDataTotal] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [dataOrder, setDataOrder] = useState<Course[]>([]);
+  const [dataTotal, setDataTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!cartLoading && courseIds?.length > 0) {
@@ -32,10 +36,10 @@ const CartPageView = () => {
           setDataOrder(courses.reverse());
           const priceTotal = courses.reduce((total, item) => (total += item.cost - item.discountPrice, total), 0);
           setDataTotal(priceTotal)
-          setLoading(false)
+          setLoading(false);
         })
         .catch(() => {
-          message.warning('Có lỗi xảy ra');
+          enqueueSnackbar('Có lỗi xảy ra', { variant: "warning" })
           setDataOrder([]);
           setLoading(false);
         })
@@ -55,46 +59,47 @@ const CartPageView = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <div className="course-order">
-        <Spin spinning={loading}>
+        <LoadingContainer loading={loading}>
           <div className="container">
             {dataOrder?.length > 0 ?
-              <Row>
-                <Col xs={24} sm={24} md={16} lg={16} xl={16} className="order-item">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={8} className="order-item">
                   <div>
                     {dataOrder.map((item, i) =>
-                      <Row className="transaction-item" key={i}>
-                        <Col xs={24} sm={6} md={6} lg={6} xl={6}>
+                      <Grid className="transaction-item" key={i} container>
+                        <Grid item xs={12} sm={3}>
                           <img className="gwt-Image" src={item.avatar || itemAvatar} />
-                        </Col>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={12} className="infor">
+                        </Grid>
+                        <Grid item xs={12} sm={6} className="infor">
                           <strong>
                             <div className="gwt-HTML">{item.name}</div>
                           </strong>
-                          <div>
+                          <div style={{ display: "flex", alignItems: "center" }}>
                             <span >(500) </span>
                             <span>
-                              <Rate style={{ fontSize: '15px', color: '#ec1f24' }} disabled allowHalf defaultValue={4.5} />
+                              <Rating readOnly value={4.5} precision={0.5} size="small" />
                             </span>
                           </div>
                           <div className="dot-3" >
                             {item.shortDesc}
                           </div>
-                        </Col>
-                        <Col xs={24} sm={6} md={6} lg={6} xl={6} className="infor infor-order">
+                        </Grid>
+                        <Grid item xs={12} sm={3} className="infor infor-order">
                           <button type="button" className="infor-order-close" onClick={() => onRemove(item._id)}>
                             <i className="far fa-times"></i>
                           </button>
                           {item.discountPrice !== 0 && <div className="discount-price">{numberFormat.format(item.cost)} VNĐ</div>}
                           <div className="gwt-HTML">{numberFormat.format(item.cost - item.discountPrice)} VND</div>
-                        </Col>
-                      </Row>
+                        </Grid>
+                      </Grid>
                     )}
                   </div>
-                </Col>
-                <Col xs={24} sm={24} md={8} lg={8} xl={8} className="total-price-left-panel">
-                  <div>
+                </Grid>
+
+                <Grid item xs={12} md={4} className="total-price-left-panel">
+                  <Paper className="total-price-left-panel-main">
                     <label className="infor-label">Thông tin đơn hàng</label>
                     <div className="item-price">
                       <span>Tạm tính</span>
@@ -122,9 +127,9 @@ const CartPageView = () => {
                         onClick={() => dispatch(showLoginModalAction(true))}
                       >Thanh toán
                       </button>}
-                  </div>
-                </Col>
-              </Row>
+                  </Paper>
+                </Grid>
+              </Grid>
               :
               <div className="empty-cart-container">
                 {!loading &&
@@ -142,9 +147,9 @@ const CartPageView = () => {
               </div>
             }
           </div>
-        </Spin>
+        </LoadingContainer>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
