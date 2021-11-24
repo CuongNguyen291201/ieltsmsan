@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css';
 import { GetServerSideProps } from 'next';
 import React from "react";
 // import Newright from '../../public/hvvv/news-right.jpeg';

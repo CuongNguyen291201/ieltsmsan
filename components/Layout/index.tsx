@@ -1,4 +1,3 @@
-import 'antd/dist/antd.css';
 import Head from 'next/head';
 import React, { FC, useEffect, useState } from 'react';
 import WebInfo from '../../sub_modules/share/model/webInfo';

@@ -1,5 +1,5 @@
-import { PhoneOutlined } from "@ant-design/icons";
 import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { Phone } from "@material-ui/icons"
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -246,7 +246,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               <div className="giai-dap-thac-mac">
                 <div>Giải đáp thắc mắc Hotline:</div>{" "}
                 <div>
-                  <PhoneOutlined /> {props.hotLine ?? ""}
+                  <Phone /> {props.hotLine ?? ""}
                 </div>
               </div>
             </DialogContent>
