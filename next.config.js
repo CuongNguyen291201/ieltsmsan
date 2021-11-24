@@ -10,11 +10,7 @@ module.exports = withPlugins([withCSS, withSass, withImages, {
 		  {
 			source: '/tai-lieu/:any*',
 			destination: '/tai-lieu/',
-		  },
-		  {
-			source: '/livegame/:any*',
-			destination: '/livegame/',
-		  },
+		  }
 		];
 	  },
 	exportPathMap: (

@@ -13,9 +13,6 @@
 [submodule "sub_modules/document"]
 	path = sub_modules/document
 	url = git@bitbucket.org:ksdevs/elearning-documents.git
-[submodule "sub_modules/live-game"]
-	path = sub_modules/live-game
-	url = git@bitbucket.org:ksdevs/elearning-live-game.git
 [submodule "sub_modules/firebase"]
 	path = sub_modules/firebase
 	url = git@bitbucket.org:ksdevs/elearning-firebase.git
