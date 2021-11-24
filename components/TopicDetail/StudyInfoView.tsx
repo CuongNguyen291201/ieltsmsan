@@ -27,9 +27,7 @@ const StudyInfoView = (props: { topic: _Topic }) => {
       const { topicExercise, studyScore, myCardData } = data;
       dispatch(updateTopicExerciseAction(parentId, topicExercise, studyScore, myCardData));
     }
-
-    if (!isLoadedDetailTopic) getDataDetailExerciseFC();
-
+    getDataDetailExerciseFC();
   }, [currentUser, isLoadedDetailTopic]);
 
   const renderStudyView = () => {
