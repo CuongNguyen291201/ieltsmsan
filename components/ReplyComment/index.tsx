@@ -4,14 +4,12 @@ import {
   CardActions,
   CardContent,
   Dialog,
-  DialogActions,
-  FormControl,
+  DialogActions, DialogContent, FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Select, Table, TableBody, TableCell, TableContainer,
-  TableHead,
-  TextField
+  TableHead, TableRow, TextField
 } from "@material-ui/core";
 import { Autocomplete, Pagination } from "@material-ui/lab";
 import dynamic from "next/dynamic";
@@ -24,7 +22,6 @@ import { CommentScopes, _Category } from '../../custom-types';
 import { PAGE_COURSE_DETAIL, PAGE_TOPIC_DETAIL } from '../../custom-types/PageType';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
-import { DialogContent, TableRow } from "../../sub_modules/live-game/node_modules/@material-ui/core";
 import { formatFullDateTime } from '../../utils';
 import { apiGetAllCourse } from '../../utils/apis/courseApi';
 import { apiDiscussionsById, apiListDiscussionsByFilter, apiUpdateReply } from '../../utils/apis/notificationApi';

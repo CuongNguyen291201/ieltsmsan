@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle, Grid } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
@@ -12,7 +12,6 @@ import { Scopes } from '../../redux/types';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { encodeSHA256Code } from '../../sub_modules/common/utils';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { DialogContent } from "../../sub_modules/live-game/node_modules/@material-ui/core";
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import {
   NOT_PAYMENT,
