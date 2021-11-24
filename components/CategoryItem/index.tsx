@@ -17,7 +17,7 @@ const CategoryItem = (props: {
 
   return (
     <Link href={categorySlug} passHref>
-      <a onClick={(e) => { e.preventDefault(); }}>
+      <a onClick={(e) => { e.preventDefault(); }} className="plain-anchor-tag">
         <Paper elevation={5}>
           <div className="cat-avatar" onClick={() => router.push(getBrowserSlug(category.slug, PAGE_CATEGORY_DETAIL, category._id))} >
             <img src={category.avatar || itemAvatar} alt={category.name} />

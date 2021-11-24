@@ -27,7 +27,7 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
   const nameCourse = course.name
   return (
     <Link href={courseSlug} passHref>
-      <a onClick={(e) => { e.preventDefault() }} style={{ width: "100%" }}>
+      <a onClick={(e) => { e.preventDefault() }} className="plain-anchor-tag">
         <Paper elevation={5}>
           <div className="crs-avatar">
             {/* <img src={course.avatar || itemAvatar} alt={course.name} /> */}

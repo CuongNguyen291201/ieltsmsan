@@ -66,7 +66,7 @@ const CartPageView = () => {
             {dataOrder?.length > 0 ?
               <Grid container spacing={3}>
                 <Grid item xs={12} md={8} className="order-item">
-                  <div>
+                  <div style={{ width: "100%" }}>
                     {dataOrder.map((item, i) =>
                       <Grid className="transaction-item" key={i} container>
                         <Grid item xs={12} sm={3}>

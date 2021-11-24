@@ -7,7 +7,7 @@ const _BreadcrumbItem = (props: { name: string; slug?: string; isEnd?: boolean; 
   return (
     <>
 
-      {!isEnd ? <Link href={slug}><a>
+      {!isEnd ? <Link href={slug}><a className="plain-anchor-tag">
         <span className="breadcrumb-item">
           {name}
         </span>
