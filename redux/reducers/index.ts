@@ -5,7 +5,7 @@ import { topicReducer, TopicState } from './topic.reducer';
 import { courseReducer, CourseState } from './course.reducer';
 import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
 import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
-import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
+// import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
 import { commentReducer, CommentState } from './comment.reducers';
 import documentModuleReducers from '../../sub_modules/document/src/redux/reducers';
 import { DocumentModuleState } from '../../sub_modules/document/src/redux/state';
@@ -20,7 +20,7 @@ export interface AppState {
   courseReducer: CourseState;
   prepareGameReducer: PrepareGameState;
   gameReducer: IGameState;
-  scenarioReducer: ScenarioState;
+  // scenarioReducer: ScenarioState;
   commentReducer: CommentState;
   documentState: DocumentModuleState;
   cartReducer: CartState;
@@ -34,7 +34,7 @@ export const rootReducer = combineReducers<AppState>({
   courseReducer,
   prepareGameReducer,
   gameReducer,
-  scenarioReducer,
+  // scenarioReducer,
   commentReducer,
   documentState: documentModuleReducers,
   cartReducer,

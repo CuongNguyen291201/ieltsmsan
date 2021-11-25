@@ -21,7 +21,8 @@ import registerServiceWorker, { clearCountDown, countDownTimer, unregister } fro
 import StreamComponent from '../Stream';
 import VideoPlayer from "../VideoPlayer";
 import './lesson-info.scss';
-const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
+
+// const ScenarioGame = dynamic(() => import('../../sub_modules/scenario/src/main/ScenarioGame'), { ssr: false })
 const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 const DocumentsList = dynamic(() => import("./DocumentList"), { ssr: false });
 
@@ -104,7 +105,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
                         </div>
                       ) : (
                         <div className="video-scenario">
-                          <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} />
+                          {/* <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} /> */}
                         </div>
                       )}
 
