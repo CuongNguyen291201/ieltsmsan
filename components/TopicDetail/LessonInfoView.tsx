@@ -105,6 +105,7 @@ const LessonInfoView = (props: { topic: Topic }) => {
                         </div>
                       ) : (
                         <div className="video-scenario">
+                          <VideoPlayer videoUrl={topic.videoUrl || dataScenario.url} playOnRender={false} />
                           {/* <ScenarioGame currentUser={currentUser} scenarioInfo={new ScenarioInfo(dataScenario)} /> */}
                         </div>
                       )}
