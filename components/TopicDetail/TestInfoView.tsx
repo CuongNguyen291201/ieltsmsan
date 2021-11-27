@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Box, Grid, Paper, Typography } from '@material-ui/core';
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
@@ -7,150 +7,81 @@ import { CommentScopes } from '../../custom-types';
 import { AppState } from '../../redux/reducers';
 import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
 import { getExamScoreDetails, getSkills } from '../../sub_modules/game/api/ExamApi';
-import { STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
+import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
+import Skill from "../../sub_modules/share/model/skill";
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
+import ExamTOEICResutls from "./ExamTOEICResults";
 import TestOverView from './TestOverview';
 import { StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
 
 const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
-export const StatisticSkillView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, currentUser: UserInfo }) => {
-  const { currentTopic, currentUser, studyScore } = props;
-  const [statisticSkill, setStatisticSkill] = useState([]);
-  useEffect(() => {
-    const statFC = async () => {
-      const examScoreDetails: any[] = await getExamScoreDetails({
-        userId: currentUser._id,
-        studyScoreDataId: studyScore.studyScoreData._id
-      });
-      const mapSkillExamScoreDetail = examScoreDetails.reduce((map, e) => {
-        if (e.cardType > 0) {
-          map[e.cardType] = [...map[e.cardType] || [], e];
-        }
-        return map;
-      }, {});
+export const StatisticSkillView = (props: { skills: Skill[] }) => {
+  const { skills } = props;
+  const { studyScore } = useSelector((state: AppState) => state.topicReducer);
+  const mapSkillValueCard = studyScore?.studyScoreData?.statistics?.mapSkillValueCard || {};
+  const data = useMemo(() => {
+    const _skills = skills
+      .filter((skill) => typeof mapSkillValueCard[skill.value] !== 'undefined')
+      .sort((a, b) => a.name.localeCompare(b.name));
+    const labels: string[] = [];
+    const dataCorrect: number[] = [];
+    const dataIncorrect: number[] = [];
+    _skills.forEach((skill) => {
+      labels.push(skill.name);
+      dataCorrect.push(mapSkillValueCard[skill.value].correctNum);
+      dataIncorrect.push(mapSkillValueCard[skill.value].totalCardNum - mapSkillValueCard[skill.value].correctNum);
+    })
 
-      const skillRes = await getSkills();
-      const mapSkill = {};
-      if (!skillRes.data.length) return;
-      (skillRes.data).map((e) => {
-        mapSkill[e.value] = e;
-        if (e.childSkills) {
-          (e.childSkills).map((ce) => {
-            mapSkill[ce.value] = ce;
-          })
-        }
-      });
-
-      const statisticSkillData: any[] = [];
-      Object.keys(mapSkillExamScoreDetail).map((key) => {
-        if (mapSkill[key]) {
-          let totalCorrect = 0;
-          let totalInCorrect = 0;
-          (mapSkillExamScoreDetail[key] as any[]).map((e) => {
-            e.correct === STUDY_SCORE_DETAIL_CORRECT ? totalCorrect++ : totalInCorrect++;
-          });
-          statisticSkillData.push({
-            skillValue: key,
-            name: mapSkill[key].name,
-            totalCorrect,
-            totalInCorrect
-          });
-        }
-      });
-
-      setStatisticSkill(statisticSkillData.sort((a, b) => a.skillValue - b.skillValue))
-    }
-
-    statFC();
-  }, [])
-
-  const genData = useCallback((statisticSkill: any[]) => {
-    const labels = [];
-    const dataCorrect = [];
-    const dataInCorrect = [];
-    statisticSkill.map((e) => {
-      labels.push(e.name);
-      dataCorrect.push(e.totalCorrect);
-      dataInCorrect.push(e.totalInCorrect);
-    });
     return {
-      labels,
-      datasets: [
-        {
-          label: 'Câu đúng',
-          data: dataCorrect,
-          backgroundColor: 'rgb(54, 162, 235)'
-        },
-        {
-          label: 'Câu sai',
-          data: dataInCorrect,
-          backgroundColor: 'rgb(255, 99, 132)'
-        }
-      ]
-    }
-  }, [statisticSkill]);
+      labels, dataCorrect, dataIncorrect
+    };
+  }, [studyScore, skills]);
 
-  return (
-    <>
-      {
-        statisticSkill
-          ? (statisticSkill.length ? <div className="section4"><ChartBar data={genData(statisticSkill)} height={undefined} /></div> : <></>)
-          : <StatisticSkillSkeleton />
-      }
-    </>
-  )
+  return <div id="statistic-skills-view" style={{ padding: "16px" }}>
+    <Box textAlign="center">
+      <Typography component="h3">THỐNG KÊ KỸ NĂNG</Typography>
+    </Box>
+
+    <ChartBar
+      data={{
+        labels: data.labels,
+        datasets: [
+          { label: 'Correct', data: data.dataCorrect, backgroundColor: 'rgb(54, 162, 235)' },
+          { label: 'Incorrect', data: data.dataIncorrect, backgroundColor: 'rgb(255, 99, 132)' },
+        ]
+      }}
+      height={undefined}
+    />
+  </div>
 }
 
-const SkeletonScoreView = () => {
-  return (
-    <div className="section2">
-      <div className="section2-left">
-        <div className="date-time">
-          <div className="date skeleton">
-            <span><Skeleton /></span>
-          </div>
-          <div className="time skeleton">
-            <span><Skeleton /></span>
-          </div>
-        </div>
-        <div className="score-wrap">
-          <div className="score-number skeleton"><Skeleton /></div>
-          <div className="score-text skeleton"><Skeleton /></div>
-        </div>
-        <div className="buttons">
-          <div className="xem-lai skeleton">
-            <Skeleton />
-          </div>
-        </div>
-      </div>
-      <div className="section2-right">
-        <div className="title"><Skeleton ></Skeleton></div>
-        <div className="image skeleton"><Skeleton /></div>
-        <div className="text skeleton"><Skeleton /></div>
-      </div>
-    </div>
-
-  )
-}
-
-const TestInfoView = (props: { topic: Topic }) => {
-  const { topic } = props;
+const TestInfoView = (props: { topic: Topic; toeicStats?: boolean; skills?: Skill[] }) => {
+  const { topic, toeicStats, skills = [] } = props;
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const isPlayTest = useMemo(() => !!studyScore, [studyScore]);
+  const isFinisedTest = useMemo(() => studyScore?.status === EXAM_SCORE_FINISH, [studyScore])
+
+  const renderMainView = useMemo(() => {
+    if (isPlayTest) {
+      return <>
+        {!!toeicStats && isFinisedTest && <ExamTOEICResutls />}
+        <TestOverView currentTopic={topic} currentUser={currentUser} studyScore={studyScore} />
+      </>
+    }
+    return <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />;
+  }, [isPlayTest, topic, studyScore])
+
   return (
     <div className="topic-test-view">
       <Grid container className="thong-ke-">
         <Grid item xs={12} md={8}>
-          {isPlayTest
-            ? <TestOverView currentTopic={topic} currentUser={currentUser} studyScore={studyScore} />
-            : <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} />
-          }
+          {renderMainView}
         </Grid>
 
         <Grid item xs={12} md={4} className="commentPanel_">
@@ -158,9 +89,13 @@ const TestInfoView = (props: { topic: Topic }) => {
           <CommentPanelNew commentScope={CommentScopes.TOPIC} />
         </Grid>
       </Grid>
-      <Grid container className="view-panel-score">
+      <Grid container className="view-panel-score" spacing={2}>
         <Grid item xs={12} md={8} className="view-left">
           {isPlayTest && <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />}
+
+          {isPlayTest && isFinisedTest && skills.length && <Paper elevation={1} style={{ marginTop: "20px" }}>
+            <StatisticSkillView skills={skills} />
+          </Paper>}
         </Grid>
         <Grid item xs={12} md={4} className="view-right course-info-topic">
           <InformationCourse course={course} />

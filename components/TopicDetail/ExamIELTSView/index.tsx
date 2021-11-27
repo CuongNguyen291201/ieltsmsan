@@ -59,7 +59,7 @@ const ExamIELTSView = (props: PropsWithoutRef<{
         </Grid>
       </Grid>
 
-      <Grid container className="view-panel-score">
+      <Grid container className="view-panel-score" spacing={2}>
         <Grid item xs={12} md={8} className="view-left">
 
         </Grid>
