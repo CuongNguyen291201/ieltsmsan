@@ -1,7 +1,13 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import nextCors from "../../../utils/apis/nextCors";
 import { ROUTER_NOT_FOUND } from "../../../utils/router";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const allowed = nextCors(req);
+  if (!allowed) {
+    res.status(403).json({ message: "Forbidden" });
+    return;
+  }
   if (req.method === "POST") {
     try {
       const { data } = await axios.post(
