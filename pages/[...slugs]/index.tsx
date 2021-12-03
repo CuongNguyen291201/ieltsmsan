@@ -10,7 +10,7 @@ import {
 } from '../../custom-types/PageType';
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
 import { wrapper } from '../../redux/store';
-import { getUserFromToken } from '../../sub_modules/common/api/userApis';
+import { getUserFromToken } from '../../utils/apis/auth';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
 import News from '../../sub_modules/share/model/news';

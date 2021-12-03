@@ -5,7 +5,6 @@ import MemberListView from "../../components/CourseDetail/MemberListView";
 import Layout from '../../components/Layout';
 import { setCurrentCourseAction } from "../../redux/actions/course.actions";
 import { wrapper } from "../../redux/store";
-import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
 import WebInfo from "../../sub_modules/share/model/webInfo";
@@ -15,6 +14,7 @@ import { apiWebInfo } from "../../utils/apis/webInfoApi";
 import { apiWebSocial } from "../../utils/apis/webSocial";
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from "../../utils/router";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { getUserFromToken } from "../../utils/apis/auth";
 
 type CourseMembersPageProps = {
     course: Course;
