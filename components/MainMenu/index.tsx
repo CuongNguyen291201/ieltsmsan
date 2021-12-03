@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { Phone } from "@material-ui/icons"
+import dynamic from "next/dynamic";
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -7,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadListAction } from '../../redux/actions';
 import { AppState } from "../../redux/reducers";
 import { Scopes } from '../../redux/types';
-import LoginModal from "../../sub_modules/common/components/loginModal";
+
 import RegisterModal from "../../sub_modules/common/components/registerModal";
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
@@ -17,6 +18,9 @@ import { ROUTER_CART, ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
 import "./style.scss";
+
+const LoginModal = dynamic(() => import("../../sub_modules/common/components/loginModal"));
+
 function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
@@ -29,7 +33,6 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
 
   const codeRef = useRef(null);
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     if (!props.disableFixedHeader) {
@@ -251,11 +254,13 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               </div>
             </DialogContent>
           </Dialog>
-          <LoginModal
-            mainBgrColor="#EC1F24"
-            mainTextColor="#FFF"
-            loginApiEndpoint={`${process.env.NEXT_PUBLIC_NEXT_ENDPOINT || 'http://localhost:3000'}/api/auth/login`}
-          />
+          <div suppressHydrationWarning>
+            {typeof window !== "undefined" ? <LoginModal
+              mainBgrColor="#EC1F24"
+              mainTextColor="#FFF"
+              loginApiEndpoint={`${window.location.origin}/api/auth/login`}
+            /> : <></>}
+          </div>
           <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
         </div>
       </div >
