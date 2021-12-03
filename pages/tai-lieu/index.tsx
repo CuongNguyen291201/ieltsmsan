@@ -14,7 +14,7 @@ import { apiWebSocial } from '../../utils/apis/webSocial';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
-import { getUserFromToken } from "../../utils/apis/auth";
+import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
 
 // const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";

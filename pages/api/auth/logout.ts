@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
   if (req.method === "POST") {
-    const domain = (req.headers.host ?? "").split(":")[0] || undefined;
+    const domain = process.env.NODE_ENV === "production" ? `.${req.headers.host}` : "localhost";
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/logout`, {
         token: req.cookies["token"],
