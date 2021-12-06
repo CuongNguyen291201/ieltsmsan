@@ -145,9 +145,9 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               </Link>
               <div className="search">
                 <div className="icon">
-                  <i style={{ fontSize: '17px', color: '#ec1f24' }} className="far fa-search"></i>
+                  <i style={{ fontSize: '17px', color: '#A4ADD7' }} className="far fa-search"></i>
                 </div>
-                <input type="text" placeholder="Tìm kiếm khoá học..." />
+                <input type="text" placeholder="Tìm kiếm thông tin..." />
               </div>
             </Grid>
             <Grid item md={8} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>

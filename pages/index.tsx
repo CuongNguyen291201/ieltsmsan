@@ -5,11 +5,9 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'wow.js/css/libs/animate.css';
 import HomeBanner from '../components/HomeBanner';
 import HomeCategorySection from '../components/HomeCategorySection';
-import HomeNews from '../components/HomeNews';
-import HomeUtility from '../components/HomeUtility';
-import HomeWhy from '../components/HomeWhy';
+// import HomeUtility from '../components/HomeUtility';
+// import HomeWhy from '../components/HomeWhy';
 import Layout from '../components/Layout';
-import StudentFeeling from '../components/StudentFeeling';
 import { _Category } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { getUserFromToken } from '../sub_modules/common/api/userApis';
@@ -35,10 +33,8 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
       <div style={{boxShadow:'0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor:'white'}}>
       <HomeBanner />
       <HomeCategorySection categories={props.homeCategories} />
-      <StudentFeeling></StudentFeeling>
-      <HomeWhy></HomeWhy>
-      <HomeUtility></HomeUtility>
-      <HomeNews></HomeNews>
+      {/* <HomeWhy></HomeWhy> */}
+      {/* <HomeUtility></HomeUtility> */}
       </div>
     </Layout>
   )

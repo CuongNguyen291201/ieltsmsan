@@ -42,11 +42,11 @@
         }
       }
       .search {
-        background: $root-background-color;
-        border: 1px solid $root-color;
+        background: #0B1850;
+        border: 1px solid #51597C;
         box-sizing: border-box;
         box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-        border-radius: 50px;
+        border-radius: 10px;
         height: 40px;
         display: flex;
         padding: 4px 12px;
@@ -58,7 +58,7 @@
           margin-right: 8px;
           display: flex;
           align-items: center;
-          color: $root-color;
+          color: #A4ADD7;
         }
         input {
           border: none;
@@ -67,19 +67,19 @@
           background: transparent;
           width: 100%;
           padding: 5px;
-          color: $root-title-color;
+          color: #A4ADD7;
           &::-webkit-input-placeholder {
             /* Edge */
-            color: #ccc;
+            color: #A4ADD7;
           }
 
           &:-ms-input-placeholder {
             /* Internet Explorer 10-11 */
-            color: #ccc;
+            color: #A4ADD7;
           }
 
           &::placeholder {
-            color: #ccc;
+            color: #A4ADD7;
           }
         }
       }
@@ -90,7 +90,7 @@
         // max-width: 65%;
         align-items: center;
         .menu-item {
-          color: $root-color;
+          color: #fff;
           text-align: center;
           position: relative;
           cursor: pointer;
@@ -101,7 +101,7 @@
             &::after {
               content: "";
               position: absolute;
-              background-color: $root-color;
+              background-color: #fff;
               bottom: -7px;
               left: 50%;
               transform: translateX(-50%);
@@ -120,8 +120,8 @@
         }
         .active-course {
           margin:0px 10px;
-          border: 1px solid $root-color;
-          color: $root-color;
+          border: 1px solid #fff;
+          color: #fff;
           font-weight: bold;
           text-transform: uppercase;
           height: 35px;
@@ -134,7 +134,7 @@
             font-size: 13px;
           }
           &:hover {
-            background: #fdfdfd;
+            background: #0B1850;
           }
         }
         .cart {
@@ -142,7 +142,7 @@
           position: relative;
           .shopping-cart {
             font-size: 20px;
-            color: $root-color;
+            color: #fff;
             cursor: pointer;
             margin-top: 5px;
           }
@@ -178,12 +178,12 @@
           }
         }
         .lang {
-          border: 1px solid $root-color;
+          border: 1px solid #fff;
           padding: 5px;
           width: 35px;
           text-align: center;
           i {
-            color: $root-color;
+            color: #fff;
           }
         }
         .close-menu-icon {

@@ -11,7 +11,7 @@
         .user-menu-icon{
             cursor: pointer;
             .user-acc{
-                color: $root-color;
+                color: #fff;
                 font-size: 24px;
             }
         }
@@ -52,7 +52,7 @@
                     display: flex;
                     cursor: pointer;
                     padding: 10px;
-                    color: black;
+                    color: #1E2959 !important;
                     i{
                         min-width: 20px;
                         margin-right: 10px;
