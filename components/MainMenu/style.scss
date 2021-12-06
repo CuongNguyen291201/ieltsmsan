@@ -3,16 +3,16 @@
 @mixin item-with-icon {
   display: flex;
   align-items: center;
-  border: 1px solid $root-color;
+  border: 1px solid #fff;
   padding: 5px 15px;
-  color: $root-color;
+  color: #fff;
   font-weight: 500;
   width: 80px;
   justify-content: center;
   margin: 0 5px;
   &:hover {
-    background-color: white;
-    color: $root-color;
+    background-color:#0B1850;
+    color: #fff;
   }
   img {
     margin-right: 8px;

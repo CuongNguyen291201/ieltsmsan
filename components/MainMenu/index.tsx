@@ -251,8 +251,8 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               </div>
             </DialogContent>
           </Dialog>
-          <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
-          <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+          <LoginModal mainBgrColor="#19CE7A" mainTextColor="#FFF" />
+          <RegisterModal mainBgrColor="#19CE7A" mainTextColor="#FFF" />
         </div>
       </div >
     </div>
