@@ -251,11 +251,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               </div>
             </DialogContent>
           </Dialog>
-          <LoginModal
-            mainBgrColor="#EC1F24"
-            mainTextColor="#FFF"
-            loginApiEndpoint={`${process.env.NEXT_PUBLIC_NEXT_ENDPOINT || 'http://localhost:3000'}/api/auth/login`}
-          />
+          <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
           <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
         </div>
       </div >
