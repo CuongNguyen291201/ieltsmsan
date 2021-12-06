@@ -4,14 +4,14 @@ import ReactPlayer from 'react-player';
 import screenfull, { Screenfull } from 'screenfull';
 import moment from 'moment';
 import { apiGetTimeStamp } from '../../utils/apis/topicApi';
-import FullscreenIcon from '../../public/icon/fullscreen.svg';
-import ExitFullscreenIcon from '../../public/icon/fullscreen_exit.svg';
-import LiveStream from '../../public/icon/live-stream.svg';
-import ViewStream from '../../public/icon/view-stream.svg';
-import VolumeOffIcon from '../../public/icon/volume_off.svg';
-import VolumeUpIcon from '../../public/icon/volume_up.svg';
+import FullscreenIcon from '../../public/images/icons/fullscreen.svg';
+import ExitFullscreenIcon from '../../public/images/icons/fullscreen_exit.svg';
+import LiveStream from '../../public/images/icons/live-stream.svg';
+import ViewStream from '../../public/images/icons/view-stream.svg';
+import VolumeOffIcon from '../../public/images/icons/volume_off.svg';
+import VolumeUpIcon from '../../public/images/icons/volume_up.svg';
 import ScenarioInfo from '../../sub_modules/share/model/scenarioInfo';
-import PlayIcon from '../../public/icon/play-button.svg';
+import PlayIcon from '../../public/images/icons/play-button.svg';
 import './style.scss';
 
 const StreamComponent = (props: { dataTotalUser: number; dataScenario: ScenarioInfo; setIsEndLive: (isEndLive: boolean) => void }) => {

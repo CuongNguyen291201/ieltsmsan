@@ -1,7 +1,7 @@
 import { Rating } from "@material-ui/lab";
 import { useMemo } from "react";
 import { _Topic } from "../../../custom-types";
-import bgPostion from '../../../public/default/positionBg.png';
+import bgPostion from '../../../public/images/icons/positionBg.png';
 import { Course } from "../../../sub_modules/share/model/courses";
 import WebInfo from "../../../sub_modules/share/model/webInfo";
 import { getCoursePageSlug } from '../../../utils/router';

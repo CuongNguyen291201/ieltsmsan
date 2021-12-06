@@ -1,5 +1,5 @@
 import { Course } from '../../sub_modules/share/model/courses';
-import ImageCourse from '../../public/event/banner-event.jpg'
+import ImageCourse from '../../public/images/event/banner-event.jpg'
 import './style.scss';
 import { apiGetMyCourses } from '../../utils/apis/courseApi';
 import { useRouter } from 'next/router';

@@ -4,8 +4,8 @@ import { HighlightOff } from '@material-ui/icons';
 import { PropsWithoutRef, useEffect, useMemo, useReducer } from 'react';
 import DocViewer, { DocViewerRenderers, ImageProxyRenderer, JPGRenderer, MSDocRenderer, PDFRenderer, PNGRenderer } from 'react-doc-viewer';
 import { apiCountDocumentsByTopic, apiOffsetDocumentsByTopic } from '../../../utils/apis/documentApi';
-import SingleFileDocIcon from '../../../public/icon/SingleFileDocIcon.svg';
-import ArchiveFileDocIcon from '../../../public/icon/ArchiveFileDocIcon.svg';
+import SingleFileDocIcon from '../../../public/images/icons/SingleFileDocIcon.svg';
+import ArchiveFileDocIcon from '../../../public/images/icons/ArchiveFileDocIcon.svg';
 import {
   documentsListInitState,
   documentsListReducer,

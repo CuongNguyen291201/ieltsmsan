@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-// import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
-import liveAvatar from '../../public/icon/live-avatar.svg';
-import liveLike from '../../public/icon/live-like.svg';
-import liveUp from '../../public/icon/live-up.svg';
-import liveDown from '../../public/icon/live-down.svg';
+// import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg';
+import liveAvatar from '../../public/images/icons/live-avatar.svg';
+import liveLike from '../../public/images/icons/live-like.svg';
+import liveUp from '../../public/images/icons/live-up.svg';
+import liveDown from '../../public/images/icons/live-down.svg';
 import { AppState } from '../../redux/reducers';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { getRelativeTime, isEqualStringified } from '../../utils';

@@ -1,9 +1,9 @@
 import { TextareaAutosize } from "@material-ui/core";
 import { ChangeEvent, ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-// import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
-import liveAvatar from '../../public/icon/live-avatar.svg';
-import liveSent from '../../public/icon/live-sent.svg';
+// import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg';
+import liveAvatar from '../../public/images/icons/live-avatar.svg';
+import liveSent from '../../public/images/icons/live-sent.svg';
 import { AppState } from '../../redux/reducers';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import './style.scss';

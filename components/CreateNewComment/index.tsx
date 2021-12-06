@@ -1,6 +1,6 @@
 import { ForwardedRef, forwardRef, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import defaultAvatar from '../../public/default/default_avatar_otsv.jpg';
+import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg';
 import { AppState } from '../../redux/reducers';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import './style.scss';

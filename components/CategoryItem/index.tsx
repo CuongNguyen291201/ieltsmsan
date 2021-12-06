@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { memo, useMemo } from 'react';
 import { _Category } from '../../custom-types';
 import { PAGE_CATEGORY_DETAIL } from '../../custom-types/PageType';
-import itemAvatar from '../../public/default/item-avatar.png';
+import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { getBrowserSlug, getCategorySlug } from '../../utils/router';
 import './style.scss';
 

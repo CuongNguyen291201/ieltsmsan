@@ -7,7 +7,7 @@ import { memo, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { _Category } from '../../custom-types';
 import { PAGE_COURSE_DETAIL } from '../../custom-types/PageType';
-import itemAvatar from '../../public/default/item-avatar.png';
+import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { createOneAction } from '../../redux/actions';
 import { Scopes } from '../../redux/types';
 import { Course } from '../../sub_modules/share/model/courses';

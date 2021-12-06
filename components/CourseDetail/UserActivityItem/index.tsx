@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PAGE_TOPIC_DETAIL } from '../../../custom-types/PageType';
-import defaultAvatar from '../../../public/default/default_avatar_otsv.jpg';
+import defaultAvatar from '../../../public/images/icons/default_avatar_otsv.jpg';
 import { AppState } from '../../../redux/reducers';
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import {
@@ -18,8 +18,8 @@ import { UserActivity } from '../../../sub_modules/share/model/userActivity';
 import { formatFullDateTime } from '../../../utils';
 import { getBrowserSlug } from '../../../utils/router';
 import SanitizedDiv from '../../SanitizedDiv';
-import IconExercise from '../../../public/default/icon-exercise.png'
-import IconLession from '../../../public/default/video-lession.png'
+import IconExercise from '../../../public/images/icons/icon-exercise.png'
+import IconLession from '../../../public/images/icons/video-lession.png'
 import './style.scss';
 
 const UserActivityItem = (props: {

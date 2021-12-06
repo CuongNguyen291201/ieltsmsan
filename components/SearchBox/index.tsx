@@ -1,5 +1,5 @@
 import { ForwardedRef, forwardRef, memo } from 'react';
-import SearchIcon from '../../public/home/search-icon.png';
+import SearchIcon from '../../public/images/home/search-icon.png';
 import './style.scss';
 
 const SearchBox = forwardRef((

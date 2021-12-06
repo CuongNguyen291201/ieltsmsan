@@ -6,7 +6,7 @@ import { AppState } from '../../redux/reducers';
 import { Course } from '../../sub_modules/share/model/courses';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import TopicTreeNode from './TopicTreeNode';
-import newTopic from '../../public/default/newLession.png';
+import newTopic from '../../public/images/icons/newLession.png';
 
 const LOAD_LIMIT = 50;
 

@@ -3,12 +3,12 @@ import Highcharts, { color } from 'highcharts';
 import { Grid } from '@material-ui/core';
 import './style.scss'
 import { Course } from '../../sub_modules/share/model/courses';
-import AvatarUser from '../../public/default/default_avatar_otsv.jpg'
+import AvatarUser from '../../public/images/icons/default_avatar_otsv.jpg'
 import { UserInfo } from '../../sub_modules/share/model/user';
-import IconEditUser from '../../public/icon/icon-edit-user.svg'
-import IconFeedbackUser from '../../public/icon/icon-feedback-user.svg'
-import IconRecentTest from '../../public/icon/iconRecentTest.svg'
-import IconActivityRecent from '../../public/icon/IconActivityrecent.svg'
+import IconEditUser from '../../public/images/icons/icon-edit-user.svg'
+import IconFeedbackUser from '../../public/images/icons/icon-feedback-user.svg'
+import IconRecentTest from '../../public/images/icons/iconRecentTest.svg'
+import IconActivityRecent from '../../public/images/icons/IconActivityrecent.svg'
 import { RelatedCourse } from '../RelatedCourse';
 import { Fragment, useEffect, useState } from 'react';
 import { apiGetMyCourses } from '../../utils/apis/courseApi';

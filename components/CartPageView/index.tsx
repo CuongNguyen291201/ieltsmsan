@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
-import itemAvatar from '../../public/default/item-avatar.png';
+import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { removeOneAction } from '../../redux/actions';
 import { AppState } from '../../redux/reducers';
 import { Scopes } from '../../redux/types';

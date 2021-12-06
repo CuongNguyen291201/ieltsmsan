@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
-import iconWaiting from '../../public/default/waiting-live.svg';
+import iconWaiting from '../../public/images/icons/waiting-live.svg';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";

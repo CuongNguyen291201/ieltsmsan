@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 
-import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
+import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
@@ -23,7 +23,7 @@ export const MenuDesktop = () => {
                     <>
                         <div className="current-user-wrap item">
                             <div className="user-menu-icon" onClick={() => setShowUserMenu(!isShowUserMenu)} ref={toggleUserMenuRef}>
-                                {/* <img src="/home/header-user.png" alt="" /> */}
+                                {/* <img src="/images/home/header-user.png" alt="" /> */}
                                 <i className="fas fa-user-circle user-acc"></i>
                             </div>
                             {isShowUserMenu && (<div className="user-menu-panel">
@@ -62,7 +62,7 @@ export const MenuDesktop = () => {
                 ) : (
                     <>
                         <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
-                            <img src="/home/header-user.png" alt="" />
+                            <img src="/images/home/header-user.png" alt="" />
                             <i className="fas fa-user-circle header-icon"></i>
                             <div className="text">Log in</div>
                         </div>
