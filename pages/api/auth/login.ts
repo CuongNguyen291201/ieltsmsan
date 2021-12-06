@@ -3,14 +3,8 @@ import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 import { LOGIN_FAILED } from "../../../sub_modules/share/constraint";
 import { ROUTER_NOT_FOUND } from "../../../utils/router";
-import nextCors from "../../../utils/apis/nextCors";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const allowed = nextCors(req);
-  if (!allowed) {
-    res.status(403).json({ message: "Forbidden" });
-    return;
-  }
   if (req.method === "POST") {
     const domain = (req.headers.host ?? "").split(":")[0] || undefined;
     try {
