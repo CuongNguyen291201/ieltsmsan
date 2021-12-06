@@ -30,7 +30,7 @@ function StudentFeeling() {
             <SwiperSlide key={0}>
               <div className="student-feeling-slide-item">
                 <div className="image">
-                  <img src="/home/student-feeling-1.png" alt="" />
+                  <img src="/images/home/student-feeling-1.png" alt="" />
                 </div>
                 <div className="description">
                   Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,
@@ -45,7 +45,7 @@ function StudentFeeling() {
             <SwiperSlide key={1}>
               <div className="student-feeling-slide-item">
                 <div className="image">
-                  <img src="/home/student-feeling-2.png" alt="" />
+                  <img src="/images/home/student-feeling-2.png" alt="" />
                 </div>
                 <div className="description">
                   Khóa học chất lượng, chị dạy rất nhiệt tình và dễ hiểu,

@@ -4,7 +4,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { useDispatch, useSelector } from 'react-redux';
 import { Comment, CommentScopes } from '../../custom-types';
 import { useSocket } from '../../hooks/socket';
-import liveDown from '../../public/icon/live-down.svg';
+import liveDown from '../../public/images/icons/live-down.svg';
 import { createOneAction } from '../../redux/actions';
 import { createCommentAction, fetchCourseCommentsAction, fetchRepliesAction, fetchTopicCommentsAction, resetCommentStateAction } from '../../redux/actions/comment.action';
 import { AppState } from '../../redux/reducers';

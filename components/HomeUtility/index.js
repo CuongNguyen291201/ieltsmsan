@@ -14,34 +14,34 @@ function HomeUtility() {
       </div>
       <div className="list container">
         <div className="list-item wow rollIn" data-wow-delay="0.5s" >
-          <img src="/home/home-utility-1.png" alt="" />
+          <img src="/images/home/home-utility-1.png" alt="" />
           <div className="description">
             Học mọi lúc <br />
             mọi nơi
           </div>
         </div>
         <div className="list-item wow bounceInDown" data-wow-delay="0.6s">
-          <img src="/home/home-utility-2.png" alt="" />
+          <img src="/images/home/home-utility-2.png" alt="" />
           <div className="description">
             Tối ưu ghi nhớ
           </div>
         </div>
         <div className="list-item wow bounceInUp" data-wow-delay="0.7s">
-          <img src="/home/home-utility-3.png" alt="" />
+          <img src="/images/home/home-utility-3.png" alt="" />
           <div className="description">
             Kiểm tra, thi <br />
             mô phỏng kỳ thi thật
           </div>
         </div>
         <div className="list-item wow bounceInDown" data-wow-delay="0.6s">
-          <img src="/home/home-utility-4.png" alt="" />
+          <img src="/images/home/home-utility-4.png" alt="" />
           <div className="description">
             Nội dung đầy đủ <br />
             xúc tích
           </div>
         </div>
         <div className="list-item wow lightSpeedIn" data-wow-delay="0.5s">
-          <img src="/home/home-utility-5.png" alt="" />
+          <img src="/images/home/home-utility-5.png" alt="" />
           <div className="description">
             Tính tương tác cao <br />
             (chat, bình luận)

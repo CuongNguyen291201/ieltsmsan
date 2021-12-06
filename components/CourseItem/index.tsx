@@ -3,7 +3,7 @@ import { Rating } from "@material-ui/lab";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
-import itemAvatar from '../../public/default/item-avatar.png';
+import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
 import orderUtils from '../../utils/payment/orderUtils';

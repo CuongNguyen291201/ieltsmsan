@@ -9,13 +9,13 @@ function HomeBanner() {
       <div className="home-banner">
         <Carousel showStatus={false} autoPlay={true} interval={2000} infiniteLoop={true} showThumbs={false} swipeable={true} emulateTouch={true}>
           <div>
-            <img src="/home/banner-bg-2.jpeg" alt="banner-1" />
+            <img src="/images/home/banner-bg-2.jpeg" alt="banner-1" />
           </div>
           <div>
-            <img src="/home/banner-bg-3.jpeg" alt="banner-2" />
+            <img src="/images/home/banner-bg-3.jpeg" alt="banner-2" />
           </div>
           <div>
-            <img src="/home/banner-bg-4.jpeg" alt="banner-3" />
+            <img src="/images/home/banner-bg-4.jpeg" alt="banner-3" />
           </div>
         </Carousel>
       </div>

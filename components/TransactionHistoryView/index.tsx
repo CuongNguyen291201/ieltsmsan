@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MapPaymentType } from '../../custom-types/MapContraint';
-import itemAvatar from '../../public/default/item-avatar.png';
+import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { AppState } from '../../redux/reducers';
 import { PAYMENT_BANK } from '../../sub_modules/share/constraint';
 import Order from '../../sub_modules/share/model/order';

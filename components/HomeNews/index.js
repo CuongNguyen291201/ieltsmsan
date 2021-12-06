@@ -32,9 +32,9 @@ function HomeNews() {
                     <div className="quote">
                       {
                         index % 2 == 0 ? (
-                          <img src="/home/home-quote-1.png" alt="" />
+                          <img src="/images/home/home-quote-1.png" alt="" />
                         ) : (
-                          <img src="/home/home-quote-2.png" alt="" />
+                          <img src="/images/home/home-quote-2.png" alt="" />
                         )
                       }
 
@@ -48,7 +48,7 @@ function HomeNews() {
 
         </div>
         <div className="arrow">
-          <img src="/home/home-news-arrow.png" alt="" />
+          <img src="/images/home/home-news-arrow.png" alt="" />
         </div>
       </div>
     </div>

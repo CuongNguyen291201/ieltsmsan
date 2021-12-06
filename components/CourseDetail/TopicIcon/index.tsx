@@ -1,14 +1,14 @@
 import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import exerciseIcon from '../../../public/default/icon-exercise.png';
-import iconVideoLession from '../../../public/default/video-lession.png';
-import testIcon from '../../../public/icon/test-icon.svg';
+import exerciseIcon from '../../../public/images/icons/icon-exercise.png';
+import iconVideoLession from '../../../public/images/icons/video-lession.png';
+import testIcon from '../../../public/images/icons/test-icon.svg';
 import { AppState } from '../../../redux/reducers';
 import { TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from '../../../sub_modules/share/constraint';
 import MainTopicIcon from './MainTopicIcon';
 import ProgressTopicIcon from './ProgressTopicIcon';
-import iconLession from '../../../public/default/lession-.png';
-import isFree from '../../../public/default/isFree.png';
+import iconLession from '../../../public/images/icons/lession-.png';
+import isFree from '../../../public/images/icons/isFree.png';
 import './style.scss';
 
 const TopicIcon = (props: { topicType: number; progress?: number; isMain?: boolean; isTopicOpen?: boolean; topicVideoUrl?: string }) => {

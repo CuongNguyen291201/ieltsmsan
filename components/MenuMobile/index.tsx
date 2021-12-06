@@ -6,9 +6,9 @@ import { getCookie, TOKEN, removeCookie } from "../../sub_modules/common/utils/c
 import { apiLogout } from "../../utils/apis/auth";
 import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
 import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
-import defaultAvatar from '../../public/default/default_avatar_otsv.jpg'
-import iconItemMenu from '../../public/default/icon-item-menu.png'
-import iconClose from '../../public/default/icon-close.png'
+import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
+import iconItemMenu from '../../public/images/icons/icon-item-menu.png'
+import iconClose from '../../public/images/icons/icon-close.png'
 import "./style.scss"
 export const MenuMobile = () => {
     const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
@@ -92,7 +92,7 @@ export const MenuMobile = () => {
                             ) : (
                                 <>
                                     <div className="login menu-item" onClick={() => { dispatch(showLoginModalAction(true)); showMenu() }}>
-                                        {/* <img src="/home/header-user.png" alt="" /> */}
+                                        {/* <img src="/images/home/header-user.png" alt="" /> */}
                                         {/* <i className="fas fa-user-circle header-icon"></i> */}
                                         <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
                                     </div>

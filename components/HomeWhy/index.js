@@ -16,21 +16,21 @@ function HomeWhy() {
       <div className="content container">
         <div className="left">
           {/* <div className="image1">
-            <img src="/home/home-why-1.png" alt="" />
+            <img src="/images/home/home-why-1.png" alt="" />
           </div>
           <div className="image2">
-            <img src="/home/home-why-2.png" alt="" />
+            <img src="/images/home/home-why-2.png" alt="" />
           </div>
           <div className="image3">
-            <img src="/home/home-why-3.png" alt="" />
+            <img src="/images/home/home-why-3.png" alt="" />
           </div>
           <div className="image4">
-            <img src="/home/home-why-4.png" alt="" />
+            <img src="/images/home/home-why-4.png" alt="" />
           </div> */}
-          <img src="/home/home-why-1.png" className="image1 image wow bounceInDown" data-wow-delay="0.6s" alt="" />
-          <img src="/home/home-why-2.png" className="image2 image wow bounceInDown" data-wow-delay="0.8s" alt="" />
-          <img src="/home/home-why-3.png" className="image3 image wow bounceInUp" data-wow-delay="0.6s" alt="" />
-          <img src="/home/home-why-4.png" className="image4 image wow bounceInUp" data-wow-delay="0.8s" alt="" />
+          <img src="/images/home/home-why-1.png" className="image1 image wow bounceInDown" data-wow-delay="0.6s" alt="" />
+          <img src="/images/home/home-why-2.png" className="image2 image wow bounceInDown" data-wow-delay="0.8s" alt="" />
+          <img src="/images/home/home-why-3.png" className="image3 image wow bounceInUp" data-wow-delay="0.6s" alt="" />
+          <img src="/images/home/home-why-4.png" className="image4 image wow bounceInUp" data-wow-delay="0.8s" alt="" />
         </div>
         <div className="right wow bounceInRight" data-wow-delay="0.8s">
           <div className="box wow fadeInDown" data-wow-delay="1.2s">
