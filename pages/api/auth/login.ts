@@ -6,7 +6,6 @@ import { ROUTER_NOT_FOUND } from "../../../utils/router";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const domain = (req.headers.host ?? "").split(":")[0] || undefined;
     try {
       const { data, headers } = await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/login`, req.body, {
         withCredentials: true
@@ -17,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const tokenCookie = cookies[tokenIndex];
         const parsedCookie = cookie.parse(tokenCookie);
         const rewrittenCookie = cookie.serialize('token', parsedCookie["token"], {
-          domain,
+          domain: process.env.NEXT_PUBLIC_DOMAIN,
           expires: new Date(parsedCookie["Expires"] || parsedCookie["expires"]),
           sameSite: "strict",
           httpOnly: true,

@@ -47,19 +47,13 @@ export const MenuDesktop = () => {
                 <i className="fas fa-wrench"></i>
                 Trả lời bình luận
               </div> */}
-                                    <div suppressHydrationWarning>
-                                        {typeof window !== "undefined" ?
-
-                                            <div className="menu-item" onClick={() => {
-                                                apiLogout(window.location.origin).then(() => {
-                                                    router.reload()
-                                                });
-                                            }}>
-                                                <i className="fas fa-sign-out" />
-                                                Đăng xuất
-                                            </div>
-                                            : <></>
-                                        }
+                                    <div className="menu-item" onClick={() => {
+                                        apiLogout().then(() => {
+                                            router.reload()
+                                        });
+                                    }}>
+                                        <i className="fas fa-sign-out" />
+                                        Đăng xuất
                                     </div>
                                 </div>
                             </div>)}

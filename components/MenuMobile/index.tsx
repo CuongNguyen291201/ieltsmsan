@@ -79,18 +79,13 @@ export const MenuMobile = () => {
                 <i className="fas fa-wrench"></i>
                 Trả lời bình luận
               </div> */}
-                                            <div suppressHydrationWarning>
-                                                {typeof window !== "undefined" ?
-                                                    <div className="menu-item" onClick={() => {
-                                                        apiLogout(window.location.origin).then(() => {
-                                                            router.reload()
-                                                        });
-                                                    }}>
-                                                        <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng xuất
-                                                    </div>
-                                                    : <></>}
+                                            <div className="menu-item" onClick={() => {
+                                                apiLogout().then(() => {
+                                                    router.reload()
+                                                });
+                                            }}>
+                                                <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng xuất
                                             </div>
-
                                         </div>
                                     </div>
                                 </>

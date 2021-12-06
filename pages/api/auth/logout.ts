@@ -1,11 +1,10 @@
 import axios from "axios";
-import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ROUTER_NOT_FOUND } from "../../../utils/router";
+import cookie from "cookie";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
-    const domain = (req.headers.host ?? "").split(":")[0] || undefined;
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/logout`, {
         token: req.cookies["token"],
@@ -18,8 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       path: "/",
       expires: new Date(0),
       httpOnly: true,
-      maxAge: 0,
-      domain
+      maxAge: 0
     });
     res.setHeader("Set-Cookie", cookies);
     res.status(200).json({ message: "Success" });
