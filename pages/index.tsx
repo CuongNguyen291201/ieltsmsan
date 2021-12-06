@@ -12,7 +12,7 @@ import Layout from '../components/Layout';
 import StudentFeeling from '../components/StudentFeeling';
 import { _Category } from '../custom-types';
 import { wrapper } from '../redux/store';
-import { getUserFromToken } from "../sub_modules/common/api/userApis";
+import { getUserFromToken } from '../utils/apis/auth';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
 import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';

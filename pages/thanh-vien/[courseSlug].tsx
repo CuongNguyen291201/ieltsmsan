@@ -14,7 +14,7 @@ import { apiWebInfo } from "../../utils/apis/webInfoApi";
 import { apiWebSocial } from "../../utils/apis/webSocial";
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from "../../utils/router";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { getUserFromToken } from "../../sub_modules/common/api/userApis";
+import { getUserFromToken } from "../../utils/apis/auth";
 
 type CourseMembersPageProps = {
     course: Course;

@@ -2,11 +2,11 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import Layout from '../../components/Layout';
 import { wrapper } from '../../redux/store';
-import { getUserFromToken } from "../../sub_modules/common/api/userApis";
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
+import { getUserFromToken } from "../../utils/apis/auth";
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
 

@@ -3,7 +3,7 @@ import CourseDetail from '../../components/CourseDetail'
 import Layout from '../../components/Layout'
 import { setCurrentCourseAction } from '../../redux/actions/course.actions'
 import { wrapper } from '../../redux/store'
-import { getUserFromToken } from "../../sub_modules/common/api/userApis"
+import { getUserFromToken } from '../../sub_modules/common/api/userApis'
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions'
 import { Course } from '../../sub_modules/share/model/courses'
 import WebInfo from '../../sub_modules/share/model/webInfo'

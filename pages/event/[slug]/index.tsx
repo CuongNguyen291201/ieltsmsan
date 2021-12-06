@@ -7,7 +7,7 @@ import { loginSuccessAction } from '../../../sub_modules/common/redux/actions/us
 import EventExam from '../../../components/Event/EventExam';
 import { apiGetTopicById } from '../../../utils/apis/topicApi';
 import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
-import { getUserFromToken } from "../../../sub_modules/common/api/userApis";
+import { getUserFromToken } from "../../../utils/apis/auth";
 
 const ExamPage = () => {
     return (

@@ -11,9 +11,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(403).json({ message: "Forbidden" });
     return;
   }
-  console.log("req", req.headers);
   if (req.method === "POST") {
-    const domain = process.env.NODE_ENV === "production" ? `.${req.headers.host}` : "localhost";
+    const domain = (req.headers.host ?? "").split(":")[0] || undefined;
     try {
       const { data, headers } = await axios.post(`${process.env.NEXT_PUBLIC_ENDPOINT}/api/login`, req.body, {
         withCredentials: true
