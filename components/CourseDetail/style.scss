@@ -40,13 +40,16 @@
     .main-content {
       a {
         span {
-          color: #aea6ff;
+          color: #fff !important;
           font-weight: 500;
         }
       }
+      .breadcrumb-slash {
+        color: #fff !important;
+      }
       .breadcrumb-item {
         &.active {
-          color: #aea6ff;
+          color: #fff !important;
           font-weight: 500;
         }
       }
@@ -54,26 +57,28 @@
   }
   .title {
     h1 {
-      color: $root-title-color;
+      color: #fff;
       margin-bottom: 0.1em;
     }
   }
   .description {
-    color: $root-title-color;
+    color: #A4ADD7;
     width: calc(70% - 50px);
   }
   .overview-item {
     .item-main {
       margin-top: 20px;
+      display: flex;
+      align-items: center;
       .ratting {
-        border: 1px solid $root-color;
+        border: 1px solid #A4ADD7;
         padding: 7px 15px;
         border-radius: 7px;
         display: inline-flex;
       }
       .total-user-rate {
         margin-left: 20px;
-        color: $root-title-color;
+        color: #fff;
         letter-spacing: 1px;
         font-size: 18px;
         span {
@@ -84,7 +89,7 @@
     }
   }
   .tag-course {
-    background-image: url("/default/tag-course_.png");
+    background-image: url(/images/icons/tag-course_.png);
     background-size: 100%;
     z-index: 1;
     width: 200px;

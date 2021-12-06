@@ -62,7 +62,7 @@ const Layout: FC<{
 		<>
 			<Head>
 				<meta charSet="utf-8" />
-				<title>{webInfo?.name || 'Ôn thi sinh viên'}</title>
+				<title>{webInfo?.name || 'Ms An IELTS'}</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<meta name="keywords" content={webSeo?.keyword} />
 				<meta name="description" content={webSeo?.descriptionSeo} />

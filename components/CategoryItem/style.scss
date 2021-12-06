@@ -1,9 +1,10 @@
 @import "../../styles/variables.scss";
 
 @mixin item-avatar-style {
-  min-height: 200px;
+  // min-height: 200px;
   max-width: 100%;
-  height: auto;
+  max-height: 100%;
+  // height: auto;
   @media (max-width: 768px) {
     border-radius: unset;
   }
@@ -11,6 +12,10 @@
 
 .cat-avatar {
   position: relative;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  background-color: #8396a5;
   & img {
     @include item-avatar-style;
   }
@@ -44,7 +49,7 @@
       opacity: 1;
     }
     transition: 0.3s ease;
-    background-color: rgba(236, 31, 36, 0.6);
+    background-color: #2ece7659;
   }
 }
 .cat-info {

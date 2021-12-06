@@ -107,10 +107,10 @@ export const InformationCourse = (props: { course: Course }) => {
                             {isCourseDiscount && <div className={`origin-price${isCourseDiscount ? ' discount' : ''}`}>{numberFormat.format(course.cost)} VNĐ</div>}
                         </div>
                         <div className={`total-student item__${isTeacher ? ' teacher' : ''}`}>
-                            <span className="icon"><img src={iconTotalStudent} /></span> <div className="text" onClick={goToListMember}>Tổng học viên</div> <span className="number__">9999</span>
+                            <span className="icon"><img src={iconTotalStudent} /></span> <div className="text" onClick={goToListMember}>Tổng học viên</div> <span className="number__">Đang cập nhật</span>
                         </div>
                         <div className="number-study item__">
-                            <span className="icon"><img src={iconNumberStudy} alt="iconNumberStudy" /></span> <div className="text">Số bài học</div> <span className="number__">123</span>
+                            <span className="icon"><img src={iconNumberStudy} alt="iconNumberStudy" /></span> <div className="text">Số bài học</div> <span className="number__">Đang cập nhật</span>
                         </div>
                         <div className="time-study item__">
                             <span className="icon"><img src={iconClock} alt="iconClock" /></span> <div className="text">Thời gian học</div><span className="number__">{course.courseContent?.timeStudy ? `${course.courseContent?.timeStudy} ngày` : 'Không giới hạn'}</span>

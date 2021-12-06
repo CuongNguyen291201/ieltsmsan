@@ -7,14 +7,14 @@ import './style.scss';
 
 const Footer = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
   return (
-    <div className="footer">
+    <div id="footer" className="footer">
       <div className="container">
         <Grid container spacing={6}>
-          <Grid item xs={12} sm={12} md={5}>
+          <Grid item xs={12} sm={12} md={7}>
             <ContactInfoPanel webInfo={props.webInfo} webSocial={props.webSocial} />
           </Grid>
 
-          <Grid item xs={12} sm={12} md={7}>
+          <Grid item xs={12} sm={12} md={5}>
             <FooterNav />
           </Grid>
         </Grid>
