@@ -1,4 +1,5 @@
-import { Badge as MuiBadge, createStyles, Grid, withStyles } from "@material-ui/core";
+import { Badge as MuiBadge, Grid } from "@mui/material";
+import { withStyles } from "@mui/styles";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -33,7 +34,7 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: W
         }
     }, [currentUser]);
 
-    const Badge = withStyles((_) => createStyles({
+    const Badge = withStyles((_) => ({
         root: {
             width: "100%"
         },
@@ -60,7 +61,7 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: W
                                 const e = userCourse.course
                                 return (
                                     <Grid key={e._id} item xs={12} sm={6} md={3}>
-                                        <Badge badgeContent="Quá hạn học" invisible={!!userCourse.isExpired} color="secondary">
+                                        <Badge badgeContent="Quá hạn học" invisible={!!userCourse.isExpired} color="error">
                                             <CourseItem course={e} ownCourse />
                                         </Badge>
                                     </Grid>

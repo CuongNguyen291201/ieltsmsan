@@ -1,12 +1,10 @@
-import { Grid } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { setUserCourseAction, setUserCourseLoadingAction } from '../../redux/actions/course.actions';
 import { AppState } from '../../redux/reducers';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { TOPIC_TYPE_LESSON } from '../../sub_modules/share/constraint';
-import { Course } from '../../sub_modules/share/model/courses';
 import Topic from '../../sub_modules/share/model/topic';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { apiGetUserCourse } from '../../utils/apis/courseApi';

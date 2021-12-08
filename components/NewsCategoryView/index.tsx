@@ -1,5 +1,4 @@
-import { Grid } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+import { Grid, Pagination } from "@mui/material";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
@@ -52,7 +51,7 @@ const NewsCategoryView = (props: {
                             <Grid item xs={12} lg={5}>
                               <div className="image"><img src={item?.avatarUrl} alt={item?.avatarUrl} /></div>
                             </Grid>
-                            <Grid xs={12} lg={7}>
+                            <Grid item xs={12} lg={7}>
                               <div className="inf-news">
                                 <h3 className="title-item-news dot-2">{item?.title}</h3>
                                 <p className="dot-3 des-full-news"> {item.description}</p>

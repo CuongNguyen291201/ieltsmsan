@@ -1,7 +1,5 @@
-import { Dialog, Grid } from '@material-ui/core';
-import Backdrop from '@material-ui/core/Backdrop';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import { Dialog, Grid, Backdrop } from '@mui/material';
+import { LocalOffer, PlayCircleOutline } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { memo, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -66,13 +64,13 @@ const PopupShowQuickView = (props: {
               <div className="infor-course">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div className="tag-video-course">
-                    <PlayCircleOutlineIcon />  Khoá học Video Online
+                    <PlayCircleOutline />  Khoá học Video Online
                   </div>
                   <div> 180 Ngày</div>
                 </div>
                 <Grid container className="price-course">
                   <Grid item xs={12} md={8} style={{ display: "contents" }}>
-                    <LocalOfferIcon />
+                    <LocalOffer />
                     <div className="crs-discount-price">
                       {numberFormat.format(course.cost - course.discountPrice)} VNĐ
                     </div>

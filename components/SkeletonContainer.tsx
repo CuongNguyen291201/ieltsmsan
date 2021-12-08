@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
-import { Skeleton as MuiSkeleton } from "@material-ui/lab";
-import { withStyles } from "@material-ui/core";
+import { Skeleton as MuiSkeleton } from "@mui/material";
+import { withStyles } from "@mui/styles";
 
 const SkeletonContainer = (props: PropsWithChildren<{ loading?: boolean; noTransform?: boolean }>) => {
   const Skeleton = !!props.noTransform

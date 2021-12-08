@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { _Category } from '../../custom-types';
 import CategoryItem from '../CategoryItem';
 import SectionLabel from '../SectionLabel';

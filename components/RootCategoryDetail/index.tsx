@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { Fragment, useEffect, useMemo, useReducer } from 'react';
 import { _Category } from '../../custom-types';
 import { useScrollToTop } from '../../hooks/scrollToTop';

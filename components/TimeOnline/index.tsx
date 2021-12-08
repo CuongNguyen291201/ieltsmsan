@@ -1,6 +1,6 @@
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts, { color } from 'highcharts';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import './style.scss'
 import { Course } from '../../sub_modules/share/model/courses';
 import AvatarUser from '../../public/images/icons/default_avatar_otsv.jpg'

@@ -1,4 +1,4 @@
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { useMemo, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";

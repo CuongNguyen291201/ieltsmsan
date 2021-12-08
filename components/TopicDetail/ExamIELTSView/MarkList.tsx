@@ -1,4 +1,5 @@
-import { Button, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, withStyles } from "@material-ui/core";
+import { Button, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs } from "@mui/material";
+import { withStyles } from "@mui/styles"
 import { useRouter } from "next/router";
 import { PropsWithoutRef, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";

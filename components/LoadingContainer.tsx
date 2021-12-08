@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress } from "@material-ui/core";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { PropsWithChildren } from "react";
 
 const LoadingContainer = (props: PropsWithChildren<{ loading?: boolean }>) => {

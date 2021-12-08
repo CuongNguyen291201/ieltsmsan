@@ -1,6 +1,6 @@
-import { Dialog, Tooltip, withStyles } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
-import { HighlightOff } from '@material-ui/icons';
+import { Dialog, Tooltip, Pagination } from '@mui/material';
+import { withStyles } from "@mui/styles"
+import { HighlightOff } from '@mui/icons-material';
 import { PropsWithoutRef, useEffect, useMemo, useReducer } from 'react';
 import DocViewer, { DocViewerRenderers, ImageProxyRenderer, JPGRenderer, MSDocRenderer, PDFRenderer, PNGRenderer } from 'react-doc-viewer';
 import { apiCountDocumentsByTopic, apiOffsetDocumentsByTopic } from '../../../utils/apis/documentApi';

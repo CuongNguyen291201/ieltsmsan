@@ -1,5 +1,5 @@
-import { createStyles, Grid, Theme, withStyles } from '@material-ui/core';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Grid, Theme, LinearProgress } from '@mui/material';
+import { withStyles } from "@mui/styles"
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
 import React, { Fragment, useCallback } from 'react';
@@ -215,14 +215,13 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
     }
   }
 
-  const BorderLinearProgress = withStyles((theme: Theme) =>
-    createStyles({
+  const BorderLinearProgress = withStyles((theme: Theme) => ({
       root: {
         height: 30,
         borderRadius: 0,
       },
       colorPrimary: {
-        backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
+        backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700],
       },
       bar: {
         borderRadius: 0,

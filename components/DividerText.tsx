@@ -1,7 +1,8 @@
-import { createStyles, Divider, makeStyles } from "@material-ui/core";
+import Divider from "@mui/material/Divider";
+import { makeStyles } from "@mui/styles";
 import { memo, PropsWithoutRef } from "react";
 
-const useStyles = makeStyles((_) => createStyles({
+const useStyles = makeStyles((_) => ({
   dividerContainer: {
     display: "flex",
     alignItems: "center",

@@ -1,4 +1,4 @@
-import { TextareaAutosize } from "@material-ui/core";
+import { TextareaAutosize } from "@mui/material";
 import { ChangeEvent, ForwardedRef, forwardRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 // import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg';
@@ -49,8 +49,8 @@ const CreateNewComment = forwardRef((props: { onPushComment?: () => any; isReply
         value={dataTextArea}
         onChange={onChange}
         placeholder={isReply ? 'Trả lời' : 'Bình luận'}
-        rowsMin={1}
-        rowsMax={4}
+        minRows={1}
+        maxRows={4}
         ref={ref}
         onKeyPress={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {

@@ -1,11 +1,9 @@
 import FooterLogo from '../../public/images/home/footer-logo.png';
-import HomeFooterBgr from '../../public/images/home/home-footer.png';
+import IconEmail from '../../public/images/home/icon-email.png';
 import IconLocation from '../../public/images/home/icon-location.png';
 import IconPhone from '../../public/images/home/icon-phone.png';
-import IconEmail from '../../public/images/home/icon-email.png';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
-import FacebookIcon from '@material-ui/icons/Facebook';
 const ContactInfoPanel = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
   const { webInfo, webSocial } = props;
 

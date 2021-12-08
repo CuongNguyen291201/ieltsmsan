@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import React from 'react';
 import { formatDateDMY } from '../../sub_modules/common/utils';
 import News from '../../sub_modules/share/model/news';

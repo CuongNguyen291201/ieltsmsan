@@ -1,5 +1,4 @@
-import { Grid } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+import { Grid, Pagination } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

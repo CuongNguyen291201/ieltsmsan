@@ -1,5 +1,5 @@
-import { Box, Typography } from "@material-ui/core";
-import { InboxOutlined } from "@material-ui/icons";
+import { Box, Typography } from "@mui/material";
+import { InboxOutlined } from "@mui/icons-material";
 import { PropsWithoutRef } from "react";
 
 const EmptyUI = (props: PropsWithoutRef<{ description?: string }>) => {

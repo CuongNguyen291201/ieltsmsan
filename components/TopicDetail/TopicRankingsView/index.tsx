@@ -1,4 +1,4 @@
-import { NativeSelect, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@material-ui/core";
+import { NativeSelect, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@mui/material";
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -132,7 +132,7 @@ const TopicRankingsView = (props: { topic: Topic }) => {
               count={totalItems}
               page={currentPage - 1}
               rowsPerPage={sortingOpts.numRanks}
-              onChangePage={(e, page) => onChangePage({ page, key: topic._id })}
+              onPageChange={(e, page) => onChangePage({ page, key: topic._id })}
               labelRowsPerPage=""
               rowsPerPageOptions={[sortingOpts.numRanks]}
             />

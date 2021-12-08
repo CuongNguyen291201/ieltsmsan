@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import dynamic from "next/dynamic";
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';

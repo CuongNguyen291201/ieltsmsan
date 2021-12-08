@@ -13,7 +13,7 @@ import { apiGetCourseById, apiGetUserCourse } from "../../utils/apis/courseApi";
 import { apiWebInfo } from "../../utils/apis/webInfoApi";
 import { apiWebSocial } from "../../utils/apis/webSocial";
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from "../../utils/router";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import dynamic from "next/dynamic";
 
 const MemberListView = dynamic(() => import("../../components/CourseDetail/MemberListView"));

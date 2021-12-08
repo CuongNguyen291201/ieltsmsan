@@ -1,5 +1,5 @@
-import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
-import { Phone } from "@material-ui/icons"
+import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { Phone } from "@mui/icons-material"
 import Link from 'next/link';
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
