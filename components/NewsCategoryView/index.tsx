@@ -47,7 +47,7 @@ const NewsCategoryView = (props: {
                   <Grid container key={key}>
                     <Grid item xs={12}>
                       <Link href={newsSlug} as={newsSlug}>
-                        <a className="item-full-news">
+                        <a className="item-full-news plain-anchor-tag">
                           <Grid container className="item-news">
                             <Grid item xs={12} lg={5}>
                               <div className="image"><img src={item?.avatarUrl} alt={item?.avatarUrl} /></div>

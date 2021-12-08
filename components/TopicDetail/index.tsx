@@ -15,8 +15,8 @@ import LessonInfoView from './LessonInfoView';
 import StudyInfoView from './StudyInfoView';
 import './style.scss';
 
-const TopicDetail = (props: { topic: Topic; course: Course, webInfo?: WebInfo }) => {
-  const { topic, course, webInfo } = props;
+const TopicDetail = (props: { topic: Topic; webInfo?: WebInfo }) => {
+  const { topic, webInfo } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const dispatch = useDispatch();
   useEffect(() => {

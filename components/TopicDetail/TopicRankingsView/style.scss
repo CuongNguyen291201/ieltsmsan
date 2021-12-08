@@ -6,35 +6,9 @@
     .filter-option {
       label {
         font-weight: 600;
+        margin-right: 8px;
       }
-      margin: 10px 12px 10px 0;
-    }
-  }
-
-  .tbl-rankings {
-    .tbl-head {
-      display: grid;
-      border-bottom: 2px solid #dbdde0;
-      // text-align: center;
-      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
-      .tbl-cell {
-        font-weight: bold;
-        padding: 12px 0;
-      }
-    }
-  
-    .tbl-row {
-      display: grid;
-      // text-align: center;
-      align-items: center;
-      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
-      border-bottom: 1px solid #e8e8e8;
-      .tbl-cell {
-        padding: 12px 0;
-        & .action {
-          cursor: pointer;
-        }
-      }
+      margin: 10px 16px 10px 0;
     }
   }
 }

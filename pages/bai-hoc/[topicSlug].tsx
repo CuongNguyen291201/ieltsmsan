@@ -30,7 +30,7 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
       webSocial={webSocial}
       addMathJax
     >
-      <TopicDetail course={topic.course} topic={topic} webInfo={webInfo} />
+      <TopicDetail topic={topic} webInfo={webInfo} />
     </Layout>
   )
 }

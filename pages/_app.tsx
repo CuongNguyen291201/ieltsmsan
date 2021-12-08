@@ -3,11 +3,11 @@ import { AppProps } from 'next/app';
 import "nprogress/nprogress.css";
 import '../styles/_global.scss';
 import { wrapper } from '../redux/store';
-import ToastBackgroundContainer from '../sub_modules/common/components/toast_container';
 import dynamic from "next/dynamic";
 import { SnackbarProvider } from "notistack";
 
 const TopProgressBar = dynamic(() => import('../components/TopProgressBar'), { ssr: false });
+const ToastBackgroundContainer = dynamic(() => import('../sub_modules/common/components/toast_container'));
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (

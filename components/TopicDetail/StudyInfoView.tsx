@@ -9,6 +9,7 @@ import ExerciseInfoView from './ExerciseInfoView';
 import ExamIELTSView from "./ExamIELTSView";
 import TestInfoView from './TestInfoView';
 import ExamTOEICView from "./ExamTOEICView";
+import LoadingContainer from "../LoadingContainer";
 
 const StudyInfoView = (props: { topic: _Topic }) => {
   const { topic } = props;
@@ -44,17 +45,9 @@ const StudyInfoView = (props: { topic: _Topic }) => {
   }
 
   return (
-    <>
-      {
-        !isLoadedDetailTopic
-          ? <div>Loading...</div>
-          : (
-            <>
-              {renderStudyView()}
-            </>
-          )
-      }
-    </>
+    <LoadingContainer loading={!isLoadedDetailTopic}>
+      {renderStudyView()}
+    </LoadingContainer>
   );
 }
 

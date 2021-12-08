@@ -1,3 +1,4 @@
+import { NativeSelect, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@material-ui/core";
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,7 +14,6 @@ import { UserInfo } from '../../../sub_modules/share/model/user';
 import { formatDateDMY, formatTimeClock, getGameSlug } from '../../../utils';
 import { fetchPaginationAPI } from '../../../utils/apis/common';
 import { apiCountTopicStudyScores, apiGetUserExamCardData, apiOffsetRankingsByTopic, apiSeekRankingsByTopic } from '../../../utils/apis/topicApi';
-import LinkPagination from '../../LinkPagination';
 import { SortingOpts, TypeSort } from './config';
 import './style.scss';
 const { SCORE_DESC, SCORE_ASC, LATEST, EARLIEST } = SortingOpts;
@@ -74,65 +74,71 @@ const TopicRankingsView = (props: { topic: Topic }) => {
 
   return (
     <div className="topic-rankings">
-
       <div className="rank-filter">
         <div className="filter-option">
           <label htmlFor="sort-by">Sắp xếp </label>
-          <select name="sort-by" id="sort-by" defaultValue={SCORE_DESC.key} onChange={(e) => handleChangeFilter(e)}>
+
+          <NativeSelect name="sort-by" id="sort-by" defaultValue={SCORE_DESC.key} onChange={(e) => handleChangeFilter(e)}>
             <option value={SCORE_DESC.key}>Điểm cao nhất</option>
             <option value={SCORE_ASC.key}>Điểm thấp nhất</option>
             <option value={LATEST.key}>Mới nhất</option>
             <option value={EARLIEST.key}>Cũ nhất</option>
-          </select>
+          </NativeSelect>
         </div>
 
         <div className="filter-option">
           <label htmlFor="limit-filter">Hiển thị </label>
-          <select name="limit-filter" id="limit-filter" defaultValue="20" onChange={(e) => handleChangeLimit(e)}>
+          <NativeSelect name="limit-filter" id="limit-filter" defaultValue="20" onChange={(e) => handleChangeLimit(e)}>
             <option value="20">20 dòng</option>
             <option value="30">30 dòng</option>
             <option value="50">50 dòng</option>
-          </select>
+          </NativeSelect>
         </div>
       </div>
 
-      <div className="tbl-rankings">
-        <div className="tbl-head">
-          <div className="tbl-cell">STT</div>
-          <div className="tbl-cell">Họ tên</div>
-          <div className="tbl-cell">Ngày thi</div>
-          <div className="tbl-cell">Kết quả</div>
-          <div className="tbl-cell">Thời gian</div>
-          <div className="tbl-cell">Chi tiết</div>
-        </div>
+      <TableContainer>
+        <Table className="tbl-rankings">
+          <TableHead className="tbl-head">
+            <TableRow>
+              <TableCell className="tbl-cell">STT</TableCell>
+              <TableCell className="tbl-cell">Họ tên</TableCell>
+              <TableCell className="tbl-cell">Ngày thi</TableCell>
+              <TableCell className="tbl-cell">Kết quả</TableCell>
+              <TableCell className="tbl-cell">Thời gian</TableCell>
+              <TableCell className="tbl-cell">Chi tiết</TableCell>
+            </TableRow>
+          </TableHead>
 
-        {!!pageData && !!pageData[currentPage] && pageData[currentPage].map((e, i) => (
-          <div className="tbl-row" key={e._id || i}>
-            <div className="tbl-cell">{i + 1}</div>
-            <div className="tbl-cell">{e.userName}</div>
-            <div className="tbl-cell">{formatDateDMY(e.lastUpdate || e.registerDate)}</div>
-            <div className="tbl-cell">{`${e.score}/10`}</div>
-            <div className="tbl-cell">{formatTimeClock(e.totalTime)}</div>
-            <div className="tbl-cell">
-              <i
-                className="fas fa-info action"
-                onClick={() => handleReview(e)}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+          <TableBody>
+            {!!pageData && !!pageData[currentPage] && pageData[currentPage].map((e, i) => (
+              <TableRow className="tbl-row" key={e._id || i}>
+                <TableCell className="tbl-cell">{i + 1}</TableCell>
+                <TableCell className="tbl-cell">{e.userName}</TableCell>
+                <TableCell className="tbl-cell">{formatDateDMY(e.lastUpdate || e.registerDate)}</TableCell>
+                <TableCell className="tbl-cell">{`${e.score}/10`}</TableCell>
+                <TableCell className="tbl-cell">{formatTimeClock(e.totalTime)}</TableCell>
+                <TableCell className="tbl-cell">
+                  <i
+                    className="fas fa-info action"
+                    onClick={() => handleReview(e)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
 
-      <div className="pagination">
-        {!!totalItems && !!pageData && !!currentPage && !!mapTotalPages[topic._id] && <LinkPagination
-          total={totalItems}
-          totalPages={mapTotalPages[topic._id]}
-          currentPage={currentPage}
-          startIndex={(currentPage - 1) * sortingOpts.numRanks + 1}
-          endIndex={(currentPage - 1) * sortingOpts.numRanks + pageData[currentPage].length}
-          onClick={(page: number) => onChangePage({ page, key: topic._id })}
-        />}
-      </div>
+          <TableFooter>
+            <TablePagination
+              count={totalItems}
+              page={currentPage - 1}
+              rowsPerPage={sortingOpts.numRanks}
+              onChangePage={(e, page) => onChangePage({ page, key: topic._id })}
+              labelRowsPerPage=""
+              rowsPerPageOptions={[sortingOpts.numRanks]}
+            />
+          </TableFooter>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

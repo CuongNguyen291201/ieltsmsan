@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { PropsWithoutRef, useEffect, useState } from "react";
 import { InfoCourse } from "../../components/CourseDetail/InfoCourse";
-import MemberListView from "../../components/CourseDetail/MemberListView";
 import Layout from '../../components/Layout';
 import { setCurrentCourseAction } from "../../redux/actions/course.actions";
 import { wrapper } from "../../redux/store";
@@ -15,6 +14,9 @@ import { apiWebInfo } from "../../utils/apis/webInfoApi";
 import { apiWebSocial } from "../../utils/apis/webSocial";
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from "../../utils/router";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import dynamic from "next/dynamic";
+
+const MemberListView = dynamic(() => import("../../components/CourseDetail/MemberListView"));
 
 type CourseMembersPageProps = {
     course: Course;

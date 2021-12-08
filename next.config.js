@@ -2,9 +2,12 @@ const withCSS = require('@zeit/next-css');
 const withSass = require('@zeit/next-sass');
 const withImages = require('next-images');
 const withPlugins = require('next-compose-plugins');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+	enabled: process.env.ANALYZE === 'true'
+});
 
 
-module.exports = withPlugins([withCSS, withSass, withImages, {
+module.exports = withPlugins([withBundleAnalyzer, withCSS, withSass, withImages, {
 	async rewrites() {
 		return [
 		  {

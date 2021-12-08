@@ -34,33 +34,27 @@ const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSo
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req, res, query }) => {
-  try {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-      store.dispatch(loginSuccessAction(userInfo));
-    }
-    const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS });
-    const webSocial = await apiWebSocial();
+  const userInfo = await getUserFromToken(req);
+  if (userInfo) {
+    store.dispatch(loginSuccessAction(userInfo));
+  }
+  const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS });
+  const webSocial = await apiWebSocial();
 
-    const pageQuery = parseInt((query.page || '1') as string);
-    const skip = (isNaN(pageQuery) || pageQuery <= 1) ? 0 : (pageQuery - 1) * NEWS_LIMIT
-    const { data: newsList, total: totalNews } = await apiFullNews({ skip, limit: NEWS_LIMIT });
-    const { data: { categories: categoryNews } } = await apiNewsCategories();
+  const pageQuery = parseInt((query.page || '1') as string);
+  const skip = (isNaN(pageQuery) || pageQuery <= 1) ? 0 : (pageQuery - 1) * NEWS_LIMIT
+  const { data: newsList, total: totalNews } = await apiFullNews({ skip, limit: NEWS_LIMIT });
+  const { data: { categories: categoryNews } } = await apiNewsCategories();
 
-    return {
-      props: {
-        webInfo: webInfoRes.webInfo,
-        webSeo: webInfoRes.webSeo,
-        webSocial,
-        newsList,
-        totalNews,
-        categoryNews
-      }
+  return {
+    props: {
+      webInfo: webInfoRes.webInfo,
+      webSeo: webInfoRes.webSeo,
+      webSocial,
+      newsList,
+      totalNews,
+      categoryNews
     }
-  } catch (e) {
-    console.error(e);
-    res.writeHead(302, { Location: ROUTER_ERROR }).end();
-    return;
   }
 });
 

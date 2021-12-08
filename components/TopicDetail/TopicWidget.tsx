@@ -260,21 +260,6 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
 
 // MY CARD BOX
 
-const CardDataBoxSkeleton = () => (
-  <div className="section3-box">
-    <div className="head"><Skeleton /></div>
-    <div className="content">
-      <div className="image skeleton">
-        <Skeleton />
-      </div>
-      <div className="sentence-wrap">
-        <div className="sentence-number skeleton"><Skeleton /></div>
-        <div className="sentence-text skeleton"><Skeleton /></div>
-      </div>
-    </div>
-  </div>
-)
-
 const CardDataBoxView = (props: { text: string; numCard: number; url: string; onClick: () => any }) => (
   <div className="section3-box"
     onClick={() => props.onClick()}
@@ -287,15 +272,6 @@ const CardDataBoxView = (props: { text: string; numCard: number; url: string; on
     </div>
     <div className="head_">{props.text}</div>
   </div>
-);
-
-export const MyCardDataSkeleton = () => (
-  <Grid className="section3">
-    <CardDataBoxSkeleton />
-    <CardDataBoxSkeleton />
-    <CardDataBoxSkeleton />
-    <CardDataBoxSkeleton />
-  </Grid>
 );
 
 // STATIC SKILL
