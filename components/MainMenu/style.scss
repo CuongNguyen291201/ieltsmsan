@@ -51,7 +51,7 @@
         display: flex;
         padding: 4px 12px;
         align-items: center;
-        width: 80%;
+        width: 60%;
         margin-left: 20px;
         margin-right: 20px;
         .icon {
@@ -97,6 +97,8 @@
           font-size: 16px;
           margin:0px 10px;
           min-width: 55px;
+          display: flex;
+          align-items: center;
           &:hover {
             &::after {
               content: "";
@@ -116,6 +118,9 @@
                 width: 100%;
               }
             }
+          }
+          @media all and (max-width: 1025px) {
+            font-size: 12px;
           }
         }
         .active-course {
@@ -288,6 +293,18 @@
             justify-content: center;
             line-height: 0;
           }
+        }
+      }
+    }
+  }
+
+  @include responsive(xxl) {
+    .main-menu {
+      .menu{
+        .menu-item{
+          min-width: 78px !important;
+          margin: 0 !important;
+          justify-content: center;
         }
       }
     }
