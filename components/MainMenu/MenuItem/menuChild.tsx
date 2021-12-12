@@ -14,13 +14,13 @@ const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebM
         setAnchorEl(null);
     }
 
-    const showMenu = (mapMenu: { [itemId: string]: WebMenuItem[] }, item: WebMenuItem, depth = 0) => {
+    const showMenu = (mapMenu: { [itemId: string]: WebMenuItem[] }, item: WebMenuItem) => {
         return (
             <>
                 {mapMenu[item._id].map((menuC) => (
                     <Grid item key={menuC._id} xs={4}>
-                        {depth === 0 ? <span onClick={() => router.push(menuC.url)} style={{ fontWeight: 600}}>{menuC.title}</span> : <span onClick={() => router.push(menuC.url)} style={{ fontSize: "12px" }}>{menuC.title}</span>}
-                        <div>{mapItem[menuC._id]?.length > 0 && showMenu(mapItem, menuC, depth + 1)}</div>
+                        {mapItem[menuC._id]?.length > 0 ? <span onClick={() => router.push(menuC.url)} style={{ fontWeight: 600}}>{menuC.title}</span> : <span onClick={() => router.push(menuC.url)} style={{ fontSize: "12px" }}>{menuC.title}</span>}  {/* Check menuItem cấp 2 */}
+                        <div>{mapItem[menuC._id]?.length > 0 && showMenu(mapItem, menuC)}</div>
                     </Grid>
                 ))}
             </>
@@ -55,7 +55,7 @@ const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebM
             >
                 <MenuExpandContainer>
                     <Grid container spacing={2}>
-                        {showMenu(mapItem, item, 0)}
+                        {showMenu(mapItem, item)}
                     </Grid>
                 </MenuExpandContainer>
             </MenuPopover>

@@ -2,7 +2,7 @@ import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/c
 import { Phone } from "@material-ui/icons"
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadListAction } from '../../redux/actions';
 import { AppState } from "../../redux/reducers";
@@ -17,11 +17,12 @@ import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_CART, ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
-import { initMenuState, MenuState } from "./MenuItem/initMenu";
 import MenuChild from "./MenuItem/menuChild";
+import { menuState, webMenuReducer, webMenuAction } from "./MenuItem/webMenu.reducer";
 import "./style.scss";
 function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
+  const [{ rootItems, mapItem }, menuLogic] = useReducer(webMenuReducer, menuState);
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
@@ -29,7 +30,6 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
   const [activedIds, setActivedIds] = useState<string[]>([])
   const { items: cartItems, isLoading: cartLoading } = useSelector((state: AppState) => state.cartReducer);
   const toggleUserMenuRef = useRef<HTMLDivElement>();
-  const [webMenu, setWebMenu] = useState<MenuState>();
 
   const codeRef = useRef(null);
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
 
   useEffect(() => {
     webMenuApi().then((res) => {
-      setWebMenu(initMenuState(res));
+      menuLogic(webMenuAction(res));
     })
   }, [])
 
@@ -184,9 +184,9 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                   Kích hoạt khóa học
                 </div> */}
 
-                {!!webMenu && webMenu.rootItems.map((item) => (
+                {!!rootItems && rootItems.map((item) => (
                   <div key={item._id} className="menu-item">
-                    {webMenu.mapItem[item._id].length > 0 ? <MenuChild item={item} mapItem={webMenu.mapItem} /> : <span onClick={() => router.push(item.url)}>{item.title}</span>}
+                    {mapItem[item._id].length > 0 ? <MenuChild item={item} mapItem={mapItem} /> : <span onClick={() => router.push(item.url)}>{item.title}</span>}
                   </div>
                 ))}
 
@@ -210,7 +210,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                     <span className="cart-number">{cartItems.length}</span>
                   }
                 </div>
-                <MenuMobile webMenu={webMenu} />
+                <MenuMobile rootItems={rootItems} mapItem={mapItem} />
               </div>
             </Grid>
           </Grid>
