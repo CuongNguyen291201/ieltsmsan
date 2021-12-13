@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/router";
-import { Collapse, Grid } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Collapse, Grid } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WebMenuItem } from '../../../sub_modules/share/model/webMenuItem';
 import iconItemMenu from '../../../public/images/icons/icon-item-menu.png';
 

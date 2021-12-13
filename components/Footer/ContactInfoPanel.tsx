@@ -1,10 +1,7 @@
+import { EmailTwoTone, LocationOnTwoTone, PhoneTwoTone } from "@mui/icons-material";
 import FooterLogo from '../../public/images/home/footer-logo.png';
-import IconEmail from '../../public/images/home/icon-email.png';
-import IconLocation from '../../public/images/home/icon-location.png';
-import IconPhone from '../../public/images/home/icon-phone.png';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
-import { LocationOnTwoTone, EmailTwoTone, PhoneTwoTone } from "@material-ui/icons";
 const ContactInfoPanel = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
   const { webInfo, webSocial } = props;
 

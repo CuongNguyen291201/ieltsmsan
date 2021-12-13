@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/router";
-import { Grid, Paper, Popover, withStyles, createStyles } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Grid, Paper, Popover } from '@mui/material';
+import { withStyles } from '@mui/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WebMenuItem } from '../../../sub_modules/share/model/webMenuItem';
 
 const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebMenuItem[] } }) => {
@@ -27,7 +28,7 @@ const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebM
         )
     }
 
-    const MenuPopover = withStyles((_) => createStyles({
+    const MenuPopover = withStyles((_) => ({
         paper: {
             minHeight: "unset",
             maxHeight: "unset",
@@ -36,7 +37,7 @@ const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebM
         }
     }))(Popover);
 
-    const MenuExpandContainer = withStyles((_) => createStyles({
+    const MenuExpandContainer = withStyles((_) => ({
         root: {
             minWidth: "768px",
             padding: "16px"

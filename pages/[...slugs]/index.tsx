@@ -59,59 +59,53 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
-  try {
-    const { webInfo } = await apiWebInfo();
-    const webSocial = await apiWebSocial();
+  const { webInfo } = await apiWebInfo();
+  const webSocial = await apiWebSocial();
 
-    if (slugs.length === 1) {
-      const routePath = slugs[0];
-      const items = routePath.split('-');
-      const [id] = items.slice(-1);
-      const type = Number(...items.slice(-2, -1));
-      const slug = items.slice(0, -2).join('-');
+  if (slugs.length === 1) {
+    const routePath = slugs[0];
+    const items = routePath.split('-');
+    const [id] = items.slice(-1);
+    const type = Number(...items.slice(-2, -1));
+    const slug = items.slice(0, -2).join('-');
 
-      if (!id || !slug) {
-        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-        return;
-      }
-
-
-      if (id.startsWith(NEWS_ID_PREFIX)) {
-        const newsId = id.slice(NEWS_ID_PREFIX.length);
-        const news = await apiGetNewsById(newsId);
-        if (!news) {
-          res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-          return;
-        }
-        return {
-          props: {
-            type: PAGE_NEWS_DETAIL,
-            news,
-            webInfo, webSocial
-          }
-        }
-      }
-
-      if (type === PAGE_CATEGORY_DETAIL) {
-        const [category, childCategories] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
-
-        store.dispatch(setCurrentCategoryAction(category));
-        return {
-          props: {
-            id, type, slug, category, childCategories, webInfo, webSocial
-          }
-        }
-      } else if (type === PAGE_REPLY_COMMENT) {
-        return {
-          props: { id, slug, type, webInfo, webSocial }
-        }
-      }
+    if (!id || !slug) {
       res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
       return;
     }
-  } catch (e) {
-    console.log('Internal Server Error', e);
-    res.writeHead(302, { Location: ROUTER_ERROR }).end();
+
+
+    if (id.startsWith(NEWS_ID_PREFIX)) {
+      const newsId = id.slice(NEWS_ID_PREFIX.length);
+      const news = await apiGetNewsById(newsId);
+      if (!news) {
+        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+        return;
+      }
+      return {
+        props: {
+          type: PAGE_NEWS_DETAIL,
+          news,
+          webInfo, webSocial
+        }
+      }
+    }
+
+    if (type === PAGE_CATEGORY_DETAIL) {
+      const [category, childCategories] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
+
+      store.dispatch(setCurrentCategoryAction(category));
+      return {
+        props: {
+          id, type, slug, category, childCategories, webInfo, webSocial
+        }
+      }
+    } else if (type === PAGE_REPLY_COMMENT) {
+      return {
+        props: { id, slug, type, webInfo, webSocial }
+      }
+    }
+    res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
     return;
   }
 });
