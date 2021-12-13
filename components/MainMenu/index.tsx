@@ -144,7 +144,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
     <div id="main-menu">
       <div className="main-menu">
         <div className="layout-header">
-          <Grid container wrap="nowrap" justify="space-between">
+          <Grid container wrap="nowrap" justifyContent="space-between">
             <Grid item md={4} className="left-header">
               <Link href='/'>
                 <a>

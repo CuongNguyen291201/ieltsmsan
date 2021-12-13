@@ -24,7 +24,7 @@ export const apiGetCategoryBySlug = async (slug: string): Promise<_Category | nu
   return null;
 };
 
-export const apiGetAllCategoriesWithCourses = async (args?: { limitCourses?: number }): Promise<_Category[]> => {
+export const apiGetAllCategoriesWithCourses = async (args?: { limitCourses?: number, position?: number }): Promise<_Category[]> => {
   const { data, status } = await POST_API('all-categories', args);
   if (status !== response_status_codes.success) return [];
   return (data as Category[]).sort((a, b) => a.index - b.index)
