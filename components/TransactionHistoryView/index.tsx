@@ -1,5 +1,4 @@
-import { Grid } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+import { Grid, Pagination } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -12,8 +11,7 @@ import OrderCombo from '../../sub_modules/share/model/orderCombo';
 import { UserInfo } from '../../sub_modules/share/model/user';
 import { formatDateDMY, formatFullDateTime, formatTimeHMS, numberFormat } from '../../utils';
 import { apiGetUserOrders } from '../../utils/apis/orderApi';
-import { getCoursePageSlug, ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
-import Breadcrumb from '../Breadcrumb';
+import { getCoursePageSlug } from '../../utils/router';
 import Bank from '../CoursePay/payment-content/Bank';
 import EmptyUI from "../EmptyUI";
 import LoadingUI from "../LoadingUI";
@@ -67,7 +65,6 @@ const TransactionHistoryView = () => {
   }
 
   return (<>
-    <Breadcrumb items={[{ name: 'Lịch sử giao dịch', slug: ROUTER_TRANSACTION_HISTORY }]} />
 
     <div id="transaction-history" className="container">
       <Grid container spacing={2} className="main-transaction-view">

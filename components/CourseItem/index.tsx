@@ -1,5 +1,4 @@
-import { Paper, Tooltip } from '@material-ui/core';
-import { Rating } from "@material-ui/lab";
+import { Paper, Tooltip, Rating } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';

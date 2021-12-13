@@ -1,21 +1,17 @@
-import { Box, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
 import { AppState } from '../../redux/reducers';
 import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
-import { getExamScoreDetails, getSkills } from '../../sub_modules/game/api/ExamApi';
-import { EXAM_SCORE_FINISH, STUDY_SCORE_DETAIL_CORRECT } from '../../sub_modules/share/constraint';
+import { EXAM_SCORE_FINISH } from '../../sub_modules/share/constraint';
 import Skill from "../../sub_modules/share/model/skill";
-import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
-import { UserInfo } from '../../sub_modules/share/model/user';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import ExamTOEICResutls from "./ExamTOEICResults";
 import TestOverView from './TestOverview';
-import { StatisticSkillSkeleton, TopicInfoCommonView } from './TopicWidget';
+import { TopicInfoCommonView } from './TopicWidget';
 
 const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 

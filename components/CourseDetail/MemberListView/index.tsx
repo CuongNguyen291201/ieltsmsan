@@ -1,6 +1,7 @@
 import {
-  Button, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, withStyles
-} from "@material-ui/core";
+  Button, Table, TableBody, TableCell as MuiTableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow
+} from "@mui/material";
+import { withStyles } from "@mui/styles"
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
@@ -226,7 +227,7 @@ const MemberListView = (props: { course: Course }) => {
                           rowsPerPage={LOAD_LIMIT}
                           rowsPerPageOptions={[]}
                           page={currentPage}
-                          onChangePage={(e, page) => {
+                          onPageChange={(e, page) => {
                             onChangePage(page)
                           }}
                           labelDisplayedRows={({ count }) => {

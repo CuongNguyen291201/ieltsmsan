@@ -1,4 +1,4 @@
-import { Rating } from "@material-ui/lab";
+import { Rating } from "@mui/material";
 import { useMemo } from "react";
 import { _Topic } from "../../../custom-types";
 import bgPostion from '../../../public/images/icons/positionBg.png';

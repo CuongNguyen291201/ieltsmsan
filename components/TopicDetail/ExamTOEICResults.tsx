@@ -1,10 +1,11 @@
-import { Box, createStyles, Grid, makeStyles, Paper, Slider, withStyles } from "@material-ui/core";
+import { Box, Grid, Paper, Slider } from "@mui/material";
+import { makeStyles, withStyles }  from "@mui/styles"
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { SKILL_TYPE_LISTENING, SKILL_TYPE_READING } from "../../sub_modules/share/constraint";
 
-const useStyles = makeStyles((_) => createStyles({
+const useStyles = makeStyles((_) => ({
   toeicScorePanel: {
     padding: "16px"
   },
@@ -62,7 +63,7 @@ const ExamTOEICResutls = () => {
     }
   }, [studyScore]);
 
-  const ScoreSlider = withStyles((_) => createStyles({
+  const ScoreSlider = withStyles((_) => ({
     root: {
       marginTop: "50px"
     },

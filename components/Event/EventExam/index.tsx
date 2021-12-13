@@ -10,7 +10,7 @@ import { updateTopicExerciseAction } from '../../../redux/actions/topic.action';
 import { EXAM_SCORE_PAUSE, EXAM_SCORE_PLAY } from '../../../sub_modules/share/constraint';
 import defaultAvatar from '../../../public/images/event/default-avatar-rank.png';
 import './style.scss';
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 
 const EventExam = () => {

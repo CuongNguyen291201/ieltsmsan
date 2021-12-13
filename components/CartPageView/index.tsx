@@ -1,5 +1,4 @@
-import { Grid, Paper } from "@material-ui/core";
-import { Rating } from "@material-ui/lab";
+import { Grid, Paper, Rating } from "@mui/material";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from 'react';

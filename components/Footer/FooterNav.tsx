@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core"
+import { Grid } from "@mui/material"
 import { Fragment } from 'react'
 import SectionLabel from '../SectionLabel'
 import FooterNavItem, { FooterNavItemProps } from './FooterNavItem'

@@ -1,4 +1,4 @@
-import { Slider, Tooltip } from "@material-ui/core";
+import { Slider as MuiSlider, Tooltip } from "@mui/material";
 import {
   Forward10,
   Pause,
@@ -13,8 +13,9 @@ import {
   VolumeUp,
   Fullscreen,
   FullscreenExit
-} from "@material-ui/icons";
-import { ChangeEvent, forwardRef, memo, PropsWithoutRef, useCallback, useEffect, useRef, useState } from "react";
+} from "@mui/icons-material";
+import { withStyles } from "@mui/styles";
+import { forwardRef, memo, PropsWithoutRef, useCallback, useEffect, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import ReactPlayer from "react-player";
 import screenfull from "screenfull";
@@ -80,7 +81,7 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
     }
   }
 
-  const handleChangeVolume = (event: ChangeEvent<any>, value: number) => {
+  const handleChangeVolume = (event: Event, value: number) => {
     if (value > 0 && muted) setMuted(false);
     setVolume(value);
   }
@@ -114,6 +115,13 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
       }
     }
   }
+
+  const Slider = withStyles({
+    thumb: {
+      height: "10px",
+      width: "10px"
+    }
+  })(MuiSlider);
 
   return (
     <div {...{ id }} className={`com-video-player-main${className ? ` ${className}` : ''}`} ref={videoContainerRef}>

@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, TextField } from "@material-ui/core";
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
 import React, { memo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';

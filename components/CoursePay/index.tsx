@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@mui/material";
 import { useRouter } from 'next/router';
 import randomstring from 'randomstring';
 import React, { useEffect, useState } from 'react';
@@ -160,7 +160,7 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
             />}
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" color="secondary" onClick={handleCancel}>Huỷ</Button>
+          <Button variant="contained" color="error" onClick={handleCancel}>Huỷ</Button>
 
           <Button variant="contained" color="primary" onClick={() => {
             if (isOrderCreated) {

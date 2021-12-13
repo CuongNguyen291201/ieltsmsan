@@ -2,6 +2,7 @@ import { saveAs } from 'file-saver';
 import { ServerResponse } from "http";
 import { extension } from 'mime-types';
 import moment from 'moment';
+import { formatDuration } from "../sub_modules/common/utils/timeFormat";
 import { BAREM_SCORE_SAT_BIO, BAREM_SCORE_SAT_CHEMISTRY, BAREM_SCORE_SAT_MATH, BAREM_SCORE_SAT_PHYSICS, BAREM_SCORE_TOEIC } from '../sub_modules/game/src/gameConfig';
 import { ROUTER_GAME } from './router';
 moment.locale('vi');
@@ -57,7 +58,15 @@ export const getGameSlug = (topicId: string) => ({
 
 export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
 
-export const getRelativeTime = (time: number) => moment(time).fromNow();
+export const getRelativeTime = (time: number) => {
+  const timeNow = moment();
+  const diffTimeSeconds = Math.abs(moment(time).diff(timeNow, "seconds"));
+  if (diffTimeSeconds < 10) return 'Vài giây trước'; // after 10 seconds
+  else if (diffTimeSeconds < 3600) return `${Math.abs(moment(time).diff(timeNow, "hours"))} giờ trước`;
+  else if (diffTimeSeconds < 604800) return `${Math.abs(moment(time).diff(timeNow, "days"))} ngày`;
+  else if (diffTimeSeconds < 31556926) return `${Math.abs(moment(time).diff(timeNow, "weeks"))} tuần`;
+  return moment(time).format("DD/MM/yyyy");
+};
 
 export const formatFullDateTime = (time: number) => moment(time).format('HH:mm:ss DD/MM/YYYY');
 

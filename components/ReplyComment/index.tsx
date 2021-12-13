@@ -9,9 +9,10 @@ import {
   InputLabel,
   MenuItem,
   Select, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, TextField
-} from "@material-ui/core";
-import { Autocomplete, Pagination } from "@material-ui/lab";
+  TableHead, TableRow, TextField,
+  Autocomplete, Pagination
+} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select"
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
@@ -81,8 +82,9 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
       createDate: `${formatFullDateTime(row.createDate)}`,
       replyStatus: <>
         <Select
+          size="small"
           defaultValue={row.replyStatus}
-          onChange={(e: ChangeEvent<{ value: number }>) => handleUpdateReply(row._id, e.target.value, index)}
+          onChange={(e: SelectChangeEvent<number>) => handleUpdateReply(row._id, Number(e.target.value), index)}
           style={{
             width: 120,
             color: row.replyStatus === 1 ? '#008000' : (row.replyStatus === 2 ? 'rgb(255, 202, 0)' : 'unset')
@@ -240,12 +242,13 @@ const ReplyComment = (props: { category: _Category; childCategories: _Category[]
                 <FormControl size="small" fullWidth variant="outlined">
                   <InputLabel id="filter-status">Chọn trạng thái</InputLabel>
                   <Select
+                    size="small"
                     labelId="filter-status"
                     value={statusFilter}
                     label="Chọn trạng thái"
                     autoWidth
-                    onChange={(e: ChangeEvent<{ value: number }>) => {
-                      setStatusFilter(e.target.value);
+                    onChange={(e: SelectChangeEvent<number>) => {
+                      setStatusFilter(Number(e.target.value));
                     }}
                   >
                     <MenuItem value={-1}>Tất cả</MenuItem>
