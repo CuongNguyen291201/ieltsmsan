@@ -2,7 +2,7 @@ import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/c
 import { Phone } from "@material-ui/icons"
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadListAction } from '../../redux/actions';
 import { AppState } from "../../redux/reducers";
@@ -12,13 +12,17 @@ import RegisterModal from "../../sub_modules/common/components/registerModal";
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
 import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
+import { webMenuApi } from "../../utils/apis/menuApi";
 import orderUtils from '../../utils/payment/orderUtils';
 import { ROUTER_CART, ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
+import MenuChild from "./MenuItem/menuChild";
+import { menuState, webMenuReducer, webMenuAction } from "./MenuItem/webMenu.reducer";
 import "./style.scss";
 function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
+  const [{ rootItems, mapItem }, menuLogic] = useReducer(webMenuReducer, menuState);
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
@@ -48,6 +52,12 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
       }
     }
   }, []);
+
+  useEffect(() => {
+    webMenuApi().then((res) => {
+      menuLogic(webMenuAction(res));
+    })
+  }, [])
 
   useEffect(() => {
     if (cartLoading) {
@@ -152,7 +162,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
             </Grid>
             <Grid item md={8} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
               <div className="menu">
-                <div className="menu-item" onClick={() => router.push("/")}>
+                {/* <div className="menu-item" onClick={() => router.push("/")}>
                   Khoá Học
                 </div>
                 <div
@@ -172,7 +182,13 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                 </div>
                 <div onClick={() => showModalActiveCourse()} className="active-course">
                   Kích hoạt khóa học
-                </div>
+                </div> */}
+
+                {!!rootItems && rootItems.map((item) => (
+                  <div key={item._id} className="menu-item">
+                    {mapItem[item._id].length > 0 ? <MenuChild item={item} mapItem={mapItem} /> : <span onClick={() => router.push(item.url)}>{item.title}</span>}
+                  </div>
+                ))}
 
                 <div className="cart item" onClick={() => router.push(ROUTER_CART)}>
                   <i className="far fa-shopping-cart shopping-cart"></i>
@@ -194,7 +210,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
                     <span className="cart-number">{cartItems.length}</span>
                   }
                 </div>
-                <MenuMobile />
+                <MenuMobile rootItems={rootItems} mapItem={mapItem} />
               </div>
             </Grid>
           </Grid>

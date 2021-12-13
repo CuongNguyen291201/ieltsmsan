@@ -10,7 +10,10 @@ import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import iconItemMenu from '../../public/images/icons/icon-item-menu.png'
 import iconClose from '../../public/images/icons/icon-close.png'
 import "./style.scss"
-export const MenuMobile = () => {
+import MenuChildMobile from "./MenuItemMobile/menuChildMobile";
+import { WebMenuItem } from "../../sub_modules/share/model/webMenuItem";
+export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId: string]: WebMenuItem[]} }) => {
+    const { rootItems, mapItem } = props;
     const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
     const [showModalAct, setShowModalAct] = useState(false);
     const router = useRouter();
@@ -42,7 +45,7 @@ export const MenuMobile = () => {
                     <img className="icon-close" src={iconClose} alt="iconClose" />
                 </div>
                 <div className="wraper-menu-item">
-                    <div className="menu-item" onClick={() => router.push("/")}>
+                    {/* <div className="menu-item" onClick={() => router.push("/")}>
                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Khoá Học
                     </div>
                     <div
@@ -62,7 +65,12 @@ export const MenuMobile = () => {
                     </div>
                     <div onClick={() => showModalActiveCourse()} className="menu-item">
                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Kích hoạt khóa học
-                    </div>
+                    </div> */}
+                    {rootItems.map((item) => (
+                        <div key={item._id} className="menu-item">
+                            {mapItem[item._id].length > 0 ? <MenuChildMobile item={item} mapItem={mapItem} /> : <span><img src={iconItemMenu} alt="iconItemMenu" />{item.title}</span>}
+                        </div>
+                    ))}
                     <div>
                         {
                             currentUser ? (
