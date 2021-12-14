@@ -12,11 +12,12 @@ import { _Category } from '../custom-types';
 import { wrapper } from '../redux/store';
 import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
+import { CATEGORY_POSITION_LANDING_PAGE, CATEGORY_POSITION_MENU } from '../sub_modules/share/constraint';
 import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
 import { removeServerSideCookie } from "../utils";
-import { apiGetCategories } from '../utils/apis/categoryApi';
+import { apiGetCategories, apiGetAllCategoriesWithCourses } from '../utils/apis/categoryApi';
 import { apiWebInfo } from '../utils/apis/webInfoApi';
 import { apiWebSocial } from '../utils/apis/webSocial';
 
@@ -30,12 +31,12 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
   }, [router.isReady]);
   return (
     <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
-      <div style={{boxShadow:'0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor:'white'}}>
-      <HomeBanner />
-      <HomeCategorySection categories={props.homeCategories} />
-      {/* <HomeWhy></HomeWhy> */}
-      {/* <HomeUtility></HomeUtility> */}
-      </div>
+      {/* <div style={{ boxShadow: '0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor: 'white' }}> */}
+        {/* <HomeBanner /> */}
+        <HomeCategorySection categories={props.homeCategories} />
+        {/* <HomeWhy></HomeWhy> */}
+        {/* <HomeUtility></HomeUtility> */}
+      {/* </div> */}
     </Layout>
   )
 }
@@ -50,11 +51,12 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     removeServerSideCookie(res);
   }
 
-  const { data, status } = await apiGetCategories();
+  // const { data, status } = await apiGetCategories();
+  const homeCategories = await apiGetAllCategoriesWithCourses({ limitCourses: 6, position: CATEGORY_POSITION_LANDING_PAGE });
   const { webInfo, webSeo } = await apiWebInfo();
   const webSocial = await apiWebSocial();
 
-  const homeCategories = status === 0 ? data : [];
+  // const homeCategories = status === 0 ? data : [];
 
   return {
     props: { homeCategories, webInfo, webSeo, webSocial }
