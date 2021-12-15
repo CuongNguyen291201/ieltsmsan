@@ -1,16 +1,15 @@
-import { FC } from 'react';
+import { ThemeProvider } from "@mui/material/styles";
 import { AppProps } from 'next/app';
-import "nprogress/nprogress.css";
-import '../styles/_global.scss';
-import { wrapper } from '../redux/store';
 import dynamic from "next/dynamic";
 import { SnackbarProvider } from "notistack";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import "nprogress/nprogress.css";
+import { FC } from 'react';
+import theme from "../components/theme";
+import { wrapper } from '../redux/store';
+import '../styles/_global.scss';
 
 const TopProgressBar = dynamic(() => import('../components/TopProgressBar'), { ssr: false });
 const ToastBackgroundContainer = dynamic(() => import('../sub_modules/common/components/toast_container'));
-
-const theme = createTheme();
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
