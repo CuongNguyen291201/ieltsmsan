@@ -191,14 +191,14 @@
               width: 25px;
               height: 25px;
               border-radius: 100%;
-              border: 1px solid #5624d0;
+              border: 1px solid #19CE7A;
               position: absolute;
               left: -13px;
               top: 10px;
               display: flex;
               align-items: center;
               justify-content: center;
-              color: #5624d0;
+              color: #27AE60;
               background-color: white;
             }
             .icon-new-topic {
@@ -232,7 +232,7 @@
                     margin: 0 10px;
                   }
                   .toggle-main {
-                    color: #5624d0;
+                    color: #19CE7A;
                     font-size: 14px;
                     margin: 0 10px;
                   }
@@ -465,18 +465,15 @@
       }
       .btn {
         min-width: 48%;
-        &:hover {
-          filter: brightness(1.5);
-        }
       }
-      .bgr-green {
+      .btn-green {
         background-color: green;
         border-color: green;
         padding: 5px;
       }
-      .bgr-root {
-        background-color: $root-color;
-        border-color: $root-color;
+      .btn-root {
+        background-color: #19CE7A;
+        border-color: #19CE7A;
         padding: 5px;
       }
     }
@@ -585,7 +582,7 @@
     }
     .toggle-main {
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.54);
+      color: #19CE7A;
     }
     .relaseDate {
       display: flex;

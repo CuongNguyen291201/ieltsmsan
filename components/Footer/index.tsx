@@ -15,7 +15,7 @@ const Footer = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
           </Grid>
 
           <Grid item xs={12} sm={12} md={5}>
-            <FooterNav />
+            <FooterNav webSocial={props.webSocial} />
           </Grid>
         </Grid>
       </div>

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 NProgress.configure({
   showSpinner: false,
-  template: '<div class="bar" style="background-color: #ec1f24;" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+  template: '<div class="bar" style="background-color: #19CE7A;" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
 })
 
 const TopProgressBar = () => {

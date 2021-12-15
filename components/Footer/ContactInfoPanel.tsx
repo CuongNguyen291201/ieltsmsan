@@ -18,7 +18,7 @@ const ContactInfoPanel = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) =
           </div>
           <div className="text-2">
             <p>
-              <b>MST</b>: {webInfo?.paymentInfo}
+              {webInfo?.paymentInfo}
             </p>
           </div>
         </div>

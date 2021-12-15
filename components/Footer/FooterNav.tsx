@@ -1,36 +1,37 @@
-import { Grid } from "@mui/material"
+import { FacebookRounded } from "@mui/icons-material"
+import { Box, Grid, Link, Typography } from "@mui/material"
+import { withStyles } from "@mui/styles"
 import { Fragment } from 'react'
-import SectionLabel from '../SectionLabel'
+import WebSocial from "../../sub_modules/share/model/webSocial"
 import FooterNavItem, { FooterNavItemProps } from './FooterNavItem'
 
-const FooterNav = () => {
-  const utils: FooterNavItemProps[] = [
-    { title: 'Trang chủ', slug: '/' },
-    { title: 'Giới thiệu', slug: '/gioi-thieu' },
-    { title: 'Khoá học', slug: '/khoa-hoc' },
-    { title: 'Tin tức', slug: '/tin-tuc' },
-    { title: 'Liên hệ', slug: '/lien-he' }
+const FooterNav = (props: { webSocial?: WebSocial }) => {
+  const { webSocial } = props;
+  // TODO: Hot utils
+  const utils1: FooterNavItemProps[] = [
+    { title: 'Học thử và làm bài test đầu vào', slug: '/' },
+    { title: 'IELTS Online Tests', slug: '/' },
+    { title: 'Khoá học tiếng anh online miễn phí cho người mất gốc', slug: '/' }
   ]
 
-  const policies: FooterNavItemProps[] = [
-    { title: 'Chính sách chung', slug: '/chinh-sach-chung' },
-    { title: 'Chính sách bảo mật thông tin', slug: '/chinh-sach-bao-mat-thong-tin' },
-    { title: 'Hướng dẫn mua hàng', slug: '/huong-dan-mua-hang' },
-    { title: 'Hướng dẫn kích hoạt khoá học', slug: '/huong-dan-kich-hoat-khoa-hoc' },
-    { title: 'Chính sách hoàn trả học phí', slug: '/chinh-sach-hoan-tra-hoc-phi' }
-  ]
+  const utils2: FooterNavItemProps[] = [
+    { title: 'Khoá học IELTS cấp tốc', slug: '/' },
+    { title: 'Khóa học IELTS 5.5 Online', slug: '/' },
+    { title: 'Khóa học IELTS 6.5-8.0 Online', slug: '/' }
+  ];
+
+  const ItemLabel = withStyles({
+    root: {
+      color: "#fff",
+      textAlign: "center"
+    }
+  })(Typography);
 
   return (
     <div className="footer-nav">
-      <div className="footer-label">
-        <SectionLabel />
-      </div>
-      <Grid container>
+      <Grid container columnSpacing={5}>
         <Grid item id="utils" xs={6}>
-          <div className="nav-title">
-            TIỆN ÍCH
-          </div>
-          {utils.map((e, i) => (
+          {utils1.map((e, i) => (
             <Fragment key={i}>
               <FooterNavItem title={e.title} slug={e.slug} />
             </Fragment>
@@ -38,14 +39,28 @@ const FooterNav = () => {
         </Grid>
 
         <Grid item id="policies" xs={6}>
-          <div className="nav-title">
-            CÁC CHÍNH SÁCH
-          </div>
-          {policies.map((e, i) => (
+          {utils2.map((e, i) => (
             <Fragment key={i}>
               <FooterNavItem title={e.title} slug={e.slug} />
             </Fragment>
           ))}
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={5}>
+        <Grid item xs={4}>
+          <ItemLabel>MAP</ItemLabel>
+        </Grid>
+        <Grid item xs={4}>
+          <ItemLabel>DMCA</ItemLabel>
+        </Grid>
+        <Grid item xs={4}>
+          <ItemLabel>SOCIAL</ItemLabel>
+          <Box>
+            <Link href={webSocial?.fanPage || "#"} rel="nofollow noopener" target="_blank">
+              <FacebookRounded sx={{ color: "#1778F2" }} />
+            </Link>
+          </Box>
         </Grid>
       </Grid>
     </div>

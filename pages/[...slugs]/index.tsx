@@ -108,6 +108,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
     return;
   }
+  res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+  return;
 });
 
 export default Slug;
