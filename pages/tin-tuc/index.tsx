@@ -38,13 +38,13 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   if (userInfo) {
     store.dispatch(loginSuccessAction(userInfo));
   }
-  const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS });
-  const webSocial = await apiWebSocial();
+  const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS, serverSide: true });
+  const webSocial = await apiWebSocial(true);
 
   const pageQuery = parseInt((query.page || '1') as string);
   const skip = (isNaN(pageQuery) || pageQuery <= 1) ? 0 : (pageQuery - 1) * NEWS_LIMIT
-  const { data: newsList, total: totalNews } = await apiFullNews({ skip, limit: NEWS_LIMIT });
-  const { data: { categories: categoryNews } } = await apiNewsCategories();
+  const { data: newsList, total: totalNews } = await apiFullNews({ skip, limit: NEWS_LIMIT, serverSide: true });
+  const { data: { categories: categoryNews } } = await apiNewsCategories({ serverSide: true });
 
   return {
     props: {

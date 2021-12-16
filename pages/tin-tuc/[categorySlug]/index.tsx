@@ -45,9 +45,10 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const { data: newsList, total: totalNews } = await apiGetNewsByCategorySlug({
     newsCategorySlug: categorySlug,
     offset: skip,
-    limit: NEWS_LIMIT
+    limit: NEWS_LIMIT,
+    serverSide: true
   });
-  const { data: { categories: categoryNews } } = await apiNewsCategories();
+  const { data: { categories: categoryNews } } = await apiNewsCategories({ serverSide: true });
 
   return {
     props: {

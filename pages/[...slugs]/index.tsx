@@ -59,8 +59,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
-  const { webInfo } = await apiWebInfo();
-  const webSocial = await apiWebSocial();
+  const { webInfo } = await apiWebInfo({ serverSide: true });
+  const webSocial = await apiWebSocial(true);
 
   if (slugs.length === 1) {
     const routePath = slugs[0];
@@ -92,7 +92,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     }
 
     if (type === PAGE_CATEGORY_DETAIL) {
-      const [category, childCategories] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
+      const [category, childCategories] = await Promise.all([apiGetCategoryById({ categoryId: id, serverSide: true }), apiGetCategoriesByParent({ parentId: id, serverSide: true })]);
 
       store.dispatch(setCurrentCategoryAction(category));
       return {

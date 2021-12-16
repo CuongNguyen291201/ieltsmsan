@@ -18,8 +18,8 @@ const Error = (props: {
 export const getServerSideProps = wrapper.getServerSideProps(async ({ res }) => {
   const statusCode = res?.statusCode ?? 404;
   const [{ webInfo, webSeo }, webSocial] = await Promise.all([
-    apiWebInfo(),
-    apiWebSocial()
+    apiWebInfo({ serverSide: true }),
+    apiWebSocial(true)
   ]);
   return {
     props: {

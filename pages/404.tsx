@@ -17,8 +17,8 @@ const ErrorNotFound = (props: {
 
 export const getStaticProps = wrapper.getStaticProps(async () => {
   const [{ webInfo, webSeo }, webSocial] = await Promise.all([
-    apiWebInfo(),
-    apiWebSocial()
+    apiWebInfo({ serverSide: true }),
+    apiWebSocial(true)
   ]);
   return {
     props: {

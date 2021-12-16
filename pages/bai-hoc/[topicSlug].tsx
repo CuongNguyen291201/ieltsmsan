@@ -35,13 +35,13 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
   )
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ query,req, res, store }) => {
+export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   store.dispatch(setCurrrentTopicAction(null, true));
   const [user, { webInfo }, webSocial] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo(),
-    apiWebSocial()
+    apiWebInfo({ serverSide: true }),
+    apiWebSocial(true)
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));
@@ -50,7 +50,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query,req,
   const [topicId] = topicSlugItems.slice(-1);
 
   if (topicId && topicSlug) {
-    const topic = await apiGetTopicById(topicId);
+    const topic = await apiGetTopicById({ topicId, serverSide: true });
 
     if (encodeURIComponent(topic?.slug) === topicSlug) {
       store.dispatch(setCurrentCourseAction(topic.course, false));

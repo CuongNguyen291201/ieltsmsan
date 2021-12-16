@@ -38,8 +38,8 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req
   store.dispatch(setCurrentCourseAction(null, true));
   const [user, { webInfo }, webSocial] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo(),
-    apiWebSocial()
+    apiWebInfo({ serverSide: true }),
+    apiWebSocial(true)
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));
@@ -48,7 +48,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req
   const [courseId] = courseSlugItems.slice(-1);
 
   if (courseId && courseSlug) {
-    const course = await apiGetCourseById(courseId);
+    const course = await apiGetCourseById({ courseId, serverSide: true });
 
     if (encodeURIComponent(course?.slug) === courseSlug) {
       store.dispatch(setCurrentCourseAction(course, false));
