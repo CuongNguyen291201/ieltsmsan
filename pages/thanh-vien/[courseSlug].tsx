@@ -19,48 +19,48 @@ import dynamic from "next/dynamic";
 const MemberListView = dynamic(() => import("../../components/CourseDetail/MemberListView"));
 
 type CourseMembersPageProps = {
-    course: Course;
-    webInfo?: WebInfo;
-    webSocial?: WebSocial;
+  course: Course;
+  webInfo?: WebInfo;
+  webSocial?: WebSocial;
 }
 
 const CourseMembersPage = (props: PropsWithoutRef<CourseMembersPageProps>) => {
-    const { course, webInfo, webSocial } = props;
-    const router = useRouter();
-    const [isReady, setReady] = useState(false);
+  const { course, webInfo, webSocial } = props;
+  const router = useRouter();
+  const [isReady, setReady] = useState(false);
 
-    useEffect(() => {
-        apiGetUserCourse({ courseId: course._id })
-            .then((userCourse) => {
-                if (!userCourse?.isTeacher) {
-                    router.replace(getCoursePageSlug({ course }));
-                    return;
-                }
-                setReady(true);
-            })
-            .catch((e) => {
-                console.error(e);
-            })
-    }, []);
+  useEffect(() => {
+    apiGetUserCourse({ courseId: course._id })
+      .then((userCourse) => {
+        if (!userCourse?.isTeacher) {
+          router.replace(getCoursePageSlug({ course }));
+          return;
+        }
+        setReady(true);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+  }, []);
 
-    return (
-        <Layout
-            hideMenu
-            webInfo={webInfo}
-            webSocial={webSocial}
-        >
-           <InfoCourse course={course} webInfo={webInfo} />
-            {isReady ? <MemberListView course={course} /> : <div style={{textAlign:'center'}}><CircularProgress/></div>}
-        </Layout>
-    )
+  return (
+    <Layout
+      hideMenu
+      webInfo={webInfo}
+      webSocial={webSocial}
+    >
+      <InfoCourse course={course} webInfo={webInfo} />
+      {isReady ? <MemberListView course={course} /> : <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
+    </Layout>
+  )
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res, query }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   const [user, { webInfo }, webSocial] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo(),
-    apiWebSocial()
+    apiWebInfo({ serverSide: true }),
+    apiWebSocial(true)
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));
@@ -68,7 +68,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req
   const courseSlug = courseSlugItems.slice(0, -1).join('-');
   const [courseId] = courseSlugItems.slice(-1);
   if (courseId && courseSlug) {
-    const course = await apiGetCourseById(courseId);
+    const course = await apiGetCourseById({ courseId, serverSide: true });
 
     if (encodeURIComponent(course?.slug) === courseSlug) {
       store.dispatch(setCurrentCourseAction(course, false));

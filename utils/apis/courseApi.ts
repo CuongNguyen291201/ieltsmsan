@@ -1,3 +1,4 @@
+import { getEndpoint } from ".";
 import { MapActiveCourseErrorStatus } from '../../custom-types/MapContraint';
 import { GET_API, POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
@@ -20,8 +21,8 @@ export const apiOffsetCoursesByCategory = (args: {
   skip?: number
 }) => POST_REQ('offset-courses-by-category', args);
 
-export const apiGetCourseById = async (courseId: string): Promise<Course | null> => {
-  const { data, status } = await POST_API('get-course-by-id', { courseId, isLoadFull: true });
+export const apiGetCourseById = async (args: { courseId: string; serverSide?: boolean }): Promise<Course | null> => {
+  const { data, status } = await POST_API(getEndpoint('api/get-course-by-id', args.serverSide), { courseId: args.courseId, isLoadFull: true });
   if (status === response_status_codes.success) return data;
   return null;
 }

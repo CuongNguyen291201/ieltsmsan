@@ -32,13 +32,13 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
   }, [router.isReady]);
   return (
     <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
-      <div style={{boxShadow:'0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor:'white'}}>
-      <HomeBanner />
-      <HomeCategorySection categories={props.homeCategories} />
-      <StudentFeeling></StudentFeeling>
-      <HomeWhy></HomeWhy>
-      <HomeUtility></HomeUtility>
-      <HomeNews></HomeNews>
+      <div style={{ boxShadow: '0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor: 'white' }}>
+        <HomeBanner />
+        <HomeCategorySection categories={props.homeCategories} />
+        <StudentFeeling></StudentFeeling>
+        <HomeWhy></HomeWhy>
+        <HomeUtility></HomeUtility>
+        <HomeNews></HomeNews>
       </div>
     </Layout>
   )
@@ -54,9 +54,9 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     removeServerSideCookie(res);
   }
 
-  const { data, status } = await apiGetCategories();
-  const { webInfo, webSeo } = await apiWebInfo();
-  const webSocial = await apiWebSocial();
+  const { data, status } = await apiGetCategories(true);
+  const { webInfo, webSeo } = await apiWebInfo({ pageSlug: '/', serverSide: true });
+  const webSocial = await apiWebSocial(true);
 
   const homeCategories = status === 0 ? data : [];
 

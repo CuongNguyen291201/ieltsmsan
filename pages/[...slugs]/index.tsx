@@ -60,8 +60,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
   try {
-    const { webInfo } = await apiWebInfo();
-    const webSocial = await apiWebSocial();
+    const { webInfo } = await apiWebInfo({ serverSide: true });
+    const webSocial = await apiWebSocial(true);
 
     if (slugs.length === 1) {
       const routePath = slugs[0];
@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
       if (id.startsWith(NEWS_ID_PREFIX)) {
         const newsId = id.slice(NEWS_ID_PREFIX.length);
-        const news = await apiGetNewsById(newsId);
+        const news = await apiGetNewsById(newsId, true);
         if (!news) {
           res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
           return;
@@ -93,7 +93,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       }
 
       if (type === PAGE_CATEGORY_DETAIL) {
-        const [category, childCategories] = await Promise.all([apiGetCategoryById(id), apiGetCategoriesByParent(id)]);
+        const [category, childCategories] = await Promise.all([apiGetCategoryById({ categoryId: id, serverSide: true }), apiGetCategoriesByParent({ parentId: id, serverSide: true })]);
 
         store.dispatch(setCurrentCategoryAction(category));
         return {

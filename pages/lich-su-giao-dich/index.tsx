@@ -26,8 +26,8 @@ const TransactionHistoryPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSo
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
-  const { webInfo, webSeo } = await apiWebInfo();
-  const webSocial = await apiWebSocial();
+  const { webInfo, webSeo } = await apiWebInfo({ serverSide: true });
+  const webSocial = await apiWebSocial(true);
 
   return { props: { webInfo, webSeo, webSocial } }
 });

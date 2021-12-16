@@ -80,8 +80,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     if (userInfo) {
         store.dispatch(loginSuccessAction(userInfo));
     }
-    const { webInfo, webSeo } = await apiWebInfo();
-    const webSocial = await apiWebSocial();
+    const { webInfo, webSeo } = await apiWebInfo({ serverSide: true });
+    const webSocial = await apiWebSocial(true);
 
     return { props: { webInfo, webSeo, webSocial } }
 })

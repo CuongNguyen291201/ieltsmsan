@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     const userInfo = await getUserFromToken(req);
     if (userInfo) store.dispatch(loginSuccessAction(userInfo));
     const { topicId } = query;
-    const currentTopic = await apiGetTopicById(topicId as string);
+    const currentTopic = await apiGetTopicById({ topicId: topicId as string, serverSide: true });
     if (currentTopic) store.dispatch(setCurrrentTopicAction(currentTopic));
 });
 
