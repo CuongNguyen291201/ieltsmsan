@@ -85,7 +85,7 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
       let category: _Category;
       const courses = await apiGetCourseByIds(courseIds);
       if (categoryId) {
-        category = await apiGetCategoryById(categoryId);
+        category = await apiGetCategoryById({ categoryId });
         setComboCategory(category);
       }
       setDataOrder(courses);
