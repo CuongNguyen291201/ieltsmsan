@@ -1,7 +1,10 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { HighlightOffTwoTone, LoyaltyTwoTone } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Paper, Typography } from "@mui/material";
+import DOMPurify from "isomorphic-dompurify";
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import randomstring from 'randomstring';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { _Category } from "../../custom-types";
 import { MapPaymentType } from '../../custom-types/MapContraint';
@@ -14,15 +17,18 @@ import { encodeSHA256Code } from '../../sub_modules/common/utils';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import {
+  COUPON_DISCOUNT_UNIT_CURRENCY,
   NOT_PAYMENT,
   PAYMENT_BANK,
   PAYMENT_MOMO
 } from '../../sub_modules/share/constraint';
+import Coupon from "../../sub_modules/share/model/coupon";
 import { Course } from '../../sub_modules/share/model/courses';
 import Order from '../../sub_modules/share/model/order';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import { numberFormat } from '../../utils';
 import { apiGetCategoryById } from "../../utils/apis/categoryApi";
+import { apiGetCouponByCode } from "../../utils/apis/couponApi";
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
@@ -34,7 +40,8 @@ import Momo from './payment-content/Momo';
 import './style.scss';
 
 
-const CoursePay = (props: { webInfo?: WebInfo }) => {
+const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
+  const { maxCoupons = 1 } = props;
   useScrollToTop();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -49,9 +56,14 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
   const [loading, setLoading] = useState(true);
   const [isOrderCreated, setOrderCreated] = useState(false);
   const [comboCategory, setComboCategory] = useState<_Category>();
+  const [isSearchingCoupon, setSearchingCoupon] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponList, setCouponList] = useState<Coupon[]>([]);
   const courseIdsQuery: string = router.query?.courseIds as string
   const courseIds = courseIdsQuery ? courseIdsQuery?.split(',') : [];
   const categoryId = router.query.categoryId as string;
+  const couponCodeRef = useRef<HTMLInputElement | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const PaymentInfo: { [paymentType: number]: JSX.Element } = {
     [PAYMENT_BANK]: <Bank
@@ -110,17 +122,18 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
       userId: currentUser?._id,
       codeId: null,
       serial,
-      content: `Course: ${dataOrder.map(({ name }) => name).join('; ')}`,
-      price: dataOrder.reduce((total, item) => (total += item.cost, total), 0),
-      discount: dataOrder.reduce((total, item) => (total += item.discountPrice, total), 0),
+      content: comboCategory ? `Combo: ${comboCategory.name}` : `Khoá học: ${dataOrder.map(({ name }) => name).join('; ')}`,
+      price: dataTotal,
+      discount: discountTotal + couponDiscount,
       userName: currentUser?.name,
       email: currentUser?.email,
       paymentType,
       courseIds,
       phone: currentUser?.phoneNumber,
     });
-    const checkValue = encodeSHA256Code(order, KEY_ORDER_SECRET);
-    apiCreateOrder(order, checkValue)
+    const reqOrder = { ...order, itemId: comboCategory?._id || null, itemType: OrderItemTypes.COURSE, couponIds: couponList.map(({ _id }) => _id) }
+    const checkValue = encodeSHA256Code(reqOrder, KEY_ORDER_SECRET);
+    apiCreateOrder(reqOrder, checkValue)
       .then(({ status }) => {
         if (status === response_status_codes.success) {
           // showToastifySuccess("Tạo đơn hàng thành công, vui lòng chờ xác nhận");
@@ -198,6 +211,45 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
     else setPaymentType(value);
   }
 
+  const onSearchCoupon = async () => {
+    if (isSearchingCoupon) return;
+    const couponCode = DOMPurify.sanitize(couponCodeRef?.current?.value);
+    if (!couponCode) return;
+    if (couponCodeRef?.current?.value) {
+      couponCodeRef.current.value = '';
+    }
+    if (couponList.length >= maxCoupons) {
+      enqueueSnackbar(`Đơn hàng chỉ áp dụng tối đa ${maxCoupons} mã khuyến mãi`, { variant: "info" });
+      return;
+    }
+    setSearchingCoupon(true);
+    const coupon = await apiGetCouponByCode(couponCode);
+    setSearchingCoupon(false);
+    if (!coupon) {
+      enqueueSnackbar('Mã không tồn tại', { variant: "error" });
+      return;
+    }
+    if (couponList.map(({ code }) => code).includes(couponCode)) {
+      enqueueSnackbar('Mã đã được áp dụng!', { variant: "warning" });
+      return;
+    }
+    const newCouponList = [...couponList, coupon];
+    setCouponList(newCouponList);
+    setCouponDiscount(newCouponList.reduce((total: number, coupon) => {
+      const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
+      return total + cDiscount;
+    }, 0));
+  }
+
+  const onRemoveCoupon = (coupon: Coupon, index: number) => {
+    const newCouponList = [...couponList];
+    newCouponList.splice(index, 1);
+    setCouponList(newCouponList);
+
+    const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
+    setCouponDiscount(couponDiscount - cDiscount);
+  }
+
   return (
     <React.Fragment>
       {renderModalConfirm()}
@@ -245,10 +297,46 @@ const CoursePay = (props: { webInfo?: WebInfo }) => {
                           <span id="new-template-price_">{numberFormat.format(dataTotal)} VND</span>
                         </div>
                       </div>
+
+                      <div className="membership-info-panel">
+                        <label htmlFor="coupon-code-input"><b>Mã khuyến mãi</b></label>
+                        <Grid container className="coupon-code-wrapper" sx={{ marginTop: "8px" }}>
+                          <Grid item flex={1}>
+                            <input type="text" id="coupon-code-input" placeholder="Nhập mã khuyến mãi" ref={couponCodeRef} />
+                          </Grid>
+                          <Grid item>
+                            <Button sx={{ textTransform: "none", height: "35px", borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }} color="primary" variant="contained" onClick={() => onSearchCoupon()}>Áp dụng</Button>
+                          </Grid>
+                        </Grid>
+
+                        {!!couponList.length && couponList.map((coupon, index) => {
+                          const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
+                          const cDiscountUnit = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? 'VND' : '%';
+                          return (
+                            <Paper key={coupon._id} sx={{ marginTop: "5px", display: "flex", alignItems: "center" }} elevation={3}>
+                              <Box display="flex" alignItems="center" margin="0 10px" padding="0 10px" flex={1} bgcolor="#eee" border="1px solid #ccc">
+                                <LoyaltyTwoTone sx={{ color: "#FFB302", marginRight: "5px" }} />
+                                <Typography sx={{ fontSize: "14px" }} flex={1}>{coupon.code}</Typography>
+                                <Typography sx={{ fontSize: "14px", color: "red" }} component="span">- {numberFormat.format(cDiscount)} {cDiscountUnit}</Typography>
+                              </Box>
+                              <IconButton onClick={() => { onRemoveCoupon(coupon, index) }}>
+                                <HighlightOffTwoTone />
+                              </IconButton>
+                            </Paper>
+                          )
+                        })}
+                      </div>
+
+                      <div className="membership-info-panel">
+                        <div className="new-price-display-temp-panel flex">
+                          <span>Giảm giá</span>
+                          <span id="new-template-price_">{numberFormat.format(discountTotal)} VND</span>
+                        </div>
+                      </div>
                       <div className="total-price-info-panel">
                         <div className="new-price-display-panel flex">
                           <span>Tổng cộng</span>
-                          <span className="new-total-price">{numberFormat.format(dataTotal)} VND</span>
+                          <span className="new-total-price">{numberFormat.format(finalPrice - couponDiscount)} VND</span>
                         </div>
                       </div>
                     </div>
