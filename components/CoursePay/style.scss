@@ -173,5 +173,10 @@
     height: 35px;
     font-size: 14px;
     padding: 0 10px;
+    &:focus-visible {
+      outline-width: 0.5px;
+      outline-color: #2090FE;
+      outline-style: auto;
+    }
   }
 }

@@ -229,6 +229,14 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
       enqueueSnackbar('Mã không tồn tại', { variant: "error" });
       return;
     }
+    if (coupon.isExceededUses) {
+      enqueueSnackbar('Mã đã hết lượt sử dụng');
+      return;
+    }
+    if (coupon.isExpired) {
+      enqueueSnackbar('Mã đã hết hạn sử dụng');
+      return;
+    }
     if (couponList.map(({ code }) => code).includes(couponCode)) {
       enqueueSnackbar('Mã đã được áp dụng!', { variant: "warning" });
       return;
