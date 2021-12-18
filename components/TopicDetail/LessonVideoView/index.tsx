@@ -61,7 +61,7 @@ const LessonVideoView = (props: {
           onProgress={(e) => onProgress(e.played)}
           controls={true}
           loop={false}
-          light="/default/video-thumbnail-default.jpg"
+          light="/images/icons/video-thumbnail-default.jpg"
           config={{
             file: {
               attributes: {
