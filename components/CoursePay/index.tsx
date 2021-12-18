@@ -4,7 +4,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
 import randomstring from 'randomstring';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { _Category } from "../../custom-types";
 import { MapPaymentType } from '../../custom-types/MapContraint';
@@ -19,6 +19,7 @@ import { response_status_codes } from '../../sub_modules/share/api_services/http
 import {
   COUPON_DISCOUNT_UNIT_CURRENCY,
   NOT_PAYMENT,
+  OrderItemTypes,
   PAYMENT_BANK,
   PAYMENT_MOMO
 } from '../../sub_modules/share/constraint';
