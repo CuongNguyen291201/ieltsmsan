@@ -227,15 +227,15 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
     const coupon = await apiGetCouponByCode(couponCode);
     setSearchingCoupon(false);
     if (!coupon) {
-      enqueueSnackbar('Mã không tồn tại', { variant: "error" });
+      enqueueSnackbar('Mã không tồn tại!', { variant: "error" });
       return;
     }
     if (coupon.isExceededUses) {
-      enqueueSnackbar('Mã đã hết lượt sử dụng');
+      enqueueSnackbar('Mã đã hết lượt sử dụng!', { variant: "info" });
       return;
     }
-    if (coupon.isExpired) {
-      enqueueSnackbar('Mã đã hết hạn sử dụng');
+    if (coupon.isExpired || !coupon.isActive) {
+      enqueueSnackbar('Mã không khả dụng!', { variant: "error" });
       return;
     }
     if (couponList.map(({ code }) => code).includes(couponCode)) {
