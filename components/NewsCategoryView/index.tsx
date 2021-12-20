@@ -49,7 +49,7 @@ const NewsCategoryView = (props: {
                         <a className="item-full-news plain-anchor-tag">
                           <Grid container className="item-news">
                             <Grid item xs={12} lg={5}>
-                              <div className="image"><img src={item?.avatarUrl} alt={item?.avatarUrl} /></div>
+                              <div className="image"><img src={item?.avatarUrl} alt={item?.avatarAlt} title={item?.avatarTitle} /></div>
                             </Grid>
                             <Grid item xs={12} lg={7}>
                               <div className="inf-news">
