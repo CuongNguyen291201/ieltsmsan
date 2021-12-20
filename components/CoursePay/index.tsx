@@ -18,6 +18,7 @@ import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
 import {
   COUPON_DISCOUNT_UNIT_CURRENCY,
+  COUPON_DISCOUNT_UNIT_PERCENT,
   NOT_PAYMENT,
   OrderItemTypes,
   PAYMENT_BANK,
@@ -326,7 +327,7 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
                               <Box display="flex" alignItems="center" margin="0 10px" padding="0 10px" flex={1} bgcolor="#eee" border="1px solid #ccc">
                                 <LoyaltyTwoTone sx={{ color: "#FFB302", marginRight: "5px" }} />
                                 <Typography sx={{ fontSize: "14px" }} flex={1}>{coupon.code}</Typography>
-                                <Typography sx={{ fontSize: "14px", color: "red" }} component="span">- {numberFormat.format(cDiscount)} {cDiscountUnit}</Typography>
+                                <Typography sx={{ fontSize: "14px", color: "red" }} component="span">- {numberFormat.format(cDiscount)} VND {coupon.discountUnit === COUPON_DISCOUNT_UNIT_PERCENT ? `[-${coupon.discount}%]` : ''}</Typography>
                               </Box>
                               <IconButton onClick={() => { onRemoveCoupon(coupon, index) }}>
                                 <HighlightOffTwoTone />
