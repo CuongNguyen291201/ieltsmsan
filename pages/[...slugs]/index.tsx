@@ -8,11 +8,12 @@ import { _Category } from '../../custom-types';
 import {
   PAGE_CATEGORY_DETAIL, PAGE_ERROR, PAGE_NEWS_DETAIL, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT
 } from '../../custom-types/PageType';
+import SeoProps from "../../custom-types/SeoProps";
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
-import { response_status } from '../../sub_modules/share/api_services/http_status';
+import { META_ROBOT_INDEX_FOLLOW } from "../../sub_modules/share/constraint";
 import News from '../../sub_modules/share/model/news';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
@@ -20,7 +21,7 @@ import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/c
 import { apiGetNewsById } from '../../utils/apis/newsApi';
 import { apiWebInfo } from '../../utils/apis/webInfoApi';
 import { apiWebSocial } from '../../utils/apis/webSocial';
-import { NEWS_ID_PREFIX, ROUTER_ERROR, ROUTER_NOT_FOUND } from '../../utils/router';
+import { getCategorySlug, NEWS_ID_PREFIX, ROUTER_NOT_FOUND } from '../../utils/router';
 
 type SlugTypes = {
   slug: string;
@@ -31,14 +32,14 @@ type SlugTypes = {
   webInfo?: WebInfo;
   webSocial?: WebSocial;
   news?: News;
-}
+} & SeoProps;
 
 const Slug = (props: SlugTypes) => {
-  const { id, slug, type = PAGE_NOT_FOUND } = props;
+  const { id, slug, type = PAGE_NOT_FOUND, category, childCategories, webInfo, webSocial, news, ...seoProps } = props;
   const mapTypePage = {
-    [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={props.category} childCategories={props.childCategories} />,
-    [PAGE_REPLY_COMMENT]: <ReplyComment category={props.category} childCategories={props.childCategories} />,
-    [PAGE_NEWS_DETAIL]: <NewsView news={props.news} />
+    [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={category} childCategories={childCategories} />,
+    [PAGE_REPLY_COMMENT]: <ReplyComment category={category} childCategories={childCategories} />,
+    [PAGE_NEWS_DETAIL]: <NewsView news={news} />
   }
 
   return (
@@ -46,8 +47,9 @@ const Slug = (props: SlugTypes) => {
       <Layout
         hideMenu={type === PAGE_REPLY_COMMENT}
         hideFooter={type === PAGE_REPLY_COMMENT}
-        webInfo={props.webInfo}
-        webSocial={props.webSocial}
+        webInfo={webInfo}
+        webSocial={webSocial}
+        {...seoProps}
       >
         {mapTypePage[type ?? PAGE_ERROR]}
       </Layout>
@@ -59,59 +61,61 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
-  try {
-    const { webInfo } = await apiWebInfo({ serverSide: true });
-    const webSocial = await apiWebSocial(true);
+  const { webInfo } = await apiWebInfo({ serverSide: true });
+  const webSocial = await apiWebSocial(true);
 
-    if (slugs.length === 1) {
-      const routePath = slugs[0];
-      const items = routePath.split('-');
-      const [id] = items.slice(-1);
-      const type = Number(...items.slice(-2, -1));
-      const slug = items.slice(0, -2).join('-');
+  if (slugs.length === 1) {
+    const routePath = slugs[0];
+    const items = routePath.split('-');
+    const [id] = items.slice(-1);
+    const type = Number(...items.slice(-2, -1));
+    const slug = items.slice(0, -2).join('-');
 
-      if (!id || !slug) {
-        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-        return;
-      }
-
-
-      if (id.startsWith(NEWS_ID_PREFIX)) {
-        const newsId = id.slice(NEWS_ID_PREFIX.length);
-        const news = await apiGetNewsById(newsId, true);
-        if (!news) {
-          res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-          return;
-        }
-        return {
-          props: {
-            type: PAGE_NEWS_DETAIL,
-            news,
-            webInfo, webSocial
-          }
-        }
-      }
-
-      if (type === PAGE_CATEGORY_DETAIL) {
-        const [category, childCategories] = await Promise.all([apiGetCategoryById({ categoryId: id, serverSide: true }), apiGetCategoriesByParent({ parentId: id, serverSide: true })]);
-
-        store.dispatch(setCurrentCategoryAction(category));
-        return {
-          props: {
-            id, type, slug, category, childCategories, webInfo, webSocial
-          }
-        }
-      } else if (type === PAGE_REPLY_COMMENT) {
-        return {
-          props: { id, slug, type, webInfo, webSocial }
-        }
-      }
+    if (!id || !slug) {
       res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
       return;
     }
-  } catch (e) {
-    console.log('Internal Server Error', e);
-    res.writeHead(302, { Location: ROUTER_ERROR }).end();
+
+
+    if (id.startsWith(NEWS_ID_PREFIX)) {
+      const newsId = id.slice(NEWS_ID_PREFIX.length);
+      const news: News = await apiGetNewsById(newsId, true);
+      if (!news) {
+        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+        return;
+      }
+      return {
+        props: {
+          type: PAGE_NEWS_DETAIL,
+          news,
+          webInfo,
+          webSocial,
+          robot: news.metaRobot,
+          title: news.title,
+          description: news.description,
+          canonicalSlug: `${news.slug}-${NEWS_ID_PREFIX}${newsId}`,
+          keyword: news.keyWord
+        }
+      }
+    }
+
+    if (type === PAGE_CATEGORY_DETAIL) {
+      const [category, childCategories] = await Promise.all([apiGetCategoryById({ categoryId: id, serverSide: true }), apiGetCategoriesByParent({ parentId: id, serverSide: true })]);
+
+      store.dispatch(setCurrentCategoryAction(category));
+      return {
+        props: {
+          id, type, slug, category, childCategories, webInfo, webSocial,
+          title: category?.titleSEO, description: category?.descriptionSeo,
+          robot: META_ROBOT_INDEX_FOLLOW, canonicalSlug: category ? getCategorySlug({ category }) : ''
+        }
+      }
+    } else if (type === PAGE_REPLY_COMMENT) {
+      return {
+        props: { id, slug, type, webInfo, webSocial }
+      }
+    }
+    res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
     return;
   }
 });
