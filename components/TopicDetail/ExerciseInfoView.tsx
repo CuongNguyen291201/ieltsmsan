@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import dynamic from "next/dynamic";
 import { useSelector } from 'react-redux';
-import { CommentScopes } from '../../custom-types';
+import { CommentScopes, _Topic } from '../../custom-types';
 import { AppState } from '../../redux/reducers';
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import './topic-content.scss';
@@ -9,7 +9,7 @@ import { MyCardDataView, TopicInfoCommonView } from './TopicWidget';
 
 const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 
-const ExerciseInfoView = (props: { topic: any }) => {
+const ExerciseInfoView = (props: { topic: _Topic; }) => {
   const { topic } = props;
   const { studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course, isJoinedCourse } = useSelector((state: AppState) => state.courseReducer);
@@ -34,7 +34,7 @@ const ExerciseInfoView = (props: { topic: any }) => {
           <TopicInfoCommonView currentTopic={topic} studyScore={studyScore} hidePlayGameButton />
         </Grid>
 
-        <Grid xs={12} md={4} className="view-right course-info-topic">
+        <Grid item xs={12} md={4} className="view-right course-info-topic">
           <InformationCourse course={course} />
         </Grid>
       </Grid>

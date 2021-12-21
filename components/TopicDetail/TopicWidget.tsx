@@ -1,75 +1,139 @@
-import { Grid, Theme, LinearProgress } from '@mui/material';
-import { withStyles } from "@mui/styles"
+import { Grid, LinearProgress, MenuItem, Select, Theme } from '@mui/material';
+import { makeStyles, withStyles } from "@mui/styles";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
-import React, { Fragment, useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
+import { CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_MEMORIZED, CARD_STUDY_ORDER_NONE, CARD_STUDY_ORDER_NOT_MEMORIZED, MapCardStudyOrderLabel } from "../../custom-types/MapContraint";
 import incorrectAnswerIcon from '../../public/images/icons/chua-hoc.png';
 import notAnswerIcon from '../../public/images/icons/chua-thuoc.png';
 import correctAnswerIcon from '../../public/images/icons/da-thuoc.png';
 import bookmarkAnswerIcon from '../../public/images/icons/danh-dau.png';
 import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
+import { setExerciseOptionsAction } from "../../redux/actions/exam.action";
 import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
 import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
 import { UserInfo } from '../../sub_modules/share/model/user';
-import { genUnitScore, getGameSlug } from '../../utils';
+import { getGameSlug } from '../../utils';
 import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
+
+const useStyles = makeStyles((_) => ({
+ topicDataSelect: {
+   fontSize: "14px",
+   fontWeight: 500,
+   width: "calc(40% - 50px)",
+   padding: "8px 5px",
+   background: "#f9fafa",
+   boxShadow: "inset 0px 2px 10px #00000026",
+   color: "#000",
+   borderRadius: 0,
+   fontFamily: "inherit",
+   textAlign: "center",
+   "& .MuiSelect-select": {
+     padding: 0,
+     paddingRight: "0px !important",
+   },
+   "& fieldset": {
+     border: "none"
+   },
+ }
+}));
 
 // TOPIC INFO COMMON VIEW
 export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; hideCourseInfo?: boolean }) => {
   const { currentTopic, studyScore, hidePlayGameButton } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const examReducer = useSelector((state: AppState) => state.examReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
-  let questionsNum = 0;
-  let pass = 0;
-  let data: { title: string; number: any }[] = [];
-  if (currentTopic) {
-    questionsNum = currentTopic.topicExercise?.questionsNum ?? 0;
-    pass = currentTopic.topicExercise?.pass ?? 0;
+  const topicData = useMemo(() => {
+    const questionsNum = currentTopic?.topicExercise?.questionsNum ?? 0;
+    const pass = currentTopic?.topicExercise?.pass ?? 0;
+    const duration = currentTopic.topicExercise?.duration ?? 0;
+    const data: Array<{
+      title: string;
+      number?: string | number;
+      options?: Array<{ value: string | number, label: string }>;
+      onChange?: (value: string | number) => void;
+      initOption?: () => void;
+      optionKey?: string;
+    }> = [];
     if (currentTopic.type === TOPIC_TYPE_TEST) {
-      const duration = currentTopic.topicExercise?.duration ?? 0;
-      let pauseTimes: string | number = 0;
-      let replay: string | number = 0;
-      if (currentTopic.topicExercise) {
-        pauseTimes = currentTopic.topicExercise.pauseTimes;
-        replay = currentTopic.topicExercise.replay;
-      }
-      if (studyScore) {
-        if (pauseTimes > 0 && studyScore.studyScoreData) {
-          pauseTimes = studyScore.studyScoreData.pauseTimeNum + '/' + pauseTimes
-        }
-        if (replay && studyScore.studyScoreData) {
-          replay = studyScore.studyScoreData.studyTime + '/' + replay
-        }
-      }
-      data = [
-        { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
-        { title: `Điều kiện qua (điểm)`, number: `${pass} điểm` },
-        { title: 'Thời gian làm bài', number: `${duration} phút` },
-        { title: 'Số lần làm lại', number: replay },
-        { title: 'Số lần tạm dừng', number: pauseTimes },
-      ]
+      data.push(
+        { title: "Tổng số câu hỏi", number: `${questionsNum} câu` },
+        { title: "Điều kiện qua (điểm)", number: `${pass} điểm` },
+        { title: "Thời gian làm bài", number: `${duration} phút` },
+        { title: "Số lần làm lại", number: `${studyScore?.studyScoreData?.pauseTimeNum ?? 0} / ${currentTopic?.topicExercise?.pauseTimes ?? 0}` },
+        { title: "Số lần tạm dừng", number: `${studyScore?.studyScoreData?.studyTime ?? 0} / ${currentTopic?.topicExercise?.replay ?? 0}` },
+      );
     } else {
-      data = [
-        { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
-        { title: 'Số câu ở mỗi lần luyện tập', number: `${currentTopic.topicExercise?.questionsPlayNum} câu` ?? 0 },
-        { title: 'Điều kiện qua (%)', number: `${currentTopic.topicExercise?.pass} %` }
-      ]
+      if (currentTopic?.topicExercise?.contentType === TOPIC_CONTENT_TYPE_FLASH_CARD) {
+        const skip = Math.ceil(questionsNum / 10);
+        const questionsPlayNumOptions = questionsNum < 10 ? [questionsNum] : new Array(skip).fill(0).map((_, i) => {
+          return i !== skip - 1 ? (i + 1) * 10 : questionsNum
+        })
+        data.push(
+          { title: "Tổng số từ", number: `${questionsNum} từ` },
+          {
+            title: "Học",
+            options: questionsPlayNumOptions.map((value) => ({ value, label: `${value} từ` })),
+            onChange: (value: number) => {
+              dispatch(setExerciseOptionsAction({ target: "questionsPlayNum", value }))
+            },
+            initOption: () => {
+              dispatch(setExerciseOptionsAction({ target: "questionsPlayNum", value: questionsNum }))
+            },
+            optionKey: "questionsPlayNum"
+          },
+          {
+            title: "Ưu tiên",
+            options: [
+              { value: CARD_STUDY_ORDER_DEFAULT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_DEFAULT] },
+              { value: CARD_STUDY_ORDER_MEMORIZED, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_MEMORIZED] },
+              { value: CARD_STUDY_ORDER_NOT_MEMORIZED, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_NOT_MEMORIZED] },
+              { value: CARD_STUDY_ORDER_NONE, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_NONE] },
+            ],
+            onChange: (value: number) => {
+              dispatch(setExerciseOptionsAction({ target: "cardStudyOrder", value }))
+            },
+            initOption: () => {
+              dispatch(setExerciseOptionsAction({ target: "cardStudyOrder", value: CARD_STUDY_ORDER_DEFAULT }))
+            },
+            optionKey: "cardStudyOrder"
+          }
+        )
+      } else {
+        data.push(
+          { title: 'Tổng số câu hỏi', number: `${questionsNum} câu` },
+          { title: 'Số câu ở mỗi lần luyện tập', number: `${currentTopic.topicExercise?.questionsPlayNum} câu` ?? 0 },
+          { title: 'Điều kiện qua (%)', number: `${currentTopic.topicExercise?.pass} %` }
+        )
+      }
     }
-  }
+    return data;
+  }, [currentTopic, studyScore]);
+
+  useEffect(() => {
+    topicData.forEach(({ initOption }) => {
+      if (typeof initOption !== 'undefined') {
+        initOption();
+      }
+    })
+  }, [topicData]);
+
   function playGame() {
     if (currentUser && !userCourseLoading) {
       if (canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
@@ -91,16 +155,28 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
       dispatch(showLoginModalAction(true))
     }
   }
+
   return (
     <div className="view-section1">
       <div className="section1">
         <div className="title">Thông tin Chung</div>
         <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
-          {data.map((e, index) => {
+          {topicData.map((e, index) => {
+            const isChoice = typeof e.options !== 'undefined';
             return (
               <div className="list-item" key={index}>
                 <div className="text">{e.title}</div>
-                <div className="number">{e.number}</div>
+                {isChoice
+                  ? <>
+                    <Select className={classes.topicDataSelect} value={examReducer[e.optionKey]} onChange={(evt) => {
+                      dispatch(setExerciseOptionsAction({ target: e.optionKey, value: Number(evt.target.value) }))
+                    }}>
+                      {(e.options ?? []).map(({ value, label }) => (
+                        <MenuItem key={value} value={value}>{label}</MenuItem>
+                      ))}
+                    </Select>
+                  </>
+                  : <div className="number">{e.number}</div>}
               </div>
             )
           })}
@@ -158,6 +234,14 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
   const dispatch = useDispatch();
   const router = useRouter();
   const { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark } = getNumCardBox(myCardData, currentTopic);
+  const { gamePlayButtonLabel, gameReviewButtonLabel, isFlashCard } = useMemo(() => {
+    const isFlashCard = currentTopic?.topicExercise?.contentType === TOPIC_CONTENT_TYPE_FLASH_CARD;
+    return {
+      gamePlayButtonLabel: isFlashCard ? 'Học ngay' : 'Làm bài',
+      gameReviewButtonLabel: isFlashCard ? 'Chơi game' : 'Xem lại',
+      isFlashCard
+    }
+  }, [currentTopic])
 
   const onClickBox = (box: number, numCard: number) => {
     if (!user) {
@@ -216,18 +300,18 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
   }
 
   const BorderLinearProgress = withStyles((theme: Theme) => ({
-      root: {
-        height: 30,
-        borderRadius: 0,
-      },
-      colorPrimary: {
-        backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700],
-      },
-      bar: {
-        borderRadius: 0,
-        backgroundColor: '#26C048',
-      },
-    }),
+    root: {
+      height: 30,
+      borderRadius: 0,
+    },
+    colorPrimary: {
+      backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700],
+    },
+    bar: {
+      borderRadius: 0,
+      backgroundColor: '#26C048',
+    },
+  }),
   )(LinearProgress);
   return (
     <div className="section3">
@@ -250,8 +334,8 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
         ))}
       </Grid>
       <div className="topic-button-group">
-        <div className="topic-button topic-button-play" onClick={playGame}>Làm bài</div>
-        {!!studyScore && <div className="topic-button topic-button-review" onClick={review}>Xem lại</div>}
+        <div className="topic-button topic-button-play" onClick={playGame}>{gamePlayButtonLabel}</div>
+        {(!!studyScore || isFlashCard) && <div className="topic-button topic-button-review" onClick={review}>{gameReviewButtonLabel}</div>}
       </div>
     </div>
   )

@@ -57,3 +57,15 @@ export const MapExamType = {
   [EXAM_TYPE_TOEIC]: 'Bài thi TOEIC',
   [EXAM_TYPE_TOEFL]: 'Bài thi TOEFL'
 }
+
+export const CARD_STUDY_ORDER_DEFAULT = 0;
+export const CARD_STUDY_ORDER_MEMORIZED = 1;
+export const CARD_STUDY_ORDER_NOT_MEMORIZED = 2;
+export const CARD_STUDY_ORDER_NONE = 3;
+
+export const MapCardStudyOrderLabel = {
+  [CARD_STUDY_ORDER_DEFAULT]: 'Mặc định',
+  [CARD_STUDY_ORDER_MEMORIZED]: 'Đã thuộc',
+  [CARD_STUDY_ORDER_NOT_MEMORIZED]: 'Chưa thuộc',
+  [CARD_STUDY_ORDER_NONE]: 'Chưa học'
+}

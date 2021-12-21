@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { _Topic } from "../../custom-types";
 import { updateTopicExerciseAction } from '../../redux/actions/topic.action';
 import { AppState } from '../../redux/reducers';
-import { EXAM_TYPE_IELTS, EXAM_TYPE_TOEIC, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { EXAM_TYPE_IELTS, EXAM_TYPE_TOEIC, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import { apiGetDataDetailExercise } from '../../utils/apis/topicApi';
 import ExerciseInfoView from './ExerciseInfoView';
 import ExamIELTSView from "./ExamIELTSView";
