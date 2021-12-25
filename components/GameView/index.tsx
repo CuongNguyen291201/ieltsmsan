@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useReducer } from 'react'
 import { getSkills } from "../../sub_modules/game/api/ExamApi"
-import { GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig'
+import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig'
 import LoadingGame from "../../sub_modules/game/src/game_components/loadingGame"
 import { GameData, MapSkillTypeValues } from '../../sub_modules/game/src/game_core/gameData'
 import MainGameView from '../../sub_modules/game/src/main-game/MainGameViewTS'
-import { CARD_BOX_NONE, EXAM_TYPE_IELTS, GAME_TYPE_PRACTICE, GAME_TYPE_TEACHER_REVIEW, GAME_TYPE_TEST, GAME_TYPE_USER_REVIEW, SKILL_TYPE_LISTENING, SKILL_TYPE_READING, SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint'
+import { CARD_BOX_NONE, EXAM_TYPE_IELTS, GAME_TYPE_FLASH_CARD, GAME_TYPE_PRACTICE, GAME_TYPE_TEACHER_REVIEW, GAME_TYPE_TEST, GAME_TYPE_USER_REVIEW, SKILL_TYPE_LISTENING, SKILL_TYPE_READING, SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING, TOPIC_CONTENT_TYPE_FILE_PDF, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint'
 import MyCardData from '../../sub_modules/share/model/myCardData'
 import { StudyScore } from '../../sub_modules/share/model/studyScore'
 import Topic from '../../sub_modules/share/model/topic'
@@ -25,6 +25,8 @@ const GameView = (props: {
   studyScore?: StudyScore;
   skillSettingInfo?: SkillSettingInfo;
   mapSkillTypeValues?: MapSkillTypeValues;
+  questionsPlayNum?: number;
+  cardStudyOrder?: number;
 }) => {
   const {
     myCardData,
@@ -37,7 +39,9 @@ const GameView = (props: {
     userNameReview,
     studyScore,
     skillSettingInfo,
-    mapSkillTypeValues
+    mapSkillTypeValues,
+    questionsPlayNum,
+    cardStudyOrder
   } = props;
 
   const [gameState, uiLogic] = useReducer(gamePageReducer, gamePageInitState);
@@ -54,8 +58,10 @@ const GameView = (props: {
     const isTest = currentTopic.type === TOPIC_TYPE_TEST;
     const contentType = currentTopic.topicExercise.contentType;
     const isIELTSGame = contentType === EXAM_TYPE_IELTS;
+    const isFlashCardGame = contentType === TOPIC_CONTENT_TYPE_FLASH_CARD;
     const title = isIELTSGame ? '' : currentTopic.name;
     const duration = isIELTSGame && isTest ? 60 * skillSettingInfo?.time : 60 * (currentTopic.topicExercise.duration ?? 0);
+    const showAnwserSheet = ![SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING].includes(skillSettingInfo?.skill?.type) && !isFlashCardGame
 
     const gameData = new GameData({
       examId: currentTopic._id,
@@ -64,9 +70,9 @@ const GameView = (props: {
       duration,
       title,
       pauseTimes: currentTopic.topicExercise.pauseTimes,
-      questionsPlayNum: currentTopic.topicExercise.questionsPlayNum,
+      questionsPlayNum: questionsPlayNum || currentTopic.topicExercise.questionsPlayNum,
       isBack: true,
-      gameType: isTest ? GAME_TYPE_TEST : GAME_TYPE_PRACTICE,
+      gameType: isTest ? GAME_TYPE_TEST : (isFlashCardGame ? GAME_TYPE_FLASH_CARD : GAME_TYPE_PRACTICE),
       userId: userIdReview ?? currentUser._id,
       userName: userNameReview ?? currentUser.name,
       bookmark: isTest,
@@ -75,12 +81,13 @@ const GameView = (props: {
       contentInfo: currentTopic.topicExercise.contentInfo,
       modeShowResultImmediately,
       typeUserReview: isTeacherReview ? GAME_TYPE_TEACHER_REVIEW : GAME_TYPE_USER_REVIEW,
-      showAnwserSheet: ![SKILL_TYPE_SPEAKING, SKILL_TYPE_WRITING].includes(skillSettingInfo?.skill?.type),
+      showAnwserSheet,
       teacherId: currentUser?._id,
       saveNotAnsweredCardsInTestMode: true,
       baremScore: currentTopic.topicExercise.baremScore,
       enablePinAudioPlayer: true,
       mapSkillTypeValues,
+      cardStudyOrder,
       ieltsGameSetting: {
         disableWritingDraft: true,
         disableSpeakingDraft: true,
@@ -121,6 +128,7 @@ const GameView = (props: {
           studyScore={studyScore}
           onSubmitted={() => window.history.back()}
           shuffleQuestion={gameState.isShuffleQuestion}
+          boxCard={myCardData?.boxCard || {}}
         />
       </>
     )

@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect, useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_MEMORIZED, CARD_STUDY_ORDER_NONE, CARD_STUDY_ORDER_NOT_MEMORIZED, MapCardStudyOrderLabel } from "../../custom-types/MapContraint";
+import { MapCardStudyOrderLabel } from "../../custom-types/MapContraint";
 import incorrectAnswerIcon from '../../public/images/icons/chua-hoc.png';
 import notAnswerIcon from '../../public/images/icons/chua-thuoc.png';
 import correctAnswerIcon from '../../public/images/icons/da-thuoc.png';
@@ -17,7 +17,7 @@ import { AppState } from '../../redux/reducers';
 import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, CARD_STUDY_ORDER_CORRECT, CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_INCORRECT, CARD_STUDY_ORDER_NONE, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
@@ -27,25 +27,25 @@ import { canPlayTopic } from '../../utils/permission/topic.permission';
 import { ROUTER_GAME } from '../../utils/router';
 
 const useStyles = makeStyles((_) => ({
- topicDataSelect: {
-   fontSize: "14px",
-   fontWeight: 500,
-   width: "calc(40% - 50px)",
-   padding: "8px 5px",
-   background: "#f9fafa",
-   boxShadow: "inset 0px 2px 10px #00000026",
-   color: "#000",
-   borderRadius: 0,
-   fontFamily: "inherit",
-   textAlign: "center",
-   "& .MuiSelect-select": {
-     padding: 0,
-     paddingRight: "0px !important",
-   },
-   "& fieldset": {
-     border: "none"
-   },
- }
+  topicDataSelect: {
+    fontSize: "14px",
+    fontWeight: 500,
+    width: "calc(40% - 50px)",
+    padding: "8px 5px",
+    background: "#f9fafa",
+    boxShadow: "inset 0px 2px 10px #00000026",
+    color: "#000",
+    borderRadius: 0,
+    fontFamily: "inherit",
+    textAlign: "center",
+    "& .MuiSelect-select": {
+      padding: 0,
+      paddingRight: "0px !important",
+    },
+    "& fieldset": {
+      border: "none"
+    },
+  }
 }));
 
 // TOPIC INFO COMMON VIEW
@@ -102,8 +102,8 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
             title: "Ưu tiên",
             options: [
               { value: CARD_STUDY_ORDER_DEFAULT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_DEFAULT] },
-              { value: CARD_STUDY_ORDER_MEMORIZED, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_MEMORIZED] },
-              { value: CARD_STUDY_ORDER_NOT_MEMORIZED, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_NOT_MEMORIZED] },
+              { value: CARD_STUDY_ORDER_CORRECT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_CORRECT] },
+              { value: CARD_STUDY_ORDER_INCORRECT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_INCORRECT] },
               { value: CARD_STUDY_ORDER_NONE, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_NONE] },
             ],
             onChange: (value: number) => {
@@ -172,7 +172,10 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
                       dispatch(setExerciseOptionsAction({ target: e.optionKey, value: Number(evt.target.value) }))
                     }}>
                       {(e.options ?? []).map(({ value, label }) => (
-                        <MenuItem key={value} value={value}>{label}</MenuItem>
+                        <MenuItem
+                          sx={{ fontFamily: "inherit", fontWeight: 500, fontSize: "14px" }}
+                          key={value}
+                          value={value}>{label}</MenuItem>
                       ))}
                     </Select>
                   </>
@@ -270,11 +273,19 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
   }, [user, isJoinedCourse]);
 
   const review = useCallback(() => {
+    if (!user) {
+      dispatch(showLoginModalAction(true));
+      return;
+    }
+    if (!canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
+      showToastifyWarning("Chưa tham gia khoá học");
+      return;
+    }
     if (!!user) {
       dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore }));
       router.push(getGameSlug(currentTopic._id));
     }
-  }, [user])
+  }, [user, isJoinedCourse])
 
   const mapBoxLabel = {
     [CARD_BOX_ANSWER_INCORRECT]: {

@@ -7,6 +7,7 @@ import { useScrollToTop } from '../../hooks/scrollToTop';
 import { AppState } from '../../redux/reducers';
 import { GAME_STATUS_PLAYING } from '../../sub_modules/game/src/gameConfig';
 import LoadingGame from '../../sub_modules/game/src/game_components/loadingGame';
+import { TOPIC_CONTENT_TYPE_FLASH_CARD } from "../../sub_modules/share/constraint";
 import './style.scss';
 
 const GameView = dynamic(
@@ -21,6 +22,10 @@ const GamePage = () => {
   const { currentUser: user } = useSelector((state: AppState) => state.userReducer)
   const { modeShowResultImmediately } = useSelector((state: AppState) => state.gameReducer);
   const mapSkillTypeValues = useSelector((state: AppState) => state.examReducer.mapSkillTypeValues);
+  const questionsPlayNum = useSelector((state: AppState) => state.examReducer.questionsPlayNum);
+  const cardStudyOrder = useSelector((state: AppState) => state.examReducer.cardStudyOrder);
+  const topicContentType = currentTopic?.topicExercise?.contentType;
+  const topicQuestionsNum = currentTopic?.topicExercise?.questionsNum;
   const myCardData = !!userToReview ? reviewCardData : userCardData;
   const currentUser = !!userToReview ? userToReview : user;
   const router = useRouter();
@@ -74,6 +79,8 @@ const GamePage = () => {
         userIdReview={userIdReview}
         userNameReview={userNameReview}
         mapSkillTypeValues={mapSkillTypeValues}
+        questionsPlayNum={topicContentType === TOPIC_CONTENT_TYPE_FLASH_CARD ? (questionsPlayNum || topicQuestionsNum) : topicQuestionsNum}
+        cardStudyOrder={cardStudyOrder}
       />
     </div>
   </Layout>

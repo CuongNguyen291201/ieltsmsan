@@ -1,5 +1,5 @@
-import { CARD_STUDY_ORDER_DEFAULT } from "../../custom-types/MapContraint";
 import { MapSkillTypeValues } from "../../sub_modules/game/src/game_core/gameData"
+import { CARD_STUDY_ORDER_DEFAULT } from "../../sub_modules/share/constraint";
 import Skill from "../../sub_modules/share/model/skill"
 import { ExamAction } from "../actions/exam.action"
 import { ActionTypes, Scopes } from "../types"
