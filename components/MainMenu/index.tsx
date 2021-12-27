@@ -37,9 +37,13 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
         const headerPage = document.getElementById("main-menu");
         const offsetHeightPage = 112;
         if (window.pageYOffset > offsetHeightPage) {
-          headerPage.classList.add('fixed-menu-top');
+          if (headerPage) {
+            headerPage.classList.add('fixed-menu-top');
+          }
         } else {
-          headerPage.classList.remove('fixed-menu-top')
+          if (headerPage) {
+            headerPage.classList.remove('fixed-menu-top')
+          }
         }
       }
       window.addEventListener("scroll", fixedTop);
@@ -134,7 +138,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
     <div id="main-menu">
       <div className="main-menu">
         <div className="layout-header">
-          <Grid container wrap="nowrap" justify="space-between">
+          <Grid container wrap="nowrap" justifyContent="space-between">
             <Grid item md={4} className="left-header">
               <Link href='/'>
                 <a>

@@ -1,62 +1,41 @@
-import { Grid, LinearProgress, MenuItem, Select, Theme } from '@mui/material';
-import { makeStyles, withStyles } from "@mui/styles";
+import { Box, Button, Grid, MenuItem, Select, Theme } from '@mui/material';
+import { SxProps } from "@mui/system";
+import classNames from "classnames";
 import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect, useMemo } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { MapCardStudyOrderLabel } from "../../custom-types/MapContraint";
-import incorrectAnswerIcon from '../../public/images/icons/chua-hoc.png';
-import notAnswerIcon from '../../public/images/icons/chua-thuoc.png';
-import correctAnswerIcon from '../../public/images/icons/da-thuoc.png';
-import bookmarkAnswerIcon from '../../public/images/icons/danh-dau.png';
-import { setActiveCourseModalVisibleAction } from '../../redux/actions/course.actions';
-import { setExerciseOptionsAction } from "../../redux/actions/exam.action";
-import { prepareGoToGameAction } from '../../redux/actions/prepareGame.actions';
-import { AppState } from '../../redux/reducers';
-import { showLoginModalAction } from '../../sub_modules/common/redux/actions/userActions';
-import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
-import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../sub_modules/game/src/gameConfig';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, CARD_STUDY_ORDER_CORRECT, CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_INCORRECT, CARD_STUDY_ORDER_NONE, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../sub_modules/share/constraint';
-import MyCardData from '../../sub_modules/share/model/myCardData';
-import { StudyScore } from '../../sub_modules/share/model/studyScore';
-import Topic from '../../sub_modules/share/model/topic';
-import { UserInfo } from '../../sub_modules/share/model/user';
-import { getGameSlug } from '../../utils';
-import { canPlayTopic } from '../../utils/permission/topic.permission';
-import { ROUTER_GAME } from '../../utils/router';
-
-const useStyles = makeStyles((_) => ({
-  topicDataSelect: {
-    fontSize: "14px",
-    fontWeight: 500,
-    width: "calc(40% - 50px)",
-    padding: "8px 5px",
-    background: "#f9fafa",
-    boxShadow: "inset 0px 2px 10px #00000026",
-    color: "#000",
-    borderRadius: 0,
-    fontFamily: "inherit",
-    textAlign: "center",
-    "& .MuiSelect-select": {
-      padding: 0,
-      paddingRight: "0px !important",
-    },
-    "& fieldset": {
-      border: "none"
-    },
-  }
-}));
-
+import { MapCardStudyOrderLabel } from "../../../custom-types/MapContraint";
+import { setExerciseOptionsAction } from "../../../redux/actions/exam.action";
+import { prepareGoToGameAction } from '../../../redux/actions/prepareGame.actions';
+import { AppState } from '../../../redux/reducers';
+import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
+import { showToastifyWarning } from '../../../sub_modules/common/utils/toastify';
+import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../../sub_modules/game/src/gameConfig';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NO_ANSWER, CARD_STUDY_ORDER_CORRECT, CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_INCORRECT, CARD_STUDY_ORDER_NONE, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from '../../../sub_modules/share/constraint';
+import MyCardData from '../../../sub_modules/share/model/myCardData';
+import { StudyScore } from '../../../sub_modules/share/model/studyScore';
+import Topic from '../../../sub_modules/share/model/topic';
+import { UserInfo } from '../../../sub_modules/share/model/user';
+import { getGameSlug } from '../../../utils';
+import { canPlayTopic } from '../../../utils/permission/topic.permission';
+import { ROUTER_GAME } from '../../../utils/router';
+import notAnswerIcon from '../../../public/images/icons/chua-hoc.png';
+import incorrectAnswerIcon from '../../../public/images/icons/chua-thuoc.png';
+import correctAnswerIcon from '../../../public/images/icons/da-thuoc.png';
+import bookmarkAnswerIcon from '../../../public/images/icons/danh-dau.png';
+import StaticLabelSlider from "../../StaticLabelSlider";
+import useTopicWidgetStyles from "./useTopicWidgetStyles";
 // TOPIC INFO COMMON VIEW
-export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; hideCourseInfo?: boolean }) => {
+export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudyScore | null; hidePlayGameButton?: boolean; }) => {
   const { currentTopic, studyScore, hidePlayGameButton } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const examReducer = useSelector((state: AppState) => state.examReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { enqueueSnackbar } = useSnackbar();
-  const classes = useStyles();
+  const classes = useTopicWidgetStyles();
   const dispatch = useDispatch();
   const router = useRouter();
   const topicData = useMemo(() => {
@@ -144,9 +123,6 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
         })
       } else {
         enqueueSnackbar("Chưa tham gia khoá học!", { variant: "warning" });
-        if (currentCourse.cost > 0) {
-          dispatch(setActiveCourseModalVisibleAction(true));
-        }
       }
       // } else {
       // showToastifyWarning('Bạn hết thời gian học thử, vui lòng mua khoá học để học tiếp')
@@ -157,50 +133,41 @@ export const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: S
   }
 
   return (
-    <div className="view-section1">
-      <div className="section1">
-        <div className="title">Thông tin Chung</div>
-        <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
-          {topicData.map((e, index) => {
-            const isChoice = typeof e.options !== 'undefined';
-            return (
-              <div className="list-item" key={index}>
-                <div className="text">{e.title}</div>
-                {isChoice
-                  ? <>
-                    <Select className={classes.topicDataSelect} value={examReducer[e.optionKey]} onChange={(evt) => {
-                      dispatch(setExerciseOptionsAction({ target: e.optionKey, value: Number(evt.target.value) }))
-                    }}>
-                      {(e.options ?? []).map(({ value, label }) => (
-                        <MenuItem
-                          sx={{ fontFamily: "inherit", fontWeight: 500, fontSize: "14px" }}
-                          key={value}
-                          value={value}>{label}</MenuItem>
-                      ))}
-                    </Select>
-                  </>
-                  : <div className="number">{e.number}</div>}
-              </div>
-            )
-          })}
-        </div>
-        {!hidePlayGameButton && <div className="start-game__">
-          <div className="pre-game-start" onClick={playGame}>
+    <div className="topic-info-common-view">
+      <Box textAlign="center"><h2>Thông tin Chung</h2></Box>
+      <div className={`${currentTopic?.type != TOPIC_TYPE_TEST ? 'list-exercise' : ""} list`}>
+        {topicData.map((e, index) => {
+          const isChoice = typeof e.options !== 'undefined';
+          return (
+            <Box className={classes.topicOverviewItem} key={index}>
+              <Box className={classes.topicOverviewLabel}>{e.title}</Box>
+              {isChoice
+                ? <>
+                  <Select className={classes.topicDataSelect} value={examReducer[e.optionKey]} onChange={(evt) => {
+                    dispatch(setExerciseOptionsAction({ target: e.optionKey, value: Number(evt.target.value) }))
+                  }}>
+                    {(e.options ?? []).map(({ value, label }) => (
+                      <MenuItem
+                        sx={{ fontFamily: "inherit", fontWeight: 500, fontSize: "14px" }}
+                        key={value}
+                        value={value}>{label}</MenuItem>
+                    ))}
+                  </Select>
+                </>
+                : <Box className={classes.topicOverviewValue}>{e.number}</Box>}
+            </Box>
+          )
+        })}
+      </div>
+      {!hidePlayGameButton && <div className="start-game__">
+        <Box display="flex" justifyContent="center" mt="16px">
+          <Button className={classNames(classes.gameButton, classes.gameButtonPlay)} onClick={playGame}>
             <div className="start-game-btn">
               Làm bài
             </div>
-          </div>
-        </div>}
-      </div>
-      {/* <Grid item className="comment__" md={4}>
-          <CommentPanel commentScope={CommentScopes.TOPIC} />
-        </Grid> */}
-      {/* {!hideCourseInfo && <Grid container className="information-in-course">
-        <Grid item md={8}> </Grid>
-        <Grid item md={4}>
-          <InformationCourse course={currentCourse} />
-        </Grid>
-      </Grid>} */}
+          </Button>
+        </Box>
+      </div>}
     </div>
   )
 }
@@ -232,10 +199,16 @@ function getNumCardBox(myCardData: MyCardData, currentTopic: Topic) {
   return { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark }
 }
 
-export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData; user?: UserInfo; isJoinedCourse?: boolean }) => {
-  const { currentTopic, studyScore, myCardData, user, isJoinedCourse } = props;
+export const MyCardDataView = (props: {
+  currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData; user?: UserInfo; isJoinedCourse?: boolean;
+  sliderBoxStyle?: SxProps<Theme>
+  cardDataBoxStyle?: SxProps<Theme>
+  gameButtonGroupBoxStyle?: SxProps<Theme>
+}) => {
+  const { currentTopic, studyScore, myCardData, user, isJoinedCourse, sliderBoxStyle, cardDataBoxStyle, gameButtonGroupBoxStyle } = props;
   const dispatch = useDispatch();
   const router = useRouter();
+  const classes = useTopicWidgetStyles();
   const { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark } = getNumCardBox(myCardData, currentTopic);
   const { gamePlayButtonLabel, gameReviewButtonLabel, isFlashCard } = useMemo(() => {
     const isFlashCard = currentTopic?.topicExercise?.contentType === TOPIC_CONTENT_TYPE_FLASH_CARD;
@@ -291,81 +264,126 @@ export const MyCardDataView = (props: { currentTopic: Topic; studyScore?: StudyS
     [CARD_BOX_ANSWER_INCORRECT]: {
       label: "Chưa thuộc",
       icon: incorrectAnswerIcon,
-      numCard: cardIncorrectArr.length
+      numCard: cardIncorrectArr.length,
+      color: "#FF8474"
     },
     [CARD_BOX_ANSWER_CORRECT]: {
       label: "Đã thuộc",
       icon: correctAnswerIcon,
-      numCard: cardCorrectArr.length
+      numCard: cardCorrectArr.length,
+      color: "#2DC27C"
     },
     [CARD_BOX_ANSWER_BOOKMARK]: {
       label: "Đánh dấu",
       icon: bookmarkAnswerIcon,
-      numCard: cardBookMark.length
+      numCard: cardBookMark.length,
+      color: "#02C2E8"
     },
     [CARD_BOX_NO_ANSWER]: {
       label: "Chưa học",
       icon: notAnswerIcon,
-      numCard: numCardNotAnswer
+      numCard: numCardNotAnswer,
+      color: "#FFBE40"
     }
   }
 
-  const BorderLinearProgress = withStyles((theme: Theme) => ({
-    root: {
-      height: 30,
-      borderRadius: 0,
-    },
-    colorPrimary: {
-      backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 0,
-      backgroundColor: '#26C048',
-    },
-  }),
-  )(LinearProgress);
   return (
-    <div className="section3">
-      <div className="tien-do-hoc">Tiến Độ Học</div>
-      <div className="progress-animation">
-        <BorderLinearProgress variant="determinate" value={studyScore?.progress || 0} />
-        <div className="item-progress-ani" style={{ left: `${(studyScore?.progress || 0) - 4}%` }} >{studyScore?.progress || 0}%</div>
-        <div style={{ left: `${(studyScore?.progress || 0) - 1.5}%` }} id="triangle-down"></div>
-      </div>
-      <Grid container className="cardDataBoxViewPanel">
+    <div className="my-card-data-view">
+      <Box className="tien-do-hoc" sx={{ textAlign: "center" }}><h2>Tiến Độ Học</h2></Box>
+      <Box className="progress-animation" mt="40px" mb="40px" sx={{ ...sliderBoxStyle }}>
+        <StaticLabelSlider
+          min={0} max={100} value={studyScore?.progress ?? 0}
+          height="25px"
+          valueLabelTopPosition="-16px"
+          valueLabelFormat={(value) => <>{value}%</>}
+        />
+      </Box>
+      <Grid container className="cardDataBoxViewPanel" rowGap="28px" sx={{ ...cardDataBoxStyle }}>
         {[CARD_BOX_NO_ANSWER, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_BOOKMARK].map((box, key) => (
-          <Grid key={key} item xs={12} sm={6}>
+          <Grid key={key} item xs={12} sm={6}
+            sx={{
+              display: "flex",
+              justifyContent: {
+                xs: "center",
+                sm: (key % 2) ? "end" : "start"
+              }
+            }}
+          >
             <CardDataBoxView
               text={mapBoxLabel[box].label}
               numCard={mapBoxLabel[box].numCard}
               url={mapBoxLabel[box].icon}
               onClick={() => { onClickBox(box, mapBoxLabel[box].numCard) }}
+              color={mapBoxLabel[box].color}
             />
           </Grid>
         ))}
       </Grid>
-      <div className="topic-button-group">
-        <div className="topic-button topic-button-play" onClick={playGame}>{gamePlayButtonLabel}</div>
-        {(!!studyScore || isFlashCard) && <div className="topic-button topic-button-review" onClick={review}>{gameReviewButtonLabel}</div>}
-      </div>
+      <Box className="topic-button-group" sx={{
+        display: "flex",
+        gap: "50px",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: "40px",
+        flexDirection: {
+          xs: "column",
+          md: "row"
+        },
+        ...gameButtonGroupBoxStyle
+      }}>
+        <Button
+          className={classNames(classes.gameButton, classes.gameButtonPlay)}
+          onClick={playGame}
+        >{gamePlayButtonLabel}
+        </Button>
+        {(!!studyScore || isFlashCard) &&
+          <Button className={classNames(classes.gameButton, classes.gameButtonReview)} onClick={review}>{gameReviewButtonLabel}</Button>
+        }
+      </Box>
     </div>
   )
 }
 
 // MY CARD BOX
 
-const CardDataBoxView = (props: { text: string; numCard: number; url: string; onClick: () => any }) => (
-  <div className="section3-box"
-    onClick={() => props.onClick()}
-  >
-    <div className="content">
-      <div className="image">
-        <img src={props.url} alt="" />
-      </div>
-      <div className="sentence-number">{props.numCard}</div>
-    </div>
-    <div className="head_">{props.text}</div>
-  </div>
+const CardDataBoxView = (props: { text: string; numCard: number; url: string; onClick: () => any, color?: string; }) => (
+  <Box component="div" onClick={props.onClick} sx={{
+    display: "flex",
+    flexDirection: "column",
+    width: "190px",
+    height: "135px",
+    boxShadow: "inset 0px 2px 8px rgba(0, 0, 0, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "8px",
+    cursor: "pointer"
+  }}>
+    <Box sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: "32px",
+      flex: 1
+    }}>
+      <Box>
+        <img src={props.url} alt={props.text} />
+      </Box>
+      <Box sx={{
+        color: props.color || "#000",
+        fontSize: "30px",
+        fontWeight: 700
+      }}>{props.numCard}</Box>
+    </Box>
+    <Box sx={{
+      background: "#EFF3FC",
+      boxShadow: "inset 0px 2px 5px rgba(0, 0, 0, 0.1)",
+      width: "100%",
+      height: "28px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: 600
+    }}>{props.text}</Box>
+  </Box>
 );
 
 // STATIC SKILL

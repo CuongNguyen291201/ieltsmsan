@@ -105,9 +105,6 @@ const SkillInfoItem = (props: PropsWithoutRef<{
     }
     if (!canPlayTopic({ topic, isJoinedCourse })) {
       enqueueSnackbar('Chưa tham gia khoá học', { variant: "warning" });
-      if (currentCourse.cost) {
-        dispatch(setActiveCourseModalVisibleAction(true));
-      }
       return;
     }
     const prepareStatusGame = isReplay

@@ -8,7 +8,7 @@ const CourseTopicTreeView = (props: { course: Course }) => {
   const { currentCategory } = useSelector((state: AppState) => state.categoryReducer);
   const { course } = props;
   return (
-    <div className="main-topic">
+    <div className="course-topic-tree">
       <TopicTree category={currentCategory} course={course} />
     </div>
   )

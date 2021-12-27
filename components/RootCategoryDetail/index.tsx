@@ -38,7 +38,7 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
   useEffect(() => {
     Promise.all(childCategoryIds.map(async (categoryId) => {
       const { data, status } = await apiOffsetCoursesByCategory({ categoryId, field: '_id', skip: 0, limit: COURSE_LOAD_LIMIT, status: [STATUS_PUBLIC, STATUS_OPEN] });
-      const { total } = await apiCountCategoryCourses({ categoryId, isRoot: false, status:  [STATUS_PUBLIC, STATUS_OPEN] });
+      const { total } = await apiCountCategoryCourses({ categoryId, isRoot: false, status: [STATUS_PUBLIC, STATUS_OPEN] });
 
       return {
         categoryId, data: (status === response_status.success ? data : []) as Course[], total
@@ -66,8 +66,8 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
 
   return (
     <>
-      <Breadcrumb items={[{ name: category?.name, slug: getCategorySlug({ category }) }]} />
       <div className="container root-category-detail">
+        <Breadcrumb items={[{ name: category?.name, slug: getCategorySlug({ category }) }]} />
         <div className="nav-cat">
           <div className="head">
             <div className="title-cat">

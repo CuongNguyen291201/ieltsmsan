@@ -1,4 +1,4 @@
-import { Dialog, Tooltip, Pagination } from '@mui/material';
+import { Dialog, Tooltip, Pagination, Typography } from '@mui/material';
 import { withStyles } from "@mui/styles"
 import { HighlightOff } from '@mui/icons-material';
 import { PropsWithoutRef, useEffect, useMemo, useReducer } from 'react';
@@ -28,7 +28,8 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
     documentPage,
     totalDocuments,
     mapStateOpen,
-    previewUrl
+    previewUrl,
+    documentTitle
   }, uiLogic] = useReducer(documentsListReducer, documentsListInitState);
 
   const totalPages = useMemo(() => {
@@ -78,6 +79,13 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
             documents={[{ uri: previewUrl, fileType: getFileMimeType(previewUrl) }]}
             pluginRenderers={[...DocViewerRenderers, MSDocRenderer, ImageProxyRenderer, PDFRenderer, PNGRenderer, JPGRenderer]}
             style={{ height: "100%", width: "100%" }}
+            config={{
+              header: {
+                overrideComponent: (state, prevDoc, nextDoc) => {
+                  return <Typography sx={{ backgroundColor: "#fff", paddingLeft: "16px" }}>{documentTitle}</Typography>
+                }
+              }
+            }}
           />
           : <div>File không được hỗ trợ</div>
         }
@@ -110,7 +118,7 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
                       uiLogic(setOpenDocumentItems(e._id, !mapStateOpen[e._id]));
                     }} />
                     : <i className="far fa-eye" onClick={() => {
-                      uiLogic(setPreviewUrl(e.itemsDetail[0] ? e.itemsDetail[0].url : ''))
+                      uiLogic(setPreviewUrl(e.itemsDetail[0] ? e.itemsDetail[0].url : '', e.title))
                     }} />}
                 </Tooltip>
                 <Tooltip title="Tải xuống" arrow>
@@ -131,7 +139,7 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
 
                   <div className="document-items-detail-addons">
                     <Tooltip title="Xem chi tiết" arrow>
-                      <i className="far fa-eye" onClick={() => { uiLogic(setPreviewUrl(_e.url)) }} />
+                      <i className="far fa-eye" onClick={() => { uiLogic(setPreviewUrl(_e.url, `${e.title}_${i + 1}`)) }} />
                     </Tooltip>
                     <Tooltip title="Tải xuống" arrow>
                       <i className="far fa-download" onClick={() => { downloadSingleFile(`${e.title}_${i + 1}`, _e.url); }} />

@@ -8,7 +8,7 @@ enum ActionTypes {
   SET_DOCUMENTS_LIST,
   SET_DOCUMENT_PAGE,
   SET_OPEN_DOCUMENT_ITEMS,
-  SET_PREVIEW_URL
+  SET_PREVIEW_URL,
 }
 
 interface DocumentsListAction {
@@ -19,6 +19,7 @@ interface DocumentsListAction {
   documentId?: string;
   documentOpen?: boolean;
   previewUrl?: string;
+  documentTitle?: string;
 }
 
 // State
@@ -31,6 +32,7 @@ type DocumentsListState = {
     [documentId: string]: boolean
   },
   previewUrl: string;
+  documentTitle: string;
 }
 
 export const documentsListInitState: DocumentsListState = {
@@ -38,7 +40,8 @@ export const documentsListInitState: DocumentsListState = {
   totalDocuments: 0,
   documentPage: 1,
   mapStateOpen: {},
-  previewUrl: ''
+  previewUrl: '',
+  documentTitle: ''
 }
 
 // Reducer
@@ -71,7 +74,8 @@ export const documentsListReducer = (state: DocumentsListState, action: Document
     case ActionTypes.SET_PREVIEW_URL:
       return {
         ...state,
-        previewUrl: action.previewUrl || ''
+        previewUrl: action.previewUrl || '',
+        documentTitle: action.documentTitle || ''
       }
 
     default:
@@ -93,8 +97,8 @@ export const setOpenDocumentItems = (documentId: string, documentOpen: boolean):
   type: ActionTypes.SET_OPEN_DOCUMENT_ITEMS, documentId, documentOpen
 });
 
-export const setPreviewUrl = (previewUrl: string): DocumentsListAction => ({
-  type: ActionTypes.SET_PREVIEW_URL, previewUrl
+export const setPreviewUrl = (previewUrl: string, documentTitle?: string): DocumentsListAction => ({
+  type: ActionTypes.SET_PREVIEW_URL, previewUrl, documentTitle
 });
 
 export const getFileMimeType = (url: string) => {

@@ -16,6 +16,7 @@ const Layout: FC<{
 	hideMenu?: boolean;
 	hideFooter?: boolean;
 	webSocial?: WebSocial;
+	useDefaultBackground?: boolean;
 } & SeoProps> = (props) => {
 	const {
 		addMathJax,
@@ -25,11 +26,12 @@ const Layout: FC<{
 		hideMenu = false,
 		hideFooter = false,
 		webSocial,
+		useDefaultBackground,
 		title = '',
 		description = '',
 		robot = META_ROBOT_NO_INDEX_NO_FOLLOW,
 		keyword = '',
-		canonicalSlug
+		canonicalSlug,
 	} = props;
 	const [isVisible, setVisible] = useState(false);
 	const siteName = useMemo(() => webInfo?.name || process.env.NEXT_PUBLIC_SITENAME || 'Template', [webInfo]);
@@ -78,8 +80,8 @@ const Layout: FC<{
 				</script>)}
 			</Head>
 
-			{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
-			<div className="padding-wrap-page">
+			<div id="main-page-wrapper" {...{ className: useDefaultBackground ? '-default-background' : undefined }}>
+				{!hideMenu && <MainMenu hotLine={webInfo?.hotLine} webLogo={webInfo?.webLogo} />}
 				{children}
 				{!hideFooter && <Footer webInfo={webInfo} webSocial={webSocial} />}
 				{isVisible && (

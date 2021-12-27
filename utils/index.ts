@@ -61,8 +61,9 @@ export const getTimeZeroHour = () => (new Date().setHours(0, 0, 0, 0));
 export const getRelativeTime = (time: number) => {
   const timeNow = moment();
   const diffTimeSeconds = Math.abs(moment(time).diff(timeNow, "seconds"));
-  if (diffTimeSeconds < 10) return 'Vài giây trước'; // after 10 seconds
-  else if (diffTimeSeconds < 3600) return `${Math.abs(moment(time).diff(timeNow, "hours"))} giờ trước`;
+  if (diffTimeSeconds < 60) return 'Vài giây trước'; // after 10 seconds
+  else if (diffTimeSeconds < 3600) return `${Math.abs(moment(time).diff(timeNow, "minutes"))} phút trước`;
+  else if (diffTimeSeconds < 86400) return `${Math.abs(moment(time).diff(timeNow, "hours"))} giờ trước`;
   else if (diffTimeSeconds < 604800) return `${Math.abs(moment(time).diff(timeNow, "days"))} ngày`;
   else if (diffTimeSeconds < 31556926) return `${Math.abs(moment(time).diff(timeNow, "weeks"))} tuần`;
   return moment(time).format("DD/MM/yyyy");

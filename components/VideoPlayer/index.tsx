@@ -23,7 +23,7 @@ import { formatDuration } from "../../sub_modules/common/utils/timeFormat";
 import './style.scss';
 
 const VideoPlayer = forwardRef((props: PropsWithoutRef<{
-  playOnRender: boolean;
+  playOnRender?: boolean;
   id?: string;
   className?: string;
   videoUrl?: string;

@@ -16,22 +16,20 @@ import { apiWebSocial } from '../../utils/apis/webSocial'
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from '../../utils/router'
 
 type CoursePageProps = {
-  course: Course;
   webInfo?: WebInfo;
   webSocial?: WebSocial;
 } & SeoProps;
 
 const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
-  const { course, webInfo, webSocial, ...seo } = props;
+  const { webInfo, webSocial, ...seo } = props;
 
   return (
     <Layout
-      hideMenu
       webInfo={webInfo}
       webSocial={webSocial}
       {...seo}
     >
-      <CourseDetail course={course} webInfo={webInfo} />
+      <CourseDetail />
     </Layout>
   )
 }
@@ -58,7 +56,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req
       const courseContent: CourseContent = course?.courseContent;
       return {
         props: {
-          course,
           webInfo,
           webSocial,
           title: courseContent?.titleSeo,

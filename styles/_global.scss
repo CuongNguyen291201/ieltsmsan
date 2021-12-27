@@ -5,7 +5,6 @@
 * {
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
-  // transition: all 0.2s;
 }
 
 body {
@@ -23,10 +22,6 @@ body {
   --main-game-border: 1px solid #ec1f24;
 }
 
-// .container {
-//   max-width: $container-max-width;
-//   margin: auto;
-// }
 .home-section-title {
   font-weight: 900;
   font-size: 36px;
@@ -54,13 +49,7 @@ body {
   align-items: center;
 }
 
-// @media (max-width: $container-max-width) {
-//   .container {
-//     padding: 0 10px;
-//   }
-// }
-
-@media (max-width: $mobile-max-width) {
+@media (max-width: 576px) {
   .home-section-title {
     font-size: 24px;
   }

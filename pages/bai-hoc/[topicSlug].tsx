@@ -1,7 +1,6 @@
 import { PropsWithoutRef } from 'react';
 import Layout from '../../components/Layout';
 import TopicDetail from '../../components/TopicDetail';
-import { _Topic } from '../../custom-types';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
@@ -15,22 +14,17 @@ import { apiWebSocial } from '../../utils/apis/webSocial';
 import { ROUTER_NOT_FOUND } from '../../utils/router';
 
 type TopicPageProps = {
-  topic: _Topic;
   webInfo?: WebInfo;
   webSocial?: WebSocial;
 }
 
 const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
-  const { topic, webInfo, webSocial } = props;
-
   return (
     <Layout
-      hideMenu
-      webInfo={webInfo}
-      webSocial={webSocial}
+      {...props}
       addMathJax
     >
-      <TopicDetail topic={topic} webInfo={webInfo} />
+      <TopicDetail />
     </Layout>
   )
 }
@@ -58,7 +52,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req
 
       return {
         props: {
-          topic,
           webInfo,
           webSocial
         }
