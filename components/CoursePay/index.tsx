@@ -112,32 +112,34 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
       setFinalPrice(finalPrice);
       setSerial(randomstring.generate({ length: 8, charset: 'alphanumeric', capitalization: 'uppercase' }));
       setLoading(false)
+      return finalPrice;
     }
     if (courseIds?.length > 0) {
-      loadCoursesFC();
+      loadCoursesFC()
+        .then((finalPrice) => {
+          // Coupon cookie/query
+          const cookieCouponCode = getCookie(COUPON_CODE_KEY);
+          const couponCodeQuery = router.query.code as string;
+          const code = couponCodeQuery || cookieCouponCode;
+          if (!!code) {
+            if (!cookieCouponCode) setCookie(COUPON_CODE_KEY, code);
+            const decodedCode = atob(code);
+            apiGetCouponByCode(decodedCode)
+              .then((coupon) => {
+                if (!coupon) removeCookie(COUPON_CODE_KEY);
+                if (coupon && !coupon.isExpired && !coupon.isExceededUses && coupon.isActive && couponList.length < maxCoupons) {
+                  const newCouponList = [...couponList, coupon];
+                  setCouponList(newCouponList);
+                  setCouponDiscount(newCouponList.reduce((total: number, coupon) => {
+                    const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
+                    return total + cDiscount;
+                  }, 0));
+                }
+              })
+          }
+        });
     } else {
       setLoading(false)
-    }
-
-    // Coupon cookie/query
-    const cookieCouponCode = getCookie(COUPON_CODE_KEY);
-    const couponCodeQuery = router.query.code as string;
-    const code = couponCodeQuery || cookieCouponCode;
-    if (!!code) {
-      if (!cookieCouponCode) setCookie(COUPON_CODE_KEY, code);
-      const decodedCode = atob(code);
-      apiGetCouponByCode(decodedCode)
-        .then((coupon) => {
-          if (!coupon) removeCookie(COUPON_CODE_KEY);
-          if (coupon && !coupon.isExpired && !coupon.isExceededUses && coupon.isActive && couponList.length < maxCoupons) {
-            const newCouponList = [...couponList, coupon];
-            setCouponList(newCouponList);
-            setCouponDiscount(newCouponList.reduce((total: number, coupon) => {
-              const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
-              return total + cDiscount;
-            }, 0));
-          }
-        })
     }
   }, []);
 
