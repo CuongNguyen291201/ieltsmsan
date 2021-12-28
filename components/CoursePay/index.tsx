@@ -34,12 +34,13 @@ import { apiGetCouponByCode } from "../../utils/apis/couponApi";
 import { apiGetCourseByIds } from '../../utils/apis/courseApi';
 import { apiCreateOrder } from '../../utils/apis/orderApi';
 import { KEY_ORDER_SECRET } from '../../utils/contrants';
-import orderUtils from '../../utils/payment/orderUtils';
+import orderUtils, { COUPON_CODE_KEY } from '../../utils/payment/orderUtils';
 import { ROUTER_TRANSACTION_HISTORY } from '../../utils/router';
 import SkeletonContainer from "../SkeletonContainer";
 import Bank from './payment-content/Bank';
 import Momo from './payment-content/Momo';
 import './style.scss';
+import { getCookie, removeCookie, setCookie } from "../../sub_modules/common/utils/cookie";
 
 
 const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
@@ -116,6 +117,27 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
       loadCoursesFC();
     } else {
       setLoading(false)
+    }
+
+    // Coupon cookie/query
+    const cookieCouponCode = getCookie(COUPON_CODE_KEY);
+    const couponCodeQuery = router.query.code as string;
+    const code = couponCodeQuery || cookieCouponCode;
+    if (!!code) {
+      if (!cookieCouponCode) setCookie(COUPON_CODE_KEY, code);
+      const decodedCode = atob(code);
+      apiGetCouponByCode(decodedCode)
+        .then((coupon) => {
+          if (!coupon) removeCookie(COUPON_CODE_KEY);
+          if (coupon && !coupon.isExpired && !coupon.isExceededUses && coupon.isActive && couponList.length < maxCoupons) {
+            const newCouponList = [...couponList, coupon];
+            setCouponList(newCouponList);
+            setCouponDiscount(newCouponList.reduce((total: number, coupon) => {
+              const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
+              return total + cDiscount;
+            }, 0));
+          }
+        })
     }
   }, []);
 
@@ -255,7 +277,9 @@ const CoursePay = (props: { webInfo?: WebInfo; maxCoupons?: number }) => {
     const newCouponList = [...couponList];
     newCouponList.splice(index, 1);
     setCouponList(newCouponList);
-
+    if (getCookie(COUPON_CODE_KEY) === btoa(coupon.code)) {
+      removeCookie(COUPON_CODE_KEY);
+    }
     const cDiscount = coupon.discountUnit === COUPON_DISCOUNT_UNIT_CURRENCY ? coupon.discount : (Math.round(finalPrice * coupon.discount / (100 * 1000) * 1000));
     setCouponDiscount(couponDiscount - cDiscount);
   }
