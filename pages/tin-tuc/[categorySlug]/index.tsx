@@ -6,6 +6,7 @@ import { wrapper } from '../../../redux/store';
 import { getUserFromToken } from '../../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../../../sub_modules/common/utils/cookie';
+import { META_ROBOT_NO_INDEX_NO_FOLLOW } from "../../../sub_modules/share/constraint";
 import CategoryNews from '../../../sub_modules/share/model/categoryNews';
 import News from '../../../sub_modules/share/model/news';
 import WebInfo from '../../../sub_modules/share/model/webInfo';
@@ -20,7 +21,7 @@ const NEWS_LIMIT = 5;
 
 const CategoryNewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[]; category: CategoryNews }) => {
   const { categoryNews, newsList, totalNews, category, ...webSettings } = props;
-  return <Layout {...webSettings}>
+  return <Layout {...webSettings} robot={META_ROBOT_NO_INDEX_NO_FOLLOW}>
     <NewsCategoryView
       categoryNews={categoryNews}
       newsList={newsList}
@@ -58,7 +59,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       newsList,
       totalNews,
       categoryNews,
-      category: categoryNews.find(({ slug }) => slug === categorySlug)
+      category: categoryNews.find(({ slug }) => slug === categorySlug),
+      canonicalSlug: `${ROUTER_NEWS}/${categorySlug}`
     }
   }
 });

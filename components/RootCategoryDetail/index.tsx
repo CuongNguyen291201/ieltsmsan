@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useReducer } from 'react';
 import { _Category } from '../../custom-types';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { response_status } from '../../sub_modules/share/api_services/http_status';
+import { STATUS_OPEN, STATUS_PUBLIC } from "../../sub_modules/share/constraint";
 import { Course } from '../../sub_modules/share/model/courses';
 import { apiCountCategoryCourses, apiOffsetCoursesByCategory } from '../../utils/apis/courseApi';
 import { getCategorySlug } from '../../utils/router';
@@ -36,8 +37,8 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
 
   useEffect(() => {
     Promise.all(childCategoryIds.map(async (categoryId) => {
-      const { data, status } = await apiOffsetCoursesByCategory({ categoryId, field: '_id', skip: 0, limit: COURSE_LOAD_LIMIT });
-      const { total } = await apiCountCategoryCourses({ categoryId, isRoot: false });
+      const { data, status } = await apiOffsetCoursesByCategory({ categoryId, field: '_id', skip: 0, limit: COURSE_LOAD_LIMIT, status: [STATUS_PUBLIC, STATUS_OPEN] });
+      const { total } = await apiCountCategoryCourses({ categoryId, isRoot: false, status: [STATUS_PUBLIC, STATUS_OPEN] });
 
       return {
         categoryId, data: (status === response_status.success ? data : []) as Course[], total
@@ -65,8 +66,8 @@ const RootCategoryDetail = (props: { category: _Category; childCategories: _Cate
 
   return (
     <>
-      <Breadcrumb items={[{ name: category?.name, slug: getCategorySlug({ category }) }]} />
       <div className="container root-category-detail">
+        <Breadcrumb items={[{ name: category?.name, slug: getCategorySlug({ category }) }]} />
         <div className="nav-cat">
           <div className="head">
             <div className="title-cat">

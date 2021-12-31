@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { GameData } from '../../sub_modules/game/src/game_core/gameData';
-import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NONE, CARD_BOX_NO_ANSWER, CARD_HAS_CHILD } from '../../sub_modules/share/constraint';
+import { CARD_BOX_ANSWER_BOOKMARK, CARD_BOX_ANSWER_CORRECT, CARD_BOX_ANSWER_INCORRECT, CARD_BOX_NONE, CARD_BOX_NO_ANSWER, CARD_HAS_CHILD, TOPIC_CONTENT_TYPE_FLASH_CARD } from '../../sub_modules/share/constraint';
 import { Card } from '../../sub_modules/share/model/card';
 import Skill from '../../sub_modules/share/model/skill';
 import MyCardData from '../../sub_modules/share/model/myCardData';
@@ -236,6 +236,7 @@ export const initGamePageStateAction = (args: {
   const shuffleQuestionOrder = studyScoreData?.shuffleQuestionOrder ?? [];
   const isPrepareToPlay = statusGame === GAME_STATUS_NONE;
   const isPrepareToContinue = statusGame === GAME_STATUS_PREPARE_CONTINUE;
+  const isGameFlashCard = currentTopic.topicExercise.contentType === TOPIC_CONTENT_TYPE_FLASH_CARD;
 
   if (!!shuffleQuestionOrder.length && !isPrepareToPlay) {
     cards.forEach((card) => {
@@ -245,7 +246,7 @@ export const initGamePageStateAction = (args: {
   }
   const isShuffleQuestion = !!currentTopic.topicExercise?.shuffleQuestion && isPrepareToPlay;
   
-  const _cards = sortCards(cards, isShuffleQuestion);
+  const _cards = !isGameFlashCard ? sortCards(cards, isShuffleQuestion) : cards;
 
   return {
     type: GamePageActionTypes.INIT_GAME_STATE,

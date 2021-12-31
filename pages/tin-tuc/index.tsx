@@ -7,6 +7,7 @@ import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
+import { META_ROBOT_NO_INDEX_NO_FOLLOW } from "../../sub_modules/share/constraint";
 import CategoryNews from '../../sub_modules/share/model/categoryNews';
 import News from '../../sub_modules/share/model/news';
 import WebInfo from '../../sub_modules/share/model/webInfo';
@@ -22,7 +23,7 @@ const NEWS_LIMIT = 5;
 const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[] }) => {
   const { categoryNews, newsList, totalNews, ...webSettings } = props;
   return (
-    <Layout {...webSettings}>
+    <Layout {...webSettings} canonicalSlug={ROUTER_NEWS} robot={META_ROBOT_NO_INDEX_NO_FOLLOW} title="Tin tức">
       <NewsCategoryView
         categoryNews={categoryNews}
         newsList={newsList}

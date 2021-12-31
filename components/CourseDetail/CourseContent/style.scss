@@ -1,0 +1,27 @@
+.course-content {
+  box-shadow: 0px 4px 30px rgba(95, 73, 118, 0.15);
+  background-color: #ffffff;
+  padding: 30px;
+  .content {
+    &.hide {
+      // FIRE FOX
+      @media (min--moz-device-pixel-ratio: 0) {
+        max-height: 150px;
+      }
+      // SAFARI
+      @media not all and (min-resolution:.001dpcm) {
+        @supports (-webkit-appearance: none) {
+          max-height: 150px;
+        }
+      }
+
+      @supports (-webkit-line-clamp: 4) {
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+      }
+    }
+  }
+}

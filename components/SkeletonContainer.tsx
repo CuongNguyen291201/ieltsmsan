@@ -13,7 +13,7 @@ const SkeletonContainer = (props: PropsWithChildren<{ loading?: boolean; noTrans
     : MuiSkeleton;
 
   return props.loading
-    ? <Skeleton>{props.children}</Skeleton>
+    ? <Skeleton></Skeleton>
     : <>{props.children}</>
 }
 

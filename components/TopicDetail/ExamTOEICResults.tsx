@@ -1,9 +1,10 @@
 import { Box, Grid, Paper, Slider } from "@mui/material";
-import { makeStyles, withStyles }  from "@mui/styles"
+import { makeStyles, withStyles } from "@mui/styles"
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { SKILL_TYPE_LISTENING, SKILL_TYPE_READING } from "../../sub_modules/share/constraint";
+import StaticLabelSlider from "../StaticLabelSlider";
 
 const useStyles = makeStyles((_) => ({
   toeicScorePanel: {
@@ -63,40 +64,9 @@ const ExamTOEICResutls = () => {
     }
   }, [studyScore]);
 
-  const ScoreSlider = withStyles((_) => ({
-    root: {
-      marginTop: "50px"
-    },
-    rail: {
-      height: "10px"
-    },
-    track: {
-      height: "10px"
-    },
-    mark: {
-      height: 0
-    },
-    markLabel: {
-      color: "#000",
-      fontWeight: "bold"
-    },
-    valueLabel: {
-      left: "calc(-50% - 10px)"
-    },
-    disabled: {
-      color: "#52af77"
-    },
-    thumb: {
-      "&.Mui-disabled": {
-        width: 0,
-        height: 0
-      }
-    }
-  }))(Slider);
-
   const renderScoreSlider = (args: { value: number }) => {
     const { value } = args;
-    return <ScoreSlider
+    return <StaticLabelSlider
       value={value}
       valueLabelDisplay="on"
       max={495}
@@ -121,7 +91,9 @@ const ExamTOEICResutls = () => {
                 {listeningCards?.correctNum ?? 0}/{listeningCards?.totalCardNum ?? 0}
               </Box>
             </Box>
-            {renderScoreSlider({ value: listeningScore })}
+            <Box mt="40px">
+              {renderScoreSlider({ value: listeningScore })}
+            </Box>
           </Grid>
 
           <Grid item xs={12} component={Paper} variant="outlined" className={classes.toeicScorePanel}>
@@ -133,7 +105,9 @@ const ExamTOEICResutls = () => {
                 {readingCards?.correctNum ?? 0}/{readingCards?.totalCardNum ?? 0}
               </Box>
             </Box>
-            {renderScoreSlider({ value: readingScore })}
+            <Box mt="40px">
+              {renderScoreSlider({ value: readingScore })}
+            </Box>
           </Grid>
         </Grid>
       </Grid>

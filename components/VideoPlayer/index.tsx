@@ -1,29 +1,25 @@
-import { Slider as MuiSlider, Tooltip } from "@mui/material";
 import {
-  Forward10,
-  Pause,
+  Forward10, Fullscreen,
+  FullscreenExit, Pause,
   PauseCircleOutline,
   PlayArrow,
-  PlayCircleOutline,
-  ReplayOutlined,
-  Replay,
-  Replay10,
-  VolumeDown,
+  PlayCircleOutline, Replay,
+  Replay10, ReplayOutlined, VolumeDown,
   VolumeOff,
-  VolumeUp,
-  Fullscreen,
-  FullscreenExit
+  VolumeUp
 } from "@mui/icons-material";
+import { Slider as MuiSlider, Tooltip } from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { forwardRef, memo, PropsWithoutRef, useCallback, useEffect, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import ReactPlayer from "react-player";
+import ReactSlider from 'react-slider';
 import screenfull from "screenfull";
 import { formatDuration } from "../../sub_modules/common/utils/timeFormat";
 import './style.scss';
 
 const VideoPlayer = forwardRef((props: PropsWithoutRef<{
-  playOnRender: boolean;
+  playOnRender?: boolean;
   id?: string;
   className?: string;
   videoUrl?: string;
@@ -81,7 +77,7 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
     }
   }
 
-  const handleChangeVolume = (event: Event, value: number) => {
+  const handleChangeVolume = (value: number) => {
     if (value > 0 && muted) setMuted(false);
     setVolume(value);
   }
@@ -137,7 +133,7 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
           }
         </div>
         <div className="player-seek">
-          <Slider
+          {/* <Slider
             className="player-seek-slider"
             aria-label="Seek"
             min={0}
@@ -147,12 +143,28 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
             onChange={(_, value) => {
               setSeeking(true);
               setPlayedSecs(value as number);
+              videoPlayerRef.current.seekTo(value as number, "seconds");
             }}
             onChangeCommitted={(_, value) => {
+              setSeeking(false);
               videoPlayerRef.current.seekTo(value as number, "seconds");
+            }}
+          /> */}
+          <ReactSlider
+            className="player-seek-slider"
+            ariaLabel="Seek"
+            min={0}
+            max={duration}
+            step={1}
+            value={playedSecs}
+            onChange={(value) => {
+              setSeeking(true);
+              setPlayedSecs(value)
+            }}
+            onAfterChange={(value) => {
+              videoPlayerRef.current?.seekTo(value, "seconds");
               setSeeking(false);
             }}
-
           />
         </div>
 
@@ -196,13 +208,22 @@ const VideoPlayer = forwardRef((props: PropsWithoutRef<{
                 }
               </div>
             </Tooltip>
-            <Slider
+            {/* <Slider
               className="player-toolbars-volume-slider"
               aria-label="Volume"
               value={muted ? 0 : volume}
               min={0}
               max={1}
               step={0.05}
+              onChange={handleChangeVolume}
+            /> */}
+            <ReactSlider
+              className="player-toolbars-volume-slider"
+              aria-label="Volume"
+              value={muted ? 0 : volume}
+              min={0}
+              max={1}
+              step={0.01}
               onChange={handleChangeVolume}
             />
           </div>

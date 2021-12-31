@@ -16,7 +16,7 @@
     height: 100%;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 2;
     &.play {
       display: none;
     }
@@ -25,14 +25,43 @@
       position: absolute;
       bottom: 43px;
       width: 100%;
+      height: 3px;
       &-slider {
+        width: 100%;
         z-index: 4;
         position: absolute;
         height: 3px;
         padding: 0 !important;
         color: #f00;
-        & *:not(.MuiSlider-thumb) {
+        border-radius: 1px;
+        & *:not(.thumb) {
           height: 3px;
+        }
+        & .track {
+          background-color: currentColor;
+          &-1 {
+            opacity: 0.38;
+          }
+        }
+        & .thumb {
+          width: 12px;
+          height: 12px;
+          background-color: currentColor;
+          display: flex;
+          outline: 0;
+          position: absolute;
+          box-sizing: border-box;
+          margin-top: -5px;
+          transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+          align-items: center;
+          margin-left: -6px;
+          border-radius: 50%;
+          justify-content: center;
+          cursor: pointer;
+          margin-left: 0;
+          &:hover {
+            box-shadow: 0px 0px 0px 8px rgb(63 81 181 / 16%);
+          }
         }
       }
     }
@@ -79,6 +108,30 @@
         width: 100px;
         color: #fff;
         margin-left: 10px;
+        height: 5px;
+        & *:not(.thumb) {
+          height: 5px;
+        }
+        & .track {
+          background-color: currentColor;
+          &-1 {
+            opacity: 0.38;
+          }
+        }
+        & .thumb {
+          width: 12px;
+          height: 12px;
+          background-color: currentColor;
+          border-radius: 50%;
+          display: flex;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+          &:hover {
+            box-shadow: 0px 0px 0px 8px rgb(63 81 181 / 16%);
+          }
+        }
         @media (max-width: 576px) {
           width: 50px;
         }

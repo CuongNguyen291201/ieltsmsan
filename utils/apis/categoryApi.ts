@@ -25,8 +25,9 @@ export const apiGetCategoryBySlug = async (slug: string): Promise<_Category | nu
   return null;
 };
 
-export const apiGetAllCategoriesWithCourses = async (args?: { limitCourses?: number, position?: number; serverSide?: boolean }): Promise<_Category[]> => {
-  const { data, status } = await POST_API(getEndpoint('api/all-categories', args.serverSide), args);
+export const apiGetAllCategoriesWithCourses = async (args?: { limitCourses?: number; parentId?: string; position?: number; serverSide?: boolean; slugs?: string[] }): Promise<_Category[]> => {
+  const { serverSide, ...reqBody } = args;
+  const { data, status } = await POST_API(getEndpoint('api/all-categories', serverSide), reqBody);
   if (status !== response_status_codes.success) return [];
   return (data as Category[]).sort((a, b) => a.index - b.index)
 }

@@ -2,7 +2,9 @@ import { getEndpoint } from ".";
 import { _Topic } from '../../custom-types';
 import { POST_API, POST_REQ } from '../../sub_modules/common/api';
 import { response_status_codes } from '../../sub_modules/share/api_services/http_status';
+import Document from "../../sub_modules/share/model/document";
 import MyCardData from '../../sub_modules/share/model/myCardData';
+import ScenarioInfo from "../../sub_modules/share/model/scenarioInfo";
 import Skill from "../../sub_modules/share/model/skill";
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import { StudyScoreData } from "../../sub_modules/share/model/studyScoreData";
@@ -103,12 +105,22 @@ export const getOneVideoScenarioAPI = async (object) => {
   }
   return data
 }
-export const apiGetTimeStamp = async (args: {}) => {
-  const res = await POST_API('check-time-stamp', args)
+
+export const apiGetDataDetailLesson = async (args: { topicId: string }): Promise<{
+  scenarioInfos: ScenarioInfo[];
+  documents: Document[]
+}> => {
+  const { data, status } = await POST_API(`/get-data-detail-lesson`, args)
+  if (status !== response_status_codes.success) return { scenarioInfos: [], documents: [] };
+  return data
+}
+
+export const apiGetTimeStamp = async (): Promise<{ timeStamp: number }> => {
+  const res = await POST_API('check-time-stamp', {})
   if (res.status === 200) {
     return res.data
   }
-  return 0
+  return { timeStamp: null }
 };
 
 export const apiGetIELTSTopicData = async (args: { topicId: string; userId?: string }): Promise<{

@@ -1,14 +1,19 @@
 import { MapSkillTypeValues } from "../../sub_modules/game/src/game_core/gameData"
+import { CARD_STUDY_ORDER_DEFAULT } from "../../sub_modules/share/constraint";
 import Skill from "../../sub_modules/share/model/skill"
 import { ExamAction } from "../actions/exam.action"
 import { ActionTypes, Scopes } from "../types"
 
 export interface ExamState {
   mapSkillTypeValues: MapSkillTypeValues;
+  questionsPlayNum: number;
+  cardStudyOrder: number;
 }
 
 const initialState: ExamState = {
-  mapSkillTypeValues: {}
+  mapSkillTypeValues: {},
+  questionsPlayNum: 0,
+  cardStudyOrder: CARD_STUDY_ORDER_DEFAULT
 }
 
 const getMapSkillTypeValues = (skills: Skill[]): MapSkillTypeValues => {
@@ -25,6 +30,11 @@ export const examReducer = (state = initialState, action: ExamAction): ExamState
         return {
           ...state,
           mapSkillTypeValues: getMapSkillTypeValues(action.payload.skills)
+        }
+      case ActionTypes.EXAM_SET_EXERCISE_OPTIONS:
+        return {
+          ...state,
+          [action.target]: action.payload?.value
         }
       default:
         return state;

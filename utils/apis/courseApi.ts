@@ -18,7 +18,8 @@ export const apiOffsetCoursesByCategory = (args: {
   field?: keyof ICourse;
   asc?: boolean;
   limit?: number;
-  skip?: number
+  skip?: number;
+  status?: number | number[]
 }) => POST_REQ('offset-courses-by-category', args);
 
 export const apiGetCourseById = async (args: { courseId: string; serverSide?: boolean }): Promise<Course | null> => {
@@ -27,7 +28,7 @@ export const apiGetCourseById = async (args: { courseId: string; serverSide?: bo
   return null;
 }
 
-export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot?: boolean }): Promise<{ total: number; }> => {
+export const apiCountCategoryCourses = async (args: { categoryId: string; isRoot?: boolean; status?: number | number[] }): Promise<{ total: number; }> => {
   const { data, status } = await POST_API('count-category-courses', args);
   if (status === response_status_codes.success) return data;
   return { total: 0 };

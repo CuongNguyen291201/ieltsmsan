@@ -2,6 +2,8 @@ import { showToastifySuccess, showToastifyWarning } from "../../sub_modules/comm
 
 export const ORDER_RETURN_KEY = 'orderReturnUrl';
 export const CART_ITEMS_KEY = 'courseIds';
+export const COUPON_CODE_KEY = '_hvvv_data_coupon_code';
+export const COUPON_CODE_ENCODE_KEY = 'PXXhEqEDZ8svm3e7tLilW60kl1VTy42J';
 
 export default {
   addCourseToCart: (courseId: string, callback?: () => void) => {

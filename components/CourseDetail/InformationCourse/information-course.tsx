@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";
-import { useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MapUserCourseStatus } from '../../../custom-types/MapContraint';
 import iconCircle from '../../../public/images/icons/icon-circle.png';
@@ -35,10 +35,7 @@ export const InformationCourse = (props: { course: Course }) => {
     const { userCourse, userCourseLoading, isJoinedCourse, isVisibleActiveCourseModal, currentCourseLoading } = useSelector((state: AppState) => state.courseReducer);
     const { currentUser } = useSelector((state: AppState) => state.userReducer);
     const isCourseDiscount = useMemo(() => !!course.cost && !!course.discountPrice, [course]);
-    const [{
-        activeLoading,
-        showCourseMembers
-    }, uiLogic] = useReducer(infoCourseReducer, infoCourseInitState);
+    const [{ activeLoading }, uiLogic] = useReducer(infoCourseReducer, infoCourseInitState);
 
     const isTeacher = useMemo(() => userCourse?.isTeacher, [userCourse]);
 
@@ -48,9 +45,7 @@ export const InformationCourse = (props: { course: Course }) => {
             return;
         }
         if (activeLoading || userCourseLoading) return;
-        if (course.cost && (!userCourse || userCourse?.isExpired) && currentUser !== USER_TYPE_HAS_ROLE) {
-            dispatch(setActiveCourseModalVisibleAction(true));
-        } else if (!course.cost && !userCourse) {
+        if (!userCourse) {
             uiLogic(setActiveLoading(true));
             apiJoinCourse({ courseId: course._id })
                 .then((uc) => {
@@ -64,35 +59,53 @@ export const InformationCourse = (props: { course: Course }) => {
         return;
     }
 
-    // const renderCourseMembersModal = () => (
-    //     <Modal
-    //         visible={showCourseMembers}
-    //         footer={null}
-    //         onCancel={() => {
-    //             uiLogic(setShowCourseMembers(false));
-    //         }}
-    //         centered
-    //         width="100%"
-    //         title="Danh sách học viên"
-    //         bodyStyle={{ maxHeight: "80vh" }}
-    //     >
-    //         <MemberListView course={course} />
-    //     </Modal>
-    // )
-    const goToListMember = () =>{
+    const goToListMember = () => {
         if (isTeacher) {
-            router.push(getCourseMembersPageSlug({course}))
+            router.push(getCourseMembersPageSlug({ course }))
         }
     }
+
+    const renderCourseButtons = useCallback(() => {
+        if (!isJoinedCourse || userCourse?.isExpired) {
+            if (course.cost > 0) {
+                return (<div className="button-group">
+                    <div>
+                        <Button variant="contained" size="large" className="btn bgr-green" onClick={() => {
+                            orderUtils.setReturnUrl(router.asPath);
+                            router.push(getPaymentPageSlug(course._id));
+                        }}>Mua ngay</Button>
+                    </div>
+                    <div>
+                        <Button variant="contained" size="large" className="btn bgr-root" onClick={() => {
+                            orderUtils.addCourseToCart(course._id, () => {
+                                dispatch(createOneAction(Scopes.CART, course._id));
+                            })
+                        }}>Thêm vào giỏ</Button>
+                    </div>
+                </div>)
+            } else if (userCourse?.status !== USER_COURSE_APPROVE) {
+                return (<div className="button-group">
+                    <div>
+                        <Button variant="outlined" size="large" className="btn bgr-root" onClick={() => {
+                            joinCourse()
+                        }}>
+                            {userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học'}
+                        </Button>
+                    </div>
+                </div>)
+            }
+            return <></>
+        }
+        return <></>
+    }, [isJoinedCourse, userCourse, course.cost])
+
     return (
         <div id="course-overview">
-            {/* {renderCourseMembersModal()} */}
             <SkeletonContainer loading={currentCourseLoading} noTransform>
                 <div className="information-course">
                     <div>
                         {/* {(course?.courseContent as CourseContent)?.videoIntro} */}
                         <img src={course?.avatar || "https://storage.googleapis.com/ielts-fighters.appspot.com/elearning-react/2021/10/30/54040744ielts_writing_image"} alt="course-info" width="100%" height="200px" />
-                        {/* <iframe width="100%" height="200px" src="https://www.youtube.com/embed/Vo7N4uSaJV8?list=RDVo7N4uSaJV8" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe> */}
                     </div>
                     <div className="discount-price">
                         GIẢM GIÁ <b>40%</b>
@@ -117,46 +130,7 @@ export const InformationCourse = (props: { course: Course }) => {
                         </div>
                     </div>
                 </div>
-                {(!isJoinedCourse || userCourse?.isExpired)
-                    && !!course.cost
-                    ? <div className="button-group">
-                        <div>
-                            <Button variant="contained" size="large" className="btn bgr-green" onClick={() => {
-                                orderUtils.setReturnUrl(router.asPath);
-                                router.push(getPaymentPageSlug(course._id));
-                            }}>Mua ngay</Button>
-                        </div>
-                        <div>
-                            <Button variant="contained" size="large" className="btn bgr-root" onClick={() => {
-                                orderUtils.addCourseToCart(course._id, () => {
-                                    dispatch(createOneAction(Scopes.CART, course._id));
-                                })
-                            }}>Thêm vào giỏ</Button>
-                        </div>
-                    </div>
-                    :
-                    <>{userCourse?.status !== USER_COURSE_APPROVE && <div className="button-group">
-                        <div>
-                            <Button variant="outlined" size="large" className="btn btn-root" onClick={() => {
-                                joinCourse()
-                            }}>
-                                {userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học'}
-                            </Button>
-                        </div>
-                    </div>}
-                    </>
-                }
-
-                {/* <div className="button-group">
-                      <Button style={{ width: "100%" }} type="primary" size="large" className="btn bgr-root" onClick={() => joinCourse()}>
-                        {activeLoading || userCourseLoading
-                          ? <CircularProgress style={{ color: "white" }} size={25} />
-                          : course.cost
-                            ? (!isJoinedCourse ? 'Kích hoạt khoá học' : 'Đã tham gia')
-                            : (userCourse ? MapUserCourseStatus[userCourse.status] : 'Tham gia khoá học')
-                        }
-                      </Button>
-                    </div> */}
+                {renderCourseButtons()}
             </SkeletonContainer>
         </div>
     )
