@@ -1,17 +1,17 @@
 @import "../../styles/variables.scss";
-#main-page-wrapper {
-  padding: 0 70px;
-  background-color: #e5e5e5;
-  background-image: url("/images/icons/backgrond__.png");
-  &.-default-background {
-    background-color: unset;
-    background-image: unset;
-    padding: 0;
-  }
-  @media (max-width: 768px) {
-    padding: 0;
-  }
-}
+// #main-page-wrapper {
+//   padding: 0 70px;
+//   background-color: #e5e5e5;
+//   background-image: url("/images/icons/backgrond__.png");
+//   &.-default-background {
+//     background-color: unset;
+//     background-image: unset;
+//     padding: 0;
+//   }
+//   @media (max-width: 768px) {
+//     padding: 0;
+//   }
+// }
 #scroll-top-button > .scrollTop {
   position: fixed;
   bottom: 30px;

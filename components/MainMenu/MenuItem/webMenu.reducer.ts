@@ -22,7 +22,7 @@ const initMenuState = (menu: WebMenuItem[]) => {
         .reduce((map: {[itemId: string]: WebMenuItem[]}, item) => {
             const key = item.parentId || '';
             if (!key) {
-                map[`${item._id}`] = [];
+                map[`${item._id}`] = [...(map[`${item._id}`] || [])];
             } else {
                 map[key] = [...(map[key] || []), item];
             }

@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   }
 
   // const { data, status } = await apiGetCategories();
-  const homeCategories = await apiGetAllCategoriesWithCourses({ limitCourses: 6, position: CATEGORY_POSITION_LANDING_PAGE, serverSide: true });
+  const homeCategories = await apiGetAllCategoriesWithCourses({ position: CATEGORY_POSITION_LANDING_PAGE, serverSide: true });
   const { webInfo, webSeo } = await apiWebInfo({ pageSlug: '/', serverSide: true });
   const webSocial = await apiWebSocial(true);
 
