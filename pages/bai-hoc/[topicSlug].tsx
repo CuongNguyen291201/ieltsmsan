@@ -58,8 +58,9 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req
       }
     }
   }
-  res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-  return;
+  return {
+    notFound: true
+  }
 });
 
 export default TopicPage;

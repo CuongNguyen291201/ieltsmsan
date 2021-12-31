@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { PropsWithoutRef, useEffect, useState } from "react";
-import { InfoCourse } from "../../components/CourseDetail/InfoCourse";
+import { InfoCourse } from "../../components/InfoCourse";
 import Layout from '../../components/Layout';
 import { setCurrentCourseAction } from "../../redux/actions/course.actions";
 import { wrapper } from "../../redux/store";
@@ -49,7 +49,7 @@ const CourseMembersPage = (props: PropsWithoutRef<CourseMembersPageProps>) => {
       webInfo={webInfo}
       webSocial={webSocial}
     >
-      <InfoCourse course={course} webInfo={webInfo} />
+      <InfoCourse course={course} />
       {isReady ? <MemberListView course={course} /> : <div style={{ textAlign: 'center' }}><CircularProgress /></div>}
     </Layout>
   )
@@ -81,8 +81,9 @@ export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req
       }
     }
   }
-  res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-  return;
+  return {
+    notFound: true
+  }
 })
 
 export default CourseMembersPage;
