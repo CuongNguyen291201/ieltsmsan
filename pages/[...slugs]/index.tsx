@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import React from 'react';
+import ErrorView from "../../components/ErrorView";
 import Layout from '../../components/Layout';
 import NewsView from '../../components/NewsView';
 import ReplyComment from '../../components/ReplyComment';
@@ -39,7 +40,8 @@ const Slug = (props: SlugTypes) => {
   const mapTypePage = {
     [PAGE_CATEGORY_DETAIL]: <RootCategoryDetail category={category} childCategories={childCategories} />,
     [PAGE_REPLY_COMMENT]: <ReplyComment category={category} childCategories={childCategories} />,
-    [PAGE_NEWS_DETAIL]: <NewsView news={news} />
+    [PAGE_NEWS_DETAIL]: <NewsView news={news} />,
+    [PAGE_NOT_FOUND]: <ErrorView message="Không tìm thấy trang" />
   }
 
   return (
@@ -72,8 +74,13 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     const slug = items.slice(0, -2).join('-');
 
     if (!id || !slug) {
-      res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-      return;
+      return {
+        props: {
+          type: PAGE_NOT_FOUND, webInfo, webSocial
+        }
+      }
+      // res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
+      // return;
     }
 
 
@@ -81,8 +88,11 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
       const newsId = id.slice(NEWS_ID_PREFIX.length);
       const news: News = await apiGetNewsById(newsId, true);
       if (!news) {
-        res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-        return;
+        return {
+          props: {
+            type: PAGE_NOT_FOUND, webInfo, webSocial
+          }
+        }
       }
       return {
         props: {
@@ -115,11 +125,17 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         props: { id, slug, type, webInfo, webSocial }
       }
     }
-    res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-    return;
+    return {
+      props: {
+        type: PAGE_NOT_FOUND, webInfo, webSocial
+      }
+    }
   }
-  res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-  return;
+  return {
+    props: {
+      type: PAGE_NOT_FOUND, webInfo, webSocial
+    }
+  }
 });
 
 export default Slug;
