@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadListAction } from '../../redux/actions';
 import { AppState } from "../../redux/reducers";
 import { Scopes } from '../../redux/types';
-import LoginModal from "../../sub_modules/common/components/loginModal";
-import RegisterModal from "../../sub_modules/common/components/registerModal";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
 import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
@@ -255,8 +255,8 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
               </div>
             </DialogContent>
           </Dialog>
-          <LoginModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
-          <RegisterModal mainBgrColor="#EC1F24" mainTextColor="#FFF" />
+          <LoginModal />
+          <RegisterModal />
         </div>
       </div >
     </div>
