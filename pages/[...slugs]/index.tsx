@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     } else if (routePath.match(NewsSlugRegex)) {
       const { 1: slug, 2: id } = routePath.match(NewsSlugRegex);
       const news: News = await apiGetNewsById(id, true);
-      if (encodeURIComponent(news.slug) !== encodeURIComponent(slug)) {
+      if (encodeURIComponent(news.slug) === encodeURIComponent(slug)) {
         return {
           props: {
             type: PAGE_NEWS_DETAIL,
