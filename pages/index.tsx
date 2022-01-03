@@ -19,6 +19,7 @@ import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
 import { removeServerSideCookie } from "../utils";
 import { apiGetCategories } from '../utils/apis/categoryApi';
+import { apiGetPageLayout } from "../utils/apis/pageLayoutApi";
 import { apiWebInfo } from '../utils/apis/webInfoApi';
 import { apiWebSocial } from '../utils/apis/webSocial';
 
@@ -55,8 +56,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   }
 
   const { data, status } = await apiGetCategories(true);
-  const { webInfo, webSeo } = await apiWebInfo({ pageSlug: '/', serverSide: true });
-  const webSocial = await apiWebSocial(true);
+  const { webInfo, webSeo, webSocial } = await apiGetPageLayout({ slug: '/' });
 
   const homeCategories = status === 0 ? data : [];
 

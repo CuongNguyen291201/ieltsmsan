@@ -1,3 +1,5 @@
+import CircularProgress from '@mui/material/CircularProgress';
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PropsWithoutRef, useEffect, useState } from "react";
 import { InfoCourse } from "../../components/InfoCourse";
@@ -10,11 +12,8 @@ import { Course } from "../../sub_modules/share/model/courses";
 import WebInfo from "../../sub_modules/share/model/webInfo";
 import WebSocial from "../../sub_modules/share/model/webSocial";
 import { apiGetCourseById, apiGetUserCourse } from "../../utils/apis/courseApi";
-import { apiWebInfo } from "../../utils/apis/webInfoApi";
-import { apiWebSocial } from "../../utils/apis/webSocial";
-import { getCoursePageSlug, ROUTER_NOT_FOUND } from "../../utils/router";
-import CircularProgress from '@mui/material/CircularProgress';
-import dynamic from "next/dynamic";
+import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
+import { getCoursePageSlug } from "../../utils/router";
 
 const MemberListView = dynamic(() => import("../../components/CourseDetail/MemberListView"));
 
@@ -57,10 +56,9 @@ const CourseMembersPage = (props: PropsWithoutRef<CourseMembersPageProps>) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res, query }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [user, { webInfo }, webSocial] = await Promise.all([
+  const [user, { webInfo, webSocial }] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo({ serverSide: true }),
-    apiWebSocial(true)
+    apiGetPageLayout()
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));

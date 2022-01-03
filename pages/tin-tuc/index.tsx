@@ -6,21 +6,18 @@ import NewsCategoryView from '../../components/NewsCategoryView';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
-import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { META_ROBOT_NO_INDEX_NO_FOLLOW } from "../../sub_modules/share/constraint";
 import CategoryNews from '../../sub_modules/share/model/categoryNews';
 import News from '../../sub_modules/share/model/news';
 import WebInfo from '../../sub_modules/share/model/webInfo';
-import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiFullNews, apiNewsCategories } from "../../utils/apis/newsApi";
-import { apiWebInfo } from '../../utils/apis/webInfoApi';
-import { apiWebSocial } from '../../utils/apis/webSocial';
-import { ROUTER_ERROR, ROUTER_NEWS } from '../../utils/router';
+import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
+import { ROUTER_NEWS } from '../../utils/router';
 
 const NEWS_LIMIT = 5;
 
-const NewsPage = (props: { webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[] }) => {
+const NewsPage = (props: { webInfo?: WebInfo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[] }) => {
   const { categoryNews, newsList, totalNews, ...webSettings } = props;
   return (
     <Layout {...webSettings} canonicalSlug={ROUTER_NEWS} robot={META_ROBOT_NO_INDEX_NO_FOLLOW} title="Tin tức">
@@ -39,8 +36,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   if (userInfo) {
     store.dispatch(loginSuccessAction(userInfo));
   }
-  const webInfoRes = await apiWebInfo({ pageSlug: ROUTER_NEWS, serverSide: true });
-  const webSocial = await apiWebSocial(true);
+  const { webInfo, webSocial } = await apiGetPageLayout();
 
   const pageQuery = parseInt((query.page || '1') as string);
   const skip = (isNaN(pageQuery) || pageQuery <= 1) ? 0 : (pageQuery - 1) * NEWS_LIMIT
@@ -49,8 +45,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
   return {
     props: {
-      webInfo: webInfoRes.webInfo,
-      webSeo: webInfoRes.webSeo,
+      webInfo,
       webSocial,
       newsList,
       totalNews,

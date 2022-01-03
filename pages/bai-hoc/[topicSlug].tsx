@@ -8,10 +8,8 @@ import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
+import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
 import { apiGetTopicById } from '../../utils/apis/topicApi';
-import { apiWebInfo } from '../../utils/apis/webInfoApi';
-import { apiWebSocial } from '../../utils/apis/webSocial';
-import { ROUTER_NOT_FOUND } from '../../utils/router';
 
 type TopicPageProps = {
   webInfo?: WebInfo;
@@ -32,10 +30,9 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   store.dispatch(setCurrrentTopicAction(null, true));
-  const [user, { webInfo }, webSocial] = await Promise.all([
+  const [user, { webInfo, webSocial }] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo({ serverSide: true }),
-    apiWebSocial(true)
+    apiGetPageLayout()
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));
