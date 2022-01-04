@@ -11,6 +11,7 @@ import { Course } from '../../sub_modules/share/model/courses'
 import WebInfo from '../../sub_modules/share/model/webInfo'
 import WebSocial from '../../sub_modules/share/model/webSocial'
 import { apiGetCourseById } from '../../utils/apis/courseApi'
+import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi"
 import { apiWebInfo } from '../../utils/apis/webInfoApi'
 import { apiWebSocial } from '../../utils/apis/webSocial'
 import { getCoursePageSlug, ROUTER_NOT_FOUND } from '../../utils/router'
@@ -37,10 +38,9 @@ const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [user, { webInfo }, webSocial] = await Promise.all([
+  const [user, { webInfo , webSocial }] = await Promise.all([
     getUserFromToken(req),
-    apiWebInfo({ serverSide: true }),
-    apiWebSocial(true)
+    apiGetPageLayout()
   ]);
 
   if (user) store.dispatch(loginSuccessAction(user));

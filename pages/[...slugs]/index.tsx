@@ -18,9 +18,8 @@ import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetCategoriesByParent, apiGetCategoryById } from '../../utils/apis/categoryApi';
 import { apiGetNewsById } from '../../utils/apis/newsApi';
-import { apiWebInfo } from '../../utils/apis/webInfoApi';
-import { apiWebSocial } from '../../utils/apis/webSocial';
-import { getCategorySlug, NEWS_ID_PREFIX, ROUTER_NOT_FOUND } from '../../utils/router';
+import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
+import { getCategorySlug, NEWS_ID_PREFIX } from '../../utils/router';
 
 const CategorySlugRegex = RegExp(`([0-9A-Za-z-]+)-${PAGE_CATEGORY_DETAIL}-([0-9a-f]+)`);
 const NewsSlugRegex = RegExp(`([0-9A-Za-z-]+)-${NEWS_ID_PREFIX}([0-9a-f]+)`);
@@ -62,8 +61,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
-  const { webInfo } = await apiWebInfo({ serverSide: true });
-  const webSocial = await apiWebSocial(true);
+  const { webInfo, webSocial } = await apiGetPageLayout();
 
   if (slugs.length === 1) {
     const routePath: string = slugs[0];
@@ -84,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     } else if (routePath.match(NewsSlugRegex)) {
       const { 1: slug, 2: id } = routePath.match(NewsSlugRegex);
       const news: News = await apiGetNewsById(id, true);
-      if (encodeURIComponent(news.slug) !== encodeURIComponent(slug)) {
+      if (encodeURIComponent(news.slug) === encodeURIComponent(slug)) {
         return {
           props: {
             type: PAGE_NEWS_DETAIL,

@@ -2,13 +2,11 @@ import ErrorView from '../components/ErrorView'
 import Layout from '../components/Layout'
 import { wrapper } from "../redux/store"
 import WebInfo from "../sub_modules/share/model/webInfo"
-import WebSeo from "../sub_modules/share/model/webSeo"
 import WebSocial from "../sub_modules/share/model/webSocial"
-import { apiWebInfo } from "../utils/apis/webInfoApi"
-import { apiWebSocial } from "../utils/apis/webSocial"
+import { apiGetPageLayout } from "../utils/apis/pageLayoutApi"
 
 const ErrorNotFound = (props: {
-  webInfo?: WebInfo, webSeo?: WebSeo, webSocial?: WebSocial
+  webInfo?: WebInfo, webSocial?: WebSocial
 }) => {
   return <Layout {...props}>
     <ErrorView message="Không tìm thấy trang" />
@@ -16,13 +14,10 @@ const ErrorNotFound = (props: {
 }
 
 export const getStaticProps = wrapper.getStaticProps(async () => {
-  const [{ webInfo, webSeo }, webSocial] = await Promise.all([
-    apiWebInfo({ serverSide: true }),
-    apiWebSocial(true)
-  ]);
+  const { webInfo, webSocial } = await apiGetPageLayout();
   return {
     props: {
-      webInfo, webSeo, webSocial
+      webInfo, webSocial
     }
   }
 })
