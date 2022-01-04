@@ -25,7 +25,7 @@ const LoginModal = () => {
     >
       <Box display="flex" justifyContent="center">
         <LoginForm
-          mainBgrColor="#ec1f24"
+          mainBgrColor="#19CE7A"
           mainTextColor="#fff"
           onClickRegister={() => {
             dispatch(showLoginModalAction(false));

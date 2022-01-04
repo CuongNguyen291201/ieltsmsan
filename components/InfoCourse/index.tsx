@@ -27,7 +27,7 @@ export const InfoCourse = (props: { course?: Course, topic?: _Topic }) => {
                     <img src={bgPostion} alt="bgPostion" />
                 </div>
                 <div className="container">
-                    <Breadcrumb items={breadcrumbItems} />
+                    <Breadcrumb items={breadcrumbItems} invertColor />
                     <div className="title"><h1>{title_}</h1></div>
                     <div className="description">{shortDesc}</div>
                     {!topic && <div className="overview-item">

@@ -25,7 +25,7 @@ const RegisterModal = () => {
     >
       <Box display="flex" justifyContent="center">
         <RegisterForm
-          mainBgrColor="#ec1f24"
+          mainBgrColor="#19CE7A"
           mainTextColor="#fff"
           onClickLogin={() => {
             dispatch(showRegisterModalAction(false));

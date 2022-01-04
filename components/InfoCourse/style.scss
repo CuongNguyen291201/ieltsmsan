@@ -18,30 +18,30 @@
     }
     .title {
       h1 {
-        color: #000;
+        color: #fff;
         margin-bottom: 0.1em;
       }
     }
     .description {
-      color: #000;
+      color: #fff;
       width: calc(70% - 50px);
     }
     .overview-item {
       .item-main {
         margin-top: 20px;
         .rating {
-          border: 1px solid #ec1f24;
+          border: 2px solid #FFCE46;
           padding: 7px 15px;
-          border-radius: 7px;
+          border-radius: 10px;
           display: inline-flex;
         }
         .total-user-rate {
           margin-left: 20px;
-          color: #000;
+          color: #19CE7A;
           font-size: 18px;
           .course-total-users {
             margin-left: 7px;
-            color: #000;
+            color: #fff;
           }
         }
       } 
