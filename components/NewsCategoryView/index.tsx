@@ -79,7 +79,7 @@ const NewsCategoryView = (props: {
                     const categorySlug = `${ROUTER_NEWS}/${value.slug}`;
                     return (
                       <Link key={key} href={categorySlug}>
-                        <a>
+                        <a className="plain-anchor-tag">
                           <div key={key} className={`item-category-news${category?._id === value._id ? ' active' : ''}`}>
                             {value.name}
                           </div>
