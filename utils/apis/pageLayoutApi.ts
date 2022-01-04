@@ -8,7 +8,7 @@ export const apiGetPageLayout = async (args: {
   menu?: boolean;
   serverSide?: boolean;
 } = { serverSide: true }): Promise<PageLayout> => {
-  const { serverSide, ...reqBody } = args;
+  const { serverSide = true, ...reqBody } = args;
   const { data, status } = await POST_API(getEndpoint('api/get-page-layout', serverSide), reqBody);
   if (status !== response_status_codes.success) return {
     webInfo: null, webSeo: null, webSocial: null, webMenuItems: []

@@ -20,8 +20,6 @@ import WebSocial from '../sub_modules/share/model/webSocial';
 import { removeServerSideCookie } from "../utils";
 import { apiGetCategories } from '../utils/apis/categoryApi';
 import { apiGetPageLayout } from "../utils/apis/pageLayoutApi";
-import { apiWebInfo } from '../utils/apis/webInfoApi';
-import { apiWebSocial } from '../utils/apis/webSocial';
 
 const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
   const router = useRouter();
