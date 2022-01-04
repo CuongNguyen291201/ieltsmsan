@@ -40,22 +40,24 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
         <Grid item xs={12} md={isVideoTheaterMode ? 12 : 8}>
           {!!isVideoContent && <Box className={classes.boxContent}>
             <VideoPlayer videoUrl={topic.videoUrl} />
-            <b>Chế độ xem:</b>
-            <Tooltip title="Thu nhỏ">
-              <i
-                onClick={() => setVideoTheaterMode(false)}
-                className="far fa-columns"
-                style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#AAAFB2' : '#000000' }}
-              />
-            </Tooltip>
+            <Box textAlign="right" mt="25px">
+              <b>Chế độ xem:</b>
+              <Tooltip title="Thu nhỏ">
+                <i
+                  onClick={() => setVideoTheaterMode(false)}
+                  className="far fa-columns"
+                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#AAAFB2' : '#000000' }}
+                />
+              </Tooltip>
 
-            <Tooltip title="Mở rộng">
-              <i
-                onClick={() => setVideoTheaterMode(true)}
-                className="far fa-rectangle-landscape"
-                style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#000000' : '#AAAFB2' }}
-              />
-            </Tooltip>
+              <Tooltip title="Mở rộng">
+                <i
+                  onClick={() => setVideoTheaterMode(true)}
+                  className="far fa-rectangle-landscape"
+                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#000000' : '#AAAFB2' }}
+                />
+              </Tooltip>
+            </Box>
           </Box>}
 
           <Box sx={{ margin: { xs: "0 8px", md: "0 16px" } }}>
