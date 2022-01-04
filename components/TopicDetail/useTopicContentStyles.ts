@@ -38,6 +38,25 @@ const useTopicContentStyles = makeStyles((theme: Theme) => ({
   },
   commentPanel: {
     height: "416px"
+  },
+  tableOfContent: {
+    boxShadow: "0px 4px 30px rgba(95, 73, 118, 0.1)"
+  },
+  tableOfContentMobile: {
+    [theme.breakpoints.up(theme.breakpoints.values.md)]: {
+      display: "none"
+    },
+    "&.theater-mode": {
+      display: "unset !important"
+    }
+  },
+  tableOfContentDesktop: {
+    [theme.breakpoints.down(theme.breakpoints.values.md)]: {
+      display: "none"
+    },
+    "&.theater-mode": {
+      display: "none !important"
+    }
   }
 }));
 

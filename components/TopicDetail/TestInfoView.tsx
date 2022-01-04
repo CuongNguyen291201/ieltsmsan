@@ -1,19 +1,16 @@
-import { Box, Button, Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Grid, Tooltip } from '@mui/material';
 import classNames from "classnames";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CommentScopes } from '../../custom-types';
+import useHeadingsData from "../../hooks/useHeadingsData";
 import { AppState } from '../../redux/reducers';
-import ChartBar from '../../sub_modules/common/components/chart/ChartBar';
 import { EXAM_SCORE_FINISH } from '../../sub_modules/share/constraint';
 import Skill from "../../sub_modules/share/model/skill";
-import Topic from '../../sub_modules/share/model/topic';
-import CourseTopicTreeView from "../CourseDetail/CourseTopicTreeView";
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import SanitizedDiv from "../SanitizedDiv";
 import VideoPlayer from "../VideoPlayer";
-import ExamTOEICResutls from "./ExamTOEICResults";
 import StatisticSkillView from "./StatisticSkillView";
 import TestOverView from './topic-widgets/TestOverview';
 import { TopicInfoCommonView } from './topic-widgets/TopicWidget';
@@ -21,6 +18,7 @@ import useTopicContentStyles from "./useTopicContentStyles";
 
 const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
 const DocumentsList = dynamic(() => import('./DocumentList'), { ssr: false });
+const TableOfContent = dynamic(() => import('../TableOfContent'), { ssr: false });
 
 const TestInfoView = (props: { skills?: Skill[] }) => {
   const { skills = [] } = props;
@@ -33,6 +31,8 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
   const [isVideoTheaterMode, setVideoTheaterMode] = useState(false);
   const [showComment, setShowComment] = useState(true);
   const isVideoContent = useMemo(() => !!topic.videoUrl, [topic]);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const { nestedHeadings, isReady } = useHeadingsData({ enabled: !!contentRef, rootElement: contentRef.current });
 
   return (
     <div id="test-info-view" className={classes.mainView}>
@@ -40,22 +40,24 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
         <Grid item xs={12} md={isVideoTheaterMode ? 12 : 8}>
           {!!isVideoContent && <Box className={classes.boxContent}>
             <VideoPlayer videoUrl={topic.videoUrl} />
-            <b>Chế độ xem:</b>
-            <Tooltip title="Thu nhỏ">
-              <i
-                onClick={() => setVideoTheaterMode(false)}
-                className="far fa-columns"
-                style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#AAAFB2' : '#000000' }}
-              />
-            </Tooltip>
+            <Box textAlign="right" mt="25px">
+              <b>Chế độ xem:</b>
+              <Tooltip title="Thu nhỏ">
+                <i
+                  onClick={() => setVideoTheaterMode(false)}
+                  className="far fa-columns"
+                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#AAAFB2' : '#000000' }}
+                />
+              </Tooltip>
 
-            <Tooltip title="Mở rộng">
-              <i
-                onClick={() => setVideoTheaterMode(true)}
-                className="far fa-rectangle-landscape"
-                style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#000000' : '#AAAFB2' }}
-              />
-            </Tooltip>
+              <Tooltip title="Mở rộng">
+                <i
+                  onClick={() => setVideoTheaterMode(true)}
+                  className="far fa-rectangle-landscape"
+                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#000000' : '#AAAFB2' }}
+                />
+              </Tooltip>
+            </Box>
           </Box>}
 
           <Box sx={{ margin: { xs: "0 8px", md: "0 16px" } }}>
@@ -101,7 +103,10 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
             </>
           }
 
-          {!!topic.description && <Box className={classes.boxContent}>
+          {!!topic.description && <Box className={classes.boxContent} ref={contentRef}>
+            <Box className={classNames(classes.tableOfContent, classes.tableOfContentMobile, isVideoTheaterMode ? 'theater-mode' : '')}>
+              <TableOfContent nestedHeadings={nestedHeadings} />
+            </Box>
             <SanitizedDiv content={topic.description} />
           </Box>}
 
@@ -124,6 +129,12 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
                   </Button>
                 </Box>
               </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              {!!topic.description && <Box mt="32px" className={classNames(classes.tableOfContent, classes.tableOfContentDesktop, isVideoTheaterMode ? 'theater-mode' : '')}>
+                <TableOfContent nestedHeadings={nestedHeadings} />
+              </Box>}
             </Grid>
 
             <Grid item xs={12} md={isVideoTheaterMode ? 8 : 12}>

@@ -21,7 +21,7 @@ const NEWS_LIMIT = 5;
 const NewsPage = (props: { webInfo?: WebInfo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[] }) => {
   const { categoryNews, newsList, totalNews, ...webSettings } = props;
   return (
-    <Layout {...webSettings} canonicalSlug={ROUTER_NEWS} robot={META_ROBOT_NO_INDEX_NO_FOLLOW} title="Tin tức">
+    <Layout {...webSettings} canonicalSlug={ROUTER_NEWS} robot={META_ROBOT_NO_INDEX_NO_FOLLOW} title="Tin tức" useDefaultBackground>
       <NewsCategoryView
         categoryNews={categoryNews}
         newsList={newsList}

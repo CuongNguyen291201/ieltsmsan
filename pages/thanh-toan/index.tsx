@@ -16,8 +16,10 @@ const CoursePay = dynamic(() => import('../../components/CoursePay'), { ssr: fal
 
 const CoursePayPage = (props: { webInfo: WebInfo, webSocial: WebSocial }) => {
     return (
-        <Layout {...props}>
-            <Breadcrumb items={[{ name: 'Thanh toán', slug: ROUTER_PAYMENT }]} />
+        <Layout {...props} useDefaultBackground>
+            <div className="container">
+                <Breadcrumb items={[{ name: 'Thanh toán', slug: ROUTER_PAYMENT }]} />
+            </div>
             <CoursePay webInfo={props.webInfo} />
         </Layout>
     );

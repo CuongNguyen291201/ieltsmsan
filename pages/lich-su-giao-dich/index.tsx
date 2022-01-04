@@ -15,8 +15,10 @@ const TransactionHistoryView = dynamic(() => import('../../components/Transactio
 
 const TransactionHistoryPage = (props: { webInfo: WebInfo, webSocial: WebSocial }) => {
   return (
-    <Layout {...props} webInfo={{ ...props.webInfo, name: `Lịch sử giao dịch | ${props.webInfo?.name}` }}>
-      <Breadcrumb items={[{ name: 'Lịch sử giao dịch', slug: ROUTER_TRANSACTION_HISTORY }]} />
+    <Layout {...props} webInfo={props.webInfo} title="Lịch sử giao dịch" useDefaultBackground>
+      <div className="container">
+        <Breadcrumb items={[{ name: 'Lịch sử giao dịch', slug: ROUTER_TRANSACTION_HISTORY }]} />
+      </div>
       <TransactionHistoryView />
     </Layout>
   )

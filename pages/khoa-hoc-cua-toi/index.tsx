@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Breadcrumb from "../../components/Breadcrumb";
 import CourseItem from '../../components/CourseItem';
 import Layout from '../../components/Layout';
 import SearchBox from "../../components/SearchBox";
@@ -17,6 +18,7 @@ import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetMyCourses } from "../../utils/apis/courseApi";
 import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
+import { ROUTER_MY_COURSES } from "../../utils/router";
 import './style.scss';
 const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     const router = useRouter();
@@ -45,10 +47,11 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     }))(MuiBadge);
 
     return (
-        <Layout {...props}>
+        <Layout {...props} title="Khoá học của tôi" useDefaultBackground>
             <div className="my-course">
                 <div className="wrapper-my-course">
                     <div className="container">
+                        <Breadcrumb items={[{ name: "Khoá học của tôi", slug: ROUTER_MY_COURSES }]} />
                         <div className="title-search">
                             <h2>Khoá học của tôi</h2>
                             <div>

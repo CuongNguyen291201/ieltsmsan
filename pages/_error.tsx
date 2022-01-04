@@ -10,8 +10,8 @@ const Error = (props: {
   webInfo?: WebInfo, webSocial?: WebSocial, statusCode?: number;
 }) => {
   const { statusCode = 500, ...seo } = props;
-  const message = `Có lỗi xảy ra, xin vui lòng liên hệ quản trị viên. ErrorCode: ${statusCode}`
-  return <Layout {...seo}><ErrorView message={message} /></Layout>
+  const message = `Có lỗi xảy ra, xin vui lòng liên hệ quản trị viên`;
+  return <Layout {...seo} useDefaultBackground><ErrorView message={message} errorCode={statusCode} /></Layout>
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ res, store: { dispatch } }) => {

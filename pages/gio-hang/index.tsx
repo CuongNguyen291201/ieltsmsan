@@ -16,9 +16,11 @@ const CartPageView = dynamic(() => import('../../components/CartPageView'));
 
 const CartPage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     return (
-        <Layout {...props}>
-            <Breadcrumb items={[{ name: 'Giỏ hàng', slug: ROUTER_CART }]} />
-            <CartPageView />
+        <Layout {...props} useDefaultBackground>
+            <div className="container">
+                <Breadcrumb items={[{ name: 'Giỏ hàng', slug: ROUTER_CART }]} />
+                <CartPageView />
+            </div>
         </Layout>
     );
 };

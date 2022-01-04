@@ -2,9 +2,10 @@ import { Button, Grid, Tooltip } from '@mui/material';
 import { Box } from "@mui/system";
 import classNames from "classnames";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSelector } from 'react-redux';
 import { CommentScopes, _Topic } from '../../custom-types';
+import useHeadingsData from "../../hooks/useHeadingsData";
 import { AppState } from '../../redux/reducers';
 import CourseTopicTreeView from "../CourseDetail/CourseTopicTreeView";
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
@@ -15,6 +16,7 @@ import useTopicContentStyles from "./useTopicContentStyles";
 
 const DocumentsList = dynamic(() => import('./DocumentList'), { ssr: false });
 const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
+const TableOfContent = dynamic(() => import('../TableOfContent'), { ssr: false });
 
 const ExerciseInfoView = () => {
   const { currentTopic: topic, studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
@@ -24,6 +26,8 @@ const ExerciseInfoView = () => {
   const [isVideoTheaterMode, setVideoTheaterMode] = useState(false);
   const [showComment, setShowComment] = useState(true);
   const isVideoContent = useMemo(() => !!topic.videoUrl, [topic]);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const { nestedHeadings, isReady } = useHeadingsData({ enabled: !!contentRef, rootElement: contentRef.current });
 
   return (
     <div id="exercise-view" className={classes.mainView}>
@@ -55,7 +59,10 @@ const ExerciseInfoView = () => {
             <DocumentsList topicId={topic._id} />
           </Box>
 
-          {!!topic.description && <Box className={classes.boxContent}>
+          {!!topic.description && <Box className={classes.boxContent} ref={contentRef}>
+            <Box className={classNames(classes.tableOfContent, classes.tableOfContentMobile, isVideoTheaterMode ? 'theater-mode' : '')}>
+              <TableOfContent nestedHeadings={nestedHeadings} />
+            </Box>
             <SanitizedDiv content={topic.description} />
           </Box>}
 
@@ -95,6 +102,12 @@ const ExerciseInfoView = () => {
                   </Button>
                 </Box>
               </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              {!!topic.description && <Box mt="32px" className={classNames(classes.tableOfContent, classes.tableOfContentDesktop, isVideoTheaterMode ? 'theater-mode' : '')}>
+                <TableOfContent nestedHeadings={nestedHeadings} />
+              </Box>}
             </Grid>
 
             <Grid item xs={12} md={isVideoTheaterMode ? 8 : 12}>

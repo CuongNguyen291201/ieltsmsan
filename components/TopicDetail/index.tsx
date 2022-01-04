@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '../../hooks/scrollToTop';
 import { setUserCourseAction, setUserCourseLoadingAction } from '../../redux/actions/course.actions';
@@ -8,17 +8,14 @@ import { showToastifyWarning } from '../../sub_modules/common/utils/toastify';
 import { EXAM_TYPE_IELTS, EXAM_TYPE_TOEIC, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_EXERCISE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST } from "../../sub_modules/share/constraint";
 import { apiGetUserCourse } from '../../utils/apis/courseApi';
 import { apiGetDataDetailExercise } from "../../utils/apis/topicApi";
-import { canPlayTopic } from "../../utils/permission/topic.permission";
 import CourseLayout from "../CourseLayout";
 import LoadingContainer from "../LoadingContainer";
-import LoadingUI from "../LoadingUI";
 import ExamIELTSView from "./ExamIELTSView";
 import ExamTOEICView from "./ExamTOEICView";
 import ExerciseInfoView from "./ExerciseInfoView";
 import LessonView from "./LessonView";
 import TestInfoView from "./TestInfoView";
-import TopicPrivateView from "./TopicPrivateView";
-import TopicUnauthView from "./TopicUnauthView";
+import './style.scss';
 
 const TopicDetail = () => {
   const { currentTopic: topic, currentTopicLoading } = useSelector((state: AppState) => state.topicReducer);

@@ -9,14 +9,14 @@ import './style.scss';
 const NewsView = (props: { news: News }) => {
   const { news } = props;
   return (<>
-    <Breadcrumb items={[
-      { name: "Tin tức", slug: ROUTER_NEWS },
-      { name: news.title }
-    ]}
-    />
     <div id="news-detail">
       <div className="wraper-detail-news">
         <div className="container">
+          <Breadcrumb items={[
+            { name: "Tin tức", slug: ROUTER_NEWS },
+            { name: news.title }
+          ]}
+          />
           <Grid item xs={12} md={10} xl={9} className="grid-item-news">
             <h1 className="title">
               {news.title}

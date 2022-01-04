@@ -33,9 +33,9 @@ const NewsCategoryView = (props: {
   };
 
   return (<>
-    <Breadcrumb items={brItems} />
     <div className="content-news">
       <div className="container">
+        <Breadcrumb items={brItems} />
         <div className="wraper-item-news">
           <Grid container>
             <Grid item xs={12} lg={8}>
@@ -79,7 +79,7 @@ const NewsCategoryView = (props: {
                     const categorySlug = `${ROUTER_NEWS}/${value.slug}`;
                     return (
                       <Link key={key} href={categorySlug}>
-                        <a>
+                        <a className="plain-anchor-tag">
                           <div key={key} className={`item-category-news${category?._id === value._id ? ' active' : ''}`}>
                             {value.name}
                           </div>

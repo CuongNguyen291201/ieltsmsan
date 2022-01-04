@@ -34,7 +34,7 @@ const DocumentPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSocial: WebS
             .then((category) => setRootDocument(category))
     }, []);
     return (
-        <Layout {...props} hideFooter>
+        <Layout {...props} hideFooter useDefaultBackground>
             {/* <Breadcrumb items={[{ name: "Tài liệu", slug: ROUTER_DOCUMENT }]} /> */}
             {
                 rootDocument

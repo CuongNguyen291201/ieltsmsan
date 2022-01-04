@@ -4,9 +4,10 @@ import classNames from "classnames";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommentScopes } from "../../custom-types";
+import useHeadingsData from "../../hooks/useHeadingsData";
 import WaitingLiveIcon from '../../public/images/icons/waiting-live.svg';
 import { AppState } from "../../redux/reducers";
 import { useRealtime } from "../../sub_modules/firebase/src/FirebaseContext";
@@ -25,6 +26,7 @@ import useTopicContentStyles from "./useTopicContentStyles";
 
 const DocumentsList = dynamic(() => import('./DocumentList'), { ssr: false });
 const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
+const TableOfContent = dynamic(() => import('../TableOfContent'), { ssr: false });
 
 const useStyles = makeStyles((theme: Theme) => ({
   waitingLiveBox: {
@@ -56,8 +58,8 @@ const LessonView = () => {
   const [isVideoTheaterMode, setVideoTheaterMode] = useState(false);
   const [showComment, setShowComment] = useState(true);
   const isVideoContent = useMemo(() => !!topic.videoUrl, [topic]);
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const { nestedHeadings, isReady } = useHeadingsData({ enabled: !!contentRef, rootElement: contentRef.current });
   const classes = { ...useStyles(), ...useTopicContentStyles() };
 
   useEffect(() => {
@@ -181,7 +183,10 @@ const LessonView = () => {
                 <DocumentsList topicId={topic._id} />
               </Box>
 
-              {!!topic.description && <Box className={classes.boxContent}>
+              {!!topic.description && <Box className={classes.boxContent} ref={contentRef}>
+                <Box className={classNames(classes.tableOfContent, classes.tableOfContentMobile, isVideoTheaterMode ? 'theater-mode' : '')}>
+                  <TableOfContent nestedHeadings={nestedHeadings} />
+                </Box>
                 <SanitizedDiv content={topic.description} />
               </Box>}
 
@@ -206,6 +211,13 @@ const LessonView = () => {
                     </Box>
                   </Box>
                 </Grid>
+
+                <Grid item xs={12}>
+                  {!!topic.description && <Box mt="32px" className={classNames(classes.tableOfContent, classes.tableOfContentDesktop, isVideoTheaterMode ? 'theater-mode' : '')}>
+                    <TableOfContent nestedHeadings={nestedHeadings} />
+                  </Box>}
+                </Grid>
+
 
                 {/* <Grid item xs={12} md={isVideoTheaterMode ? 8 : 12}>
                   <Box mt="30px" ml="16px">
