@@ -3,6 +3,7 @@ import React from "react";
 // import Newright from '../../public/hvvv/news-right.jpeg';
 import Layout from '../../components/Layout';
 import NewsCategoryView from '../../components/NewsCategoryView';
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -36,8 +37,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   if (userInfo) {
     store.dispatch(loginSuccessAction(userInfo));
   }
-  const { webInfo, webSocial } = await apiGetPageLayout();
-
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
+  store.dispatch(getWebMenuAction(webMenuItems));
   const pageQuery = parseInt((query.page || '1') as string);
   const skip = (isNaN(pageQuery) || pageQuery <= 1) ? 0 : (pageQuery - 1) * NEWS_LIMIT
   const { data: newsList, total: totalNews } = await apiFullNews({ skip, limit: NEWS_LIMIT, serverSide: true });

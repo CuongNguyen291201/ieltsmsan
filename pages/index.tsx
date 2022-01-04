@@ -8,6 +8,7 @@ import HomeCategorySection from '../components/HomeCategorySection';
 // import HomeWhy from '../components/HomeWhy';
 import Layout from '../components/Layout';
 import { _Category } from '../custom-types';
+import { getWebMenuAction } from "../redux/actions/menu.action";
 import { wrapper } from '../redux/store';
 import { getUserFromToken } from '../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
@@ -51,8 +52,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
   // const { data, status } = await apiGetCategories();
   const homeCategories = await apiGetAllCategoriesWithCourses({ position: CATEGORY_POSITION_LANDING_PAGE, serverSide: true });
-  const { webInfo, webSeo, webSocial } = await apiGetPageLayout({ slug: '/' });
-
+  const { webInfo, webSeo, webSocial, webMenuItems } = await apiGetPageLayout({ slug: '/', menu: true });
+  store.dispatch(getWebMenuAction(webMenuItems));
   // const homeCategories = status === 0 ? data : [];
 
   return {

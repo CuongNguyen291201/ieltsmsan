@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 import Breadcrumb from "../../components/Breadcrumb";
 import Layout from '../../components/Layout';
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -24,8 +25,8 @@ const TransactionHistoryPage = (props: { webInfo: WebInfo, webSocial: WebSocial 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
-  const { webInfo, webSocial } = await apiGetPageLayout();
-
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu:  true });
+  store.dispatch(getWebMenuAction(webMenuItems));
 
   return { props: { webInfo, webSocial } }
 });

@@ -3,6 +3,7 @@ import CourseDetail from '../../components/CourseDetail'
 import Layout from '../../components/Layout'
 import SeoProps from "../../custom-types/SeoProps"
 import { setCurrentCourseAction } from '../../redux/actions/course.actions'
+import { getWebMenuAction } from "../../redux/actions/menu.action"
 import { wrapper } from '../../redux/store'
 import { getUserFromToken } from '../../sub_modules/common/api/userApis'
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions'
@@ -38,11 +39,11 @@ const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [user, { webInfo , webSocial }] = await Promise.all([
+  const [user, { webInfo , webSocial, webMenuItems }] = await Promise.all([
     getUserFromToken(req),
-    apiGetPageLayout()
+    apiGetPageLayout({ menu: true })
   ]);
-
+  store.dispatch(getWebMenuAction(webMenuItems));
   if (user) store.dispatch(loginSuccessAction(user));
   const courseSlugItems = (query.courseSlug as string).split('-');
   const courseSlug = courseSlugItems.slice(0, -1).join('-');

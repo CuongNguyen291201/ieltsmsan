@@ -2,6 +2,7 @@ import { PropsWithoutRef } from 'react';
 import Layout from '../../components/Layout';
 import TopicDetail from '../../components/TopicDetail';
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
@@ -30,11 +31,11 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   store.dispatch(setCurrrentTopicAction(null, true));
-  const [user, { webInfo, webSocial }] = await Promise.all([
+  const [user, { webInfo, webSocial, webMenuItems }] = await Promise.all([
     getUserFromToken(req),
-    apiGetPageLayout()
+    apiGetPageLayout({ menu: true })
   ]);
-
+  store.dispatch(getWebMenuAction(webMenuItems));
   if (user) store.dispatch(loginSuccessAction(user));
   const topicSlugItems = (query.topicSlug as string).split('-');
   const topicSlug = topicSlugItems.slice(0, -1).join('-');

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import CourseItem from '../../components/CourseItem';
 import Layout from '../../components/Layout';
 import SearchBox from "../../components/SearchBox";
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { AppState } from "../../redux/reducers";
 import { wrapper } from "../../redux/store";
 import { getUserFromToken } from "../../sub_modules/common/api/userApis";
@@ -78,8 +79,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     if (userInfo) {
         store.dispatch(loginSuccessAction(userInfo));
     }
-    const { webInfo, webSocial } = await apiGetPageLayout();
-
+    const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
+    store.dispatch(getWebMenuAction(webMenuItems));
     return { props: { webInfo, webSocial } }
 })
 

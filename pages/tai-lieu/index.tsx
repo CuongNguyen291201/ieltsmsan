@@ -16,6 +16,7 @@ import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
 
 // const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
@@ -54,7 +55,8 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     if (userInfo) {
         store.dispatch(loginSuccessAction(userInfo));
     }
-    const { webInfo, webSocial } = await apiGetPageLayout();
+    const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
+    store.dispatch(getWebMenuAction(webMenuItems));
 
     return { props: { webInfo, webSocial } }
 })

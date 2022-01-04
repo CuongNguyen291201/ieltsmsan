@@ -9,6 +9,7 @@ import {
 } from '../../custom-types/PageType';
 import SeoProps from "../../custom-types/SeoProps";
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
+import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
@@ -61,8 +62,9 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   const userInfo = await getUserFromToken(req);
   if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
-  const { webInfo, webSocial } = await apiGetPageLayout();
-
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
+  store.dispatch(getWebMenuAction(webMenuItems));
+  
   if (slugs.length === 1) {
     const routePath: string = slugs[0];
     if (routePath.match(CategorySlugRegex)) {
@@ -102,8 +104,6 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
   return {
     notFound: true
   }
-  res.writeHead(302, { Location: ROUTER_NOT_FOUND }).end();
-  return;
 });
 
 export default Slug;

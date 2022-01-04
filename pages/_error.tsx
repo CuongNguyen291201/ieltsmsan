@@ -1,5 +1,6 @@
 import ErrorView from '../components/ErrorView';
 import Layout from '../components/Layout';
+import { getWebMenuAction } from "../redux/actions/menu.action";
 import { wrapper } from "../redux/store";
 import WebInfo from "../sub_modules/share/model/webInfo";
 import WebSocial from "../sub_modules/share/model/webSocial";
@@ -13,10 +14,10 @@ const Error = (props: {
   return <Layout {...seo}><ErrorView message={message} /></Layout>
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async ({ res }) => {
+export const getServerSideProps = wrapper.getServerSideProps(async ({ res, store: { dispatch } }) => {
   const statusCode = res?.statusCode ?? 404;
-  const { webInfo, webSocial } = await apiGetPageLayout();
-  ;
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
+  dispatch(getWebMenuAction(webMenuItems));
   return {
     props: {
       statusCode, webInfo, webSocial

@@ -1,28 +1,27 @@
+import { Phone } from "@mui/icons-material";
 import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
-import { Phone } from "@mui/icons-material"
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState, useReducer } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadListAction } from '../../redux/actions';
 import { AppState } from "../../redux/reducers";
 import { Scopes } from '../../redux/types';
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
 import { showLoginModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
 import { apiActiveCode, apiGetCodeInfo, apiLoadCourseByCode } from "../../utils/apis/courseApi";
-import { webMenuApi } from "../../utils/apis/menuApi";
 import orderUtils from '../../utils/payment/orderUtils';
-import { ROUTER_CART, ROUTER_DOCUMENT, ROUTER_NEWS } from '../../utils/router';
+import { ROUTER_CART } from '../../utils/router';
 import { MenuDesktop } from "../MenuDesktop";
 import { MenuMobile } from "../MenuMobile";
+import LoginModal from "./LoginModal";
 import MenuChild from "./MenuItem/menuChild";
-import { menuState, webMenuReducer, webMenuAction } from "./MenuItem/webMenu.reducer";
+import RegisterModal from "./RegisterModal";
 import "./style.scss";
 function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeader?: boolean }) {
   const router = useRouter();
-  const [{ rootItems, mapItem }, menuLogic] = useReducer(webMenuReducer, menuState);
+  // const [{ rootItems, mapItem }, menuLogic] = useReducer(webMenuReducer, menuState);
+  const { rootItems, mapItem } = useSelector((state: AppState) => state.menuReducer);
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser)
   const [showModalAct, setShowModalAct] = useState(false);
   const [courses, setCourses] = useState<Array<Course>>([]);
@@ -56,12 +55,6 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
       }
     }
   }, []);
-
-  useEffect(() => {
-    webMenuApi().then((res) => {
-      menuLogic(webMenuAction(res));
-    })
-  }, [])
 
   useEffect(() => {
     if (cartLoading) {
