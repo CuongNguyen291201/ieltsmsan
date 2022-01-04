@@ -10,7 +10,7 @@ import NotFoundImage from "../public/images/icons/not-found.svg";
 const ErrorNotFound = (props: {
   webInfo?: WebInfo, webSocial?: WebSocial
 }) => {
-  return <Layout {...props}>
+  return <Layout {...props} useDefaultBackground>
     <ErrorView message="Không tìm thấy trang" description="Page Not Found" errorCode={404} img={NotFoundImage} />
   </Layout>
 }

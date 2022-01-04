@@ -44,7 +44,7 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     }))(MuiBadge);
 
     return (
-        <Layout {...props}>
+        <Layout {...props} title="Khoá học của tôi" useDefaultBackground>
             <div className="my-course">
                 <div className="wrapper-my-course">
                     <div className="container">

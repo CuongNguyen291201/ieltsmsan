@@ -30,7 +30,7 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
     }
   }, [router.isReady]);
   return (
-    <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial}>
+    <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial} useDefaultBackground>
       <div style={{ boxShadow: '0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor: 'white' }}>
         <HomeBanner />
         <HomeCategorySection categories={props.homeCategories} />

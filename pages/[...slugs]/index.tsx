@@ -50,6 +50,7 @@ const Slug = (props: SlugTypes) => {
         webInfo={webInfo}
         webSocial={webSocial}
         {...seoProps}
+        useDefaultBackground
       >
         {mapTypePage[type ?? PAGE_ERROR]}
       </Layout>
