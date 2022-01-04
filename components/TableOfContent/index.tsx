@@ -20,8 +20,8 @@ const useStyles = makeStyles((_) => ({
   },
 }));
 
-const TableOfContent = (props: { nestedHeadings: Array<HeadingData & { items?: Array<HeadingData> }> }) => {
-  const { nestedHeadings } = props;
+const TableOfContent = (props: { nestedHeadings: Array<HeadingData & { items?: Array<HeadingData> }>, stickyClass?: string }) => {
+  const { nestedHeadings, stickyClass = "sticky-table-of-content" } = props;
   const ref = useRef<HTMLDivElement | null>(null);
   const classes = useStyles();
   const onClickHeading = (id: string) => {
@@ -32,9 +32,9 @@ const TableOfContent = (props: { nestedHeadings: Array<HeadingData & { items?: A
     if (ref.current) {
       const offsetTop = ref.current.offsetTop;
       if (window.scrollY >= offsetTop) {
-        ref.current.classList.add("sticky-table-of-content");
+        ref.current.classList.add(stickyClass);
       } else {
-        ref.current.classList.remove("sticky-table-of-content");
+        ref.current.classList.remove(stickyClass);
       }
     }
   }
