@@ -1,0 +1,21 @@
+.sticky-table-of-content {
+  position: fixed;
+  z-index: 2;
+  top: 90px;
+  box-shadow: 0px 4px 4px 0px rgba(95, 73, 118, 0.1);
+  width: 370px;
+  @media (max-width: 1199px) {
+    width: 310px;
+  }
+  @media (max-width: 991px) {
+    width: 230px;
+  }
+  @media (max-width: 767px) {
+    width: 496px;
+    left: 100%;
+    transform: translateX(-100%);
+  }
+  @media (max-width: 575px) {
+    width: 90%;
+  }
+}
