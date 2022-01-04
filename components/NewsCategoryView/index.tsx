@@ -33,9 +33,9 @@ const NewsCategoryView = (props: {
   };
 
   return (<>
-    <Breadcrumb items={brItems} />
     <div className="content-news">
       <div className="container">
+        <Breadcrumb items={brItems} />
         <div className="wraper-item-news">
           <Grid container>
             <Grid item xs={12} lg={8}>

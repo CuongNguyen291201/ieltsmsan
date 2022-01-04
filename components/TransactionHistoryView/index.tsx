@@ -161,7 +161,7 @@ const TransactionHistoryView = () => {
                         <label>{combo.comboName || ''}</label>
                         <div className="course-list">
                           {combo.courses.map((course) => (
-                            <a key={course._id} href={getCoursePageSlug({ course })}>
+                            <a key={course._id} href={getCoursePageSlug({ course })} className="plain-anchor-tag">
                               <Grid container className="course-item" spacing={1}>
                                 <Grid item xs={12} md={3}>
                                   <img style={{ width: "100%" }} src={course.avatar || itemAvatar} alt={course.name} />

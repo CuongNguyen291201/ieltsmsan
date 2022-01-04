@@ -51,7 +51,7 @@ const Breadcrumb = (props: PropsWithoutRef<{ items: Array<BreadcrumbItem>, inver
   })(MuiBreadcrumbs);
 
   return (
-    <_Breadcrumbs separator={<ArrowRight />}>
+    <_Breadcrumbs className={invertColor ? classes.itemDark : classes.itemLight} separator={<ArrowRight color="inherit" />}>
       {items.map((item, i) => {
         const isEnd = i === items.length - 1;
         return (
