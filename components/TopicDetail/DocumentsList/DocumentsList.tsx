@@ -1,58 +1,40 @@
-import { Dialog, Tooltip, Pagination, Typography } from '@mui/material';
-import { withStyles } from "@mui/styles"
 import { HighlightOff } from '@mui/icons-material';
-import { PropsWithoutRef, useEffect, useMemo, useReducer } from 'react';
+import { Box, Dialog, Pagination, Tooltip, Typography } from '@mui/material';
+import { withStyles } from "@mui/styles";
+import { PropsWithoutRef, useMemo, useReducer } from 'react';
 import DocViewer, { DocViewerRenderers, ImageProxyRenderer, JPGRenderer, MSDocRenderer, PDFRenderer, PNGRenderer } from 'react-doc-viewer';
-import { apiCountDocumentsByTopic, apiOffsetDocumentsByTopic } from '../../../utils/apis/documentApi';
-import SingleFileDocIcon from '../../../public/images/icons/SingleFileDocIcon.svg';
 import ArchiveFileDocIcon from '../../../public/images/icons/ArchiveFileDocIcon.svg';
+import SingleFileDocIcon from '../../../public/images/icons/SingleFileDocIcon.svg';
+import Document from "../../../sub_modules/share/model/document";
 import {
   documentsListInitState,
   documentsListReducer,
   downloadDocument,
   downloadSingleFile,
   getFileMimeType,
-  setDocumentPage,
-  setDocumentsList,
   setOpenDocumentItems,
   setPreviewUrl
-} from './documentList.reducer';
+} from './documentsList.reducer';
 import './style.scss';
 
-const DOCUMENT_LOAD_LIMIT = 20;
 
-const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boolean }>) => {
-  const { topicId, hideTitle } = props;
+const DocumentsList = (props: PropsWithoutRef<{
+  documentsList?: Document[];
+  totalDocuments?: number;
+  documentPage?: number;
+  onChangePage?: (page: number) => void;
+  pageSize?: number;
+}>) => {
+  const { documentsList = [], totalDocuments = 0, documentPage = 1, onChangePage = () => { }, pageSize = 20 } = props;
   const [{
-    documentsList,
-    documentPage,
-    totalDocuments,
     mapStateOpen,
     previewUrl,
     documentTitle
   }, uiLogic] = useReducer(documentsListReducer, documentsListInitState);
 
   const totalPages = useMemo(() => {
-    return Math.ceil((totalDocuments || 1) / DOCUMENT_LOAD_LIMIT);
-  }, [totalDocuments]);
-
-  useEffect(() => {
-    Promise.all([
-      apiCountDocumentsByTopic(topicId),
-      apiOffsetDocumentsByTopic({ skip: 0, field: 'createDate', parentId: topicId, limit: DOCUMENT_LOAD_LIMIT })
-    ])
-      .then(([{ total }, documentsList]) => {
-        uiLogic(setDocumentsList(documentsList, total));
-      });
-  }, [topicId]);
-
-  const onChangePage = (page: number) => {
-    apiOffsetDocumentsByTopic({ skip: (page - 1) * DOCUMENT_LOAD_LIMIT, field: 'createDate', parentId: topicId, limit: DOCUMENT_LOAD_LIMIT })
-      .then((documentsList) => {
-        uiLogic(setDocumentsList(documentsList));
-        uiLogic(setDocumentPage(page));
-      })
-  }
+    return Math.ceil((totalDocuments || 1) / (pageSize || 20));
+  }, [totalDocuments, pageSize]);
 
   const PreviewDialog = withStyles((theme) => ({
     paper: {
@@ -71,7 +53,7 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
       >
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <span style={{ cursor: "pointer" }} onClick={() => { uiLogic(setPreviewUrl('')) }}>
-            <HighlightOff style={{ margin: "10px" }} />
+            <HighlightOff style={{ marginTop: "10px", marginRight: "10px" }} />
           </span>
         </div>
         {fileType
@@ -82,13 +64,14 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
             config={{
               header: {
                 overrideComponent: (state, prevDoc, nextDoc) => {
-                  return <Typography sx={{ backgroundColor: "#fff", paddingLeft: "16px" }}>{documentTitle}</Typography>
+                  return <Typography sx={{ backgroundColor: "#fff", paddingLeft: "16px" }}><h3 style={{ margin: 0 }}>{documentTitle}</h3></Typography>
                 }
               }
             }}
           />
           : <div>File không được hỗ trợ</div>
         }
+        <Box sx={{ position: "absolute", bottom: "0", zIndex: 999, width: "100%", height: "24px" }} />
       </PreviewDialog>
     )
   }
@@ -96,7 +79,6 @@ const DocumentsList = (props: PropsWithoutRef<{ topicId: string; hideTitle?: boo
   return (
     <>
       <div id="topic-documents-view" className="document-list">
-        {!!documentsList.length && !hideTitle && <div><h2 className="title">Tài liệu tham khảo</h2></div>}
         {documentsList.map((e) => (
           <div key={e._id} className="document-wrap">
             <div className="document">

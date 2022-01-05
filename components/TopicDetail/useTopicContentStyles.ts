@@ -39,6 +39,9 @@ const useTopicContentStyles = makeStyles((theme: Theme) => ({
   commentPanel: {
     height: "416px"
   },
+  sectionPanelBorder: {
+    borderBottom: "1px solid rgba(190, 203, 211, 0.3)"
+  },
   tableOfContent: {
     boxShadow: "0px 4px 30px rgba(95, 73, 118, 0.1)"
   },

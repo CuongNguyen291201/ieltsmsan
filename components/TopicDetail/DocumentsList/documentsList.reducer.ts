@@ -5,17 +5,12 @@ import Document from "../../../sub_modules/share/model/document";
 // Action Types
 
 enum ActionTypes {
-  SET_DOCUMENTS_LIST,
-  SET_DOCUMENT_PAGE,
   SET_OPEN_DOCUMENT_ITEMS,
   SET_PREVIEW_URL,
 }
 
 interface DocumentsListAction {
   type: ActionTypes;
-  documentsList?: Document[];
-  totalDocuments?: number;
-  documentPage?: number;
   documentId?: string;
   documentOpen?: boolean;
   previewUrl?: string;
@@ -25,9 +20,6 @@ interface DocumentsListAction {
 // State
 
 type DocumentsListState = {
-  documentsList: Document[];
-  totalDocuments: number;
-  documentPage: number;
   mapStateOpen: {
     [documentId: string]: boolean
   },
@@ -36,9 +28,6 @@ type DocumentsListState = {
 }
 
 export const documentsListInitState: DocumentsListState = {
-  documentsList: [],
-  totalDocuments: 0,
-  documentPage: 1,
   mapStateOpen: {},
   previewUrl: '',
   documentTitle: ''
@@ -48,20 +37,6 @@ export const documentsListInitState: DocumentsListState = {
 
 export const documentsListReducer = (state: DocumentsListState, action: DocumentsListAction): DocumentsListState => {
   switch (action.type) {
-    case ActionTypes.SET_DOCUMENTS_LIST:
-      return {
-        ...state,
-        documentsList: action.documentsList || [],
-        totalDocuments: action.totalDocuments || state.totalDocuments,
-        mapStateOpen: (action.documentsList || []).reduce((map, doc) => (map[doc._id] = false, map), {})
-      }
-
-    case ActionTypes.SET_DOCUMENT_PAGE:
-      return {
-        ...state,
-        documentPage: action.documentPage || 1
-      }
-
     case ActionTypes.SET_OPEN_DOCUMENT_ITEMS:
       return {
         ...state,
@@ -84,14 +59,6 @@ export const documentsListReducer = (state: DocumentsListState, action: Document
 }
 
 // Action Creators
-
-export const setDocumentsList = (documentsList: Document[], totalDocuments?: number): DocumentsListAction => ({
-  type: ActionTypes.SET_DOCUMENTS_LIST, documentsList, totalDocuments
-});
-
-export const setDocumentPage = (documentPage: number): DocumentsListAction => ({
-  type: ActionTypes.SET_DOCUMENT_PAGE, documentPage
-});
 
 export const setOpenDocumentItems = (documentId: string, documentOpen: boolean): DocumentsListAction => ({
   type: ActionTypes.SET_OPEN_DOCUMENT_ITEMS, documentId, documentOpen

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Tooltip } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { useMemo, useRef, useState } from 'react';
@@ -10,21 +10,22 @@ import { EXAM_SCORE_FINISH } from '../../sub_modules/share/constraint';
 import Skill from "../../sub_modules/share/model/skill";
 import { InformationCourse } from '../CourseDetail/InformationCourse/information-course';
 import SanitizedDiv from "../SanitizedDiv";
-import VideoPlayer from "../VideoPlayer";
 import StatisticSkillView from "./StatisticSkillView";
 import TestOverView from './topic-widgets/TestOverview';
 import { TopicInfoCommonView } from './topic-widgets/TopicWidget';
 import useTopicContentStyles from "./useTopicContentStyles";
+import VideoPanel from "./VideoPanel";
 
-const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
-const DocumentsList = dynamic(() => import('./DocumentList'), { ssr: false });
-const TableOfContent = dynamic(() => import('../TableOfContent'), { ssr: false });
+const CommentPanel = dynamic(() => import('../CommentPanelNew'), { ssr: false });
+const DocumentsListPanel = dynamic(() => import('./DocumentsList/DocumentsListPanel'), { ssr: false });
+const TableOfContents = dynamic(() => import('../TableOfContents'), { ssr: false });
 
 const TestInfoView = (props: { skills?: Skill[] }) => {
   const { skills = [] } = props;
   const { currentTopic: topic, studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse: course } = useSelector((state: AppState) => state.courseReducer);
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
+  const totalDocuments = useSelector((state: AppState) => state.topicDocumentReducer.totalDocuments);
   const isPlayTest = useMemo(() => !!studyScore, [studyScore]);
   const isFinisedTest = useMemo(() => studyScore?.status === EXAM_SCORE_FINISH, [studyScore]);
   const classes = useTopicContentStyles();
@@ -34,35 +35,24 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const { nestedHeadings, isReady } = useHeadingsData({ enabled: !!contentRef, rootElement: contentRef.current });
 
+  const renderDocumentsList = () => {
+    return !!totalDocuments && <Box className={classes.sectionPanelBorder}>
+      <DocumentsListPanel />
+    </Box>
+  }
+
   return (
     <div id="test-info-view" className={classes.mainView}>
       <Grid container className={classes.mainGrid}>
         <Grid item xs={12} md={isVideoTheaterMode ? 12 : 8}>
           {!!isVideoContent && <Box className={classes.boxContent}>
-            <VideoPlayer videoUrl={topic.videoUrl} />
-            <Box textAlign="right" mt="25px">
-              <b>Chế độ xem:</b>
-              <Tooltip title="Thu nhỏ">
-                <i
-                  onClick={() => setVideoTheaterMode(false)}
-                  className="far fa-columns"
-                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#AAAFB2' : '#000000' }}
-                />
-              </Tooltip>
-
-              <Tooltip title="Mở rộng">
-                <i
-                  onClick={() => setVideoTheaterMode(true)}
-                  className="far fa-rectangle-landscape"
-                  style={{ cursor: 'pointer', fontSize: '18px', margin: '0px 5px', color: isVideoTheaterMode ? '#000000' : '#AAAFB2' }}
-                />
-              </Tooltip>
-            </Box>
+            <VideoPanel isVideoTheaterMode={isVideoTheaterMode} setVideoTheaterMode={setVideoTheaterMode} />
+            {renderDocumentsList()}
           </Box>}
 
-          <Box sx={{ margin: { xs: "0 8px", md: "0 16px" } }}>
+          {/* <Box sx={{ margin: { xs: "0 8px", md: "0 16px" } }}>
             <DocumentsList topicId={topic._id} />
-          </Box>
+          </Box> */}
 
 
           {isPlayTest && <Box className={classes.boxShadowContainer}
@@ -105,7 +95,7 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
 
           {!!topic.description && <Box className={classes.boxContent} ref={contentRef}>
             <Box className={classNames(classes.tableOfContent, classes.tableOfContentMobile, isVideoTheaterMode ? 'theater-mode' : '')}>
-              <TableOfContent nestedHeadings={nestedHeadings} />
+              <TableOfContents nestedHeadings={nestedHeadings} stickyClass="no-sticky-table-of-content" />
             </Box>
             <SanitizedDiv content={topic.description} />
           </Box>}
@@ -115,25 +105,28 @@ const TestInfoView = (props: { skills?: Skill[] }) => {
         <Grid item xs={12} md={isVideoTheaterMode ? 12 : 4}>
           <Grid container columnSpacing={3}>
             <Grid item xs={12}>
-              <Box>
-                <Box className={classNames(classes.boxContent, classes.commentShadow, isVideoContent ? classes.commentPanelVideo : classes.commentPanel)} sx={{
-                  overflow: showComment ? "auto" : "hidden", display: showComment ? undefined : "none"
+              <Box
+                className={classNames(classes.boxContent, classes.commentShadow)}
+                sx={{ display: showComment ? undefined : "none" }}
+              >
+                <Box className={isVideoContent ? classes.commentPanelVideo : classes.commentPanel} sx={{
+                  overflow: showComment ? "auto" : "hidden"
                 }}>
-                  <CommentPanelNew commentScope={CommentScopes.TOPIC} />
+                  <CommentPanel commentScope={CommentScopes.TOPIC} />
                 </Box>
-                <Box width="100%" mt={showComment ? 0 : { xs: "8px", md: "16px" }}>
-                  <Button sx={{ width: "100%" }}
-                    variant="outlined"
-                    onClick={() => setShowComment(!showComment)}>
-                    {showComment ? 'Ẩn bình luận' : 'Hiển thị bình luận'}
-                  </Button>
-                </Box>
+              </Box>
+              <Box width="100%" mt={showComment ? 0 : { xs: "8px", md: "16px" }}>
+                <Button sx={{ width: "100%" }}
+                  variant="outlined"
+                  onClick={() => setShowComment(!showComment)}>
+                  {showComment ? 'Ẩn bình luận' : 'Hiển thị bình luận'}
+                </Button>
               </Box>
             </Grid>
 
             <Grid item xs={12}>
               {!!topic.description && <Box mt="32px" className={classNames(classes.tableOfContent, classes.tableOfContentDesktop, isVideoTheaterMode ? 'theater-mode' : '')}>
-                <TableOfContent nestedHeadings={nestedHeadings} />
+                <TableOfContents nestedHeadings={nestedHeadings} />
               </Box>}
             </Grid>
 

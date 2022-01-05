@@ -11,6 +11,7 @@ import documentModuleReducers from '../../sub_modules/document/src/redux/reducer
 import { DocumentModuleState } from '../../sub_modules/document/src/redux/state';
 import { cartReducer, CartState } from './cart.reducer';
 import { examReducer, ExamState } from "./exam.reducer";
+import { topicDocumentReducer, TopicDocumentState } from "./document.reducer";
 
 
 export interface AppState {
@@ -25,6 +26,7 @@ export interface AppState {
   documentState: DocumentModuleState;
   cartReducer: CartState;
   examReducer: ExamState;
+  topicDocumentReducer: TopicDocumentState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -38,5 +40,6 @@ export const rootReducer = combineReducers<AppState>({
   commentReducer,
   documentState: documentModuleReducers,
   cartReducer,
-  examReducer
+  examReducer,
+  topicDocumentReducer
 });

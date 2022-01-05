@@ -15,7 +15,7 @@ const CourseLayout = (props: PropsWithChildren<{
       <InfoCourse course={course} topic={topic} />
       <Box sx={{ backgroundColor: "#fff" }}>
         <Box className="container">
-          <Box sx={{ position: "relative", top: "-200px" }}>
+          <Box sx={{ position: "relative", top: !!topic ? "-300px" : "-200px" }}>
             {children}
           </Box>
         </Box>
