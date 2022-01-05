@@ -85,20 +85,19 @@ $root-title-color: #444;
 
 @mixin thin-scroll {
   scrollbar-width: thin;
-  scrollbar-color: $root-color $root-background-color;
+  scrollbar-color: #606060 #f9f9f9;
   &::-webkit-scrollbar {
     width: 7px;
   }
   &::-webkit-scrollbar-track {
     border-radius: 7px;
-    background: $root-background-color;
+    background: #f9f9f9
   }
   &::-webkit-scrollbar-thumb {
-    background: $root-background-color;
     border-radius: 7px;
-    border-top: 1px solid #ccc;
+    background: #909090;
     &:hover {
-      background: $root-color;
+      background: #606060;
     }
   }
 }

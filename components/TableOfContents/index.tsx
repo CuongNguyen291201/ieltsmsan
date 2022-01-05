@@ -2,7 +2,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Fragment, memo, useEffect, useRef } from "react";
-import { HeadingData } from "../../hooks/useHeadingsData";
+import HeadingData from "../../custom-types/HeadingData";
 
 const useStyles = makeStyles((_) => ({
   tableOfContentRoot: {
@@ -29,7 +29,7 @@ const TableOfContent = (props: { nestedHeadings: Array<HeadingData & { items?: A
   }
 
   const stickyTableOfContent = () => {
-    if (ref.current) {
+    if (ref.current && !!stickyClass) {
       const offsetTop = ref.current.offsetTop;
       if (window.scrollY >= offsetTop) {
         ref.current.classList.add(stickyClass);
@@ -66,6 +66,7 @@ const TableOfContent = (props: { nestedHeadings: Array<HeadingData & { items?: A
               </Typography>
               {!!heading2.items?.length && heading2.items.map((heading3) => (
                 <Typography
+                  key={heading3.id}
                   sx={{ marginLeft: "16px" }}
                   component="div"
                   onClick={() => onClickHeading(heading3.id)}
