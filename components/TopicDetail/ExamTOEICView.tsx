@@ -3,7 +3,7 @@ import classNames from "classnames";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useSnackbar } from "notistack";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommentScopes } from "../../custom-types";
 import { setExamMapSkillTypeValuesAction } from "../../redux/actions/exam.action";
@@ -17,26 +17,35 @@ import { getGameSlug } from "../../utils";
 import { apiGetListSkills } from "../../utils/apis/skill";
 import { canPlayTopic } from "../../utils/permission/topic.permission";
 import { InformationCourse } from "../CourseDetail/InformationCourse/information-course";
+import SanitizedDiv from "../SanitizedDiv";
 import ExamTOEICResutls from "./ExamTOEICResults";
 import StatisticSkillView from "./StatisticSkillView";
 import useTopicWidgetStyles from "./topic-widgets/useTopicWidgetStyles";
 import useTopicContentStyles from "./useTopicContentStyles";
 
-const CommentPanelNew = dynamic(() => import('../CommentPanelNew'), { ssr: false });
+const DocumentsListView = dynamic(() => import('./DocumentsListView'), { ssr: false });
+const TableOfContents = dynamic(() => import('../TableOfContents'), { ssr: false });
 
 const ExamTOEICView = () => {
   const { currentTopic: topic, studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);
   const course = useSelector((state: AppState) => state.courseReducer.currentCourse);
   const isJoinedCourse = useSelector((state: AppState) => state.courseReducer.isJoinedCourse);
-
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
+  const nestedHeadings = useSelector((state: AppState) => state.contentReducer.headings);
+
   const dispatch = useDispatch();
   const router = useRouter();
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
   const classes = { ...useTopicContentStyles(), ...useTopicWidgetStyles() };
   const { enqueueSnackbar } = useSnackbar();
+
   const [skills, setSkills] = useState<Skill[]>([]);
   const [showComment, setShowComment] = useState(true);
+
+  const isPlayTest = useMemo(() => !!studyScore, [studyScore]);
   const isFinishedTest = useMemo(() => studyScore?.status === EXAM_SCORE_FINISH, [studyScore]);
+  const isVideoContent = useMemo(() => !!topic.videoUrl, [topic]);
 
   const { gameButtonLabel } = useMemo(() => {
     let gameButtonLabel = '';
@@ -88,91 +97,80 @@ const ExamTOEICView = () => {
   }, []);
 
   return (
-    <div id="topic-toeic-test-view" className={classes.mainView}>
-      <Grid container className={classes.mainGrid}>
-        <Grid item xs={12} md={8}>
-          {isFinishedTest && <Box className={classes.boxContent}>
-            <ExamTOEICResutls />
-          </Box>}
-
-          <Box
-            className={classNames(classes.boxContent, classes.boxShadowContainer)}
-          >
-            <Box textAlign="center"><h2>Thông tin chung</h2></Box>
-            <Box>
-              <Box className={classes.topicOverviewItem}>
-                <Box className={classes.topicOverviewLabel}>Số câu hỏi</Box>
-                <Box className={classes.topicOverviewValue}>{topic.topicExercise?.questionsNum ?? 0} câu hỏi</Box>
-              </Box>
-
-              <Box className={classes.topicOverviewItem}>
-                <Box className={classes.topicOverviewLabel}>Thời gian làm bài</Box>
-                <Box className={classes.topicOverviewValue}>{topic.topicExercise?.duration ?? 0} phút</Box>
-              </Box>
-            </Box>
-
-            <Box sx={{
-              display: "flex",
-              gap: "50px",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "40px",
-              flexDirection: {
-                xs: "column",
-                md: "row"
-              }
-            }}>
-              <Button
-                className={classNames(classes.gameButton, classes.gameButtonPlay)}
-                onClick={() => goToGame()}
-              >
-                {gameButtonLabel}
-              </Button>
-
-              {studyScore?.status === EXAM_SCORE_FINISH && <Button className={classNames(classes.gameButton, classes.gameButtonReview)} onClick={() => goToGame(true)}>
-                Xem giải chi tiết
-              </Button>}
-            </Box>
-
+    <div id="toeic-view">
+      <Box display="flex" flexDirection={isPlayTest ? "column-reverse" : "column"}>
+        {/* CONTENT TEXT */}
+        {!!topic.description && <Box component="div" className={classes.boxContent} ref={contentRef}>
+          <Box className={classNames(classes.tableOfContent, classes.tableOfContentMobile)}>
+            <TableOfContents nestedHeadings={nestedHeadings} stickyClass="no-sticky-table-of-content" />
           </Box>
-
-
-          {isFinishedTest && <Box className={classes.boxContent}>
-            <StatisticSkillView skills={skills} />
+          <SanitizedDiv content={topic.description} />
+          {!isVideoContent && <Box>
+            <DocumentsListView />
           </Box>}
-        </Grid>
+        </Box>}
 
-        <Grid item xs={12} md={4}>
-          <Grid container columnSpacing={3}>
+        {/* TEST INFO */}
+        <Grid container>
+          <Grid item xs={12}>
+            {isFinishedTest && <Box>
+              <ExamTOEICResutls />
+            </Box>}
 
-            <Grid item xs={12}>
+            <Box
+              className={classNames(classes.boxContent, classes.boxShadowContainer)}
+            >
+              <Box textAlign="center"><h2>Thông tin chung</h2></Box>
               <Box>
-                <Box className={classNames(classes.boxContent, classes.commentShadow, classes.commentPanel)} sx={{
-                  overflow: showComment ? "auto" : "hidden", display: showComment ? undefined : "none"
-                }}>
-                  <CommentPanelNew commentScope={CommentScopes.TOPIC} />
+                <Box className={classes.topicOverviewItem}>
+                  <Box className={classes.topicOverviewLabel}>Số câu hỏi</Box>
+                  <Box className={classes.topicOverviewValue}>{topic.topicExercise?.questionsNum ?? 0} câu hỏi</Box>
                 </Box>
-                <Box width="100%" mt={showComment ? 0 : { xs: "8px", md: "16px" }}>
-                  <Button sx={{ width: "100%" }}
-                    variant="outlined"
-                    onClick={() => setShowComment(!showComment)}>
-                    {showComment ? 'Ẩn bình luận' : 'Hiển thị bình luận'}
-                  </Button>
+
+                <Box className={classes.topicOverviewItem}>
+                  <Box className={classes.topicOverviewLabel}>Thời gian làm bài</Box>
+                  <Box className={classes.topicOverviewValue}>{topic.topicExercise?.duration ?? 0} phút</Box>
                 </Box>
               </Box>
-            </Grid>
 
-            <Grid item xs={12} md={12}>
-              <Box mt="30px">
-                <InformationCourse course={course} />
+              <Box sx={{
+                display: "flex",
+                gap: "50px",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "40px",
+                flexDirection: {
+                  xs: "column",
+                  md: "row"
+                }
+              }}>
+                <Button
+                  className={classNames(classes.gameButton, classes.gameButtonPlay)}
+                  onClick={() => goToGame()}
+                >
+                  {gameButtonLabel}
+                </Button>
+
+                {isFinishedTest && <Button className={classNames(classes.gameButton, classes.gameButtonReview)} onClick={() => goToGame(true)}>
+                  Xem giải chi tiết
+                </Button>}
               </Box>
-            </Grid>
 
+            </Box>
+
+
+            {isFinishedTest && <Box className={classes.boxContent}>
+              <StatisticSkillView skills={skills} />
+            </Box>}
           </Grid>
         </Grid>
-      </Grid>
+
+        {!isVideoContent && !topic.description && <Box>
+          <DocumentsListView />
+        </Box>}
+      </Box>
     </div>
-  )
+  );
 }
 
 export default ExamTOEICView;

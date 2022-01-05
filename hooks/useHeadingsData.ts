@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import slugify from 'slugify';
-
-export type HeadingData = {
-  id: string; title: string;
-}
+import HeadingData from "../custom-types/HeadingData";
+import { setHeadingsDataAction } from "../redux/actions/content.action";
 
 const getSlug = (content: string) => {
   if (content) {
@@ -18,14 +17,11 @@ const getSlug = (content: string) => {
   return content;
 }
 
-const useHeadingsData = ({ enabled, rootElement }: { enabled: boolean; rootElement?: HTMLElement }) => {
-  const [nestedHeadings, setNestedHeadings] = useState<Array<HeadingData & { items?: Array<HeadingData> }>>([]);
-  const [isReady, setReady] = useState(false);
-
-  useEffect(() => {
-    if (enabled) {
-      const root = rootElement || document;
-      const headingElements = root.querySelectorAll("h2, h3");
+const useHeadingsData = ({ rootElement }: { rootElement?: HTMLElement }) => {
+  const dispatch = useDispatch();
+  useLayoutEffect(() => {
+    if (!!rootElement) {
+      const headingElements = rootElement.querySelectorAll("h2, h3");
       const nestedHeadings: Array<HeadingData & { items?: Array<HeadingData> }> = [];
       headingElements.forEach((heading) => {
         const title = heading.textContent;
@@ -38,13 +34,9 @@ const useHeadingsData = ({ enabled, rootElement }: { enabled: boolean; rootEleme
           nestedHeadings[nestedHeadings.length - 1]?.items?.push({ id, title });
         }
       });
-
-      setNestedHeadings(nestedHeadings);
-      setReady(true);
+      dispatch(setHeadingsDataAction(nestedHeadings))
     }
-  }, [enabled, rootElement]);
-
-  return { nestedHeadings, isReady };
+  }, [rootElement]);
 }
 
 export default useHeadingsData;
