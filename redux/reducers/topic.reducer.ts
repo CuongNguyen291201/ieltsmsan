@@ -30,7 +30,7 @@ const initialState: TopicState = {
   isLoadedDetailTopic: false,
   userToReview: null,
   reviewCardData: null,
-  mapLoadMoreState: {}
+  mapLoadMoreState: {},
 };
 
 export function topicReducer(state = initialState, action: TopicAction): TopicState {
@@ -40,7 +40,7 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
         return {
           ...state,
           mainTopics: [...state.mainTopics, ...action.payload.data],
-          loadMoreMainTopics: action.payload.data.length >= (action.payload.limit ?? 20)
+          loadMoreMainTopics: action.payload.data.length >= (action.payload.limit ?? 20),
         };
 
       case ActionTypes.FAILURE:
