@@ -10,11 +10,11 @@ import Skill from "../../sub_modules/share/model/skill";
 import SanitizedDiv from "../SanitizedDiv";
 import StatisticSkillView from "./StatisticSkillView";
 import TestOverView from './topic-widgets/TestOverview';
-import { TopicInfoCommonView } from './topic-widgets/TopicWidget';
 import useTopicContentStyles from "./useTopicContentStyles";
 
 const DocumentsListView = dynamic(() => import('./DocumentsListView'), { ssr: false });
 const TableOfContents = dynamic(() => import('../TableOfContents'), { ssr: false });
+const TopicInfoCommonView = dynamic(() => import('./topic-widgets/TopicInfoCommonView'), { ssr: false });
 
 const TestInfoView = (props: { skills?: Skill[] }) => {
   const { skills = [] } = props;

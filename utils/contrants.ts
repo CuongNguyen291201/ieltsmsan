@@ -8,3 +8,5 @@ export const CODE_ACTIVE_MORE = 6;
 export const CODE_ACTIVE_OUT_OF_DATE = 7;
 
 export const KEY_ORDER_SECRET = "zWOKp38TGPGicc0bEMyYGQ";
+
+export const FLASH_CARD_QUESTIONS_KEY = process.env.NEXT_PUBLIC_FLASH_CARD_QUESTIONS || "_template_flash_card_questions"
