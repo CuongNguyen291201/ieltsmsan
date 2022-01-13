@@ -6,11 +6,12 @@ import { useSelector } from 'react-redux';
 import useHeadingsData from "../../hooks/useHeadingsData";
 import { AppState } from '../../redux/reducers';
 import SanitizedDiv from "../SanitizedDiv";
-import { MyCardDataView, TopicInfoCommonView } from './topic-widgets/TopicWidget';
+import MyCardDataView from './topic-widgets/MyCardDataView';
 import useTopicContentStyles from "./useTopicContentStyles";
 
 const DocumentsListView = dynamic(() => import('./DocumentsListView'), { ssr: false });
 const TableOfContents = dynamic(() => import('../TableOfContents'), { ssr: false });
+const TopicInfoCommonView = dynamic(() => import('./topic-widgets/TopicInfoCommonView'), { ssr: false });
 
 const ExerciseInfoView = () => {
   const { currentTopic: topic, studyScore, myCardData } = useSelector((state: AppState) => state.topicReducer);

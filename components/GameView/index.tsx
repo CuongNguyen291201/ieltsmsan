@@ -129,6 +129,7 @@ const GameView = (props: {
           onSubmitted={() => window.history.back()}
           shuffleQuestion={gameState.isShuffleQuestion}
           boxCard={myCardData?.boxCard || {}}
+          cardBookmarks={myCardData?.cardBookmarks || []}
         />
       </>
     )
