@@ -143,3 +143,8 @@ export const apiGetLatestTopicStudyScoreData = async (args: { topicId: string; s
   if (status !== 200) return [];
   return data;
 }
+
+export const apiGetCourseSections = async (args: { courseId: string; userId?: string }): Promise<_Topic[]> => {
+  const { data, status } = await POST_API('/get-course-sections', args);
+  return status !== 200 ? [] : data;
+}

@@ -3,19 +3,21 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from "notistack";
 import { Fragment, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { _Topic } from '../../custom-types';
-import { MapExamType } from "../../custom-types/MapContraint";
-import releaseDate from '../../public/images/icons/icon-release-date.png';
-import iconIsDone from '../../public/images/icons/isDone.png';
-import iconLockLession from '../../public/images/icons/lock-course.png';
-import { setLoadMoreChildTopicsAction } from '../../redux/actions/topic.action';
-import { AppState } from '../../redux/reducers';
-import { response_status } from '../../sub_modules/share/api_services/http_status';
-import { STATUS_OPEN, TOPIC_CONTENT_TYPE_CARD, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../sub_modules/share/constraint';
-import { apiOffsetTopicsByParentId, apiUpdateTopicProgress } from '../../utils/apis/topicApi';
-import { apiUpdateTimeActivity } from '../../utils/apis/userActivityApi';
-import { getTopicPageSlug } from '../../utils/router';
+import { _Topic } from '../../../custom-types';
+import { MapExamType } from "../../../custom-types/MapContraint";
+import releaseDate from '../../../public/images/icons/icon-release-date.png';
+import iconIsDone from '../../../public/images/icons/isDone.png';
+import iconLockLession from '../../../public/images/icons/lock-course.png';
+import { setLoadMoreChildTopicsAction } from '../../../redux/actions/topic.action';
+import { AppState } from '../../../redux/reducers';
+import { response_status } from '../../../sub_modules/share/api_services/http_status';
+import { STATUS_OPEN, TOPIC_CONTENT_TYPE_CARD, TOPIC_TYPE_CHILD_NONE, TOPIC_TYPE_LESSON, TOPIC_TYPE_TEST, USER_ACTIVITY_LESSON, USER_ACTIVITY_WATCH_VIDEO } from '../../../sub_modules/share/constraint';
+import { apiOffsetTopicsByParentId, apiUpdateTopicProgress } from '../../../utils/apis/topicApi';
+import { apiUpdateTimeActivity } from '../../../utils/apis/userActivityApi';
+import { getTopicPageSlug } from '../../../utils/router';
 import TopicIcon from './TopicIcon';
+import './topic-tree-node.scss';
+import { getTopicShortDescription } from "./courseTopicTree.logic";
 
 const LOAD_LIMIT = 40;
 export type TopicNodeProps = {
@@ -153,14 +155,7 @@ const TopicTreeNode = (props: { topic: _Topic; isMain?: boolean, }) => {
                 <div style={{ fontWeight: isMain ? 700 : 500 }}>{topic.name}</div>
               </div>
               <div className="sort__">
-                {topic.type === TOPIC_TYPE_LESSON
-                  ? topic.shortDescription
-                  : <>
-                    {topic.topicExercise?.questionsNum || 0} câu hỏi
-                    {topic.type === TOPIC_TYPE_TEST && topic.topicExercise?.contentType === TOPIC_CONTENT_TYPE_CARD && <> / {topic.topicExercise?.duration || 0} phút</>}
-                    {topic.topicExercise?.contentType !== TOPIC_CONTENT_TYPE_CARD && <> / {MapExamType[topic.topicExercise?.contentType]}</>}
-                  </>
-                }
+                {getTopicShortDescription(topic)}
                 <div className="relaseDate">
                   {topic.startTime > 0 && !topic.isOverStartTime && <><img src={releaseDate} alt="releaseDate" />{`${moment(topic.startTime).format('HH:mm DD/MM/YYYY')}`}</>}
                 </div>

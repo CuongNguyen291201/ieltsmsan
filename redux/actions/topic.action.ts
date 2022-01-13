@@ -1,4 +1,5 @@
 import { BaseAction } from '.';
+import { _Topic } from "../../custom-types";
 import MyCardData from '../../sub_modules/share/model/myCardData';
 import { StudyScore } from '../../sub_modules/share/model/studyScore';
 import Topic from '../../sub_modules/share/model/topic';
@@ -23,7 +24,7 @@ export const setUserCardDataAction = (args: { cardData: MyCardData; user: UserIn
   scope: Scopes.TOPIC, type: ActionTypes.TP_SET_USER_CARD_DATA, payload: args
 });
 
-export const fetchTopicsAction = (args: { courseId: string; parentId: string | null; limit?: number; skip?: number; field: string; userId?: string }): TopicAction => ({
+export const fetchTopicsAction = (args: { courseId: string; parentId: string | null; limit?: number; skip?: number; field: string; userId?: string; asc?: boolean }): TopicAction => ({
   scope: Scopes.TOPIC, type: ActionTypes.TP_FETCH_TOPICS, payload: args
 });
 
@@ -33,4 +34,8 @@ export const setLoadMoreChildTopicsAction = (args: { topicId: string; isLoadMore
 
 export const resetTopicsListAction = (): TopicAction => ({
   scope: Scopes.TOPIC, type: ActionTypes.TP_RESET_TOPICS_LIST
-}); 
+});
+
+export const fetchCourseSectionsAction = (args: { courseId: string; userId?: string }): TopicAction => ({
+  scope: Scopes.TOPIC, type: ActionTypes.TP_FETCH_SECTIONS, payload: args
+});

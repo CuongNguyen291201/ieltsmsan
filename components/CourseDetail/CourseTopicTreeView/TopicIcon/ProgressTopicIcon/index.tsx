@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import doneIcon from '../../../../public/images/icons/done-icon.svg';
+import doneIcon from '../../../../../public/images/icons/done-icon.svg';
 import './style.scss';
 
 const ProgressTopicIcon = (props: { iconSrc?: string; isShowProgress?: boolean; progress?: number }) => {
