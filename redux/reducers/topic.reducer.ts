@@ -17,6 +17,10 @@ export interface TopicState {
   userToReview: UserInfo | null;
   reviewCardData: MyCardData | null;
   mapLoadMoreState: { [x: string]: boolean; };
+  boxCorrect: number;
+  boxIncorrect: number;
+  boxNone: number;
+  boxMarked: number;
 }
 
 const initialState: TopicState = {
@@ -31,6 +35,10 @@ const initialState: TopicState = {
   userToReview: null,
   reviewCardData: null,
   mapLoadMoreState: {},
+  boxCorrect: 0,
+  boxIncorrect: 0,
+  boxNone: 0,
+  boxMarked: 0
 };
 
 export function topicReducer(state = initialState, action: TopicAction): TopicState {
@@ -65,6 +73,7 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
           ...state,
           studyScore,
           myCardData,
+          ...getNumCardBox(myCardData, state.currentTopic),
           isLoadedDetailTopic: true
         };
 
@@ -99,4 +108,36 @@ export function topicReducer(state = initialState, action: TopicAction): TopicSt
     }
   }
   return state;
+}
+
+// LOGIC
+
+function getNumCardBox(myCardData: MyCardData, currentTopic: _Topic) {
+  let cardCorrectArr: string[] = [];
+  let cardIncorrectArr: string[] = [];
+  let numCardNotAnswer = 0;
+  let cardBookMark: string[] = []
+  if (currentTopic?.topicExercise) {
+    numCardNotAnswer = currentTopic.topicExercise.questionsNum;
+  }
+  if (myCardData) {
+    const mapBoxNum: { [x: number]: string[] } = {};
+    Object.keys(myCardData.boxCard).map((e: string) => {
+      const boxNum = myCardData.boxCard[e] > 0 ? 1 : 0;
+      mapBoxNum[boxNum] = [...mapBoxNum[boxNum] || [], e];
+    });
+    cardCorrectArr = mapBoxNum[1] ? mapBoxNum[1] : [];
+    cardIncorrectArr = mapBoxNum[0] ? mapBoxNum[0] : [];
+    numCardNotAnswer = numCardNotAnswer - cardCorrectArr.length - cardIncorrectArr.length;
+    if (numCardNotAnswer < 0) {
+      numCardNotAnswer = 0;
+    }
+    cardBookMark = myCardData.cardBookmarks ?? [];
+  }
+  return {
+    boxCorrect: cardCorrectArr.length,
+    boxIncorrect: cardIncorrectArr.length,
+    boxNone: numCardNotAnswer,
+    boxMarked: cardBookMark.length
+  }
 }

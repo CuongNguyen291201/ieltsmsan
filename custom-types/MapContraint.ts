@@ -26,7 +26,8 @@ import {
   CARD_STUDY_ORDER_DEFAULT,
   CARD_STUDY_ORDER_NONE,
   CARD_STUDY_ORDER_INCORRECT,
-  CARD_STUDY_ORDER_CORRECT
+  CARD_STUDY_ORDER_CORRECT,
+  CARD_STUDY_ORDER_MARKED
 } from '../sub_modules/share/constraint';
 
 export const MapUserCourseStatus = {
@@ -66,5 +67,6 @@ export const MapCardStudyOrderLabel = {
   [CARD_STUDY_ORDER_DEFAULT]: 'Mặc định',
   [CARD_STUDY_ORDER_CORRECT]: 'Đã thuộc',
   [CARD_STUDY_ORDER_INCORRECT]: 'Chưa thuộc',
-  [CARD_STUDY_ORDER_NONE]: 'Chưa học'
+  [CARD_STUDY_ORDER_NONE]: 'Chưa học',
+  [CARD_STUDY_ORDER_MARKED]: 'Đánh dấu'
 }
