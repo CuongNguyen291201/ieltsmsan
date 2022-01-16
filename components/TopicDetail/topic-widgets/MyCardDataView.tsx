@@ -159,7 +159,7 @@ const MyCardDataView = (props: {
               display: "flex",
               justifyContent: {
                 xs: "center",
-                sm: (key % 2) ? "end" : "start"
+                sm: (key % 2) ? "flex-end" : "start"
               }
             }}
           >
