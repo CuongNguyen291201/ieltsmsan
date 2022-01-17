@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTopicsAction, fetchCourseSectionsAction } from "../../../redux/actions/topic.action";
+import { fetchTopicsAction, fetchCourseSectionsAction, resetTopicsListAction } from "../../../redux/actions/topic.action";
 import { AppState } from "../../../redux/reducers";
 import { COURSE_TYPE_SECTION } from "../../../sub_modules/share/constraint";
 import { Course } from '../../../sub_modules/share/model/courses';
@@ -16,6 +16,7 @@ const CourseTopicTreeView = () => {
   const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
 
   useEffect(() => {
+    dispatch(resetTopicsListAction());
     if (course.type === COURSE_TYPE_SECTION) {
       dispatch(fetchCourseSectionsAction({ courseId: course._id, userId: currentUser?._id }));
     } else {
