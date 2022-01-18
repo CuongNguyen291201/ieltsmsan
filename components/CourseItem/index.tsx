@@ -1,15 +1,11 @@
-import { Paper, Tooltip, Rating, Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
+import { Box, CardContent, CardMedia, Rating, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
-import itemAvatar from '../../public/images/icons/item-avatar.png';
 import { Course } from '../../sub_modules/share/model/courses';
 import { numberFormat } from '../../utils';
-import orderUtils from '../../utils/payment/orderUtils';
-import { getCoursePageSlug, ROUTER_PAYMENT } from '../../utils/router';
-import PopupShowQuickView from '../popup-quick-view/index';
+import { getCoursePageSlug } from '../../utils/router';
 import './style.scss';
-
 
 const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
   const { course, ownCourse } = props;
@@ -26,38 +22,21 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
   return (
     <Link href={courseSlug} passHref>
       <a className="plain-anchor-tag">
-        <Card sx={{ boxShadow: '0px 4px 30px rgba(95, 73, 118, 0.1)' }}>
-          <CardMedia sx={{ padding: "16px" }} component="img" image={course.avatar || process.env.NEXT_PUBLIC_COURSE_THUMB} />
-          <CardContent>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontSize: { lg: "20px", md: "16px", xs: "16px" },
-                maxHeight: "60px",
-                padding: "10px 0",
-                fontWeight: 500,
-                color: "#000000"
-              }}>{course.name}</Typography>
-            <Typography
-              variant="inherit"
-              sx={{
-                maxHeight: "50px",
-                minHeight: "50px",
-                fontSize: { lg: "14px", md: "12px" },
-                padding: "10px 0",
-                color: "#666666"
-              }}
-            >
-              {course.shortDesc}
-            </Typography>
+        <div className="course-root">
+          <div className="crs-avatar">
+            <img className="crs-avatar-img" src={course.avatar || process.env.NEXT_PUBLIC_COURSE_THUMB} alt={course.name} />
+          </div>
+          <div className="crs-body">
+            <div className="crs-body-name dot-2">{course.name}</div>
+            <div className="crs-body-short-desc dot-2">{course.shortDesc}</div>
             <Box display="flex" alignItems="center" py={2} gap="10px">
               <Typography sx={{ color: "#F0452D", fontSize: { lg: "18px", md: "14px" }, fontWeight: "bold" }}>4.6</Typography>
               <Rating name="size-small" size="small" defaultValue={4.6} precision={0.1} readOnly />
               <Typography sx={{ fontSize: { lg: "14px", md: "12px", sm: "12px", xs: "12px" } }}>(999+ lượt học thử)</Typography>
             </Box>
             <Typography sx={{ fontSize: "18px", fontWeight: 900, color: "#19CE7A" }} variant='body1'>{course.cost === 0 ? "MIỄN PHÍ" : numberFormat.format(course.cost) + " VNĐ"}</Typography>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </a>
     </Link>
   )
