@@ -9,7 +9,7 @@ import { MapCardStudyOrderLabel } from "../../../custom-types/MapContraint";
 import { setExerciseOptionsAction } from "../../../redux/actions/exam.action";
 import { AppState } from "../../../redux/reducers";
 import { showLoginModalAction } from "../../../sub_modules/common/redux/actions/userActions";
-import { CARD_STUDY_ORDER_CORRECT, CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_INCORRECT, CARD_STUDY_ORDER_NONE, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from "../../../sub_modules/share/constraint";
+import { CARD_STUDY_ORDER_CORRECT, CARD_STUDY_ORDER_DEFAULT, CARD_STUDY_ORDER_INCORRECT, CARD_STUDY_ORDER_MARKED, CARD_STUDY_ORDER_NONE, TOPIC_CONTENT_TYPE_FLASH_CARD, TOPIC_TYPE_TEST } from "../../../sub_modules/share/constraint";
 import { StudyScore } from "../../../sub_modules/share/model/studyScore";
 import Topic from "../../../sub_modules/share/model/topic";
 import { FLASH_CARD_QUESTIONS_KEY } from "../../../utils/contrants";
@@ -21,12 +21,14 @@ const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudySco
   const { currentTopic, studyScore, hidePlayGameButton } = props;
   const { currentUser } = useSelector((state: AppState) => state.userReducer);
   const examReducer = useSelector((state: AppState) => state.examReducer);
+  const { boxCorrect, boxIncorrect, boxMarked, boxNone } = useSelector((state: AppState) => state.topicReducer);
   const { currentCourse } = useSelector((state: AppState) => state.courseReducer);
   const { isJoinedCourse, userCourseLoading } = useSelector((state: AppState) => state.courseReducer);
   const { enqueueSnackbar } = useSnackbar();
   const classes = useTopicWidgetStyles();
   const dispatch = useDispatch();
   const router = useRouter();
+
   const topicData = useMemo(() => {
     const questionsNum = currentTopic?.topicExercise?.questionsNum ?? 0;
     const pass = currentTopic?.topicExercise?.pass ?? 0;
@@ -70,12 +72,13 @@ const TopicInfoCommonView = (props: { currentTopic: Topic, studyScore?: StudySco
             optionKey: "questionsPlayNum"
           },
           {
-            title: "Ưu tiên",
+            title: "Tuỳ chọn",
             options: [
               { value: CARD_STUDY_ORDER_DEFAULT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_DEFAULT] },
               { value: CARD_STUDY_ORDER_CORRECT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_CORRECT] },
               { value: CARD_STUDY_ORDER_INCORRECT, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_INCORRECT] },
               { value: CARD_STUDY_ORDER_NONE, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_NONE] },
+              { value: CARD_STUDY_ORDER_MARKED, label: MapCardStudyOrderLabel[CARD_STUDY_ORDER_MARKED] },
             ],
             onChange: (value: number | string) => {
               dispatch(setExerciseOptionsAction({ target: "cardStudyOrder", value: Number(value) }))

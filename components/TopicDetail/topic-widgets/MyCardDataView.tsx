@@ -2,15 +2,16 @@ import { Box, Button, Grid, Theme } from '@mui/material';
 import { SxProps } from "@mui/system";
 import classNames from "classnames";
 import { useRouter } from 'next/router';
+import { useSnackbar } from "notistack";
 import React, { useCallback, useMemo } from 'react';
-import Skeleton from 'react-loading-skeleton';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import notAnswerIcon from '../../../public/images/icons/chua-hoc.png';
 import incorrectAnswerIcon from '../../../public/images/icons/chua-thuoc.png';
 import correctAnswerIcon from '../../../public/images/icons/da-thuoc.png';
 import bookmarkAnswerIcon from '../../../public/images/icons/danh-dau.png';
 import { setExerciseOptionsAction } from "../../../redux/actions/exam.action";
 import { prepareGoToGameAction } from '../../../redux/actions/prepareGame.actions';
+import { AppState } from "../../../redux/reducers";
 import { showLoginModalAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { showToastifyWarning } from '../../../sub_modules/common/utils/toastify';
 import { GAME_STATUS_PREPARE_PLAY, GAME_STATUS_PREPARE_REVIEW } from '../../../sub_modules/game/src/gameConfig';
@@ -24,32 +25,6 @@ import { canPlayTopic } from '../../../utils/permission/topic.permission';
 import StaticLabelSlider from "../../StaticLabelSlider";
 import useTopicWidgetStyles from "./useTopicWidgetStyles";
 
-// MY CARD DATA VIEW
-function getNumCardBox(myCardData: MyCardData, currentTopic: Topic) {
-  let cardCorrectArr: string[] = [];
-  let cardIncorrectArr: string[] = [];
-  let numCardNotAnswer = 0;
-  let cardBookMark: string[] = []
-  if (currentTopic?.topicExercise) {
-    numCardNotAnswer = currentTopic.topicExercise.questionsNum;
-  }
-  if (myCardData) {
-    const mapBoxNum: { [x: number]: string[] } = {};
-    Object.keys(myCardData.boxCard).map((e: string) => {
-      const boxNum = myCardData.boxCard[e] > 0 ? 1 : 0;
-      mapBoxNum[boxNum] = [...mapBoxNum[boxNum] || [], e];
-    });
-    cardCorrectArr = mapBoxNum[1] ? mapBoxNum[1] : [];
-    cardIncorrectArr = mapBoxNum[0] ? mapBoxNum[0] : [];
-    numCardNotAnswer = numCardNotAnswer - cardCorrectArr.length - cardIncorrectArr.length;
-    if (numCardNotAnswer < 0) {
-      numCardNotAnswer = 0;
-    }
-    cardBookMark = myCardData.cardBookmarks ?? [];
-  }
-  return { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark }
-}
-
 const MyCardDataView = (props: {
   currentTopic: Topic; studyScore?: StudyScore | null, myCardData: MyCardData; user?: UserInfo; isJoinedCourse?: boolean;
   sliderBoxStyle?: SxProps<Theme>
@@ -57,10 +32,12 @@ const MyCardDataView = (props: {
   gameButtonGroupBoxStyle?: SxProps<Theme>
 }) => {
   const { currentTopic, studyScore, myCardData, user, isJoinedCourse, sliderBoxStyle, cardDataBoxStyle, gameButtonGroupBoxStyle } = props;
+  const { boxCorrect, boxIncorrect, boxMarked, boxNone } = useSelector((state: AppState) => state.topicReducer);
+  const { cardStudyOrder } = useSelector((state: AppState) => state.examReducer);
   const dispatch = useDispatch();
   const router = useRouter();
   const classes = useTopicWidgetStyles();
-  const { cardCorrectArr, cardIncorrectArr, numCardNotAnswer, cardBookMark } = getNumCardBox(myCardData, currentTopic);
+  const { enqueueSnackbar } = useSnackbar();
   const { gamePlayButtonLabel, gameReviewButtonLabel, isFlashCard } = useMemo(() => {
     const isFlashCard = currentTopic?.topicExercise?.contentType === TOPIC_CONTENT_TYPE_FLASH_CARD;
     return {
@@ -76,7 +53,7 @@ const MyCardDataView = (props: {
       return;
     }
     if (numCard === 0) {
-      showToastifyWarning("Không có câu hỏi!");
+      enqueueSnackbar("Không có câu hỏi!", { variant: "warning" });
       return;
     }
     if (isFlashCard) {
@@ -95,12 +72,20 @@ const MyCardDataView = (props: {
       return;
     }
     if (!canPlayTopic({ topic: currentTopic, isJoinedCourse })) {
-      showToastifyWarning("Chưa tham gia khoá học");
+      enqueueSnackbar("Chưa tham gia khoá học", { variant: "warning" });
+      return;
+    }
+    if ((cardStudyOrder === CARD_STUDY_ORDER_CORRECT && boxCorrect === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_INCORRECT && boxIncorrect === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_NONE && boxNone === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_MARKED && boxMarked === 0)
+    ) {
+      enqueueSnackbar("Không có câu hỏi!", { variant: "warning" });
       return;
     }
     dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_PLAY }));
     router.push(getGameSlug(currentTopic._id));
-  }, [user, isJoinedCourse]);
+  }, [user, currentTopic, isJoinedCourse, cardStudyOrder, boxCorrect, boxIncorrect, boxNone, boxMarked]);
 
   const review = useCallback(() => {
     if (!user) {
@@ -111,38 +96,46 @@ const MyCardDataView = (props: {
       showToastifyWarning("Chưa tham gia khoá học");
       return;
     }
+    if ((cardStudyOrder === CARD_STUDY_ORDER_CORRECT && boxCorrect === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_INCORRECT && boxIncorrect === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_NONE && boxNone === 0)
+      || (cardStudyOrder === CARD_STUDY_ORDER_MARKED && boxMarked === 0)
+    ) {
+      enqueueSnackbar("Không có câu hỏi!", { variant: "warning" });
+      return;
+    }
     if (!!user) {
       dispatch(prepareGoToGameAction({ statusGame: GAME_STATUS_PREPARE_REVIEW, studyScore }));
       router.push(getGameSlug(currentTopic._id));
     }
-  }, [user, isJoinedCourse])
+  }, [user, currentTopic, isJoinedCourse, cardStudyOrder, boxCorrect, boxIncorrect, boxNone, boxMarked, studyScore]);
 
   const mapBoxLabel = {
     [CARD_BOX_ANSWER_INCORRECT]: {
       label: "Chưa thuộc",
       icon: incorrectAnswerIcon,
-      numCard: cardIncorrectArr.length,
+      numCard: boxIncorrect,
       color: "#FF8474",
       cardOrder: CARD_STUDY_ORDER_INCORRECT,
     },
     [CARD_BOX_ANSWER_CORRECT]: {
       label: "Đã thuộc",
       icon: correctAnswerIcon,
-      numCard: cardCorrectArr.length,
+      numCard: boxCorrect,
       color: "#2DC27C",
       cardOrder: CARD_STUDY_ORDER_CORRECT,
     },
     [CARD_BOX_ANSWER_BOOKMARK]: {
       label: "Đánh dấu",
       icon: bookmarkAnswerIcon,
-      numCard: cardBookMark.length,
+      numCard: boxMarked,
       color: "#02C2E8",
       cardOrder: CARD_STUDY_ORDER_MARKED,
     },
     [CARD_BOX_NO_ANSWER]: {
       label: "Chưa học",
       icon: notAnswerIcon,
-      numCard: numCardNotAnswer,
+      numCard: boxNone,
       color: "#FFBE40",
       cardOrder: CARD_STUDY_ORDER_NONE
     }
@@ -166,7 +159,7 @@ const MyCardDataView = (props: {
               display: "flex",
               justifyContent: {
                 xs: "center",
-                sm: (key % 2) ? "end" : "start"
+                sm: (key % 2) ? "flex-end" : "start"
               }
             }}
           >
