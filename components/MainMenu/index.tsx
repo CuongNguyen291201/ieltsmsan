@@ -183,7 +183,7 @@ function MainMenu(props: { hotLine?: string, webLogo?: string; disableFixedHeade
 
                 {!!rootItems && rootItems.map((item) => (
                   <div key={item._id} className="menu-item">
-                    {mapItem[item._id].length > 0 ? <MenuChild item={item} mapItem={mapItem} /> : <span onClick={() => router.push(item.url)}>{item.title}</span>}
+                    {mapItem[item._id].length > 0 ? <MenuChild item={item} mapItem={mapItem} /> : <Link href={item.url ?? ""} passHref><a className="plain-anchor-tag" style={{ color: "inherit" }}>{item.title}</a></Link>}
                   </div>
                 ))}
 

@@ -11,7 +11,7 @@ const HomeCategorySection = (props: { categories?: _Category[] }) => {
       <div className="container category-list">
         <Grid container spacing={4}>
           {categories[0]?.courses.map((c) => {
-            return (<Grid key={c._id} item xs={6} lg={4}>
+            return (<Grid key={c._id} item xs={12} sm={6} lg={4}>
               <CourseItem course={c} />
             </Grid>)
           })}

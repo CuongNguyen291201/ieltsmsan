@@ -1,4 +1,3 @@
-@import "../CategoryItem/style.scss";
 @import "../../styles/variables.scss";
 
 .course-root {
@@ -17,6 +16,22 @@
       top: 0;
       left: 0;
     }
+    .crs-avatar-pop-up {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+    }
+    &:hover {
+      .crs-avatar-pop-up {
+        visibility: visible;
+      }
+    }
   }
 
   .crs-body {
@@ -27,228 +42,95 @@
       font-weight: 500;
       font-size: 20px;
       min-height: 50px;
+      margin-bottom: 0;
     }
 
     &-short-desc {
       color: #666;
+      margin-top: 14px;
+      min-height: 32px;
     }
-  }
-}
-.hover-cat-item {
-  position: relative;
-  .image-corse-item_ {
-    width: 100%;
-    height: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      @media (max-width: 768px) {
-        border-radius: unset;
-      }
-    }
-  }
-  .button-hover-course-item {
-    display: none;
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    justify-content: center;
-    align-items: center;
-    border-radius: 0px 0px 20px 0px;
-    button {
-      border: 2px solid #fff;
-      margin: 5px;
-      padding: 5px 8px;
-      background-color: transparent;
-      color: white;
-      border-radius: 4px;
-      text-transform: uppercase;
-      font-weight: 600;
-      cursor: pointer;
-      @media (max-width: 768px) {
-        font-size: 8px;
-      }
-      &.btn-hightlight {
-        background-color: #ffb039;
-        border: 2px solid #ffb039;
-      }
-    }
-  }
-  &:hover {
-    .button-hover-course-item {
+
+    &-rating {
+      margin-top: 10px;
       display: flex;
+      align-items: center;
+      &-point {
+        color: #EF381F;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      &-stars {
+        margin-left: 8px;
+        margin-right: 8px;
+      }
+      &-users {
+        color: #666;
+      }
+    }
+
+    &-price {
+      color: #19ce7a;
+      font-weight: 700;
+      margin-top: 14px;
+      font-size: 18px;
     }
   }
 }
-.crs-info {
-  padding: 12px;
-  cursor: pointer;
-  @media (max-width: 768px) {
-    padding: 7px !important;
+
+.popup-quick-view-course {
+  margin-left: 14px;
+  width: 373px;
+  padding: 30px;
+  padding-top: 16px;
+  box-shadow: 0px 4px 15px rgba(95, 73, 118, 0.15);
+  border: 1px solid #19ce7a;
+  background-color: #fff;
+  position: relative;
+  @media (max-width: 576px) {
+    margin-left: 0;
   }
-  .crs-title {
+  &::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background: #fff;
+    left: -11px;
+    transform: rotate(45deg);
+    top: 50%;
+    border-left: 1px solid #19ce7a;
+    border-bottom: 1px solid #19ce7a;
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  .pop-course-name {
+    font-size: 20px;
     font-weight: 700;
-    font-size: 15px;
-    color: $root-color;
-    margin-bottom: 4px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    @media (max-width: 768px) {
-      font-size: 12px !important;
-      margin-bottom: 4px !important;
-    }
-
-    @supports (-webkit-line-clamp: 2) {
-      overflow: hidden;
-      display: -webkit-box;
-      white-space: initial;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
   }
-
-  .crs-desc {
-    font-weight: 500;
-    color: #9e9e9e;
-    font-size: 15px;
-    margin-bottom: 8px;
-    // min-height: 60px;
-    height: 45px;
-    @media (max-width: 768px) {
-      font-size: 12px;
-      height: 35px;
-      margin-bottom: unset;
-    }
+  .pop-course-desc {
+    margin-top: 12px
   }
-
-  .crs-rating {
+  .pop-course-button {
     display: flex;
     align-items: center;
-    margin-bottom: 8px;
-
-    .crs-point {
-      margin-right: 8px;
-      font-weight: 700;
-      font-size: 15px;
+    &-fav {
+      border-radius: 10px;
+      color: #19ce7a;
+      height: 45px;
+      width: 45px;
+      box-shadow: 0px 4px 10px rgba(25, 206, 122, 0.6);
     }
-
-    .vote-star {
-      margin-right: 8px;
-      .rating {
-        display: flex;
-        .star-full,
-        .star-half {
-          img {
-            width: 14px;
-            height: 14px;
-            margin-right: 2px;
-          }
-        }
-      }
-      .vote-rate {
-        font-size: 15px;
-        color: rgb(236, 31, 36);
-      }
-    }
-    .crs-mem {
-      font-size: 15px;
-    }
-  }
-
-  .crs-price {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    min-height: 34px;
-    .crs-discount-price {
-      color: $root-color;
-      font-weight: 700;
-      margin-right: 16px;
-      letter-spacing: 1px;
-    }
-    .crs-origin-price {
-      color: $root-color;
-      font-weight: 700;
-      text-decoration: line-through;
-      letter-spacing: 1px;
-    }
-  }
-
-  // .btn-video {
-  //   cursor: pointer;
-  //   background: #e7e7e7;
-  //   border-radius: 5px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   height: 24px;
-  //   width: 69px;
-  //   font-weight: bold;
-  //   color: $root-color;
-  // }
-}
-
-@media (max-width: $h-mobile-max-width) {
-  .crs-info {
-    font-size: 14px;
-    .crs-title {
-      overflow: hidden;
-    }
-    .crs-rating {
-      .vote-star {
-        margin-right: 3px;
-      }
-    }
-  }
-}
-
-@media (max-width: "375px") {
-  .crs-info .crs-rating .vote-star .vote-rate {
-    font-size: 6px !important;
-    min-width: 63px;
-  }
-}
-
-@media (max-width: $mobile-max-width) {
-  .crs-info {
-    margin: 0;
-    padding: 12px;
-    font-size: 9px;
-    .crs-title {
-      margin-bottom: 8px;
-      font-size: 14px;
-      max-width: 145px;
-    }
-    .crs-rating {
-      .crs-point {
-        font-size: 10px;
-      }
-      .vote-star {
-        margin-right: 2px;
-        .vote-rate {
-          font-size: 10px;
-          color: rgb(236, 31, 36);
-        }
-      }
-      .crs-mem {
-        font-size: 10px;
-      }
-    }
-    .crs-desc {
-      font-size: 9px;
-    }
-  }
-  .crs-avatar {
-    img {
-      min-height: 99.5px;
+    &-detail {
+      color: #fff;
+      background-color: #19ce7a;
+      text-transform: none;
+      height: 45px;
+      width: 230px;
+      box-shadow: 0px 4px 10px rgba(25, 206, 122, 0.6);
+      border-radius: 15px 0px;
+      margin-left: 16px;
     }
   }
 }
