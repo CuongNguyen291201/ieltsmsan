@@ -80,6 +80,10 @@
 
 .popup-quick-view-course {
   margin-left: 14px;
+  &.popup-left {
+    margin-left: 0;
+    margin-right: 14px;
+  }
   width: 373px;
   padding: 30px;
   padding-top: 16px;
@@ -90,7 +94,7 @@
   @media (max-width: 576px) {
     margin-left: 0;
   }
-  &::before {
+  &:not(.popup-left)::before {
     content: "";
     width: 20px;
     height: 20px;
@@ -101,6 +105,21 @@
     top: 50%;
     border-left: 1px solid #19ce7a;
     border-bottom: 1px solid #19ce7a;
+    @media (max-width: 576px) {
+      display: none;
+    }
+  }
+  &.popup-left::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background: #fff;
+    right: -11px;
+    transform: rotate(45deg);
+    top: 50%;
+    border-right: 1px solid #19ce7a;
+    border-top: 1px solid #19ce7a;
     @media (max-width: 576px) {
       display: none;
     }

@@ -9,9 +9,10 @@ import './style.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PopupQuickView from "../popup-quick-view";
 import SanitizedDiv from "../SanitizedDiv";
+import classNames from "classnames";
 
-const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
-  const { course, ownCourse } = props;
+const CourseItem = (props: { course: Course; ownCourse?: boolean; popupPlacement?: "left" | "right" | "center" }) => {
+  const { course, ownCourse, popupPlacement = "right" } = props;
   const router = useRouter();
   const courseSlug = useMemo(() => getCoursePageSlug({ course }), [course]);
   const quickViewRef = useRef<HTMLButtonElement | null>(null);
@@ -70,18 +71,18 @@ const CourseItem = (props: { course: Course; ownCourse?: boolean }) => {
         anchorEl={courseRef.current}
         anchorOrigin={{
           vertical: "center",
-          horizontal: "right"
+          horizontal: popupPlacement
         }}
         transformOrigin={{
           vertical: "center",
-          horizontal: "left"
+          horizontal: popupPlacement === "right" ? "left" : (popupPlacement === "center" ? "center" : "right")
         }}
         elevation={0}
         PaperProps={{
           style: { background: "transparent" }
         }}
       >
-        <div className="popup-quick-view-course">
+        <div className={classNames("popup-quick-view-course", popupPlacement === "right" ? "" : "popup-left")}>
           <div className="pop-course-name">{course.name}</div>
           <SanitizedDiv content={course.courseContent?.desc} className="pop-course-desc" />
           <div className="pop-course-button">
