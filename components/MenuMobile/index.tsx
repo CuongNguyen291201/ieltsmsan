@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Link from 'next/link';
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { getCookie, TOKEN, removeCookie } from "../../sub_modules/common/utils/cookie";
@@ -99,13 +100,22 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId:
                                 </>
                             ) : (
                                 <>
-                                    <div className="login menu-item" onClick={() => { dispatch(showLoginModalAction(true)); showMenu() }}>
+                                    {/* <div className="login menu-item" onClick={() => { dispatch(showLoginModalAction(true)); showMenu() }}> */}
                                         {/* <img src="/images/home/header-user.png" alt="" /> */}
                                         {/* <i className="fas fa-user-circle header-icon"></i> */}
-                                        <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
+                                        {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
+                                    </div> */}
+                                    <div className="login item">
+                                        <div className="text" style={{ color: "#fff" }}><span><img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/login">Log in</Link></span></div>
                                     </div>
-                                    <div className="signup text menu-item" onClick={() => dispatch(showRegisterModalAction(true))}>
+
+                                    {/* <div className="signup text menu-item" onClick={() => dispatch(showRegisterModalAction(true))}>
                                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng kí
+                                    </div> */}
+                                    <div className="signup text item" style={{ color: "#fff" }}>
+                                        <span><img src={iconItemMenu} alt="iconItemMenu" />
+                                            <Link href="/register">Sign up</Link>
+                                        </span>
                                     </div>
                                 </>
                             )

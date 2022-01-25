@@ -42,10 +42,11 @@ export const apiGetCourseByIds = async (courseIds: string[]): Promise<Course[]> 
   return data;
 }
 
-export const apiGetMyCourses = async (userId: string): Promise<UserCourse[]> => {
+export const apiGetMyCourses = async (userId: string): Promise<{userCourses?: UserCourse[], coursesOpen?: Course[]}> => {
   const res = await POST_API('get-user-courses', { userId });
   return res.data;
 }
+
 
 export const apiLoadCourseByCode = async (code: string): Promise<{ courses?: Course[]; activedIds?: string[] }> => {
   const { data, status } = await POST_API('load-courses-by-code', { code })

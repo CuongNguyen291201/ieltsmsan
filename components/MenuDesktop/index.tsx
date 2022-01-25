@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
-
+import Link from 'next/link';
 import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
@@ -61,13 +61,19 @@ export const MenuDesktop = () => {
                     </>
                 ) : (
                     <>
-                        <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
+                        {/* <div className="login item" onClick={() => dispatch(showLoginModalAction(true))}>
                             <img src="/images/home/header-user.png" alt="" />
                             <i className="fas fa-user-circle header-icon"></i>
                             <div className="text">Log in</div>
+                        </div> */}
+                        <div className="login item">
+                            <div className="text" style={{ color: "#fff" }}><Link href="/login">Log in</Link></div>
                         </div>
-                        <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
+                        {/* <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
                             Sign up
+                        </div> */}
+                        <div className="signup text item" style={{ color: "#fff" }}>
+                            <Link href="/register">Sign up</Link>
                         </div>
                     </>
                 )
