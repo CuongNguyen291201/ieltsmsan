@@ -67,13 +67,13 @@ export const MenuDesktop = () => {
                             <div className="text">Log in</div>
                         </div> */}
                         <div className="login item">
-                            <div className="text" style={{ color: "#fff" }}><Link href="/login">Log in</Link></div>
+                            <Link href="/login"><span className="text">Log in</span></Link>
                         </div>
                         {/* <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
                             Sign up
                         </div> */}
                         <div className="signup text item" style={{ color: "#fff" }}>
-                            <Link href="/register">Sign up</Link>
+                            <Link href="/register"><span className="text">Sign up</span></Link>
                         </div>
                     </>
                 )

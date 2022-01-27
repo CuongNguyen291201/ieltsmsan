@@ -106,16 +106,14 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId:
                                         {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
                                     </div> */}
                                     <div className="login item">
-                                        <div className="text" style={{ color: "#fff" }}><span><img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/login">Log in</Link></span></div>
+                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/login"><span className="text">Log in</span></Link>
                                     </div>
 
                                     {/* <div className="signup text menu-item" onClick={() => dispatch(showRegisterModalAction(true))}>
                                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng kí
                                     </div> */}
-                                    <div className="signup text item" style={{ color: "#fff" }}>
-                                        <span><img src={iconItemMenu} alt="iconItemMenu" />
-                                            <Link href="/register">Sign up</Link>
-                                        </span>
+                                    <div className="signup text item">
+                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/register"><span className="text">Sign up</span></Link>
                                     </div>
                                 </>
                             )

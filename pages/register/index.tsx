@@ -1,36 +1,33 @@
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
 import Layout from '../../components/Layout';
 import { wrapper } from '../../redux/store';
 import { getUserFromToken } from '../../sub_modules/common/api/userApis';
 import RegisterForm from '../../sub_modules/common/components/auth/RegisterForm';
-import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
-import { UserInfo } from '../../sub_modules/share/model/user';
 import { ROUTER_REGISTER } from '../../utils/router';
 
-const Register = (props?: { userInfo: UserInfo }) => {
-    const { userInfo } = props;
-    const router = useRouter();
-    useEffect(() => {
-        if (!!userInfo) router.push("/")
-    }, []);
-    
+const Register = () => {
     return (
         <Layout>
             <Breadcrumb items={[{ name: 'Đăng ký', slug: ROUTER_REGISTER }]} />
-            <RegisterForm className="auth-ui" mainBgrColor="#19CE7A" mainTextColor="#fff" />
+            <div className="container">
+                <RegisterForm mainBgrColor="#19CE7A" mainTextColor="#fff" />
+            </div>
         </Layout>
     );
 };
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
     const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-        store.dispatch(loginSuccessAction(userInfo));
+    if (!!userInfo) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false
+            }
+        }
     }
-    return { props: { userInfo } }
 })
 
 export default Register;
