@@ -1,20 +1,21 @@
 import { combineReducers } from 'redux';
-import { categoryReducer, CategoryState } from './category.reducer';
 import userReducer, { IUserState } from '../../sub_modules/common/redux/reducers/userReducer';
-import { topicReducer, TopicState } from './topic.reducer';
-import { courseReducer, CourseState } from './course.reducer';
-import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
-import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
-// import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
-import { commentReducer, CommentState } from './comment.reducers';
 import documentModuleReducers from '../../sub_modules/document/src/redux/reducers';
 import { DocumentModuleState } from '../../sub_modules/document/src/redux/state';
+import gameReducer, { IGameState } from '../../sub_modules/game/redux/reducers/gameReducer';
+import categorySlice, { CategorySliceState } from "../slices/category.slice";
+import courseSlice, { CourseSliceState } from "../slices/course.slice";
 import { cartReducer, CartState } from './cart.reducer';
+import { categoryReducer, CategoryState } from './category.reducer';
+// import scenarioReducer, { ScenarioState } from '../../sub_modules/scenario/src/redux/reducers/scenario.reducers';
+import { commentReducer, CommentState } from './comment.reducers';
+import { contentReducer, ContentState } from "./content.reducer";
+import { courseReducer, CourseState } from './course.reducer';
+import { topicDocumentReducer, TopicDocumentState } from "./document.reducer";
 import { examReducer, ExamState } from "./exam.reducer";
 import { menuReducer, MenuState } from "./menu.reducer";
-import { topicDocumentReducer, TopicDocumentState } from "./document.reducer";
-import { contentReducer, ContentState } from "./content.reducer";
-import courseSlice, { CourseSliceState } from "../slices/course.slice";
+import { prepareGameReducer, PrepareGameState } from './prepareGame.reducer';
+import { topicReducer, TopicState } from './topic.reducer';
 
 
 export interface AppState {
@@ -33,6 +34,7 @@ export interface AppState {
   topicDocumentReducer: TopicDocumentState;
   contentReducer: ContentState;
   courseSlice: CourseSliceState;
+  categorySlice: CategorySliceState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -50,5 +52,6 @@ export const rootReducer = combineReducers<AppState>({
   menuReducer,
   topicDocumentReducer,
   contentReducer,
-  courseSlice
+  courseSlice,
+  categorySlice
 });

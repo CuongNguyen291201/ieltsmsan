@@ -1,6 +1,6 @@
 import { ArrowRight } from "@mui/icons-material";
 import Link from 'next/link';
-import { Breadcrumbs as MuiBreadcrumbs } from "@mui/material";
+import { Breadcrumbs as MuiBreadcrumbs, Container } from "@mui/material";
 import { withStyles, makeStyles } from "@mui/styles";
 import { memo, PropsWithoutRef, useMemo } from 'react';
 import classNames from 'classnames';
@@ -23,17 +23,17 @@ const useBreadcrumbStyles = makeStyles((_) => ({
     color: "#000"
   },
   itemDark: {
-    color: "#fff"
+    color: "#1E2959"
   },
   lastItemLight: {
-    color: "#ec1f24"
+    color: "#1E2959"
   },
   lastItemDark: {
     color: "#fff"
   },
 }));
 
-const Breadcrumb = (props: PropsWithoutRef<{ items: Array<BreadcrumbItem>, invertColor?: boolean }>) => {
+const Breadcrumb = (props: PropsWithoutRef<{ items: Array<BreadcrumbItem>, invertColor?: boolean; }>) => {
   const { invertColor } = props;
   const classes = useBreadcrumbStyles();
   const router = useRouter();
@@ -51,18 +51,22 @@ const Breadcrumb = (props: PropsWithoutRef<{ items: Array<BreadcrumbItem>, inver
   })(MuiBreadcrumbs);
 
   return (
-    <_Breadcrumbs className={invertColor ? classes.itemDark : classes.itemLight} separator={<ArrowRight color="inherit" />}>
-      {items.map((item, i) => {
-        const isEnd = i === items.length - 1;
-        return (
-          <Link key={i} href={isEnd ? (item.slug ?? router.asPath) : (item.slug ?? '#')}>
-            <a className={classNames(classes.item, invertColor ? (isEnd ? classes.lastItemDark : classes.itemDark) : (isEnd ? classes.lastItemLight : classes.itemLight))}>
-              {item.name}
-            </a>
-          </Link>
-        )
-      })}
-    </_Breadcrumbs>
+    <div style={{ backgroundColor: "#EBF0FC" }}>
+      <Container maxWidth="xxl">
+        <_Breadcrumbs className={invertColor ? classes.itemDark : classes.itemLight} separator={<ArrowRight color="inherit" />}>
+          {items.map((item, i) => {
+            const isEnd = i === items.length - 1;
+            return (
+              <Link key={i} href={isEnd ? (item.slug ?? router.asPath) : (item.slug ?? '#')}>
+                <a className={classNames(classes.item, invertColor ? (isEnd ? classes.lastItemDark : classes.itemDark) : (isEnd ? classes.lastItemLight : classes.itemLight))}>
+                  {item.name}
+                </a>
+              </Link>
+            )
+          })}
+        </_Breadcrumbs>
+      </Container>
+    </div>
   )
 
 }
