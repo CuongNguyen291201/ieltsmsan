@@ -1,23 +1,12 @@
-import { createStore, AnyAction, applyMiddleware, Store } from 'redux';
-import { Context, createWrapper, HYDRATE, MakeStore } from 'next-redux-wrapper';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import createSagaMiddleware, { SagaMiddleware, Task } from 'redux-saga';
+import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import { rootReducer, AppState as _AppState } from "./reducers";
+import rootSaga from "./sagas";
+import createSagaMiddleware from "@redux-saga/core";
 
-import rootSaga from './sagas';
-import { rootReducer, AppState } from './reducers';
+const sagaMiddleware = createSagaMiddleware()
 
-export interface SagaStore extends Store {
-  sagaTask?: Task;
-}
-
-const bindMiddlewares = (middlewares: Array<SagaMiddleware>) => {
-  if (process.env.NODE_ENV !== 'production') {
-    return composeWithDevTools(applyMiddleware(...middlewares));
-  }
-  return applyMiddleware(...middlewares);
-}
-
-const reducers = (state: AppState, action: AnyAction) => {
+const reducer = (state: _AppState, action: any) => {
   if (action.type === HYDRATE) {
     return {
       ...state,
@@ -27,11 +16,24 @@ const reducers = (state: AppState, action: AnyAction) => {
   return rootReducer(state, action);
 }
 
-const makeStore: MakeStore<AppState> = (context: Context) => {
-  const sagaMiddleware = createSagaMiddleware();
-  const store = createStore<AppState, AnyAction, any, any>(reducers, bindMiddlewares([sagaMiddleware]));
-  (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);
+const store: EnhancedStore<_AppState, any> = configureStore({
+  reducer,
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false
+    }).concat(sagaMiddleware);
+  }
+});
+
+sagaMiddleware.run(rootSaga);
+
+const makeStore = () => {
   return store;
 }
 
-export const wrapper = createWrapper<AppState>(makeStore, { debug: false });
+export type AppState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export const wrapper = createWrapper<_AppState>(makeStore, { debug: false });
