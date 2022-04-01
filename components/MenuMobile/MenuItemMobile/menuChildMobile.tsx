@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/router";
-import { Collapse, Grid } from '@mui/material';
+import { Collapse, Grid, Link } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WebMenuItem } from '../../../sub_modules/share/model/webMenuItem';
 import iconItemMenu from '../../../public/images/icons/icon-item-menu.png';
@@ -14,8 +14,8 @@ const MenuChildMobile = (props: { item: WebMenuItem, mapItem: { [itemId: string]
         return (
             <>
                 {mapMenu[item._id].map((menuC) => (
-                    <Grid item key={menuC._id} xs={6} style={{ fontSize: "14px", maxWidth: "100%" }}>
-                        {mapItem[menuC._id]?.length > 0 ? <span onClick={() => router.push(menuC.url)} style={{ fontWeight: 600 }}>{menuC.title}</span> : <span onClick={() => router.push(menuC.url)}>{menuC.title}</span>}
+                    <Grid item key={menuC._id} md={6} sm={12} xs={12}>
+                        <Link href={menuC.url} underline="none" style={mapItem[menuC._id]?.length > 0 ? { fontSize: "14px", fontWeight: 600, color: "#000" } : { fontSize: "12px", color: "#000", paddingLeft: "10px" }}>{menuC.title}</Link>
                         <div>{mapItem[menuC._id]?.length > 0 && showMenu(mapItem, menuC)}</div>
                     </Grid>
                 ))}

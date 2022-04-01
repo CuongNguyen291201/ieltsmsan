@@ -47,7 +47,6 @@ export const apiGetMyCourses = async (userId: string): Promise<UserCourse[]> => 
   return res.data;
 }
 
-
 export const apiLoadCourseByCode = async (code: string): Promise<{ courses?: Course[]; activedIds?: string[] }> => {
   const { data, status } = await POST_API('load-courses-by-code', { code })
   if (status !== response_status_codes.success) return {};

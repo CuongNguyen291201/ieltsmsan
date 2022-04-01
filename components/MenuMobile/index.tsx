@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { getCookie, TOKEN, removeCookie } from "../../sub_modules/common/utils/cookie";
 import { apiLogout } from "../../utils/apis/auth";
-import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES } from '../../utils/router';
+import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER } from '../../utils/router';
 import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import iconItemMenu from '../../public/images/icons/icon-item-menu.png'
@@ -106,14 +106,14 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId:
                                         {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
                                     </div> */}
                                     <div className="login item">
-                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/login"><span className="text">Log in</span></Link>
+                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href={ROUTER_LOGIN}><span className="text">Log in</span></Link>
                                     </div>
 
                                     {/* <div className="signup text menu-item" onClick={() => dispatch(showRegisterModalAction(true))}>
                                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng kí
                                     </div> */}
                                     <div className="signup text item">
-                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href="/register"><span className="text">Sign up</span></Link>
+                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href={ROUTER_REGISTER}><span className="text">Sign up</span></Link>
                                     </div>
                                 </>
                             )

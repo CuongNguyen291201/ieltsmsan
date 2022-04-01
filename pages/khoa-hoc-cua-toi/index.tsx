@@ -19,10 +19,7 @@ import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetMyCourses } from "../../utils/apis/courseApi";
 import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
 import { ROUTER_MY_COURSES } from "../../utils/router";
-import coursesOpen from "../../public/images/icons/course-open.svg";
-import myCourses from "../../public/images/icons/my-courses.svg";
 import './style.scss';
-import { STATUS_OPEN } from "../../sub_modules/share/constraint";
 const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     const router = useRouter();
     const [userCourses, setUserCoures] = useState<UserCourse[]>([]);
@@ -61,38 +58,18 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
                                 <SearchBox />
                             </div>
                         </div>
-                        <div>
-                            <h3><img src={coursesOpen} /> Khóa học miễn phí</h3>
-                            <Grid container spacing={2} className="wrapper-item-my-course">
-                                {userCourses.map((userCourse) => {
-                                    const e = userCourse.course
-                                    if (e.status === STATUS_OPEN) {
-                                        return (
-                                            <Grid key={e._id} item xs={12} sm={6} md={3}>
-                                                <CourseItem course={e} ownCourse />
-                                            </Grid>
-                                        )
-                                    }
-                                })}
-                            </Grid>
-                        </div>
-                        <div style={{ paddingTop: "50px" }}>
-                            <h3><img src={myCourses} /> Khóa Học Đã Mua</h3>
-                            <Grid container spacing={2} className="wrapper-item-my-course">
-                                {userCourses.map((userCourse) => {
-                                    const e = userCourse.course
-                                    if (e.status !== STATUS_OPEN) {
-                                        return (
-                                            <Grid key={e._id} item xs={12} sm={6} md={3}>
-                                                <Badge badgeContent="Quá hạn học" invisible={!!userCourse.isExpired} color="error">
-                                                    <CourseItem course={e} ownCourse />
-                                                </Badge>
-                                            </Grid>
-                                        )
-                                    }
-                                })}
-                            </Grid>
-                        </div>
+                        <Grid container spacing={2} className="wrapper-item-my-course">
+                            {userCourses.map((userCourse) => {
+                                const e = userCourse.course
+                                return (
+                                    <Grid key={e._id} item xs={12} sm={6} md={3}>
+                                        <Badge badgeContent="Quá hạn học" invisible={!!userCourse.isExpired} color="error">
+                                            <CourseItem course={e} ownCourse />
+                                        </Badge>
+                                    </Grid>
+                                )
+                            })}
+                        </Grid>
                     </div>
                 </div>
             </div>
