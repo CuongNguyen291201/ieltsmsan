@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from "next/router";
-import { Grid, Paper, Popover } from '@mui/material';
+import { Grid, Link, Paper, Popover } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { WebMenuItem } from '../../../sub_modules/share/model/webMenuItem';
@@ -19,8 +19,8 @@ const MenuChild = (props: { item: WebMenuItem, mapItem: { [itemId: string]: WebM
         return (
             <>
                 {mapMenu[item._id].map((menuC) => (
-                    <Grid item key={menuC._id} xs={4}>
-                        {mapItem[menuC._id]?.length > 0 ? <span onClick={() => router.push(menuC.url)} style={{ fontWeight: 600}}>{menuC.title}</span> : <span onClick={() => router.push(menuC.url)} style={{ fontSize: "12px" }}>{menuC.title}</span>}  {/* Check menuItem cấp 2 */}
+                    <Grid item key={menuC._id} md={3} sm={12} xs={12} style={{ maxWidth: "100%" }}>
+                        <Link href={menuC.url} underline="none" style={mapItem[menuC._id]?.length > 0 ? { fontWeight: 600, color: "#000", paddingBottom: "10px" } : { fontSize: "12px", color: "#000" }}>{menuC.title}</Link>
                         <div>{mapItem[menuC._id]?.length > 0 && showMenu(mapItem, menuC)}</div>
                     </Grid>
                 ))}

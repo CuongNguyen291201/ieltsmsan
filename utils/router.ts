@@ -14,6 +14,8 @@ export const ROUTER_TRANSACTION_HISTORY = '/lich-su-giao-dich';
 export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
 export const ROUTER_ERROR = '/500';
+export const ROUTER_LOGIN = '/dang-nhap';
+export const ROUTER_REGISTER = '/dang-ky';
 
 export const NEWS_ID_PREFIX = 'post';
 
