@@ -15,6 +15,8 @@ export const ROUTER_DOCUMENT = '/tai-lieu';
 export const ROUTER_NOT_FOUND = '/404';
 export const ROUTER_ERROR = '/500';
 export const ROUTER_CATEGORY = '/khoa-hoc';
+export const ROUTER_LOGIN = '/dang-nhap';
+export const ROUTER_REGISTER = '/dang-ky';
 
 export const NEWS_ID_PREFIX = 'post';
 

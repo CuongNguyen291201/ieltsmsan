@@ -1,0 +1,60 @@
+#infomation-teacher {
+    .position {
+        color: #19ce7a;
+        border-bottom: 3px solid #19ce7a;
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+        width: fit-content;
+    }
+    .name-teacher {
+        color: #333333;
+        font-size: 30px;
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+    .item-content {
+        color: #1e2959;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    .title-info {
+        color: #7e7e7e;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .content-info {
+        color: #000;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    .introduce-title {
+        color: #000;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .introduce {
+        color: #000;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 19px;
+    }
+    .blog-author {
+        color: #000;
+        font-size: 12px;
+        font-weight: 700;
+        padding-left: 30px;
+    }
+    .divider {
+        color: #eaebef;
+        height: 1px;
+        width: 100%;
+    }
+    @media (max-width: 426px) {
+        .content-info {
+            font-size: 12px;
+        }
+    }
+}
