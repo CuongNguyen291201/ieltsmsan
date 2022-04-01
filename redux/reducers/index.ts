@@ -14,6 +14,7 @@ import { examReducer, ExamState } from "./exam.reducer";
 import { menuReducer, MenuState } from "./menu.reducer";
 import { topicDocumentReducer, TopicDocumentState } from "./document.reducer";
 import { contentReducer, ContentState } from "./content.reducer";
+import courseSlice, { CourseSliceState } from "../slices/course.slice";
 
 
 export interface AppState {
@@ -31,6 +32,7 @@ export interface AppState {
   menuReducer: MenuState;
   topicDocumentReducer: TopicDocumentState;
   contentReducer: ContentState;
+  courseSlice: CourseSliceState;
 }
 
 export const rootReducer = combineReducers<AppState>({
@@ -47,5 +49,6 @@ export const rootReducer = combineReducers<AppState>({
   examReducer,
   menuReducer,
   topicDocumentReducer,
-  contentReducer
+  contentReducer,
+  courseSlice
 });
