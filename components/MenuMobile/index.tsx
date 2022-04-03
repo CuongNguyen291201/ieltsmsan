@@ -27,6 +27,30 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId
     const showMenu = () => {
         setisActiveOnMobile(!isActiveOnMobile)
     }
+    const handleClickLogin = () => {
+        const currentPath = router.asPath;
+        if (!currentPath.startsWith(ROUTER_LOGIN)) {
+            const query = router.query;
+            router.push({
+                pathname: ROUTER_LOGIN,
+                query: query || {
+                    return_uri: currentPath
+                }
+            });
+        }
+    }
+    const handleClickRegister = () => {
+        const currentPath = router.asPath;
+        if (!currentPath.startsWith(ROUTER_REGISTER)) {
+            const query = router.query;
+            router.push({
+                pathname: ROUTER_LOGIN,
+                query: query || {
+                    return_uri: currentPath
+                }
+            });
+        }
+    }
     return (
         <div id="menu-mobile" className="menu-mobile-">
             <div className="show-menu" onClick={() => showMenu()}>
@@ -106,15 +130,15 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId
                                     {/* <i className="fas fa-user-circle header-icon"></i> */}
                                     {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
                                     </div> */}
-                                    <div className="login item">
-                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href={ROUTER_LOGIN}><span className="text">Log in</span></Link>
+                                    <div className="login item" onClick={handleClickLogin}>
+                                        <img src={iconItemMenu} alt="iconItemMenu" /><span className="text" style={{ color: "#000" }}>Log in</span>
                                     </div>
 
                                     {/* <div className="signup text menu-item" onClick={() => dispatch(showRegisterModalAction(true))}>
                                         <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng kí
                                     </div> */}
-                                    <div className="signup text item">
-                                        <img src={iconItemMenu} alt="iconItemMenu" /> <Link href={ROUTER_REGISTER}><span className="text">Sign up</span></Link>
+                                    <div className="signup text item" onClick={handleClickRegister}>
+                                        <img src={iconItemMenu} alt="iconItemMenu" /><span className="text" style={{ color: "#000" }} >Sign up</span>
                                     </div>
                                 </>
                             )

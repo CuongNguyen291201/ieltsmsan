@@ -19,13 +19,25 @@ export const MenuDesktop = () => {
     const handleClickLogin = () => {
         const currentPath = router.asPath;
         if (!currentPath.startsWith(ROUTER_LOGIN)) {
-            router.push(`${ROUTER_LOGIN}?return_uri=${currentPath}`);
+            const query = router.query;
+            router.push({
+                pathname: ROUTER_LOGIN,
+                query: query || {
+                    return_uri: currentPath
+                }
+            });
         }
     }
     const handleClickRegister = () => {
         const currentPath = router.asPath;
         if (!currentPath.startsWith(ROUTER_REGISTER)) {
-            router.push(`${ROUTER_REGISTER}?return_uri=${currentPath}`);
+            const query = router.query;
+            router.push({
+                pathname: ROUTER_LOGIN,
+                query: query || {
+                    return_uri: currentPath
+                }
+            });
         }
     }
     return (
