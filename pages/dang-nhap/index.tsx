@@ -18,7 +18,7 @@ const Login = (props: {
   webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial
 }) => {
     const router = useRouter();
-    useAuth({ redirect: "/" });
+    useAuth({ authenticatedRedirect: "/" });
     return (
         <Layout useDefaultBackground {...props}>
             <div style={{ background: "#EBF0FC" }}>
