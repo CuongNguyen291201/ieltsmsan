@@ -2,6 +2,7 @@ import { PropsWithoutRef } from 'react'
 import CourseDetail from '../../components/CourseDetail'
 import Layout from '../../components/Layout'
 import SeoProps from "../../custom-types/SeoProps"
+import useAuth from "../../hooks/useAuth"
 import { setCurrentCourseAction } from '../../redux/actions/course.actions'
 import { getWebMenuAction } from "../../redux/actions/menu.action"
 import { wrapper } from '../../redux/store'
@@ -24,6 +25,7 @@ type CoursePageProps = {
 
 const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
   const { webInfo, webSocial, ...seo } = props;
+  useAuth();
 
   return (
     <Layout
@@ -39,12 +41,8 @@ const CoursePage = (props: PropsWithoutRef<CoursePageProps>) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [user, { webInfo , webSocial, webMenuItems }] = await Promise.all([
-    getUserFromToken(req),
-    apiGetPageLayout({ menu: true })
-  ]);
+  const { webInfo , webSocial, webMenuItems } = await apiGetPageLayout({ menu: true })
   store.dispatch(getWebMenuAction(webMenuItems));
-  if (user) store.dispatch(loginSuccessAction(user));
   const courseSlugItems = (query.courseSlug as string).split('-');
   const courseSlug = courseSlugItems.slice(0, -1).join('-');
   const [courseId] = courseSlugItems.slice(-1);

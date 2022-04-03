@@ -8,8 +8,10 @@ import { loginSuccessAction } from '../../../sub_modules/common/redux/actions/us
 import EventExam from '../../../components/Event/EventExam';
 import { apiGetTopicById } from '../../../utils/apis/topicApi';
 import { setCurrrentTopicAction } from '../../../redux/actions/topic.action';
+import useAuth from "../../../hooks/useAuth";
 
 const ExamPage = () => {
+    useAuth();
     return (
         <Layout>
             <MainMenu />
@@ -19,8 +21,6 @@ const ExamPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) store.dispatch(loginSuccessAction(userInfo));
     const { topicId } = query;
     const currentTopic = await apiGetTopicById({ topicId: topicId as string, serverSide: true });
     if (currentTopic) store.dispatch(setCurrrentTopicAction(currentTopic));

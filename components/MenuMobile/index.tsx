@@ -6,14 +6,14 @@ import { AppState } from "../../redux/reducers";
 import { getCookie, TOKEN, removeCookie } from "../../sub_modules/common/utils/cookie";
 import { apiLogout } from "../../utils/apis/auth";
 import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER } from '../../utils/router';
-import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import iconItemMenu from '../../public/images/icons/icon-item-menu.png'
 import iconClose from '../../public/images/icons/icon-close.png'
 import "./style.scss"
 import MenuChildMobile from "./MenuItemMobile/menuChildMobile";
 import { WebMenuItem } from "../../sub_modules/share/model/webMenuItem";
-export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId: string]: WebMenuItem[]} }) => {
+export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId: string]: WebMenuItem[] } }) => {
     const { rootItems, mapItem } = props;
     const [isActiveOnMobile, setisActiveOnMobile] = useState(false);
     const [showModalAct, setShowModalAct] = useState(false);
@@ -90,6 +90,7 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId:
               </div> */}
                                             <div className="menu-item" onClick={() => {
                                                 apiLogout().then(() => {
+                                                    dispatch(loginSuccessAction(null));
                                                     router.reload()
                                                 });
                                             }}>
@@ -101,9 +102,9 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: {[itemId:
                             ) : (
                                 <>
                                     {/* <div className="login menu-item" onClick={() => { dispatch(showLoginModalAction(true)); showMenu() }}> */}
-                                        {/* <img src="/images/home/header-user.png" alt="" /> */}
-                                        {/* <i className="fas fa-user-circle header-icon"></i> */}
-                                        {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
+                                    {/* <img src="/images/home/header-user.png" alt="" /> */}
+                                    {/* <i className="fas fa-user-circle header-icon"></i> */}
+                                    {/* <div className="text"><span><img src={iconItemMenu} alt="iconItemMenu" /></span>Đăng nhập</div>
                                     </div> */}
                                     <div className="login item">
                                         <img src={iconItemMenu} alt="iconItemMenu" /> <Link href={ROUTER_LOGIN}><span className="text">Log in</span></Link>

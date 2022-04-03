@@ -8,6 +8,7 @@ import {
   PAGE_CATEGORY_DETAIL, PAGE_ERROR, PAGE_NEWS_DETAIL, PAGE_NOT_FOUND, PAGE_REPLY_COMMENT
 } from '../../custom-types/PageType';
 import SeoProps from "../../custom-types/SeoProps";
+import useAuth from "../../hooks/useAuth";
 import { setCurrentCategoryAction } from '../../redux/actions/category.actions';
 import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { wrapper } from '../../redux/store';
@@ -43,6 +44,8 @@ const Slug = (props: SlugTypes) => {
     [PAGE_NEWS_DETAIL]: <NewsView news={news} />
   }
 
+  useAuth();
+
   return (
     <div>
       <Layout
@@ -60,8 +63,6 @@ const Slug = (props: SlugTypes) => {
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req, res }) => {
-  const userInfo = await getUserFromToken(req);
-  if (userInfo) store.dispatch(loginSuccessAction(userInfo));
   const slugs = query.slugs;
   const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
   store.dispatch(getWebMenuAction(webMenuItems));

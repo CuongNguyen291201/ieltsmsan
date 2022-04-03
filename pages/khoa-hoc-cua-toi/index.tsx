@@ -8,6 +8,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import CourseItem from '../../components/CourseItem';
 import Layout from '../../components/Layout';
 import SearchBox from "../../components/SearchBox";
+import useAuth from "../../hooks/useAuth";
 import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { AppState } from "../../redux/reducers";
 import { wrapper } from "../../redux/store";
@@ -24,7 +25,7 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
     const router = useRouter();
     const [userCourses, setUserCoures] = useState<UserCourse[]>([]);
     const currentUser = useSelector((state: AppState) => state.userReducer.currentUser);
-
+    useAuth();
 
     useEffect(() => {
         if (!!currentUser) {
@@ -78,10 +79,6 @@ const MyCoursePage = (props: { webInfo?: WebInfo, webSocial?: WebSocial }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-        store.dispatch(loginSuccessAction(userInfo));
-    }
     const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
     store.dispatch(getWebMenuAction(webMenuItems));
     return { props: { webInfo, webSocial } }

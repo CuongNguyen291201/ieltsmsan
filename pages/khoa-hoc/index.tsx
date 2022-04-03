@@ -58,7 +58,7 @@ const CategoryPage = (props: {
       </div>
 
       <div className="section-description" style={{ marginTop: "50px" }}>
-        <SanitizedDiv content={category.description} />
+        <SanitizedDiv content={category?.description} />
       </div>
 
     </Container>
@@ -67,11 +67,7 @@ const CategoryPage = (props: {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
   const userInfo = await getUserFromToken(req);
-  if (userInfo) {
-    store.dispatch(loginSuccessAction(userInfo));
-  } else {
-    removeServerSideCookie(res);
-  }
+  store.dispatch(loginSuccessAction(userInfo ?? null));
 
   const { webMenuItems, ...layout } = await apiGetPageLayout({ slug: '/khoa-hoc', menu: true });
   const categories = await apiGetAllCategoriesWithCourses({ position: CATEGORY_POSITION_MENU, serverSide: true });

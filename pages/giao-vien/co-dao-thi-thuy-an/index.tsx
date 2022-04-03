@@ -4,14 +4,19 @@ import { GetServerSideProps } from 'next'
 import React from 'react'
 import Breadcrumb from '../../../components/Breadcrumb'
 import Layout from '../../../components/Layout'
+import useAuth from "../../../hooks/useAuth"
 import { getWebMenuAction } from '../../../redux/actions/menu.action'
 import { wrapper } from '../../../redux/store'
-import { getUserFromToken } from '../../../sub_modules/common/api/userApis'
-import { loginSuccessAction } from '../../../sub_modules/common/redux/actions/userActions'
+import WebInfo from "../../../sub_modules/share/model/webInfo"
+import WebSeo from "../../../sub_modules/share/model/webSeo"
+import WebSocial from "../../../sub_modules/share/model/webSocial"
 import { apiGetPageLayout } from '../../../utils/apis/pageLayoutApi'
 import './style.scss'
 
-const Principal = () => {
+const Principal = (props: {
+  webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial
+}) => {
+  useAuth();
   const _Card = withStyles({
     root: {
       boxShadow: "0px 4px 30px rgba(95, 73, 118, 0.15)",
@@ -22,7 +27,7 @@ const Principal = () => {
   })(Card);
 
   return (
-    <Layout>
+    <Layout useDefaultBackground {...props}>
       <div id="infomation-teacher">
         <div style={{ background: "#EBF0FC", marginBottom: "80px" }}>
           <div className="container">
@@ -163,10 +168,6 @@ const Principal = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-  const userInfo = await getUserFromToken(req);
-  if (userInfo) {
-      store.dispatch(loginSuccessAction(userInfo));
-  }
   const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
   store.dispatch(getWebMenuAction(webMenuItems));
   return { props: { webInfo, webSocial } }

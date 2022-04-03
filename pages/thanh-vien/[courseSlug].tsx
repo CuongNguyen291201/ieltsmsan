@@ -4,11 +4,10 @@ import { useRouter } from "next/router";
 import { PropsWithoutRef, useEffect, useState } from "react";
 import { InfoCourse } from "../../components/InfoCourse";
 import Layout from '../../components/Layout';
+import useAuth from "../../hooks/useAuth";
 import { setCurrentCourseAction } from "../../redux/actions/course.actions";
 import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { wrapper } from "../../redux/store";
-import { getUserFromToken } from "../../sub_modules/common/api/userApis";
-import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
 import { Course } from "../../sub_modules/share/model/courses";
 import WebInfo from "../../sub_modules/share/model/webInfo";
 import WebSocial from "../../sub_modules/share/model/webSocial";
@@ -28,6 +27,7 @@ const CourseMembersPage = (props: PropsWithoutRef<CourseMembersPageProps>) => {
   const { course, webInfo, webSocial } = props;
   const router = useRouter();
   const [isReady, setReady] = useState(false);
+  useAuth();
 
   useEffect(() => {
     apiGetUserCourse({ courseId: course._id })
@@ -57,12 +57,8 @@ const CourseMembersPage = (props: PropsWithoutRef<CourseMembersPageProps>) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async ({ store, req, res, query }) => {
   store.dispatch(setCurrentCourseAction(null, true));
-  const [user, { webInfo, webSocial, webMenuItems }] = await Promise.all([
-    getUserFromToken(req),
-    apiGetPageLayout({ menu: true })
-  ]);
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true })
   store.dispatch(getWebMenuAction(webMenuItems));
-  if (user) store.dispatch(loginSuccessAction(user));
   const courseSlugItems = (query.courseSlug as string).split('-');
   const courseSlug = courseSlugItems.slice(0, -1).join('-');
   const [courseId] = courseSlugItems.slice(-1);

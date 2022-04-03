@@ -7,10 +7,12 @@ import { apiGetPageLayout } from "../utils/apis/pageLayoutApi"
 import { getWebMenuAction } from "../redux/actions/menu.action";
 // @ts-ignore
 import NotFoundImage from "../public/images/icons/not-found.svg";
+import useAuth from "../hooks/useAuth"
 
 const ErrorNotFound = (props: {
   webInfo?: WebInfo, webSocial?: WebSocial
 }) => {
+  useAuth();
   return <Layout {...props}>
     <ErrorView message="We can’t find the page you’re looking for!" description="Page Not Found" errorCode={404} img={NotFoundImage} />
   </Layout>

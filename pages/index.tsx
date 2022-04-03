@@ -8,20 +8,19 @@ import HomeCategorySection from '../components/HomeCategorySection';
 // import HomeWhy from '../components/HomeWhy';
 import Layout from '../components/Layout';
 import { _Category } from '../custom-types';
+import useAuth from "../hooks/useAuth";
 import { getWebMenuAction } from "../redux/actions/menu.action";
 import { wrapper } from '../redux/store';
-import { getUserFromToken } from '../sub_modules/common/api/userApis';
-import { loginSuccessAction } from '../sub_modules/common/redux/actions/userActions';
 import { CATEGORY_POSITION_LANDING_PAGE } from '../sub_modules/share/constraint';
 import WebInfo from '../sub_modules/share/model/webInfo';
 import WebSeo from '../sub_modules/share/model/webSeo';
 import WebSocial from '../sub_modules/share/model/webSocial';
-import { removeServerSideCookie } from "../utils";
 import { apiGetAllCategoriesWithCourses } from '../utils/apis/categoryApi';
 import { apiGetPageLayout } from "../utils/apis/pageLayoutApi";
 
 const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial }) => {
   const router = useRouter();
+  useAuth();
   useEffect(() => {
     if (router.isReady) {
       const WOW = require('wow.js');
@@ -31,10 +30,10 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
   return (
     <Layout webInfo={props.webInfo} webSeo={props.webSeo} webSocial={props.webSocial} useDefaultBackground>
       {/* <div style={{ boxShadow: '0px 0px 15px rgba(95, 73, 118, 0.15)', backgroundColor: 'white' }}> */}
-        {/* <HomeBanner /> */}
-        <HomeCategorySection categories={props.homeCategories} />
-        {/* <HomeWhy></HomeWhy> */}
-        {/* <HomeUtility></HomeUtility> */}
+      {/* <HomeBanner /> */}
+      <HomeCategorySection categories={props.homeCategories} />
+      {/* <HomeWhy></HomeWhy> */}
+      {/* <HomeUtility></HomeUtility> */}
       {/* </div> */}
     </Layout>
   )
@@ -43,13 +42,6 @@ const Index = (props: { homeCategories: _Category[]; webInfo?: WebInfo; webSeo?:
 export default Index;
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req, res }) => {
-  const userInfo = await getUserFromToken(req);
-  if (userInfo) {
-    store.dispatch(loginSuccessAction(userInfo));
-  } else {
-    removeServerSideCookie(res);
-  }
-
   // const { data, status } = await apiGetCategories();
   const homeCategories = await apiGetAllCategoriesWithCourses({ position: CATEGORY_POSITION_LANDING_PAGE, serverSide: true });
   const { webInfo, webSeo, webSocial, webMenuItems } = await apiGetPageLayout({ slug: '/', menu: true });

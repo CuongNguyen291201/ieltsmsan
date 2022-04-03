@@ -1,12 +1,11 @@
 import { PropsWithoutRef } from 'react';
 import Layout from '../../components/Layout';
 import TopicDetail from '../../components/TopicDetail';
+import useAuth from "../../hooks/useAuth";
 import { setCurrentCourseAction } from '../../redux/actions/course.actions';
 import { getWebMenuAction } from "../../redux/actions/menu.action";
 import { setCurrrentTopicAction } from '../../redux/actions/topic.action';
 import { wrapper } from '../../redux/store';
-import { getUserFromToken } from '../../sub_modules/common/api/userApis';
-import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
 import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
@@ -18,6 +17,7 @@ type TopicPageProps = {
 }
 
 const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
+  useAuth();
   return (
     <Layout
       {...props}
@@ -31,12 +31,8 @@ const TopicPage = (props: PropsWithoutRef<TopicPageProps>) => {
 export const getServerSideProps = wrapper.getServerSideProps(async ({ query, req, res, store }) => {
   store.dispatch(setCurrentCourseAction(null, true));
   store.dispatch(setCurrrentTopicAction(null, true));
-  const [user, { webInfo, webSocial, webMenuItems }] = await Promise.all([
-    getUserFromToken(req),
-    apiGetPageLayout({ menu: true })
-  ]);
+  const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true })
   store.dispatch(getWebMenuAction(webMenuItems));
-  if (user) store.dispatch(loginSuccessAction(user));
   const topicSlugItems = (query.topicSlug as string).split('-');
   const topicSlug = topicSlugItems.slice(0, -1).join('-');
   const [topicId] = topicSlugItems.slice(-1);

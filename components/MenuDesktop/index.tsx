@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER } from '../../utils/router';
 import { getCookie, TOKEN, removeCookie } from '../../sub_modules/common/utils/cookie';
 import { apiLogout } from '../../utils/apis/auth';
-import { showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
+import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import "./style.scss";
 
 export const MenuDesktop = () => {
@@ -16,6 +16,18 @@ export const MenuDesktop = () => {
     const router = useRouter();
     const dispatch = useDispatch()
     const toggleUserMenuRef = useRef<HTMLDivElement>();
+    const handleClickLogin = () => {
+        const currentPath = router.asPath;
+        if (!currentPath.startsWith(ROUTER_LOGIN)) {
+            router.push(`${ROUTER_LOGIN}?return_uri=${currentPath}`);
+        }
+    }
+    const handleClickRegister = () => {
+        const currentPath = router.asPath;
+        if (!currentPath.startsWith(ROUTER_REGISTER)) {
+            router.push(`${ROUTER_REGISTER}?return_uri=${currentPath}`);
+        }
+    }
     return (
         <div id="menu-desktop">
             {
@@ -49,6 +61,7 @@ export const MenuDesktop = () => {
               </div> */}
                                     <div className="menu-item" onClick={() => {
                                         apiLogout().then(() => {
+                                            dispatch(loginSuccessAction(null));
                                             router.reload()
                                         });
                                     }}>
@@ -66,14 +79,14 @@ export const MenuDesktop = () => {
                             <i className="fas fa-user-circle header-icon"></i>
                             <div className="text">Log in</div>
                         </div> */}
-                        <div className="login item">
-                            <Link href={ROUTER_LOGIN}><span className="text">Log in</span></Link>
+                        <div className="login item" onClick={handleClickLogin}>
+                            <span className="text">Log in</span>
                         </div>
                         {/* <div className="signup text item" onClick={() => dispatch(showRegisterModalAction(true))}>
                             Sign up
                         </div> */}
-                        <div className="signup text item" style={{ color: "#fff" }}>
-                            <Link href={ROUTER_REGISTER}><span className="text">Sign up</span></Link>
+                        <div className="signup text item" style={{ color: "#fff" }} onClick={handleClickRegister}>
+                            <span className="text">Sign up</span>
                         </div>
                     </>
                 )

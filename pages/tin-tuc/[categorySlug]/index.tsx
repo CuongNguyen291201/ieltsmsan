@@ -1,10 +1,9 @@
 import { GetServerSideProps } from 'next';
 import Layout from '../../../components/Layout';
 import NewsCategoryView from '../../../components/NewsCategoryView';
+import useAuth from "../../../hooks/useAuth";
 import { getWebMenuAction } from "../../../redux/actions/menu.action";
 import { wrapper } from '../../../redux/store';
-import { getUserFromToken } from '../../../sub_modules/common/api/userApis';
-import { loginSuccessAction } from '../../../sub_modules/common/redux/actions/userActions';
 import { META_ROBOT_NO_INDEX_NO_FOLLOW } from "../../../sub_modules/share/constraint";
 import CategoryNews from '../../../sub_modules/share/model/categoryNews';
 import News from '../../../sub_modules/share/model/news';
@@ -18,6 +17,7 @@ const NEWS_LIMIT = 5;
 
 const CategoryNewsPage = (props: { webInfo?: WebInfo, webSocial?: WebSocial; newsList?: News[]; totalNews?: number; categoryNews?: CategoryNews[]; category: CategoryNews }) => {
   const { categoryNews, newsList, totalNews, category, ...webSettings } = props;
+  useAuth();
   return <Layout {...webSettings} robot={META_ROBOT_NO_INDEX_NO_FOLLOW}>
     <NewsCategoryView
       categoryNews={categoryNews}
@@ -30,10 +30,6 @@ const CategoryNewsPage = (props: { webInfo?: WebInfo, webSocial?: WebSocial; new
 }
 
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, query, req, res }) => {
-  const userInfo = await getUserFromToken(req);
-  if (userInfo) {
-    store.dispatch(loginSuccessAction(userInfo));
-  }
   const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
   store.dispatch(getWebMenuAction(webMenuItems));
 

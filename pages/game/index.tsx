@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Layout from '../../components/Layout';
 import { useScrollToTop } from '../../hooks/scrollToTop';
+import useAuth from "../../hooks/useAuth";
 import { AppState } from '../../redux/reducers';
 import { GAME_STATUS_PLAYING } from '../../sub_modules/game/src/gameConfig';
 import LoadingGame from '../../sub_modules/game/src/game_components/loadingGame';
@@ -30,6 +31,7 @@ const GamePage = () => {
   const currentUser = !!userToReview ? userToReview : user;
   const router = useRouter();
   useScrollToTop();
+  useAuth();
 
   useEffect(() => {
     const parentId = router.query.id
@@ -39,7 +41,7 @@ const GamePage = () => {
     }
 
     if (!currentUser) return;
-  }, []);
+  }, [currentUser, router.isReady]);
 
   useEffect(() => {
     const message = 'Do you want to leave?';

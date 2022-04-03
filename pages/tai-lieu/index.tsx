@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { getUserFromToken } from '../../sub_modules/common/api/userApis';
-import { wrapper } from '../../redux/store';
-import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
-import { removeCookie, TOKEN } from '../../sub_modules/common/utils/cookie';
 import { GetServerSideProps } from 'next';
-import { _Category } from '../../custom-types';
-import { apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
+import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
-import Breadcrumb from '../../components/Breadcrumb';
-import { ROUTER_DOCUMENT } from '../../utils/router';
-import { apiWebInfo } from '../../utils/apis/webInfoApi';
-import { apiWebSocial } from '../../utils/apis/webSocial';
+import { _Category } from '../../custom-types';
+import useAuth from "../../hooks/useAuth";
+import { getWebMenuAction } from "../../redux/actions/menu.action";
+import { wrapper } from '../../redux/store';
 import WebInfo from '../../sub_modules/share/model/webInfo';
 import WebSeo from '../../sub_modules/share/model/webSeo';
 import WebSocial from '../../sub_modules/share/model/webSocial';
+import { apiGetCategoryBySlug } from '../../utils/apis/categoryApi';
 import { apiGetPageLayout } from "../../utils/apis/pageLayoutApi";
-import { getWebMenuAction } from "../../redux/actions/menu.action";
+import { ROUTER_DOCUMENT } from '../../utils/router';
 const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), { ssr: false });
 
 // const ROOT_DOCUMENT_CATEGORY_ID = "60d147b2de1984563685542b";
@@ -28,6 +23,7 @@ const DocumentUI = dynamic(() => import('../../sub_modules/document/src/App'), {
 
 const DocumentPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSocial: WebSocial }) => {
     const [rootDocument, setRootDocument] = useState<_Category>();
+    useAuth();
 
     useEffect(() => {
         apiGetCategoryBySlug('tai-lieu')
@@ -51,10 +47,6 @@ const DocumentPage = (props: { webInfo: WebInfo, webSeo: WebSeo, webSocial: WebS
     // </div>
 };
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(async ({ store, req }) => {
-    const userInfo = await getUserFromToken(req);
-    if (userInfo) {
-        store.dispatch(loginSuccessAction(userInfo));
-    }
     const { webInfo, webSocial, webMenuItems } = await apiGetPageLayout({ menu: true });
     store.dispatch(getWebMenuAction(webMenuItems));
 
