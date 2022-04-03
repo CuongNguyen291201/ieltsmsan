@@ -31,11 +31,10 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId
         const currentPath = router.asPath;
         if (!currentPath.startsWith(ROUTER_LOGIN)) {
             const query = router.query;
+            if (!query.return_uri) query.return_uri = currentPath;
             router.push({
                 pathname: ROUTER_LOGIN,
-                query: query || {
-                    return_uri: currentPath
-                }
+                query
             });
         }
     }
@@ -43,11 +42,10 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId
         const currentPath = router.asPath;
         if (!currentPath.startsWith(ROUTER_REGISTER)) {
             const query = router.query;
+            if (!query.return_uri) query.return_uri = currentPath;
             router.push({
-                pathname: ROUTER_LOGIN,
-                query: query || {
-                    return_uri: currentPath
-                }
+                pathname: ROUTER_REGISTER,
+                query
             });
         }
     }
