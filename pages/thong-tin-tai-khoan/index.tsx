@@ -19,9 +19,11 @@ import './style.scss'
 import UploadAvatar from './UploadAvatar'
 import moment from 'moment'
 import { withStyles } from '@mui/styles'
-import { validatePhone } from '../../sub_modules/common/utils'
 import { apiUpdateUserInfo } from '../../utils/apis/auth'
 import { loginSuccessAction } from '../../sub_modules/common/redux/actions/userActions';
+import { validatePhone } from '../../utils';
+import Breadcrumb from '../../components/Breadcrumb';
+import { ROUTER_USER_INFO } from '../../utils/router';
 
 const UserInfo = (props: {
     webInfo?: WebInfo; webSeo?: WebSeo; webSocial?: WebSocial
@@ -30,9 +32,9 @@ const UserInfo = (props: {
     const { enqueueSnackbar } = useSnackbar();
     const currentUser = useAppSelector((state) => state.userReducer.currentUser);
     const dispatch = useAppDispatch();
-    const [avatar, setAvatar] = useState("");
-    const [gender, setGender] = useState(-1);
-    const [birth, setBirth] = useState(0);
+    const [avatar, setAvatar] = useState(currentUser?.avatar);
+    const [gender, setGender] = useState(currentUser?.gender);
+    const [birth, setBirth] = useState<number>();
 
     const _TextField = withStyles({
         root: {
@@ -59,6 +61,11 @@ const UserInfo = (props: {
     useAuth({ unAuthenticatedRedirect: "/" });
     return (
         <Layout useDefaultBackground {...props}>
+            <div style={{ background: "#EBF0FC" }}>
+                <div className="container">
+                    <Breadcrumb items={[{ name: 'Thông tin tài khoản', slug: ROUTER_USER_INFO }]} />
+                </div>
+            </div>
             <div className="container" >
                 <h2 style={{ textAlign: "center" }}>CẬP NHẬP THÔNG TIN TÀI KHOẢN</h2>
                 <div className="update-info">
@@ -72,7 +79,7 @@ const UserInfo = (props: {
                             <div className="label-wrapper">
                                 <label className="label">Họ tên (*)</label>
                             </div>
-                            <input required defaultValue={currentUser?.name} className="input-field" {...register("name")} placeholder="Nhập họ tên" />
+                            <input required className="input-field" {...register("name")} placeholder="Nhập họ tên" />
                         </div>
                         <div className="input-cpt">
                             <div className="label-wrapper">
@@ -80,7 +87,7 @@ const UserInfo = (props: {
                             </div>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
-                                    value={birth ? birth : moment().valueOf()}
+                                    value={birth ? birth : currentUser?.birth}
                                     onChange={(newValue: any) => setBirth(moment(newValue).valueOf())}
                                     renderInput={(params) => <_TextField fullWidth {...params} />}
                                 />
@@ -90,7 +97,7 @@ const UserInfo = (props: {
                             <div className="label-wrapper">
                                 <label className="label">Giới tính (*)</label>
                             </div>
-                            <RadioGroup row defaultValue={currentUser?.gender} onChange={(e, value) => setGender(+value)}>
+                            <RadioGroup row defaultValue={-1} onChange={(e, value) => setGender(+value)}>
                                 <FormControlLabel value={1} control={<Radio />} label="Nam" />
                                 <FormControlLabel value={0} control={<Radio />} label="Nữ" />
                                 <FormControlLabel value={-1} control={<Radio />} label="Khác" />
@@ -100,13 +107,13 @@ const UserInfo = (props: {
                             <div className="label-wrapper">
                                 <label className="label">Email (*)</label>
                             </div>
-                            <input required type="email" className="input-field" value={currentUser?.email} {...register("email")} placeholder="Nhập email" readOnly />
+                            <input required type="email" className="input-field" defaultValue={currentUser?.email} {...register("email")} placeholder="Nhập email" readOnly />
                         </div>
                         <div className="input-cpt">
                             <div className="label-wrapper">
                                 <label className="label">Số điện thoại (*)</label>
                             </div>
-                            <input required className="input-field" defaultValue={currentUser?.phoneNumber} {...register("phoneNumber")} placeholder="Nhập số điện thoại" />
+                            <input required className="input-field" {...register("phoneNumber")} placeholder="Nhập số điện thoại" />
                         </div>
                         <button className="btn-submit" type="submit">Cập nhật</button>
                     </form>

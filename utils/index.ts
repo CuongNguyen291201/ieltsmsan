@@ -76,3 +76,8 @@ export const formatTimeHMS = (time: number) => moment(time).format('HH:mm:ss');
 export const removeServerSideCookie = (res: ServerResponse) => {
   res.setHeader('Set-Cookie', 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
 }
+
+export const validatePhone = (phone: string): boolean => {
+  var regEx = /(0[3|5|7|8|9])+([0-9]{8}|[0-9]{9})\b$/;
+  return regEx.test(String(phone).toLowerCase());
+};

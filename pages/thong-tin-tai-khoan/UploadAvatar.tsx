@@ -3,7 +3,8 @@ import { ChangeEvent, useState } from "react";
 import axios from 'axios';
 import DocumentItem from "../../sub_modules/share/model/documentItem";
 import { ENDPOINT_LOCAL } from "../../sub_modules/common/api";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { loginSuccessAction } from "../../sub_modules/common/redux/actions/userActions";
 
 
 const useStyles = makeStyles((_) => ({
@@ -25,7 +26,7 @@ const UploadButton = (props: {
   const id = `sm-document-upload-button${props.id || ''}`;
   const { onUploadFinished, onUploadError, onUploadSuccess } = props;
   const currentUser = useAppSelector((state) => state.userReducer.currentUser);
-  const [currentAvatar, setCurrentAvatar] = useState(currentUser?.avatar ? currentUser?.avatar : "/images/icons/change-avatar.png");
+  const dispatch = useAppDispatch();
 
   const handleChangeFiles = async (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files[0];
@@ -55,7 +56,7 @@ const UploadButton = (props: {
           if (typeof onUploadFinished !== 'undefined') {
             onUploadFinished(item);
           }
-          setCurrentAvatar(item.url)
+          dispatch(loginSuccessAction({ ...currentUser, avatar: item.url }))
         }
       } catch (error) {
         if (typeof onUploadError !== 'undefined') {
@@ -74,7 +75,7 @@ const UploadButton = (props: {
       onChange={handleChangeFiles}
     />
     <label htmlFor={id}>
-      <img src={currentAvatar} style={{ cursor: "pointer" }} />
+      <img src={currentUser?.avatar ? currentUser?.avatar : "/images/icons/change-avatar.png"} style={{ cursor: "pointer" }} />
     </label>
     <p>Thay đổi ảnh đại diện</p>
   </div>)

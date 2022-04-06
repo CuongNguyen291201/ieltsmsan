@@ -66,7 +66,7 @@ export const MenuDesktop = () => {
                                         Khoá học của tôi
                                     </div>
                                     <div className="menu-item" onClick={() => router.push(ROUTER_USER_INFO)}>
-                                        <i className="fas fa-file-user"></i>
+                                    <i className="fas fa-id-card" />
                                         Thông tin tài khoản
                                     </div>
                                     {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
