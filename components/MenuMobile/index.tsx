@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { getCookie, TOKEN, removeCookie } from "../../sub_modules/common/utils/cookie";
 import { apiLogout } from "../../utils/apis/auth";
-import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER } from '../../utils/router';
+import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER, ROUTER_USER_INFO } from '../../utils/router';
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
 import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import iconItemMenu from '../../public/images/icons/icon-item-menu.png'
@@ -105,6 +105,9 @@ export const MenuMobile = (props: { rootItems: WebMenuItem[], mapItem: { [itemId
                                             </div>
                                             <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
                                                 <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Khoá học của tôi
+                                            </div>
+                                            <div className="menu-item" onClick={() => router.push(ROUTER_USER_INFO)}>
+                                                <span><img src={iconItemMenu} alt="iconItemMenu" /></span>Thông tin tài khoản
                                             </div>
                                             {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
                 <i className="fas fa-wrench"></i>

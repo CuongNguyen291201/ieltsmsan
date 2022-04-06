@@ -17,6 +17,7 @@ export const ROUTER_ERROR = '/500';
 export const ROUTER_CATEGORY = '/khoa-hoc';
 export const ROUTER_LOGIN = '/dang-nhap';
 export const ROUTER_REGISTER = '/dang-ky';
+export const ROUTER_USER_INFO = '/thong-tin-tai-khoan';
 
 export const NEWS_ID_PREFIX = 'post';
 

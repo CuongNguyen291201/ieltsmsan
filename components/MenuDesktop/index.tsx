@@ -4,7 +4,7 @@ import Link from 'next/link';
 import defaultAvatar from '../../public/images/icons/default_avatar_otsv.jpg'
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER } from '../../utils/router';
+import { ROUTER_DOCUMENT, ROUTER_NEWS, ROUTER_CART, ROUTER_TRANSACTION_HISTORY, ROUTER_MY_COURSES, ROUTER_LOGIN, ROUTER_REGISTER, ROUTER_USER_INFO } from '../../utils/router';
 import { getCookie, TOKEN, removeCookie } from '../../sub_modules/common/utils/cookie';
 import { apiLogout } from '../../utils/apis/auth';
 import { loginSuccessAction, showLoginModalAction, showRegisterModalAction } from "../../sub_modules/common/redux/actions/userActions";
@@ -64,6 +64,10 @@ export const MenuDesktop = () => {
                                     <div className="menu-item" onClick={() => router.push(ROUTER_MY_COURSES)}>
                                         <i className="fas fa-graduation-cap" />
                                         Khoá học của tôi
+                                    </div>
+                                    <div className="menu-item" onClick={() => router.push(ROUTER_USER_INFO)}>
+                                        <i className="fas fa-file-user"></i>
+                                        Thông tin tài khoản
                                     </div>
                                     {/* <div className="menu-item" onClick={() => router.push(getBrowserSlug('cms', PAGE_REPLY_COMMENT, 'comment'))} >
                 <i className="fas fa-wrench"></i>

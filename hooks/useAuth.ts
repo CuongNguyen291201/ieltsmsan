@@ -4,9 +4,9 @@ import { useDispatch } from "react-redux";
 import { getUserFromToken } from "../sub_modules/common/api/userApis";
 import { loginSuccessAction } from "../sub_modules/common/redux/actions/userActions";
 
-export default function useAuth (args?: { authenticatedRedirect?: string }) {
+export default function useAuth (args?: { authenticatedRedirect?: string; unAuthenticatedRedirect?: string; }) {
   const dispatch = useDispatch();
-  const { authenticatedRedirect } = args ?? {};
+  const { authenticatedRedirect, unAuthenticatedRedirect } = args ?? {};
   const router = useRouter();
 
   useEffect(() => {
@@ -15,6 +15,9 @@ export default function useAuth (args?: { authenticatedRedirect?: string }) {
         dispatch(loginSuccessAction(userInfo || null));
         if (!!userInfo && !!authenticatedRedirect) {
           router.replace(authenticatedRedirect);
+        }
+        if (!userInfo && !!unAuthenticatedRedirect) {
+          router.replace(unAuthenticatedRedirect);
         }
       })
   }, []);
